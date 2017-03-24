@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entity", "Entity\Entity.csproj", "{844A6B57-D1BB-4997-AA80-033A01593CC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.Entity", "BVTV.Entity\BVTV.Entity.csproj", "{844A6B57-D1BB-4997-AA80-033A01593CC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGISBinhDuong", "Asp.Net\WebGISBinhDuong.csproj", "{14E744D0-B97D-41EB-9D27-20B818EFC7C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.WebGIS", "BVTV.Web\BVTV.WebGIS.csproj", "{14E744D0-B97D-41EB-9D27-20B818EFC7C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
