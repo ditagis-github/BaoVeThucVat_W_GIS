@@ -2,6 +2,9 @@
     ViewBag.Title = " Chi cục Trồng trọt và Bảo vệ thực vật tỉnh Bình Dương ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@*Module Map*@
+<script src="~/Scripts/search.js"></script>
+<script src="~/Scripts/config_layout.js"></script>
 <script>
     var dojoConfig = {
         async: true
@@ -25,7 +28,7 @@
             <div class="formSearch">
                 <input type="text" id="txtMaDN" class="form-control" placeholder="Mã doanh nghiệp" />
                 <input type="text" id="txtTen" class="form-control" placeholder="Tên doanh nghiệp" />
-                <input type="text" id="txtLoaiHinhKD" class="form-control" placeholder="Loại hình kinh doanh" />
+                <input type="text" id="txtQuanHuyen" class="form-control" placeholder="Quận/Huyện" />
                 <button type="button" class="btn btn-default" id="btDoanhNghiep">Tìm kiếm</button>
                 <button type="button" class="btn btn-default" id="btDoanhNghiep_Excel">Xuất Excel</button>
                 <img src="~/Content/img/default.gif" class="loading" style="display: none;" />

@@ -8,6 +8,7 @@
     <link href="~/Content/font_awesome/css/font-awesome.min.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Content/bootstrap/js/jquery1_9.min.js"></script>
    
 </head>
 <body class="claro">
@@ -94,13 +95,14 @@
     </nav>
 
     @RenderBody()
-
-
-
     @RenderSection("scripts", required: false)
-    <script src="~/Content/bootstrap/js/jquery1_9.min.js"></script>
+    
     <script src="~/Content/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Content/bootstrap/js/responsive-tabs.js"></script>
+
+
+   
+  
 
 </body>
 </html>
