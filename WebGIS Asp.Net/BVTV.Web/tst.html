@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta NhomCayTrong="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>FeatureLayer using Weighted HeatmapRenderer</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/3.20/dijit/themes/claro/claro.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
+  <style>
+    html, body, #map {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .blurInfo {
+      position: absolute;
+      top: 10px;
+      right: 5px;
+      font-size: 1.25em;
+      font-family: monospace;
+      color: #4C4C4C;
+      width: 240px;
+      background-color: #FFFFFF;
+      padding: 10px;
+      border: 2px solid #57585A;
+      border-radius: 20px;
+    }
+
+    .blurInfo p span {
+      background-color: #FFFFFF;
+      padding: 0 5px;
+      border-radius: 5px;
+    }
+
+    .blurInfo input[type=range] {
+      width: 100%;
+      display: block;
+    }
+    </style>
+    <script src="https://js.arcgis.com/3.20/"></script>
+
+    <script>
+      var map;
+      require([
+        "dojo/number",
+        "esri/InfoTemplate",
+        "esri/layers/FeatureLayer",
+        "esri/map","esri/layers/ArcGISDynamicMapServiceLayer",
+        "esri/renderers/HeatmapRenderer",
+        "dojo/domReady!"
+      ], function (number, InfoTemplate, FeatureLayer, Map, HeatmapRenderer,ArcGISDynamicMapServiceLayer){
+
+
+   map = new Map("map", {
+          basemap: "gray",
+          zoom: 13,
+          center: [106.714976,10.936339 ]
+        });
+
+    var linkBaseMap = "http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer";
+    var geoMetryLink = "http://112.78.4.175:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer";
+
+    var BaoVeThucVat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0";
+    var DoanhNghiep_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1";
+    var PhanBon_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2";
+    var SauHai_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3";
+    var KiemDichThucVat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/4";
+    var TrongTrot_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/5";
+    var SuDungDatTrong_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/6";
+    var GiongCay_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/7";
+    var ThuaDat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/8";
+
+    //add boundaries and place names
+    var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer(linkBaseMap, {
+    });
+
+    var BaoVeThucVat = new FeatureLayer(BaoVeThucVat_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    var DoanhNghiep = new FeatureLayer(DoanhNghiep_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    var GiongCay = new FeatureLayer(GiongCay_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    var KiemDichThucVat = new FeatureLayer(KiemDichThucVat_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    var PhanBon = new FeatureLayer(PhanBon_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    var SauHai = new FeatureLayer(SauHai_link, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+    var heatmapRenderer = new HeatmapRenderer({
+        field: "PhamViAnhHuong"
+    });
+    SauHai.setRenderer(heatmapRenderer);
+    //var heatmapRenderer = new HeatmapRenderer({
+    //    field: "PhamViAnhHuong"
+    //});
+
+    //SauHai.setRenderer(heatmapRenderer);
+    var SuDungDatTrong = new FeatureLayer(SuDungDatTrong_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    var ThuaDat = new FeatureLayer(ThuaDat_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    var TrongTrot = new FeatureLayer(TrongTrot_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+
+    map.addLayer(dynamicMapServiceLayer);
+    map.addLayers([TrongTrot, SuDungDatTrong, SauHai, PhanBon, KiemDichThucVat, GiongCay, DoanhNghiep, BaoVeThucVat]);
+
+          
+        // --------------------------------------------------------------------
+        // Format the PhamViAnhHuong value in the pop up to show one decimal place.
+        // Uses the dojo/number module to perform formatting.
+        // --------------------------------------------------------------------
+        formatPhamViAnhHuong = function (value, key, data){
+          return number.format(value, {places: 1, locale: "en-us"});
+        };
+
+
+        var blurCtrl = document.getElementById("blurControl");
+        var maxCtrl = document.getElementById("maxControl");
+        var minCtrl = document.getElementById("minControl");
+        var valCtrl = document.getElementById("valueControl");
+
+
+        /** Add event handlers for interactivity **/
+
+        var sliders = document.querySelectorAll(".blurInfo p~input[type=range]");
+        var addLiveValue = function (ctrl){
+          var val = ctrl.previousElementSibling.querySelector("span");
+          ctrl.addEventListener("input", function (evt){
+            val.innerHTML = evt.target.value;
+          });
+        };
+        for (var i = 0; i < sliders.length; i++) {
+          addLiveValue(sliders.item(i));
+        }
+
+        blurCtrl.addEventListener("change", function (evt){
+          var r = +evt.target.value;
+          if (r !== heatmapRenderer.blurRadius) {
+            heatmapRenderer.blurRadius = r;
+            heatmapFeatureLayer.redraw();
+          }
+        });
+        maxCtrl.addEventListener("change", function (evt){
+          var r = +evt.target.value;
+          if (r !== heatmapRenderer.maxPixelIntensity) {
+            heatmapRenderer.maxPixelIntensity = r;
+            heatmapFeatureLayer.redraw();
+          }
+        });
+        minCtrl.addEventListener("change", function (evt){
+          var r = +evt.target.value;
+          if (r !== heatmapRenderer.minPixelIntensity) {
+            heatmapRenderer.minPixelIntensity = r;
+            heatmapFeatureLayer.redraw();
+          }
+        });
+        // --------------------------------------------------------------------
+        // When check / uncheck the control for the HeatmapRenderer field,
+        // we will leave the blurRadius and the minPixelIntensity values the
+        // same. However we will adjust the maxPixelIntensity value so it
+        // spreads the colors across the range of PhamViAnhHuong values. For your
+        // own dataset, you will need to experiment to find what looks good
+        // based upon the level of geography when you display the heatmap
+        // and the values in your dataset.
+        // --------------------------------------------------------------------
+        valCtrl.addEventListener("change", function (evt){
+          var chk = evt.target.checked;
+          if (!chk) {
+            document.getElementById("maxValue").innerHTML = 21;
+            maxCtrl.value = 21;
+            heatmapRenderer.maxPixelIntensity = 21;
+          }
+          else {
+            document.getElementById("maxValue").innerHTML = 250;
+            maxCtrl.value = 250;
+            heatmapRenderer.maxPixelIntensity = 250;
+
+          }
+          heatmapRenderer.field = (chk) ? "PhamViAnhHuong" : null;
+          heatmapFeatureLayer.redraw();
+        });
+      });
+    </script>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="blurInfo">
+    <p>
+      <label for="valueControl">Weight by PhamViAnhHuong</label>
+      <input id="valueControl" type="checkbox" checked>
+    </p>
+    <p>Blur Radius : <span id="blurValue">10</span></p>
+    <input id="blurControl" type="range" max=30 min=0 value=10 step=1/>
+
+    <p>Max Value : <span id="maxValue">100</span></p>
+    <input id="maxControl" type="range" max=500 min=0 value=100 step=1/>
+
+    <p>Min Value : <span id="minValue">0</span></p>
+    <input id="minControl" type="range" max=500 min=0 value=0 step=1/>
+  </div>
+</body>
+</html>

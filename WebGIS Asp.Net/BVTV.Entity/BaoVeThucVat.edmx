@@ -1,0 +1,1085 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BaoVeThucVatModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="a34">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="50" />
+          <Property Name="Thang" Type="smallint" />
+          <Property Name="Nam" Type="smallint" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="SDE_STATE_ID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a35">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaSauBenh" Type="nvarchar" MaxLength="50" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="SauBenhGayHai" Type="nvarchar" MaxLength="50" />
+          <Property Name="SDE_STATE_ID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a36">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="20" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="GiaiDoanSinhTruong" Type="nvarchar" MaxLength="50" />
+          <Property Name="DienTichTrong" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="TinhHinhUngDungCongNghe" Type="smallint" />
+          <Property Name="ToChucCaNhanQuanLy" Type="nvarchar" MaxLength="100" />
+          <Property Name="TinhTrangThuHoach" Type="nvarchar" MaxLength="100" />
+          <Property Name="GhiChu" Type="nvarchar" MaxLength="200" />
+          <Property Name="MaLoaiCayTrong" Type="nvarchar" MaxLength="10" />
+          <Property Name="PhuongThucTrong" Type="smallint" />
+          <Property Name="ThoiVuTrongTrot" Type="smallint" />
+          <Property Name="MatDoCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="TenGiongCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="SHAPE" Type="geometry" />
+          <Property Name="SDE_STATE_ID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a37">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="TenSauBenhGayHai" Type="nvarchar" MaxLength="50" />
+          <Property Name="MatDoSauBenhGayHai" Type="smallint" />
+          <Property Name="PhamViAnhHuong" Type="smallint" />
+          <Property Name="MucDoAnhHuong" Type="smallint" />
+          <Property Name="ThoiGianGayHai" Type="smallint" />
+          <Property Name="CapDoGayHai" Type="smallint" />
+          <Property Name="TinhHinhKiemSoatDichBenh" Type="smallint" />
+          <Property Name="MucDoKiemSoat" Type="smallint" />
+          <Property Name="BienPhapXuLy" Type="nvarchar" MaxLength="50" />
+          <Property Name="DienTich" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="SHAPE" Type="geometry" />
+          <Property Name="SDE_STATE_ID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a39">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="KyHieuLoaiDat" Type="nvarchar" MaxLength="20" />
+          <Property Name="DienTich" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="MucDichSuDungDat" Type="nvarchar" MaxLength="200" />
+          <Property Name="GhiChu" Type="nvarchar" MaxLength="250" />
+          <Property Name="GiaiDoanQuyHoach" Type="smallint" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="20" />
+          <Property Name="SHAPE" Type="geometry" />
+          <Property Name="SDE_STATE_ID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a41">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaGiongCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="GiongCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="SDE_STATE_ID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.CONGNGHECAO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CONGNGHECAO">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="HoVaTen" Type="nvarchar" MaxLength="100" />
+          <Property Name="CongNgheUngDung" Type="nvarchar" MaxLength="100" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="20" />
+          <Property Name="SoDienThoai" Type="nvarchar" MaxLength="11" />
+        </EntityType>
+        <EntityType Name="DOANHNGHIEP">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaDoanhNghiep" Type="nvarchar" MaxLength="20" />
+          <Property Name="NguoiDaiDienDoanhNghiep" Type="nvarchar" MaxLength="50" />
+          <Property Name="SoNha" Type="nvarchar" MaxLength="150" />
+          <Property Name="TenDuong" Type="nvarchar" MaxLength="50" />
+          <Property Name="PhuongXa" Type="nvarchar" MaxLength="50" />
+          <Property Name="QuanHuyen" Type="nvarchar" MaxLength="50" />
+          <Property Name="Website" Type="nvarchar" MaxLength="50" />
+          <Property Name="DiaChiKho" Type="nvarchar" MaxLength="200" />
+          <Property Name="TenCBPhuTrach" Type="nvarchar" MaxLength="50" />
+          <Property Name="DienThoai" Type="smallint" />
+          <Property Name="Fax" Type="smallint" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="LoaiDonViSXKD" Type="smallint" />
+          <Property Name="DanhMucSanPham" Type="smallint" />
+          <Property Name="GiayPhepSXKD" Type="varbinary(max)" />
+          <Property Name="SanLuongTrongNam" Type="smallint" />
+          <Property Name="GiayCNDuDieuKienSXKD" Type="varbinary(max)" />
+          <Property Name="DanhGiaXepLoai" Type="smallint" />
+          <Property Name="ThoiGianThanhTra" Type="datetime2" Precision="7" />
+          <Property Name="NguyenNhanThanhTra" Type="smallint" />
+          <Property Name="HinhThucPhat" Type="smallint" />
+          <Property Name="MucPhat" Type="smallint" />
+          <Property Name="MaHoSoLuuTru" Type="nvarchar" MaxLength="50" />
+          <Property Name="SoLanViPham" Type="smallint" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_ITEMRELATIONSHIPTYPES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_ITEMTYPES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_REPLICALOG' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_TABLES_LAST_MODIFIED' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.GIONGCAYTRONG' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="GIONGCAYTRONG">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaGiongCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="GiongCayTrong" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="HANHCHINHHUYEN">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="TenHuyen" Type="nvarchar" MaxLength="100" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <EntityType Name="MATDUONGBO">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="maNhanDang" Type="nvarchar" MaxLength="255" />
+          <Property Name="ngayThuNhan" Type="datetime2" Precision="7" />
+          <Property Name="ngayCapNhat" Type="datetime2" Precision="7" />
+          <Property Name="maDoiTuong" Type="nvarchar" MaxLength="4" />
+          <Property Name="doiTuong" Type="int" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <EntityType Name="PHUBEMAT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="maNhanDang" Type="nvarchar" MaxLength="255" />
+          <Property Name="ngayThuNhan" Type="datetime2" Precision="7" />
+          <Property Name="ngayCapNhat" Type="datetime2" Precision="7" />
+          <Property Name="maDoiTuong" Type="nvarchar" MaxLength="255" />
+          <Property Name="ten" Type="nvarchar" MaxLength="255" />
+          <Property Name="loaiPhuBeMat" Type="int" />
+          <Property Name="doiTuong" Type="smallint" />
+          <Property Name="ghichu" Type="nvarchar" MaxLength="50" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <EntityType Name="QUYHOACHSUDUNGDAT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="KyHieuLoaiDat" Type="nvarchar" MaxLength="20" />
+          <Property Name="DienTich" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="MucDichSuDungDat" Type="nvarchar" MaxLength="200" />
+          <Property Name="GhiChu" Type="nvarchar" MaxLength="250" />
+          <Property Name="GiaiDoanQuyHoach" Type="smallint" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="20" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <EntityType Name="RANHGIOIHANHCHINH">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaNhanDang" Type="nvarchar" MaxLength="255" />
+          <Property Name="Shape_Leng" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="MaPhuongXa" Type="nvarchar" MaxLength="10" />
+          <Property Name="MaQuanHuyen" Type="nvarchar" MaxLength="10" />
+          <Property Name="GhiChu" Type="nvarchar" MaxLength="255" />
+          <Property Name="DonViQuanLy" Type="smallint" />
+          <Property Name="DonViCapNhat" Type="smallint" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="50" />
+          <Property Name="MaDonViHanhChinh" Type="nvarchar" MaxLength="255" />
+          <Property Name="DanhTuChung" Type="nvarchar" MaxLength="50" />
+          <Property Name="DiaDanh" Type="nvarchar" MaxLength="50" />
+          <Property Name="DoiTuong" Type="nvarchar" MaxLength="50" />
+          <Property Name="NgayThuNhan" Type="datetime2" Precision="7" />
+          <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
+          <Property Name="DienTich" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="TenXa" Type="nvarchar" MaxLength="100" />
+          <Property Name="TenHuyen" Type="nvarchar" MaxLength="100" />
+          <Property Name="CheckTool" Type="nvarchar" MaxLength="50" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <EntityType Name="SAUBENH">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="TenSauBenhGayHai" Type="nvarchar" MaxLength="50" />
+          <Property Name="MatDoSauBenhGayHai" Type="smallint" />
+          <Property Name="PhamViAnhHuong" Type="smallint" />
+          <Property Name="MucDoAnhHuong" Type="smallint" />
+          <Property Name="ThoiGianGayHai" Type="smallint" />
+          <Property Name="CapDoGayHai" Type="smallint" />
+          <Property Name="TinhHinhKiemSoatDichBenh" Type="smallint" />
+          <Property Name="MucDoKiemSoat" Type="smallint" />
+          <Property Name="BienPhapXuLy" Type="nvarchar" MaxLength="50" />
+          <Property Name="DienTich" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.SAUBENHGAYHAI' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="SAUBENHGAYHAI">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaSauBenh" Type="nvarchar" MaxLength="50" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="SauBenhGayHai" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="SONGHO">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="maNhanDang" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="ngayThuNhan" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="ngayCapNhat" Type="datetime2" Precision="7" />
+          <Property Name="maDoiTuong" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="loaiTrangThaiNuocMat" Type="smallint" Nullable="false" />
+          <Property Name="danhTuChung" Type="nvarchar" MaxLength="150" />
+          <Property Name="diaDanh" Type="nvarchar" MaxLength="150" />
+          <Property Name="Shape" Type="geometry" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BaoVeThucVat.dbo.THOIGIANSANXUATTRONGTROT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="THOIGIANSANXUATTRONGTROT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="50" />
+          <Property Name="Thang" Type="smallint" />
+          <Property Name="Nam" Type="smallint" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TIMDUONG">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="maNhanDang" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="ngayThuNhan" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="ngayCapNhat" Type="datetime2" Precision="7" />
+          <Property Name="maDoiTuong" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="loaiDuongBo" Type="smallint" Nullable="false" />
+          <Property Name="loaiChatLieuTraiMat" Type="smallint" Nullable="false" />
+          <Property Name="loaiHienTrangSuDung" Type="smallint" Nullable="false" />
+          <Property Name="loaiKetCau" Type="smallint" Nullable="false" />
+          <Property Name="doRong" Type="numeric" Precision="38" Scale="8" Nullable="false" />
+          <Property Name="ten" Type="nvarchar" MaxLength="150" />
+          <Property Name="tenTuyen1" Type="nvarchar" MaxLength="150" />
+          <Property Name="tenTuyen2" Type="nvarchar" MaxLength="150" />
+          <Property Name="tenTuyen3" Type="nvarchar" MaxLength="150" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <EntityType Name="TRONGTROT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="int" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="nvarchar" MaxLength="20" />
+          <Property Name="NhomCayTrong" Type="smallint" />
+          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="GiaiDoanSinhTruong" Type="nvarchar" MaxLength="50" />
+          <Property Name="DienTichTrong" Type="numeric" Precision="38" Scale="8" />
+          <Property Name="TinhHinhUngDungCongNghe" Type="smallint" />
+          <Property Name="ToChucCaNhanQuanLy" Type="nvarchar" MaxLength="100" />
+          <Property Name="TinhTrangThuHoach" Type="nvarchar" MaxLength="100" />
+          <Property Name="GhiChu" Type="nvarchar" MaxLength="200" />
+          <Property Name="MaLoaiCayTrong" Type="nvarchar" MaxLength="10" />
+          <Property Name="PhuongThucTrong" Type="smallint" />
+          <Property Name="ThoiVuTrongTrot" Type="smallint" />
+          <Property Name="MatDoCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="TenGiongCayTrong" Type="nvarchar" MaxLength="50" />
+          <Property Name="SHAPE" Type="geometry" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'colregistry_fk' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="colregistry_fk" />-->
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="sdelayer_stats_fk1" />-->
+        <EntityContainer Name="BaoVeThucVatModelStoreContainer">
+          <EntitySet Name="a34" EntityType="Self.a34" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="a35" EntityType="Self.a35" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="a36" EntityType="Self.a36" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="a37" EntityType="Self.a37" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="a39" EntityType="Self.a39" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="a41" EntityType="Self.a41" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DOANHNGHIEP" EntityType="Self.DOANHNGHIEP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HANHCHINHHUYEN" EntityType="Self.HANHCHINHHUYEN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MATDUONGBO" EntityType="Self.MATDUONGBO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PHUBEMAT" EntityType="Self.PHUBEMAT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QUYHOACHSUDUNGDAT" EntityType="Self.QUYHOACHSUDUNGDAT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RANHGIOIHANHCHINH" EntityType="Self.RANHGIOIHANHCHINH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SAUBENH" EntityType="Self.SAUBENH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SONGHO" EntityType="Self.SONGHO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TIMDUONG" EntityType="Self.TIMDUONG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TRONGTROT" EntityType="Self.TRONGTROT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CONGNGHECAO" EntityType="Self.CONGNGHECAO" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CONGNGHECAO].[OBJECTID] AS [OBJECTID], 
+    [CONGNGHECAO].[HoVaTen] AS [HoVaTen], 
+    [CONGNGHECAO].[CongNgheUngDung] AS [CongNgheUngDung], 
+    [CONGNGHECAO].[MaDoiTuong] AS [MaDoiTuong], 
+    [CONGNGHECAO].[SoDienThoai] AS [SoDienThoai]
+    FROM [dbo].[CONGNGHECAO] AS [CONGNGHECAO]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="GIONGCAYTRONG" EntityType="Self.GIONGCAYTRONG" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GIONGCAYTRONG].[OBJECTID] AS [OBJECTID], 
+    [GIONGCAYTRONG].[MaGiongCayTrong] AS [MaGiongCayTrong], 
+    [GIONGCAYTRONG].[LoaiCayTrong] AS [LoaiCayTrong], 
+    [GIONGCAYTRONG].[GiongCayTrong] AS [GiongCayTrong]
+    FROM [dbo].[GIONGCAYTRONG] AS [GIONGCAYTRONG]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="SAUBENHGAYHAI" EntityType="Self.SAUBENHGAYHAI" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [SAUBENHGAYHAI].[OBJECTID] AS [OBJECTID], 
+    [SAUBENHGAYHAI].[MaSauBenh] AS [MaSauBenh], 
+    [SAUBENHGAYHAI].[NhomCayTrong] AS [NhomCayTrong], 
+    [SAUBENHGAYHAI].[SauBenhGayHai] AS [SauBenhGayHai]
+    FROM [dbo].[SAUBENHGAYHAI] AS [SAUBENHGAYHAI]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="THOIGIANSANXUATTRONGTROT" EntityType="Self.THOIGIANSANXUATTRONGTROT" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [THOIGIANSANXUATTRONGTROT].[OBJECTID] AS [OBJECTID], 
+    [THOIGIANSANXUATTRONGTROT].[MaDoiTuong] AS [MaDoiTuong], 
+    [THOIGIANSANXUATTRONGTROT].[Thang] AS [Thang], 
+    [THOIGIANSANXUATTRONGTROT].[Nam] AS [Nam], 
+    [THOIGIANSANXUATTRONGTROT].[NhomCayTrong] AS [NhomCayTrong], 
+    [THOIGIANSANXUATTRONGTROT].[LoaiCayTrong] AS [LoaiCayTrong]
+    FROM [dbo].[THOIGIANSANXUATTRONGTROT] AS [THOIGIANSANXUATTRONGTROT]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BaoVeThucVatModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DOANHNGHIEP">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaDoanhNghiep" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="NguoiDaiDienDoanhNghiep" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SoNha" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="TenDuong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PhuongXa" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="QuanHuyen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Website" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DiaChiKho" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="TenCBPhuTrach" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DienThoai" Type="Int16" />
+          <Property Name="Fax" Type="Int16" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LoaiDonViSXKD" Type="Int16" />
+          <Property Name="DanhMucSanPham" Type="Int16" />
+          <Property Name="GiayPhepSXKD" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="SanLuongTrongNam" Type="Int16" />
+          <Property Name="GiayCNDuDieuKienSXKD" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="DanhGiaXepLoai" Type="Int16" />
+          <Property Name="ThoiGianThanhTra" Type="DateTime" Precision="7" />
+          <Property Name="NguyenNhanThanhTra" Type="Int16" />
+          <Property Name="HinhThucPhat" Type="Int16" />
+          <Property Name="MucPhat" Type="Int16" />
+          <Property Name="MaHoSoLuuTru" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SoLanViPham" Type="Int16" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="HANHCHINHHUYEN">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="TenHuyen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="MATDUONGBO">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="maNhanDang" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ngayThuNhan" Type="DateTime" Precision="7" />
+          <Property Name="ngayCapNhat" Type="DateTime" Precision="7" />
+          <Property Name="maDoiTuong" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="doiTuong" Type="Int32" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="PHUBEMAT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="maNhanDang" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ngayThuNhan" Type="DateTime" Precision="7" />
+          <Property Name="ngayCapNhat" Type="DateTime" Precision="7" />
+          <Property Name="maDoiTuong" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ten" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="loaiPhuBeMat" Type="Int32" />
+          <Property Name="doiTuong" Type="Int16" />
+          <Property Name="ghichu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="QUYHOACHSUDUNGDAT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="KyHieuLoaiDat" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DienTich" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="MucDichSuDungDat" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="GiaiDoanQuyHoach" Type="Int16" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="SAUBENH">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TenSauBenhGayHai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MatDoSauBenhGayHai" Type="Int16" />
+          <Property Name="PhamViAnhHuong" Type="Int16" />
+          <Property Name="MucDoAnhHuong" Type="Int16" />
+          <Property Name="ThoiGianGayHai" Type="Int16" />
+          <Property Name="CapDoGayHai" Type="Int16" />
+          <Property Name="TinhHinhKiemSoatDichBenh" Type="Int16" />
+          <Property Name="MucDoKiemSoat" Type="Int16" />
+          <Property Name="BienPhapXuLy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DienTich" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="SONGHO">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="maNhanDang" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ngayThuNhan" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="ngayCapNhat" Type="DateTime" Precision="7" />
+          <Property Name="maDoiTuong" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="loaiTrangThaiNuocMat" Type="Int16" Nullable="false" />
+          <Property Name="danhTuChung" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="diaDanh" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Shape" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="TIMDUONG">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="maNhanDang" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ngayThuNhan" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="ngayCapNhat" Type="DateTime" Precision="7" />
+          <Property Name="maDoiTuong" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="loaiDuongBo" Type="Int16" Nullable="false" />
+          <Property Name="loaiChatLieuTraiMat" Type="Int16" Nullable="false" />
+          <Property Name="loaiHienTrangSuDung" Type="Int16" Nullable="false" />
+          <Property Name="loaiKetCau" Type="Int16" Nullable="false" />
+          <Property Name="doRong" Type="Decimal" Precision="38" Scale="8" Nullable="false" />
+          <Property Name="ten" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="tenTuyen1" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="tenTuyen2" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="tenTuyen3" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="TRONGTROT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GiaiDoanSinhTruong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DienTichTrong" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="TinhHinhUngDungCongNghe" Type="Int16" />
+          <Property Name="ToChucCaNhanQuanLy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TinhTrangThuHoach" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MaLoaiCayTrong" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PhuongThucTrong" Type="Int16" />
+          <Property Name="ThoiVuTrongTrot" Type="Int16" />
+          <Property Name="MatDoCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TenGiongCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="CONGNGHECAO">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="HoVaTen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CongNgheUngDung" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SoDienThoai" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="GIONGCAYTRONG">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaGiongCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GiongCayTrong1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SAUBENHGAYHAI">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaSauBenh" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="SauBenhGayHai1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="THOIGIANSANXUATTRONGTROT">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Thang" Type="Int16" />
+          <Property Name="Nam" Type="Int16" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="BaoVeThucVatEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DOANHNGHIEPs" EntityType="Self.DOANHNGHIEP" />
+          <EntitySet Name="HANHCHINHHUYENs" EntityType="Self.HANHCHINHHUYEN" />
+          <EntitySet Name="MATDUONGBOes" EntityType="Self.MATDUONGBO" />
+          <EntitySet Name="PHUBEMATs" EntityType="Self.PHUBEMAT" />
+          <EntitySet Name="QUYHOACHSUDUNGDATs" EntityType="Self.QUYHOACHSUDUNGDAT" />
+          <EntitySet Name="SAUBENHs" EntityType="Self.SAUBENH" />
+          <EntitySet Name="SONGHOes" EntityType="Self.SONGHO" />
+          <EntitySet Name="TIMDUONGs" EntityType="Self.TIMDUONG" />
+          <EntitySet Name="TRONGTROTs" EntityType="Self.TRONGTROT" />
+          <EntitySet Name="CONGNGHECAOs" EntityType="Self.CONGNGHECAO" />
+          <EntitySet Name="GIONGCAYTRONGs" EntityType="Self.GIONGCAYTRONG" />
+          <EntitySet Name="SAUBENHGAYHAIs" EntityType="Self.SAUBENHGAYHAI" />
+          <EntitySet Name="THOIGIANSANXUATTRONGTROTs" EntityType="Self.THOIGIANSANXUATTRONGTROT" />
+          <EntitySet Name="a34" EntityType="BaoVeThucVatModel.a34" />
+          <EntitySet Name="a35" EntityType="BaoVeThucVatModel.a35" />
+          <EntitySet Name="a36" EntityType="BaoVeThucVatModel.a36" />
+          <EntitySet Name="a37" EntityType="BaoVeThucVatModel.a37" />
+          <EntitySet Name="a39" EntityType="BaoVeThucVatModel.a39" />
+          <EntitySet Name="a41" EntityType="BaoVeThucVatModel.a41" />
+          <EntitySet Name="RANHGIOIHANHCHINHs" EntityType="BaoVeThucVatModel.RANHGIOIHANHCHINH" />
+        </EntityContainer>
+        <EntityType Name="a34">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Thang" Type="Int16" />
+          <Property Name="Nam" Type="Int16" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SDE_STATE_ID" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a35">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaSauBenh" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="SauBenhGayHai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SDE_STATE_ID" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a36">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GiaiDoanSinhTruong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DienTichTrong" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="TinhHinhUngDungCongNghe" Type="Int16" />
+          <Property Name="ToChucCaNhanQuanLy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TinhTrangThuHoach" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MaLoaiCayTrong" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PhuongThucTrong" Type="Int16" />
+          <Property Name="ThoiVuTrongTrot" Type="Int16" />
+          <Property Name="MatDoCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TenGiongCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+          <Property Name="SDE_STATE_ID" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a37">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="NhomCayTrong" Type="Int16" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TenSauBenhGayHai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MatDoSauBenhGayHai" Type="Int16" />
+          <Property Name="PhamViAnhHuong" Type="Int16" />
+          <Property Name="MucDoAnhHuong" Type="Int16" />
+          <Property Name="ThoiGianGayHai" Type="Int16" />
+          <Property Name="CapDoGayHai" Type="Int16" />
+          <Property Name="TinhHinhKiemSoatDichBenh" Type="Int16" />
+          <Property Name="MucDoKiemSoat" Type="Int16" />
+          <Property Name="BienPhapXuLy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DienTich" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="SHAPE" Type="Geometry" />
+          <Property Name="SDE_STATE_ID" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a39">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="KyHieuLoaiDat" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DienTich" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="MucDichSuDungDat" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="GiaiDoanQuyHoach" Type="Int16" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+          <Property Name="SDE_STATE_ID" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="a41">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+            <PropertyRef Name="SDE_STATE_ID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaGiongCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GiongCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SDE_STATE_ID" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RANHGIOIHANHCHINH">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
+          <Property Name="MaNhanDang" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Shape_Leng" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="MaPhuongXa" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MaQuanHuyen" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DonViQuanLy" Type="Int16" />
+          <Property Name="DonViCapNhat" Type="Int16" />
+          <Property Name="MaDoiTuong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MaDonViHanhChinh" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DanhTuChung" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DiaDanh" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DoiTuong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NgayThuNhan" Type="DateTime" Precision="7" />
+          <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
+          <Property Name="DienTich" Type="Decimal" Precision="38" Scale="8" />
+          <Property Name="TenXa" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TenHuyen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CheckTool" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BaoVeThucVatModelStoreContainer" CdmEntityContainer="BaoVeThucVatEntities">
+          <EntitySetMapping Name="DOANHNGHIEPs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.DOANHNGHIEP">
+              <MappingFragment StoreEntitySet="DOANHNGHIEP">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="MaDoanhNghiep" ColumnName="MaDoanhNghiep" />
+                <ScalarProperty Name="NguoiDaiDienDoanhNghiep" ColumnName="NguoiDaiDienDoanhNghiep" />
+                <ScalarProperty Name="SoNha" ColumnName="SoNha" />
+                <ScalarProperty Name="TenDuong" ColumnName="TenDuong" />
+                <ScalarProperty Name="PhuongXa" ColumnName="PhuongXa" />
+                <ScalarProperty Name="QuanHuyen" ColumnName="QuanHuyen" />
+                <ScalarProperty Name="Website" ColumnName="Website" />
+                <ScalarProperty Name="DiaChiKho" ColumnName="DiaChiKho" />
+                <ScalarProperty Name="TenCBPhuTrach" ColumnName="TenCBPhuTrach" />
+                <ScalarProperty Name="DienThoai" ColumnName="DienThoai" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LoaiDonViSXKD" ColumnName="LoaiDonViSXKD" />
+                <ScalarProperty Name="DanhMucSanPham" ColumnName="DanhMucSanPham" />
+                <ScalarProperty Name="GiayPhepSXKD" ColumnName="GiayPhepSXKD" />
+                <ScalarProperty Name="SanLuongTrongNam" ColumnName="SanLuongTrongNam" />
+                <ScalarProperty Name="GiayCNDuDieuKienSXKD" ColumnName="GiayCNDuDieuKienSXKD" />
+                <ScalarProperty Name="DanhGiaXepLoai" ColumnName="DanhGiaXepLoai" />
+                <ScalarProperty Name="ThoiGianThanhTra" ColumnName="ThoiGianThanhTra" />
+                <ScalarProperty Name="NguyenNhanThanhTra" ColumnName="NguyenNhanThanhTra" />
+                <ScalarProperty Name="HinhThucPhat" ColumnName="HinhThucPhat" />
+                <ScalarProperty Name="MucPhat" ColumnName="MucPhat" />
+                <ScalarProperty Name="MaHoSoLuuTru" ColumnName="MaHoSoLuuTru" />
+                <ScalarProperty Name="SoLanViPham" ColumnName="SoLanViPham" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HANHCHINHHUYENs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.HANHCHINHHUYEN">
+              <MappingFragment StoreEntitySet="HANHCHINHHUYEN">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="TenHuyen" ColumnName="TenHuyen" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MATDUONGBOes">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.MATDUONGBO">
+              <MappingFragment StoreEntitySet="MATDUONGBO">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="maNhanDang" ColumnName="maNhanDang" />
+                <ScalarProperty Name="ngayThuNhan" ColumnName="ngayThuNhan" />
+                <ScalarProperty Name="ngayCapNhat" ColumnName="ngayCapNhat" />
+                <ScalarProperty Name="maDoiTuong" ColumnName="maDoiTuong" />
+                <ScalarProperty Name="doiTuong" ColumnName="doiTuong" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PHUBEMATs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.PHUBEMAT">
+              <MappingFragment StoreEntitySet="PHUBEMAT">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="maNhanDang" ColumnName="maNhanDang" />
+                <ScalarProperty Name="ngayThuNhan" ColumnName="ngayThuNhan" />
+                <ScalarProperty Name="ngayCapNhat" ColumnName="ngayCapNhat" />
+                <ScalarProperty Name="maDoiTuong" ColumnName="maDoiTuong" />
+                <ScalarProperty Name="ten" ColumnName="ten" />
+                <ScalarProperty Name="loaiPhuBeMat" ColumnName="loaiPhuBeMat" />
+                <ScalarProperty Name="doiTuong" ColumnName="doiTuong" />
+                <ScalarProperty Name="ghichu" ColumnName="ghichu" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QUYHOACHSUDUNGDATs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.QUYHOACHSUDUNGDAT">
+              <MappingFragment StoreEntitySet="QUYHOACHSUDUNGDAT">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="KyHieuLoaiDat" ColumnName="KyHieuLoaiDat" />
+                <ScalarProperty Name="DienTich" ColumnName="DienTich" />
+                <ScalarProperty Name="MucDichSuDungDat" ColumnName="MucDichSuDungDat" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="GiaiDoanQuyHoach" ColumnName="GiaiDoanQuyHoach" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SAUBENHs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.SAUBENH">
+              <MappingFragment StoreEntitySet="SAUBENH">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+                <ScalarProperty Name="TenSauBenhGayHai" ColumnName="TenSauBenhGayHai" />
+                <ScalarProperty Name="MatDoSauBenhGayHai" ColumnName="MatDoSauBenhGayHai" />
+                <ScalarProperty Name="PhamViAnhHuong" ColumnName="PhamViAnhHuong" />
+                <ScalarProperty Name="MucDoAnhHuong" ColumnName="MucDoAnhHuong" />
+                <ScalarProperty Name="ThoiGianGayHai" ColumnName="ThoiGianGayHai" />
+                <ScalarProperty Name="CapDoGayHai" ColumnName="CapDoGayHai" />
+                <ScalarProperty Name="TinhHinhKiemSoatDichBenh" ColumnName="TinhHinhKiemSoatDichBenh" />
+                <ScalarProperty Name="MucDoKiemSoat" ColumnName="MucDoKiemSoat" />
+                <ScalarProperty Name="BienPhapXuLy" ColumnName="BienPhapXuLy" />
+                <ScalarProperty Name="DienTich" ColumnName="DienTich" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SONGHOes">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.SONGHO">
+              <MappingFragment StoreEntitySet="SONGHO">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="maNhanDang" ColumnName="maNhanDang" />
+                <ScalarProperty Name="ngayThuNhan" ColumnName="ngayThuNhan" />
+                <ScalarProperty Name="ngayCapNhat" ColumnName="ngayCapNhat" />
+                <ScalarProperty Name="maDoiTuong" ColumnName="maDoiTuong" />
+                <ScalarProperty Name="loaiTrangThaiNuocMat" ColumnName="loaiTrangThaiNuocMat" />
+                <ScalarProperty Name="danhTuChung" ColumnName="danhTuChung" />
+                <ScalarProperty Name="diaDanh" ColumnName="diaDanh" />
+                <ScalarProperty Name="Shape" ColumnName="Shape" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TIMDUONGs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.TIMDUONG">
+              <MappingFragment StoreEntitySet="TIMDUONG">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="maNhanDang" ColumnName="maNhanDang" />
+                <ScalarProperty Name="ngayThuNhan" ColumnName="ngayThuNhan" />
+                <ScalarProperty Name="ngayCapNhat" ColumnName="ngayCapNhat" />
+                <ScalarProperty Name="maDoiTuong" ColumnName="maDoiTuong" />
+                <ScalarProperty Name="loaiDuongBo" ColumnName="loaiDuongBo" />
+                <ScalarProperty Name="loaiChatLieuTraiMat" ColumnName="loaiChatLieuTraiMat" />
+                <ScalarProperty Name="loaiHienTrangSuDung" ColumnName="loaiHienTrangSuDung" />
+                <ScalarProperty Name="loaiKetCau" ColumnName="loaiKetCau" />
+                <ScalarProperty Name="doRong" ColumnName="doRong" />
+                <ScalarProperty Name="ten" ColumnName="ten" />
+                <ScalarProperty Name="tenTuyen1" ColumnName="tenTuyen1" />
+                <ScalarProperty Name="tenTuyen2" ColumnName="tenTuyen2" />
+                <ScalarProperty Name="tenTuyen3" ColumnName="tenTuyen3" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TRONGTROTs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.TRONGTROT">
+              <MappingFragment StoreEntitySet="TRONGTROT">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+                <ScalarProperty Name="GiaiDoanSinhTruong" ColumnName="GiaiDoanSinhTruong" />
+                <ScalarProperty Name="DienTichTrong" ColumnName="DienTichTrong" />
+                <ScalarProperty Name="TinhHinhUngDungCongNghe" ColumnName="TinhHinhUngDungCongNghe" />
+                <ScalarProperty Name="ToChucCaNhanQuanLy" ColumnName="ToChucCaNhanQuanLy" />
+                <ScalarProperty Name="TinhTrangThuHoach" ColumnName="TinhTrangThuHoach" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="MaLoaiCayTrong" ColumnName="MaLoaiCayTrong" />
+                <ScalarProperty Name="PhuongThucTrong" ColumnName="PhuongThucTrong" />
+                <ScalarProperty Name="ThoiVuTrongTrot" ColumnName="ThoiVuTrongTrot" />
+                <ScalarProperty Name="MatDoCayTrong" ColumnName="MatDoCayTrong" />
+                <ScalarProperty Name="TenGiongCayTrong" ColumnName="TenGiongCayTrong" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CONGNGHECAOs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.CONGNGHECAO">
+              <MappingFragment StoreEntitySet="CONGNGHECAO">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="HoVaTen" ColumnName="HoVaTen" />
+                <ScalarProperty Name="CongNgheUngDung" ColumnName="CongNgheUngDung" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="SoDienThoai" ColumnName="SoDienThoai" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GIONGCAYTRONGs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.GIONGCAYTRONG">
+              <MappingFragment StoreEntitySet="GIONGCAYTRONG">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="MaGiongCayTrong" ColumnName="MaGiongCayTrong" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+                <ScalarProperty Name="GiongCayTrong1" ColumnName="GiongCayTrong" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SAUBENHGAYHAIs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.SAUBENHGAYHAI">
+              <MappingFragment StoreEntitySet="SAUBENHGAYHAI">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="MaSauBenh" ColumnName="MaSauBenh" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="SauBenhGayHai1" ColumnName="SauBenhGayHai" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="THOIGIANSANXUATTRONGTROTs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.THOIGIANSANXUATTRONGTROT">
+              <MappingFragment StoreEntitySet="THOIGIANSANXUATTRONGTROT">
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="Thang" ColumnName="Thang" />
+                <ScalarProperty Name="Nam" ColumnName="Nam" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="a34">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.a34">
+              <MappingFragment StoreEntitySet="a34">
+                <ScalarProperty Name="SDE_STATE_ID" ColumnName="SDE_STATE_ID" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="Nam" ColumnName="Nam" />
+                <ScalarProperty Name="Thang" ColumnName="Thang" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="a35">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.a35">
+              <MappingFragment StoreEntitySet="a35">
+                <ScalarProperty Name="SDE_STATE_ID" ColumnName="SDE_STATE_ID" />
+                <ScalarProperty Name="SauBenhGayHai" ColumnName="SauBenhGayHai" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="MaSauBenh" ColumnName="MaSauBenh" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="a36">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.a36">
+              <MappingFragment StoreEntitySet="a36">
+                <ScalarProperty Name="SDE_STATE_ID" ColumnName="SDE_STATE_ID" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+                <ScalarProperty Name="TenGiongCayTrong" ColumnName="TenGiongCayTrong" />
+                <ScalarProperty Name="MatDoCayTrong" ColumnName="MatDoCayTrong" />
+                <ScalarProperty Name="ThoiVuTrongTrot" ColumnName="ThoiVuTrongTrot" />
+                <ScalarProperty Name="PhuongThucTrong" ColumnName="PhuongThucTrong" />
+                <ScalarProperty Name="MaLoaiCayTrong" ColumnName="MaLoaiCayTrong" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="TinhTrangThuHoach" ColumnName="TinhTrangThuHoach" />
+                <ScalarProperty Name="ToChucCaNhanQuanLy" ColumnName="ToChucCaNhanQuanLy" />
+                <ScalarProperty Name="TinhHinhUngDungCongNghe" ColumnName="TinhHinhUngDungCongNghe" />
+                <ScalarProperty Name="DienTichTrong" ColumnName="DienTichTrong" />
+                <ScalarProperty Name="GiaiDoanSinhTruong" ColumnName="GiaiDoanSinhTruong" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="a37">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.a37">
+              <MappingFragment StoreEntitySet="a37">
+                <ScalarProperty Name="SDE_STATE_ID" ColumnName="SDE_STATE_ID" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+                <ScalarProperty Name="DienTich" ColumnName="DienTich" />
+                <ScalarProperty Name="BienPhapXuLy" ColumnName="BienPhapXuLy" />
+                <ScalarProperty Name="MucDoKiemSoat" ColumnName="MucDoKiemSoat" />
+                <ScalarProperty Name="TinhHinhKiemSoatDichBenh" ColumnName="TinhHinhKiemSoatDichBenh" />
+                <ScalarProperty Name="CapDoGayHai" ColumnName="CapDoGayHai" />
+                <ScalarProperty Name="ThoiGianGayHai" ColumnName="ThoiGianGayHai" />
+                <ScalarProperty Name="MucDoAnhHuong" ColumnName="MucDoAnhHuong" />
+                <ScalarProperty Name="PhamViAnhHuong" ColumnName="PhamViAnhHuong" />
+                <ScalarProperty Name="MatDoSauBenhGayHai" ColumnName="MatDoSauBenhGayHai" />
+                <ScalarProperty Name="TenSauBenhGayHai" ColumnName="TenSauBenhGayHai" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="a39">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.a39">
+              <MappingFragment StoreEntitySet="a39">
+                <ScalarProperty Name="SDE_STATE_ID" ColumnName="SDE_STATE_ID" />
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="GiaiDoanQuyHoach" ColumnName="GiaiDoanQuyHoach" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="MucDichSuDungDat" ColumnName="MucDichSuDungDat" />
+                <ScalarProperty Name="DienTich" ColumnName="DienTich" />
+                <ScalarProperty Name="KyHieuLoaiDat" ColumnName="KyHieuLoaiDat" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="a41">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.a41">
+              <MappingFragment StoreEntitySet="a41">
+                <ScalarProperty Name="SDE_STATE_ID" ColumnName="SDE_STATE_ID" />
+                <ScalarProperty Name="GiongCayTrong" ColumnName="GiongCayTrong" />
+                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
+                <ScalarProperty Name="MaGiongCayTrong" ColumnName="MaGiongCayTrong" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RANHGIOIHANHCHINHs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.RANHGIOIHANHCHINH">
+              <MappingFragment StoreEntitySet="RANHGIOIHANHCHINH">
+                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
+                <ScalarProperty Name="CheckTool" ColumnName="CheckTool" />
+                <ScalarProperty Name="TenHuyen" ColumnName="TenHuyen" />
+                <ScalarProperty Name="TenXa" ColumnName="TenXa" />
+                <ScalarProperty Name="DienTich" ColumnName="DienTich" />
+                <ScalarProperty Name="NgayCapNhat" ColumnName="NgayCapNhat" />
+                <ScalarProperty Name="NgayThuNhan" ColumnName="NgayThuNhan" />
+                <ScalarProperty Name="DoiTuong" ColumnName="DoiTuong" />
+                <ScalarProperty Name="DiaDanh" ColumnName="DiaDanh" />
+                <ScalarProperty Name="DanhTuChung" ColumnName="DanhTuChung" />
+                <ScalarProperty Name="MaDonViHanhChinh" ColumnName="MaDonViHanhChinh" />
+                <ScalarProperty Name="MaDoiTuong" ColumnName="MaDoiTuong" />
+                <ScalarProperty Name="DonViCapNhat" ColumnName="DonViCapNhat" />
+                <ScalarProperty Name="DonViQuanLy" ColumnName="DonViQuanLy" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="MaQuanHuyen" ColumnName="MaQuanHuyen" />
+                <ScalarProperty Name="MaPhuongXa" ColumnName="MaPhuongXa" />
+                <ScalarProperty Name="Shape_Leng" ColumnName="Shape_Leng" />
+                <ScalarProperty Name="MaNhanDang" ColumnName="MaNhanDang" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

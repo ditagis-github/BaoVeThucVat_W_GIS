@@ -46,7 +46,7 @@ require([
   arrayUtils, parser, keys
   , HomeButton, Scalebar, Point, ProjectParameters, Graphic, SpatialReference, Extent
   , Query, dojoQuery
-  ,Navigation, registry, on
+  , Navigation, registry, on
 
 ) {
     parser.parse();
@@ -68,7 +68,7 @@ require([
 
     map = new Map("map", {
         zoom: 14,
-        logo:false
+        logo: false
     });
 
     map.on("layers-add-result", initEditor);
@@ -80,12 +80,12 @@ require([
     var geoMetryLink = "http://112.78.4.175:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer";
 
     var BaoVeThucVat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0";
-    var DoanhNghiep_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1";
+    var DoanhNghiep_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0";
     var PhanBon_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2";
-    var SauHai_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3";
+    var SauHai_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1";
     var KiemDichThucVat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/4";
-    var TrongTrot_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/5";
-    var SuDungDatTrong_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/6";
+    var TrongTrot_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2";
+    var SuDungDatTrong_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3";
     var GiongCay_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/7";
     var ThuaDat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/8";
 
@@ -132,7 +132,7 @@ require([
     });
 
     map.addLayer(dynamicMapServiceLayer);
-    map.addLayers([TrongTrot, SuDungDatTrong, SauHai, PhanBon, KiemDichThucVat, GiongCay, DoanhNghiep, BaoVeThucVat]);
+    map.addLayers([TrongTrot, SuDungDatTrong, SauHai, DoanhNghiep]);
 
     function initEditor(evt) {
         var templateLayers = arrayUtils.map(evt.layers, function (result) {
@@ -533,7 +533,7 @@ require([
 
         var fieldList = SuDungDatTrong.fields;
 
-        var htmlTable = "<table> <tr><th colspan='" + fieldList.length + "'>" + DoanhNghiep .name+ "</th></tr> <tr> ";
+        var htmlTable = "<table> <tr><th colspan='" + fieldList.length + "'>" + DoanhNghiep.name + "</th></tr> <tr> ";
         for (var i = 0 ; i < fieldList.length ; i++) {
             htmlTable += "<th> " + fieldList[i].alias + " </th>";
         }
@@ -854,8 +854,7 @@ require([
         var fieldList = SuDungDatTrong.fields;
 
         var htmlTable = "<table> <tr><th colspan='" + fieldList.length + "'>" + SuDungDatTrong.name + "</th></tr><tr> ";
-        for (var i = 0 ; i < fieldList.length ; i++)
-        {
+        for (var i = 0 ; i < fieldList.length ; i++) {
             htmlTable += "<th> " + fieldList[i].alias + " </th>";
         }
         htmlTable += "</tr>";
@@ -871,7 +870,7 @@ require([
 
                     html += "<tr>  <td>  <span alt=" + attr["MaLoaiDat"] + " class='viewdata'>" + attr["Ten"] + " </span></td> </tr>";
                     htmlTable += "<tr>";
-                    for (var y = 0 ; y < fieldList.length; y++) {                      
+                    for (var y = 0 ; y < fieldList.length; y++) {
                         htmlTable += "<td> " + attr[fieldList[y].name] + " </td>";
                     }
                     htmlTable += " </tr>";
@@ -883,7 +882,7 @@ require([
 
                 htmlTable += "</table>";
 
-               // alert(htmlTable);
+                // alert(htmlTable);
                 // nếu có data thì load excel
                 var ua = window.navigator.userAgent;
                 var msie = ua.indexOf('MSIE ');

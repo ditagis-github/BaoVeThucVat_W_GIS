@@ -44,25 +44,25 @@
                 color: #fff;
             }
 
-.dropdown-menu  li{
-    background-color:#fff;
+.dropdown-menu li {
+    background-color: #fff;
 }
 
-.dropdown-menu  li:hover{
-    background-color:#fff;
-}
+    .dropdown-menu li:hover {
+        background-color: #fff;
+    }
 
-.dropdown-menu  li a{
-    background-color:#fff !important;
-    color:rgb(153, 153, 153) !important;
-    border:none !important;
-}
+    .dropdown-menu li a {
+        background-color: #fff !important;
+        color: rgb(153, 153, 153) !important;
+        border: none !important;
+    }
 
-.dropdown-menu  li:hover a{
-    background-color:#fff !important;
-    color:#006224 !important;
-    border:none !important;
-}
+    .dropdown-menu li:hover a {
+        background-color: #fff !important;
+        color: #006224 !important;
+        border: none !important;
+    }
 
 
 /* Styles for basic forms
@@ -133,9 +133,8 @@ textarea {
         cursor: pointer;
         color: #d13232;
     }
-    
-.esriPopup .titlePane, .esriPopup.light .titlePane, .esriPopup.dark .titlePane
-{
+
+.esriPopup .titlePane, .esriPopup.light .titlePane, .esriPopup.dark .titlePane {
     background-color: #db6012 !important;
 }
 
@@ -176,4 +175,91 @@ textarea {
         font-size: 0.6em !important;
         font-weight: bold;
     }
+}
+
+#rightPane {
+    width: 20%;
+}
+
+#legendPane {
+    border: solid #97DCF2 1px;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#map {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f9f9f9;
+}
+
+.templatePicker {
+    border: none;
+}
+
+.undisplay {
+    display: none;
+}
+
+#tabAddDataContent {
+    width: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+    border-top: 1px solid #cdcdcd;
+}
+
+.dj_ie .infowindow .window .top .right .user .content {
+    position: relative;
+}
+
+.dj_ie .simpleInfoWindow .content {
+    position: relative;
+}
+
+.zoominIcon {
+    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_zoomin.png);
+    width: 16px;
+    height: 16px;
+}
+
+.zoomoutIcon {
+    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_zoomout.png);
+    width: 16px;
+    height: 16px;
+}
+
+.zoomfullextIcon {
+    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_fullextent.png);
+    width: 16px;
+    height: 16px;
+}
+
+.zoomprevIcon {
+    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_previous.png);
+    width: 16px;
+    height: 16px;
+}
+
+.zoomnextIcon {
+    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_next.png);
+    width: 16px;
+    height: 16px;
+}
+
+.panIcon {
+    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_pan.png);
+    width: 16px;
+    height: 16px;
+}
+
+.deactivateIcon {
+    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_decline.png);
+    width: 16px;
+    height: 16px;
 }

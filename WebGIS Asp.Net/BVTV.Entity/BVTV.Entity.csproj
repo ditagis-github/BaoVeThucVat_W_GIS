@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>844a6b57-d1bb-4997-aa80-033a01593cc0</ProjectGuid>
+    <ProjectGuid>{844A6B57-D1BB-4997-AA80-033A01593CC0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Entity</RootNamespace>
-    <AssemblyName>Entity</AssemblyName>
+    <RootNamespace>BVTV.Entity</RootNamespace>
+    <AssemblyName>BVTV.Entity</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,24 +30,132 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="a34.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="a35.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="a36.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="a37.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="a39.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="a41.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaoVeThucVat.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaoVeThucVat.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaoVeThucVat.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaoVeThucVat.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaoVeThucVat.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs" />
+    <Compile Include="CONGNGHECAO.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DOANHNGHIEP.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GIONGCAYTRONG.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HANHCHINHHUYEN.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MATDUONGBO.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PHUBEMAT.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QUYHOACHSUDUNGDAT.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RANHGIOIHANHCHINH.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAUBENH.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAUBENHGAYHAI.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SONGHO.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="THOIGIANSANXUATTRONGTROT.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TIMDUONG.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TRONGTROT.cs">
+      <DependentUpon>BaoVeThucVat.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="BaoVeThucVat.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BaoVeThucVat.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="BaoVeThucVat.edmx.diagram">
+      <DependentUpon>BaoVeThucVat.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BaoVeThucVat.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BaoVeThucVat.edmx</DependentUpon>
+      <LastGenOutput>BaoVeThucVat.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="BaoVeThucVat.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BaoVeThucVat.edmx</DependentUpon>
+      <LastGenOutput>BaoVeThucVat.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -57,5 +165,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
- </Project>
+</Project>

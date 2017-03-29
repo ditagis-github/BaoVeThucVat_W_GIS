@@ -145,44 +145,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bootstrap-map-js\bootstrapmapjs.png" />
-    <Content Include="bootstrap-map-js\demo\css\style.css" />
-    <Content Include="bootstrap-map-js\demo\dojo\getstarted.html" />
-    <Content Include="bootstrap-map-js\demo\dojo\grid.html" />
-    <Content Include="bootstrap-map-js\demo\dojo\maps.html" />
-    <Content Include="bootstrap-map-js\demo\dojo\media.html" />
-    <Content Include="bootstrap-map-js\demo\dojo\webmap.html" />
-    <Content Include="bootstrap-map-js\demo\dojo\windows.html" />
-    <Content Include="bootstrap-map-js\demo\images\blue-pin.png" />
-    <Content Include="bootstrap-map-js\demo\images\brand.png" />
-    <Content Include="bootstrap-map-js\demo\images\favicon.ico" />
-    <Content Include="bootstrap-map-js\demo\images\map-gray.png" />
-    <Content Include="bootstrap-map-js\demo\images\purple-pin.png" />
-    <Content Include="bootstrap-map-js\demo\index.html" />
-    <Content Include="bootstrap-map-js\demo\jquery\getstarted.html" />
-    <Content Include="bootstrap-map-js\demo\jquery\grid.html" />
-    <Content Include="bootstrap-map-js\demo\jquery\maps.html" />
-    <Content Include="bootstrap-map-js\demo\jquery\media.html" />
-    <Content Include="bootstrap-map-js\demo\jquery\webmap.html" />
-    <Content Include="bootstrap-map-js\demo\jquery\windows.html" />
-    <Content Include="bootstrap-map-js\dist\css\bootstrapmap.min.css" />
-    <Content Include="bootstrap-map-js\dist\js\bootstrapmap.min.js" />
-    <Content Include="bootstrap-map-js\Gruntfile.js" />
-    <Content Include="bootstrap-map-js\license.txt" />
-    <Content Include="bootstrap-map-js\src\css\bootstrapmap.css" />
-    <Content Include="bootstrap-map-js\src\js\bootstrapmap.js" />
-    <Content Include="bootstrap-map-js\templates\fullmap-template\fullmap-template.css" />
-    <Content Include="bootstrap-map-js\templates\fullmap-template\index.html" />
-    <Content Include="bootstrap-map-js\templates\geosearch-template\geosearch-template.css" />
-    <Content Include="bootstrap-map-js\templates\geosearch-template\index.html" />
-    <Content Include="bootstrap-map-js\templates\images\blue-pin.png" />
-    <Content Include="bootstrap-map-js\templates\images\brand.png" />
-    <Content Include="bootstrap-map-js\templates\images\favicon.ico" />
-    <Content Include="bootstrap-map-js\templates\images\purple-pin.png" />
-    <Content Include="bootstrap-map-js\templates\starter-template\index.html" />
-    <Content Include="bootstrap-map-js\templates\starter-template\starter-template.css" />
-    <Content Include="bootstrap-map-js\templates\webmap-template\index.html" />
-    <Content Include="bootstrap-map-js\templates\webmap-template\webmap-template.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
@@ -197,9 +159,11 @@
     <Content Include="Content\font_awesome\css\font-awesome.min.css" />
     <Content Include="Content\font_awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\font_awesome\HELP-US-OUT.txt" />
+    <Content Include="Content\heatmap.css" />
     <Content Include="Content\img\bgBanner.png" />
     <Content Include="Content\img\default.gif" />
     <Content Include="Content\img\logo.gif" />
+    <Content Include="Content\map.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -254,6 +218,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\timduong.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css.map" />
@@ -297,11 +262,6 @@
     <Content Include="Content\font_awesome\scss\_screen-reader.scss" />
     <Content Include="Content\font_awesome\scss\_stacked.scss" />
     <Content Include="Content\font_awesome\scss\_variables.scss" />
-    <Content Include="bootstrap-map-js\.gitignore" />
-    <Content Include="bootstrap-map-js\.jshintrc" />
-    <Content Include="bootstrap-map-js\bower.json" />
-    <Content Include="bootstrap-map-js\package.json" />
-    <Content Include="bootstrap-map-js\README.md" />
     <Content Include="proxy\proxy.ashx" />
     <Content Include="proxy\proxy.config">
       <SubType>Designer</SubType>
@@ -310,6 +270,7 @@
     <Content Include="proxy\Web.config" />
     <None Include="Properties\PublishProfiles\BaoVeThucVat.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Scripts\heatmap.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
