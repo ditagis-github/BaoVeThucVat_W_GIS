@@ -8,5 +8,7 @@ namespace Entity
 {
     public class Class1
     {
+        private int a;
+
     }
 }
