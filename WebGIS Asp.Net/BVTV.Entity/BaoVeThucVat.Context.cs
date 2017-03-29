@@ -45,5 +45,6 @@ namespace BVTV.Entity
         public virtual DbSet<a39> a39 { get; set; }
         public virtual DbSet<a41> a41 { get; set; }
         public virtual DbSet<RANHGIOIHANHCHINH> RANHGIOIHANHCHINHs { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

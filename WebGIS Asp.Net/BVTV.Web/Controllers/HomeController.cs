@@ -4,8 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace WebGISBinhDuong.Controllers
+namespace BVTV.WebGIS.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         //

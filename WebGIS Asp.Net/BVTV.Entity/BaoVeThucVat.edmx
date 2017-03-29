@@ -143,14 +143,6 @@ warning 6002: The table/view 'BaoVeThucVat.dbo.CONGNGHECAO' does not have a prim
           <Property Name="SHAPE" Type="geometry" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_ITEMRELATIONSHIPTYPES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_ITEMTYPES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_REPLICALOG' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'BaoVeThucVat.dbo.GDB_TABLES_LAST_MODIFIED' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <!--Errors Found During Generation:
 warning 6002: The table/view 'BaoVeThucVat.dbo.GIONGCAYTRONG' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GIONGCAYTRONG">
           <Key>
@@ -332,12 +324,16 @@ warning 6002: The table/view 'BaoVeThucVat.dbo.THOIGIANSANXUATTRONGTROT' does no
           <Property Name="TenGiongCayTrong" Type="nvarchar" MaxLength="50" />
           <Property Name="SHAPE" Type="geometry" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6035: The relationship 'colregistry_fk' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-        <Association Name="colregistry_fk" />-->
-        <!--Errors Found During Generation:
-warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-        <Association Name="sdelayer_stats_fk1" />-->
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="permission" Type="int" />
+          <Property Name="active" Type="bit" />
+          <Property Name="username" Type="varchar" MaxLength="10" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityContainer Name="BaoVeThucVatModelStoreContainer">
           <EntitySet Name="a34" EntityType="Self.a34" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="a35" EntityType="Self.a35" Schema="dbo" store:Type="Tables" />
@@ -355,6 +351,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <EntitySet Name="SONGHO" EntityType="Self.SONGHO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TIMDUONG" EntityType="Self.TIMDUONG" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TRONGTROT" EntityType="Self.TRONGTROT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONGNGHECAO" EntityType="Self.CONGNGHECAO" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [CONGNGHECAO].[OBJECTID] AS [OBJECTID], 
@@ -608,6 +605,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <EntitySet Name="a39" EntityType="BaoVeThucVatModel.a39" />
           <EntitySet Name="a41" EntityType="BaoVeThucVatModel.a41" />
           <EntitySet Name="RANHGIOIHANHCHINHs" EntityType="BaoVeThucVatModel.RANHGIOIHANHCHINH" />
+          <EntitySet Name="Users" EntityType="BaoVeThucVatModel.User" />
         </EntityContainer>
         <EntityType Name="a34">
           <Key>
@@ -727,6 +725,16 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <Property Name="TenHuyen" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CheckTool" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SHAPE" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="permission" Type="Int32" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="username" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1056,6 +1064,17 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
                 <ScalarProperty Name="Shape_Leng" ColumnName="Shape_Leng" />
                 <ScalarProperty Name="MaNhanDang" ColumnName="MaNhanDang" />
                 <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="permission" ColumnName="permission" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

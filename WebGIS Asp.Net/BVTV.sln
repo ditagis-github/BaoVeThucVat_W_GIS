@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.Entity", "BVTV.Entity\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.WebGIS", "BVTV.Web\BVTV.WebGIS.csproj", "{14E744D0-B97D-41EB-9D27-20B818EFC7C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{14E744D0-B97D-41EB-9D27-20B818EFC7C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14E744D0-B97D-41EB-9D27-20B818EFC7C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14E744D0-B97D-41EB-9D27-20B818EFC7C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
