@@ -3,8 +3,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @*Module Map*@
-<script src="~/Scripts/search.js"></script>
-<script src="~/Scripts/config_layout.js"></script>
 <script>
     var dojoConfig = {
         async: true
@@ -17,78 +15,92 @@
 <div class="col-md-4 col-lg-3 undisplay" id="tabSearchControl" style="">
     <h4 style="color: #2e7c0c;">Tìm kiếm thông tin <span class="label label-danger pull-right" id="closeTabSearchControl" style="font-size: 0.6em; padding: 6px 10px; cursor: pointer;">Đóng</span></h4>
     <ul class="nav nav-tabs nav-pills nav-justified responsive" id="myTab">
-        <li class="test-class active"><a class="deco-none red-class" href="#resp-tab1">Doanh nghiệp</a></li>
-        <li class="test-class"><a href="#resp-tab2">Trạm kiểm dịch</a></li>
-        <li><a class="deco-none" href="#resp-tab3">Sử dụng đất trồng</a></li>
+        <li class="test-class active"><a class="deco-none red-class" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
+        <li class="test-class"><a href="#tab-saubenh">Sâu bệnh</a></li>
+        <li><a class="deco-none" href="#tab-trongtrot">Trồng trọt</a></li>
     </ul>
 
     <div class="tab-content responsive">
-        <div class="tab-pane active" id="resp-tab1">
+        <div class="tab-pane active" id="tab-doanhnghiep">
             <h5>Tìm thông tin Doanh nghiệp</h5>
             <div class="formSearch">
                 <input type="text" id="txtMaDN" class="form-control" placeholder="Mã doanh nghiệp" />
                 <input type="text" id="txtTen" class="form-control" placeholder="Tên doanh nghiệp" />
                 <input type="text" id="txtQuanHuyen" class="form-control" placeholder="Quận/Huyện" />
-                <button type="button" class="btn btn-default" id="btDoanhNghiep">Tìm kiếm</button>
-                <button type="button" class="btn btn-default" id="btDoanhNghiep_Excel">Xuất Excel</button>
+                <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
                 <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
             </div>
             <div class="resultFormSearch">
                 <table data-toggle="table" class="table" data-row-style="rowStyle">
                     <thead>
                         <tr>
-                            <th >Tên doanh nghiệp <span class="label label-danger pull-right" id="countresultFormSearchDoanhNghiep">0</span></th>
+                            <th >Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
                         </tr>
                     </thead>
-                    <tbody id="resultFormSearchDoanhNghiep">
+                    <tbody id="result">
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="tab-pane" id="resp-tab2">
+        <div class="tab-pane" id="tab-saubenh">
             
-            <h5>Tìm thông tin Trạm kiểm dịch</h5>
+            <h5>Tìm thông tin Sâu bệnh</h5>
             <div class="formSearch">
-                <input type="text" id="txtMaVung" class="form-control" placeholder="Mã vùng" />
-                <input type="text" id="txtNoiKiemDich" class="form-control" placeholder="Nơi kiểm dịch" />
-                <input type="text" id="txtMaLoaiSinhVatGayHai" class="form-control" placeholder="Loại sinh vật gây hại" />
-                <button type="button" class="btn btn-default" id="btSearchTramKiemDich">Tìm kiếm</button>
-                <button type="button" class="btn btn-default" id="btSearchTramKiemDich_Excel">Xuất Excel</button>
+                <select  class="form-control" id="cbNhomCayTrong">
+                    <option value="" selected>Nhóm cây trồng</option>
+                </select>
+                <select class="form-control" id="cbLoaiCayTrong">
+                    <option value="" selected>Loại cây trồng</option>
+                </select>
+                <select class="form-control" id="cbCapDoGayHai">
+                    <option value="" selected>Cấp độ gây hại</option>
+                </select>
+                <input type="number" id="nbPhamViAnhHuong" class="form-control" placeholder="Phạm vi ảnh hưởng" />
+                <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
+                <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
                 <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
             </div>
             <div class="resultFormSearch">
                 <table data-toggle="table" class="table" data-row-style="rowStyle">
                     <thead>
                         <tr>
-                            <th >Nơi kiểm dịch  <span class="label label-danger  pull-right" id="countresultFormSearchTramKiemDich">0</span></th>
+                            <th >Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
                         </tr>
                     </thead>
-                    <tbody id="resultFormSearchTramKiemDich">
+                    <tbody id="result">
                     </tbody>
                 </table>
             </div>
 
         </div>
-        <div class="tab-pane" id="resp-tab3">
-             
-            <h5>Tìm thông tin Sử dụng đất trồng</h5>
+        <div class="tab-pane" id="tab-trongtrot">
+
+            <h5>Tìm thông tin Cây trồng</h5>
             <div class="formSearch">
-                <input type="text" id="txtMaLoaiDat" class="form-control" placeholder="Mã loại đất" />
-                <input type="text" id="txtTenDat" class="form-control" placeholder="Tên loại đất" />
-                <input type="text" id="txtTinhTrang" class="form-control" placeholder="Tình trạng" />
-                <button type="button" class="btn btn-default" id="btSearchSDD">Tìm kiếm</button>
-                <button type="button" class="btn btn-default" id="btSearchSDD_Excel">Xuất Excel</button>
+                <select class="form-control" id="cbNhomCayTrong">
+                    <option value="" selected>Nhóm cây trồng</option>
+                </select>
+                <select class="form-control" id="cbLoaiCayTrong">
+                    <option value="" selected>Loại cây trồng</option>
+                </select>
+                <select class="form-control" id="cbPhuongThucTrong">
+                    <option value="" selected>Phương thức trồng</option>
+                </select>
+                <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
+                <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
                 <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
             </div>
             <div class="resultFormSearch">
                 <table data-toggle="table" class="table" data-row-style="rowStyle">
                     <thead>
                         <tr>
-                            <th >Tên loại đất  <span class="label label-danger pull-right" id="countresultFormSearchSDD">0</span></th>
+                            <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
                         </tr>
                     </thead>
-                    <tbody id="resultFormSearchSDD">
-                    </tbody>
+                    <tbody id="result"></tbody>
                 </table>
             </div>
 
@@ -127,7 +139,6 @@
 </div>
 
 
-<script src="~/Content/bootstrap/js/jquery1_9.min.js"></script>
 <script type="text/javascript">
 
     $('ul.nav.nav-tabs  a').click(function (e) {
@@ -158,4 +169,6 @@
     };
 </script>
 <script src="https://js.arcgis.com/3.19/"></script>
+<script src="~/Scripts/config_layout.js"></script>
 <script src="~/Scripts/map.js"></script>
+<script src="~/Scripts/update-item-view.js"></script>

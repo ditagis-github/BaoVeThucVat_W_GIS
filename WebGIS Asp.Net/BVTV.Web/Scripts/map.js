@@ -1,4 +1,4 @@
-﻿var map;
+﻿var map, sauBenhLayer, trongTrotLayer, SuDungDatTrong, doanhNghiepLayer, dynamicMapServiceLayer, hanhChinhHuyenLayer;
 
 require([
   "esri/map",
@@ -82,7 +82,7 @@ require([
     var BaoVeThucVat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0";
     var DoanhNghiep_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0";
     var PhanBon_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2";
-    var SauHai_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1";
+    var sauBenhLink = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1";
     var KiemDichThucVat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/4";
     var TrongTrot_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2";
     var SuDungDatTrong_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3";
@@ -90,49 +90,54 @@ require([
     var ThuaDat_link = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/8";
 
     //add boundaries and place names
-    var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer(linkBaseMap, {
+    dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer(linkBaseMap, {
         "imageParameters": imageParameters
     });
 
-    var BaoVeThucVat = new FeatureLayer(BaoVeThucVat_link, {
+    BaoVeThucVat = new FeatureLayer(BaoVeThucVat_link, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var DoanhNghiep = new FeatureLayer(DoanhNghiep_link, {
+    doanhNghiepLayer = new FeatureLayer(DoanhNghiep_link, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var GiongCay = new FeatureLayer(GiongCay_link, {
+    GiongCay = new FeatureLayer(GiongCay_link, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var KiemDichThucVat = new FeatureLayer(KiemDichThucVat_link, {
+    KiemDichThucVat = new FeatureLayer(KiemDichThucVat_link, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var PhanBon = new FeatureLayer(PhanBon_link, {
+    PhanBon = new FeatureLayer(PhanBon_link, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var SauHai = new FeatureLayer(SauHai_link, {
+    sauBenhLayer = new FeatureLayer(sauBenhLink, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var SuDungDatTrong = new FeatureLayer(SuDungDatTrong_link, {
+    SuDungDatTrong = new FeatureLayer(SuDungDatTrong_link, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var ThuaDat = new FeatureLayer(ThuaDat_link, {
+    ThuaDat = new FeatureLayer(ThuaDat_link, {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
-    var TrongTrot = new FeatureLayer(TrongTrot_link, {
+    trongTrotLayer = new FeatureLayer(TrongTrot_link, {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+
+    hanhChinhHuyenLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_BDBaseMap/MapServer/6", {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
     });
 
     map.addLayer(dynamicMapServiceLayer);
-    map.addLayers([TrongTrot, SuDungDatTrong, SauHai, DoanhNghiep]);
+    map.addLayers([trongTrotLayer, SuDungDatTrong, sauBenhLayer, doanhNghiepLayer]);
 
     function initEditor(evt) {
         var templateLayers = arrayUtils.map(evt.layers, function (result) {
@@ -330,13 +335,192 @@ require([
     ////////////// end location //////////////////
     /// config layout ///
 
-    
+
 
     ////End config//////
 
     /// Seach ///
+    function addSearchEvent(domId, feature, arrAttribute, selectProperty) {
 
-    addSearchEvent('btnDoanhNghiep', 'resultFormSearchDoanhNghiep', 'countresultFormSearchDoanhNghiep', DoanhNghiep, [{
+        var btnFindDom = $(domId + ' #btnFind'), resultDom = $(domId + ' #result'), counterDom = $(domId + ' #counter');
+        $(btnFindDom).click(function (e) {
+            var where = "1=1";
+
+            arrAttribute.forEach(function (value, index) {
+                var domValue = $("#" + value.dom).val();
+                if (domValue.trim().length > 0) {
+                    where += " AND " + value.property + " LIKE N'%" + domValue + "%'";
+                }
+            });
+
+            //if (where == "1=1") {
+            //    alert("Vui lòng nhập thông tin tìm kiếm");
+            //    return;
+            //}
+
+            $(".loading").css("display", "inline-block");
+            $(resultDom).html('');
+            $(counterDom).html('');
+            var query = new Query();
+            query.returnGeometry = true;
+            query.outFields = ["*"];
+            query.where = where;
+            feature.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+                //alert(results.length);
+                var html = "";
+                if (results.length > 0) {
+                    for (var i = 0 ; i < results.length ; i++) {
+                        var feat = results[i];
+                        var attr = feat.attributes;
+
+                        html += "<tr>  <td>  <span alt='" + attr[selectProperty[0]] + "' class='viewdata'>" + attr[selectProperty[1]] + " </span></td> </tr>";
+
+                    }
+
+                    $(resultDom).html(html);
+                    $(counterDom).html(results.length);
+
+                }
+
+                $(".loading").css("display", "none");
+
+            });
+
+        });
+
+
+        //$(btnExcelId).click(function (e) {
+        //    var where = "1=1";
+
+        //    arrAttribute.forEach(function (value, index) {
+        //        if (value.dom.trim().length > 0) {
+        //            where += " AND "+value.property+"LIKE N'%" + value.dom+ "%'";
+        //        }
+        //    });
+
+        //    if (where == "1=1") {
+        //        alert("Vui lòng nhập thông tin tìm kiếm");
+        //        return;
+        //    }
+
+        //    $(".loading").css("display", "inline-block");
+        //    document.getElementById(resultFormDomId).innerHTML = "";
+        //    document.getElementById(counterResultFormDomId).innerHTML = "";
+        //    var query = new Query();
+        //    query.returnGeometry = true;
+        //    query.outFields = ["*"];
+        //    query.where = where;
+
+        //    var fieldList = SuDungDatTrong.fields;
+
+        //    var htmlTable = "<table> <tr><th colspan='" + fieldList.length + "'>" + feature.name + "</th></tr> <tr> ";
+        //    for (var i = 0 ; i < fieldList.length ; i++) {
+        //        htmlTable += "<th> " + fieldList[i].alias + " </th>";
+        //    }
+        //    htmlTable += "</tr>";
+
+
+        //    feature.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+        //        //alert(results.length);
+        //        var html = "";
+        //        if (results.length > 0) {
+        //            for (var i = 0 ; i < results.length ; i++) {
+        //                var feat = results[0];
+        //                var attr = feat.attributes;
+
+        //                html += "<tr>  <td>  <span alt=" + attr["MaDN"] + " class='viewdata'>" + attr["Ten"] + " </span></td> </tr>";
+
+        //            }
+
+        //            document.getElementById(resultFormDomId).innerHTML = html;
+        //            document.getElementById(counterResultFormDomId).innerHTML = results.length;
+
+        //            htmlTable += "<tr>";
+        //            for (var y = 0 ; y < fieldList.length; y++) {
+        //                htmlTable += "<td> " + attr[fieldList[y].name] + " </td>";
+        //            }
+        //            htmlTable += " </tr>";
+        //            htmlTable += "</table>";
+
+        //            // alert(htmlTable);
+        //            // nếu có data thì load excel
+        //            var ua = window.navigator.userAgent;
+        //            var msie = ua.indexOf('MSIE ');
+        //            var trident = ua.indexOf('Trident/');
+        //            var edge = ua.indexOf('Edge/');
+
+        //            if (msie > 0 || trident > 0 || edge > 0) {
+        //                if (window.navigator.msSaveBlob) {
+        //                    var blob = new Blob([htmlTable], {
+        //                        type: "application/csv;charset=utf-8;"
+        //                    });
+        //                    navigator.msSaveBlob(blob, 'BaoCaoExcel.xls');
+        //                }
+        //            }
+        //            else {
+        //                var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(htmlTable);
+        //                location.href = url
+        //            }
+        //            // end load excel
+        //        }
+        //        else {
+
+        //            // nếu ko có data thì thông báo
+        //            alert("Không có dữ liệu để xuất thông tin ra file excel.");
+
+        //        }
+
+        //        $(".loading").css("display", "none");
+
+        //    });
+
+        //});
+
+
+        $(resultDom).on("click", "span.viewdata", function () {
+            var value = $(this).attr('alt');
+            viewPoint((selectProperty[0] + " = '" + value + "'"), feature);
+        });
+    }
+
+
+    function viewPoint(value, layer) {
+        var query = new Query();
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        query.where = value;
+        layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+            if (results.length > 0) {
+                var feat = results[0];
+                var point = feat.geometry;
+                // var graphic1 = new esri.Graphic(point, ptSymbol1);
+
+                var pt = new Point(point.x, point.y, map.spatialReference);
+                if (pt) {
+                    var extent = new Extent((point.x + 40), (point.y + 40), (point.x - 40), (point.y - 40), map.spatialReference);
+                    var stateExtent = extent.expand(5.0);
+                    map.setExtent(stateExtent);
+                }
+            }
+        });
+    }
+
+    function viewPolygon(value, layer) {
+        var query = new Query();
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        query.where = value;
+        layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+            if (results.length > 0) {
+                var feat = results[0];
+                var point = feat.geometry;
+                // var graphic1 = new esri.Graphic(point, ptSymbol1);
+                var stateExtent = point.getExtent().expand(8.0);
+                map.setExtent(stateExtent);
+            }
+        });
+    }
+    addSearchEvent('#tab-doanhnghiep', doanhNghiepLayer, [{
         dom: 'txtMaDN',
         property: 'MaDoanhNghiep'
     },
@@ -351,10 +535,60 @@ require([
 
     //
 
-    /////
+    function loadData(dom, fieldName, layer) {
+        var combo = $(dom);
+        if (combo.find("option").length > 1)
+            return;
 
-   
+        layer.getField(fieldName).domain.codedValues.forEach(function (value, index) {
+            var code = value.code, name = value.name;
+            //create Element option item with Jquery
+            var option = $('<option/>').val(code).text(name);
+            combo.append(option);
+        })
+    }
+    //add event to update combobox  when click tab-saubenh
+    $('a[href=#tab-saubenh]').first().on('click', function () {
+        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer);
+    });
 
-    ////// End Search //////
+
+    //add event to search with button 
+    addSearchEvent('tab-saubenh', sauBenhLayer, [{
+        dom: 'cbNhomCayTrong',
+        property: 'NhomCayTrong'
+    }, {
+        dom: 'cbLoaiCayTrong',
+        property: 'LoaiCayTrong'
+    }, {
+        dom: 'nbPhamViAnhHuong',
+        property: 'PhamViAnhHuong'
+    }, {
+        dom: 'nbDienTich',
+        property: 'DienTich'
+    }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }
+    ], ['LoaiCayTrong', 'TenSauBenhGayHai'])
+
+    //add event to update combobox  when click tab-trongtrot
+    $('a[href=#tab-trongtrot]').first().on('click', function () {
+        loadData('#tab-trongtrot #cbNhomCayTrong', 'NhomCayTrong', trongTrotLayer), loadData('#tab-trongtrot #cbLoaiCayTrong', 'LoaiCayTrong', trongTrotLayer), loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
+    });
+
+
+    //add event to search with button 
+    addSearchEvent('#tab-trongtrot', trongTrotLayer, [{
+        dom: 'cbNhomCayTrong',
+        property: 'NhomCayTrong'
+    }, {
+        dom: 'cbLoaiCayTrong',
+        property: 'LoaiCayTrong'
+    }, {
+        dom: 'cbPhuongThucTrong',
+        property: 'PhuongThucTrong'
+    }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }, {
+        dom: 'nbDienTich',
+        property: 'DienTich'
+    }
+    ], ['LoaiCayTrong', 'TenGiongCayTrong'])
 
 });
