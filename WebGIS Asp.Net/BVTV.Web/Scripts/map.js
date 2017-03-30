@@ -554,7 +554,7 @@ require([
 
 
     //add event to search with button 
-    addSearchEvent('tab-saubenh', sauBenhLayer, [{
+    addSearchEvent('#tab-saubenh', sauBenhLayer, [{
         dom: 'cbNhomCayTrong',
         property: 'NhomCayTrong'
     }, {

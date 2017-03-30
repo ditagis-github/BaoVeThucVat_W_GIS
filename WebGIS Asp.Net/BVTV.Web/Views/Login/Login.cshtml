@@ -48,7 +48,7 @@
         @Html.LabelFor(model => model.username, new { @class = "sr-only" })
         @Html.TextBoxFor(model => model.username, new { @class = "form-control", @placeholder = "Tài khoản", @autocomplete = "off", @autocorrect = "off", @autocapitalize = "off", @spellcheck = "false" })
         @Html.LabelFor(model => model.pass, new { @class = "sr-only" })
-        @Html.TextBoxFor(model => model.pass, new { @class = "form-control", @placeholder = "Mật khẩu", @autocomplete = "off", @autocorrect = "off", @autocapitalize = "off", @spellcheck = "false" })
+        @Html.PasswordFor(model => model.pass, new { @class = "form-control" , @placeholder = "Mật khẩu", @autocomplete = "off", @autocorrect = "off", @autocapitalize = "off", @spellcheck = "false" })
 
         <div class="checkbox">
             @Html.EditorFor(model => model.isRemember)

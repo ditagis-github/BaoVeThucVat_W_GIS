@@ -86,7 +86,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BaoVeThucVat.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Class1.cs" />
     <Compile Include="CONGNGHECAO.cs">
       <DependentUpon>BaoVeThucVat.tt</DependentUpon>
     </Compile>
