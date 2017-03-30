@@ -1,0 +1,255 @@
+﻿@{
+    ViewBag.Title = "Bản đồ";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+<style>
+    #map {
+        padding: 0;
+        margin: 0;
+        height: 600px;
+        width: 100%;
+    }
+</style>
+<link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/map.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://js.arcgis.com/4.3/esri/css/main.css">
+<script src="https://js.arcgis.com/4.3/"></script>
+<script>
+    var map, baseMap, sauBenhLayer, trongTrotLayer, SuDungDatTrong, doanhNghiepLayer, dynamicMapServiceLayer, hanhChinhHuyenLayer;
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/MapImageLayer",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Expand",
+      "esri/widgets/LayerList",
+      "esri/widgets/Search",
+      "dojo/domReady!"
+    ], function (Map, MapView,
+        MapImageLayer,
+        FeatureLayer,
+        Expand,
+        LayerList,
+        Search
+        ) {
+        map = new Map();
+        var view = new MapView({
+            container: "map",  // Reference to the scene div created in step 5
+            map: map,  // Reference to the map object created before the scene
+            zoom: 13,  // Sets the zoom level based on level of detail (LOD)
+            center: [106.688166, 11.172618]  // Sets the center point of view in lon/lat
+        });
+        
+        baseMap = new MapImageLayer({
+            url: "http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer",
+            title:"Bình Dương"
+        });
+        map.add(baseMap);
+        var esriImageWorld = new MapImageLayer({
+            url: "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer",
+            title: "Vệ tinh",
+            visible:false
+        });
+        map.add(esriImageWorld);
+        doanhNghiepLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0", {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            title:"Doanh nghiệp"
+        });
+        sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            title:"Sâu bệnh"
+        });
+        SuDungDatTrong = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3", {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            title:"Sử dụng đất"
+        });
+        trongTrotLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2", {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            title:"Trồng trọt"
+        });
+        //map.add(sauBenhLayer);
+        map.addMany([trongTrotLayer, SuDungDatTrong, sauBenhLayer, doanhNghiepLayer]);
+
+
+
+
+
+
+        //// --------------------------------- Widget ---------------------------------///
+        // LayerList //
+        var layerList = new LayerList({
+            container: document.createElement("div"),
+            view: view
+        });
+        layerListExpand = new Expand({
+            expandIconClass: "esri-icon-layer-list",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
+            // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+            view: view,
+            content: layerList.domNode
+        });
+        view.ui.add(layerListExpand, "top-left");
+
+
+
+        // Widget Search Features //
+        var searchWidget = new Search({
+            view: view,
+            allPlaceholder: "District or Senator",
+            sources: [{
+                featureLayer: sauBenhLayer,
+                searchFields: ["TenSauBenhGayHai","LoaiCayTrong"],
+                displayField: "TenSauBenhGayHai",
+                exactMatch: false,
+                outFields: ["*"],
+                name: "Sâu hại",
+                placeholder: "Ví dụ: Chuồn chuồn",
+            }]
+        });
+
+        // Add the search widget to the top left corner of the view
+        view.ui.add(searchWidget, {
+            position: "top-right"
+        });
+
+
+    });
+</script>
+
+<section id="map-area" class="pb-100">
+    <div class="col-md-4 col-lg-3 undisplay" id="tabSearchControl" style="">
+        <h4>Tìm kiếm thông tin <span class="label label-danger pull-right" id="closeTabSearchControl" style="font-size: 0.6em; padding: 6px 10px; cursor: pointer;">Đóng</span></h4>
+        <ul class="nav nav-tabs nav-pills nav-justified responsive" id="myTab">
+            <li class="test-class active"><a class="deco-none red-class" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
+            <li class="test-class"><a href="#tab-saubenh">Sâu bệnh</a></li>
+            <li><a class="deco-none" href="#tab-trongtrot">Trồng trọt</a></li>
+        </ul>
+
+        <div class="tab-content responsive">
+            <div class="tab-pane active" id="tab-doanhnghiep">
+                <h5>Tìm thông tin Doanh nghiệp</h5>
+                <div class="formSearch">
+                    <input type="text" id="txtMaDN" class="form-control" placeholder="Mã doanh nghiệp" />
+                    <input type="text" id="txtTen" class="form-control" placeholder="Tên doanh nghiệp" />
+                    <input type="text" id="txtQuanHuyen" class="form-control" placeholder="Quận/Huyện" />
+                    <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                    <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
+                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                </div>
+                <div class="resultFormSearch">
+                    <table data-toggle="table" class="table" data-row-style="rowStyle">
+                        <thead>
+                            <tr>
+                                <th>Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="result"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab-saubenh">
+
+                <h5>Tìm thông tin Sâu bệnh</h5>
+                <div class="formSearch">
+                    <select class="form-control" id="cbNhomCayTrong">
+                        <option value="" selected>Nhóm cây trồng</option>
+                    </select>
+                    <select class="form-control" id="cbLoaiCayTrong">
+                        <option value="" selected>Loại cây trồng</option>
+                    </select>
+                    <select class="form-control" id="cbCapDoGayHai">
+                        <option value="" selected>Cấp độ gây hại</option>
+                    </select>
+                    <input type="number" id="nbPhamViAnhHuong" class="form-control" placeholder="Phạm vi ảnh hưởng" />
+                    <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
+                    <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                    <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
+                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                </div>
+                <div class="resultFormSearch">
+                    <table data-toggle="table" class="table" data-row-style="rowStyle">
+                        <thead>
+                            <tr>
+                                <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="result"></tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="tab-pane" id="tab-trongtrot">
+
+                <h5>Tìm thông tin Cây trồng</h5>
+                <div class="formSearch">
+                    <select class="form-control" id="cbNhomCayTrong">
+                        <option value="" selected>Nhóm cây trồng</option>
+                    </select>
+                    <select class="form-control" id="cbLoaiCayTrong">
+                        <option value="" selected>Loại cây trồng</option>
+                    </select>
+                    <select class="form-control" id="cbPhuongThucTrong">
+                        <option value="" selected>Phương thức trồng</option>
+                    </select>
+                    <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
+                    <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                    <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
+                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                </div>
+                <div class="resultFormSearch">
+                    <table data-toggle="table" class="table" data-row-style="rowStyle">
+                        <thead>
+                            <tr>
+                                <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="result"></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="col-md-4 col-lg-3" id="tabAddDataControl">
+        <h4 style="color: #2e7c0c;">Thêm mới dữ liệu <span class="label label-danger pull-right" id="closeTabAddDataControl" style="font-size: 0.6em; padding: 6px 10px; cursor: pointer;">Đóng</span></h4>
+        <div id="tabAddDataContent">
+            <div id="templateDiv"></div>
+            <div id="editorDiv"></div>
+        </div>
+    </div>
+
+    <div class="col-md-8 col-lg-9" id="tabMapControl">
+        <div id="map">
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        $('ul.nav.nav-tabs  a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+    </script>
+
+
+    @*<script type="text/javascript">
+            var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            var dojoConfig = {
+                packages: [{
+                    name: "application",
+                    location: package_path + '/bootstrap-map-js/src/js'
+                }]
+            };
+        </script>*@
+    @*<script src="~/Scripts/Map/map.js"></script>*@
+    <script src="~/Scripts/Map/config_layout.js"></script>
+</section>

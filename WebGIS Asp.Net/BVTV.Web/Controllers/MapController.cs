@@ -6,17 +6,12 @@ using System.Web.Mvc;
 
 namespace BVTV.WebGIS.Controllers
 {
-    [Authorize]
-    public class HomeController : Controller
+    public class MapController : Controller
     {
         //
-        // GET: /Home/
+        // GET: /Map/
 
         public ActionResult Index()
-        {
-            return View();
-        }
-        public ActionResult About()
         {
             return View();
         }

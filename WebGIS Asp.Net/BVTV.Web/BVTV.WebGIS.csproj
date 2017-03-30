@@ -138,12 +138,15 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\Contact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -151,7 +154,7 @@
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
     <Content Include="Content\bootstrap\css\bootstrap.min.css" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.svg" />
     <Content Include="Content\bootstrap\js\bootstrap.js" />
     <Content Include="Content\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\bootstrap\js\jquery1_9.min.js" />
@@ -161,10 +164,59 @@
     <Content Include="Content\font_awesome\css\font-awesome.min.css" />
     <Content Include="Content\font_awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\font_awesome\HELP-US-OUT.txt" />
+    <Content Include="Content\GreenSeoul\css\font-awesome.min.css" />
+    <Content Include="Content\GreenSeoul\css\material-design-iconic-font.min.css" />
+    <Content Include="Content\GreenSeoul\css\plugins.css" />
+    <Content Include="Content\GreenSeoul\css\style.css" />
+    <Content Include="Content\GreenSeoul\img\1%281%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\1%282%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\1%283%29.png" />
+    <Content Include="Content\GreenSeoul\img\1%285%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\1%286%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\1%287%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\1.jpg" />
+    <Content Include="Content\GreenSeoul\img\1.png" />
+    <Content Include="Content\GreenSeoul\img\2%281%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\2%282%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\2%283%29.png" />
+    <Content Include="Content\GreenSeoul\img\2%284%29.png" />
+    <Content Include="Content\GreenSeoul\img\2%285%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\2%286%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\2%287%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\2.jpg" />
+    <Content Include="Content\GreenSeoul\img\2.png" />
+    <Content Include="Content\GreenSeoul\img\3%281%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\3%282%29.png" />
+    <Content Include="Content\GreenSeoul\img\3%283%29.png" />
+    <Content Include="Content\GreenSeoul\img\3%284%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\3%285%29.jpg" />
+    <Content Include="Content\GreenSeoul\img\3.jpg" />
+    <Content Include="Content\GreenSeoul\img\3.png" />
+    <Content Include="Content\GreenSeoul\img\4%281%29.png" />
+    <Content Include="Content\GreenSeoul\img\4.jpg" />
+    <Content Include="Content\GreenSeoul\img\4.png" />
+    <Content Include="Content\GreenSeoul\img\5.jpg" />
+    <Content Include="Content\GreenSeoul\img\5.png" />
+    <Content Include="Content\GreenSeoul\img\6.jpg" />
+    <Content Include="Content\GreenSeoul\img\7.jpg" />
+    <Content Include="Content\GreenSeoul\img\about.jpg" />
+    <Content Include="Content\GreenSeoul\img\logo-2.png" />
+    <Content Include="Content\GreenSeoul\img\LogoCCBVTV.JPG" />
+    <Content Include="Content\GreenSeoul\img\small-thumb-1.jpg" />
+    <Content Include="Content\GreenSeoul\img\small-thumb-2.jpg" />
+    <Content Include="Content\GreenSeoul\img\small-thumb-3.jpg" />
+    <Content Include="Content\GreenSeoul\img\small-thumb-4.jpg" />
+    <Content Include="Content\GreenSeoul\img\small-thumb-5.jpg" />
+    <Content Include="Content\GreenSeoul\img\small-thumb-6.jpg" />
     <Content Include="Content\heatmap.css" />
     <Content Include="Content\img\bgBanner.png" />
     <Content Include="Content\img\default.gif" />
+    <Content Include="Content\img\Image-not-found.gif" />
+    <Content Include="Content\img\logo-ditagis.png" />
     <Content Include="Content\img\logo.gif" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\map\geocoder.png" />
+    <Content Include="Content\login.css" />
     <Content Include="Content\map.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -227,10 +279,6 @@
     <Content Include="Content\bootstrap\css\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap\css\bootstrap.css.map" />
     <Content Include="Content\bootstrap\css\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Content\font_awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\font_awesome\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font_awesome\fonts\fontawesome-webfont.woff" />
@@ -270,28 +318,26 @@
     </Content>
     <Content Include="proxy\README.md" />
     <Content Include="proxy\Web.config" />
+    <Content Include="Content\GreenSeoul\fonts\Material-Design-Iconic-Font.ttf" />
+    <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.eot" />
+    <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.ttf" />
+    <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.woff" />
+    <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.woff2" />
     <None Include="Properties\PublishProfiles\BaoVeThucVat.pubxml" />
-    <None Include="Scripts\jquery-1.8.2.intellisense.js" />
-    <Content Include="Scripts\config_layout.js" />
-    <Content Include="Scripts\heatmap.js" />
-    <Content Include="Scripts\jquery-1.8.2.js" />
-    <Content Include="Scripts\jquery-1.8.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui-1.8.24.js" />
-    <Content Include="Scripts\jquery-ui-1.8.24.min.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\knockout-2.2.0.debug.js" />
-    <Content Include="Scripts\knockout-2.2.0.js" />
-    <Content Include="Scripts\main.js" />
-    <Content Include="Scripts\map.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\update-item-view.js" />
-    <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\GreenSeoul\bootstrap.min.js" />
+    <Content Include="Scripts\GreenSeoul\jquery-1.12.0.min.js" />
+    <Content Include="Scripts\jquery-3.2.0.min.js" />
+    <Content Include="Scripts\Map\config_layout.js" />
+    <Content Include="Scripts\GreenSeoul\ajax-mail.js" />
+    <Content Include="Scripts\GreenSeoul\main.js" />
+    <Content Include="Scripts\GreenSeoul\modernizr-2.8.3.min.js" />
+    <Content Include="Scripts\GreenSeoul\plugins.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.min.js" />
+    <Content Include="Scripts\jquery1_9.min.js" />
+    <Content Include="Scripts\bootstrap\npm.js" />
+    <Content Include="Scripts\bootstrap\responsive-tabs.js" />
+    <Content Include="Scripts\Map\map.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -304,11 +350,15 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Shared\Layout.cshtml" />
+    <Content Include="Views\Map\Index.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\AdminAccount\" />
+    <Folder Include="Scripts\jquery\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

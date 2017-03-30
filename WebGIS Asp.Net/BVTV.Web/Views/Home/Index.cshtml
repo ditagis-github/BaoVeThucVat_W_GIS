@@ -1,174 +1,117 @@
 ﻿@{
-    ViewBag.Title = " Chi cục Trồng trọt và Bảo vệ thực vật tỉnh Bình Dương ";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/Layout.cshtml";
 }
-@*Module Map*@
-<script>
-    var dojoConfig = {
-        async: true
-    };
-</script>
-<link rel="stylesheet" href="https://js.arcgis.com/3.19/dijit/themes/claro/claro.css">
-<link rel="stylesheet" href="https://js.arcgis.com/3.19/esri/css/esri.css">
-<link href="~/Content/map.css" rel="stylesheet" />
-
-<div class="col-md-4 col-lg-3 undisplay" id="tabSearchControl" style="">
-    <h4 style="color: #2e7c0c;">Tìm kiếm thông tin <span class="label label-danger pull-right" id="closeTabSearchControl" style="font-size: 0.6em; padding: 6px 10px; cursor: pointer;">Đóng</span></h4>
-    <ul class="nav nav-tabs nav-pills nav-justified responsive" id="myTab">
-        <li class="test-class active"><a class="deco-none red-class" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
-        <li class="test-class"><a href="#tab-saubenh">Sâu bệnh</a></li>
-        <li><a class="deco-none" href="#tab-trongtrot">Trồng trọt</a></li>
-    </ul>
-
-    <div class="tab-content responsive">
-        <div class="tab-pane active" id="tab-doanhnghiep">
-            <h5>Tìm thông tin Doanh nghiệp</h5>
-            <div class="formSearch">
-                <input type="text" id="txtMaDN" class="form-control" placeholder="Mã doanh nghiệp" />
-                <input type="text" id="txtTen" class="form-control" placeholder="Tên doanh nghiệp" />
-                <input type="text" id="txtQuanHuyen" class="form-control" placeholder="Quận/Huyện" />
-                <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
-                <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
-                <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
-            </div>
-            <div class="resultFormSearch">
-                <table data-toggle="table" class="table" data-row-style="rowStyle">
-                    <thead>
-                        <tr>
-                            <th >Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="result">
-                    </tbody>
-                </table>
+<!-- Hero Area Start -->
+<section id="hero-area" class="hero-area">
+    <!-- Hero Slider -->
+    <div id="hero-slider" class="nivoSlider">
+        <img src="~/Content/GreenSeoul/img/1.jpg" alt="" title="#herocaption-1" />
+        <img src="~/Content/GreenSeoul/img/2.jpg" alt="" title="#herocaption-2" />
+    </div>
+    <!-- Hero Slider Caption -->
+    <div id="herocaption-1" class="nivo-html-caption">
+        <div class="container">
+            <div class="row">
+                <!-- Hero Content -->
+                <div class="hero-content col-xs-12">
+                    <h1 class="wow cusFadeInRight" data-wow-duration=".5s" data-wow-delay="0.5s">Tiêu đề</h1>
+                    <p class="wow cusFadeInRight" data-wow-duration=".5s" data-wow-delay="1s">Nội dung.....</p>
+                    <a href="#" class="learn-more wow cusFadeInRight" data-wow-duration=".5s" data-wow-delay="1.5s">Chi tiết</a>
+                </div>
             </div>
         </div>
-        <div class="tab-pane" id="tab-saubenh">
-            
-            <h5>Tìm thông tin Sâu bệnh</h5>
-            <div class="formSearch">
-                <select  class="form-control" id="cbNhomCayTrong">
-                    <option value="" selected>Nhóm cây trồng</option>
-                </select>
-                <select class="form-control" id="cbLoaiCayTrong">
-                    <option value="" selected>Loại cây trồng</option>
-                </select>
-                <select class="form-control" id="cbCapDoGayHai">
-                    <option value="" selected>Cấp độ gây hại</option>
-                </select>
-                <input type="number" id="nbPhamViAnhHuong" class="form-control" placeholder="Phạm vi ảnh hưởng" />
-                <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
-                <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
-                <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
-                <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+    </div>
+    <!-- Hero Slider Caption -->
+    <div id="herocaption-2" class="nivo-html-caption">
+        <div class="container">
+            <div class="row">
+                <!-- Hero Content -->
+                <div class="hero-content col-xs-12">
+                    <h1 class="wow cusFadeInRight" data-wow-duration=".5s" data-wow-delay="0.5s">Tiêu đề</h1>
+                    <p class="wow cusFadeInRight" data-wow-duration=".5s" data-wow-delay="1s">Nội dung.....</p>
+                    <a href="#" class="learn-more wow cusFadeInRight" data-wow-duration=".5s" data-wow-delay="1.5s">Chi tiết</a>
+                </div>
             </div>
-            <div class="resultFormSearch">
-                <table data-toggle="table" class="table" data-row-style="rowStyle">
-                    <thead>
-                        <tr>
-                            <th >Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="result">
-                    </tbody>
-                </table>
-            </div>
-
         </div>
-        <div class="tab-pane" id="tab-trongtrot">
-
-            <h5>Tìm thông tin Cây trồng</h5>
-            <div class="formSearch">
-                <select class="form-control" id="cbNhomCayTrong">
-                    <option value="" selected>Nhóm cây trồng</option>
-                </select>
-                <select class="form-control" id="cbLoaiCayTrong">
-                    <option value="" selected>Loại cây trồng</option>
-                </select>
-                <select class="form-control" id="cbPhuongThucTrong">
-                    <option value="" selected>Phương thức trồng</option>
-                </select>
-                <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
-                <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
-                <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
-                <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+    </div>
+</section>
+<!-- Hero Area End -->
+<!-- Service Area Start -->
+<section id="service-area" class="service-area pt-120 pb-120">
+    <div class="container">
+        <!-- Section Title -->
+        <div class="row">
+            <div class="section-title text-center col-xs-12 mb-80">
+                <h1>Chi cục bảo vệ thực vật tỉnh Bình Dương</h1>
+                <h2>Trang thông tin địa lý Bảo vệ thực vật</h2>
+                <p></p>
             </div>
-            <div class="resultFormSearch">
-                <table data-toggle="table" class="table" data-row-style="rowStyle">
-                    <thead>
-                        <tr>
-                            <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="result"></tbody>
-                </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <!--  Single Service  -->
+                <div class="single-service text-center col-md-3 col-sm-6 col-xs-12">
+                    <img src="~/Content/GreenSeoul/img/1.png" alt="">
+                    <h4>Mục 1</h4>
+                    <p>Nội dung</p>
+                </div>
+                <!--  Single Service  -->
+                <div class="single-service text-center col-md-3 col-sm-6 col-xs-12">
+                    <img src="~/Content/GreenSeoul/img/2.png" alt="">
+                    <h4>Mục 2</h4>
+                    <p>Nội dung</p>
+                </div>
+                <!--  Single Service  -->
+                <div class="single-service text-center col-md-3 col-sm-6 col-xs-12">
+                    <img src="~/Content/GreenSeoul/img/3.png" alt="">
+                    <h4>Mục 3</h4>
+                    <p>Nội dung</p>
+                </div>
+                <!--  Single Service  -->
+                <div class="single-service text-center col-md-3 col-sm-6 col-xs-12">
+                    <img src="~/Content/GreenSeoul/img/4.png" alt="">
+                    <h4>Mục 4</h4>
+                    <p>Nội dung</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Service Area End -->
+<!-- Blog Area Start -->
+<section id="blog-area" class="blog-area pt-120 pb-90">
+    <div class="container">
+        <!-- Section Title -->
+        <div class="row">
+            <div class="section-title text-center col-xs-12 mb-80">
+                <h2>Thông tin sâu bệnh</h2>
+            </div>
+        </div>
+        <div class="row">
+            <!--  Blog Item  -->
+            <div class="col-md-4 col-sm-6 col-xs-12 mb-30">
+                <div class="blog-item">
+                    <!--  Image  -->
+                    <a href="#" class="image"><img src="~/Content/GreenSeoul/img/1.jpg" alt=""></a>
+                    <!--  Content  -->
+                    <div class="content">
+                        <h4><a href="#">Dịch nấm tràn lan</a></h4>
+                        <!--  Meta  -->
+                        <div class="meta fix">
+                        </div>
+                        <p>Thông tin mới nhất từ</p>
+                        <a href="#" class="read-more">Đọc thêm</a>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
-
-
-</div>
-
-<div class="col-md-4 col-lg-3" id="tabAddDataControl">
-    <h4 style="color: #2e7c0c;">Thêm mới dữ liệu <span class="label label-danger pull-right" id="closeTabAddDataControl" style="font-size: 0.6em; padding: 6px 10px; cursor: pointer;">Đóng</span></h4>
-    <div id="tabAddDataContent">
-        <div id="templateDiv"></div>
-        <div id="editorDiv"></div>
-    </div>
-</div>
-
-<div class="col-md-8 col-lg-9" id="tabMapControl">
-    <div id="map">
-        <div id="homeDiv"></div>        
-
-        <div id="navToolbar" data-dojo-type="dijit/Toolbar">
-            <div data-dojo-type="dijit/form/Button" id="zoomin" data-dojo-props="iconClass:'zoominIcon'"></div>
-            <div data-dojo-type="dijit/form/Button" id="zoomout" data-dojo-props="iconClass:'zoomoutIcon'"></div>
-            <div data-dojo-type="dijit/form/Button" id="zoomfullext" data-dojo-props="iconClass:'zoomfullextIcon'"></div>
-            <div data-dojo-type="dijit/form/Button" id="zoomprev" data-dojo-props="iconClass:'zoomprevIcon'"></div>
-            <div data-dojo-type="dijit/form/Button" id="zoomnext" data-dojo-props="iconClass:'zoomnextIcon'"></div>
-            <div data-dojo-type="dijit/form/Button" id="pan" data-dojo-props="iconClass:'panIcon'"></div>
-            <div data-dojo-type="dijit/form/Button" id="deactivate" data-dojo-props="iconClass:'deactivateIcon'"></div>
-            @* <span>
-            <input id="textMapLink" type="text" style="width:300px;" placeholder="Nhập đường dẫn tài liệu bản đồ" value="" />
-                        <button id="addMapLink">Thêm tài liệu bản đồ</button>
-                    </span>*@
-        </div>
-    </div>
-</div>
-
-
-<script type="text/javascript">
-
-    $('ul.nav.nav-tabs  a').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
-
-</script>
-
-<script>
-
-    $(document).ready(function () {
-        var height = $(window).height();
-        height = height - 150;
-        $("#map").css("height", height + "px");
-        $("#tabAddDataContent").css("height", (height - 40) + "px");
-    });
-
-</script>
-
-<script type="text/javascript">
-    var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-    var dojoConfig = {
-        packages: [{
-            name: "application",
-            location: package_path + '/bootstrap-map-js/src/js'
-        }]
-    };
-</script>
-<script src="https://js.arcgis.com/3.19/"></script>
-<script src="~/Scripts/config_layout.js"></script>
-<script src="~/Scripts/map.js"></script>
-<script src="~/Scripts/update-item-view.js"></script>
+</section>
+<!-- Blog Area End <-->
+<!-- Plugins JS
+        ============================================ -->
+<script src="~/Scripts/GreenSeoul/plugins.js"></script>
+        ============================================ -->
+<script src="~/Scripts/GreenSeoul/main.js"></script>

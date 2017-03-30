@@ -22,13 +22,13 @@ namespace BVTV.WebGIS.Controllers
         // GET: /Admin/AdminAccount/
         BaoVeThucVatEntities entities = new BaoVeThucVatEntities();
             
-        public ActionResult Login()
+        public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Login(Account account, string returnUrl)
+        public ActionResult Index(Account account)
         {
             if (ModelState.IsValid)
             {
@@ -36,14 +36,7 @@ namespace BVTV.WebGIS.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(account.username, account.isRemember);
 
-                    if (!String.IsNullOrEmpty(returnUrl))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
                         return RedirectToAction("Index", "Home");
-                    }
                 }
                 else
                 {
