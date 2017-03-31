@@ -7,29 +7,23 @@
 <head>
     <title>Đăng nhập</title>
     <link href="~/Content/login.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/login/prefixfree.min.js"></script>  
 </head>
 <body>
-    <div class="container">
-        <div class="form-signin">
-            @using (Html.BeginForm())
-            {
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <h2 class="form-signin-heading">Đăng nhập</h2>
-                @Html.LabelFor(model => model.username, new { @class = "sr-only" })
-                @Html.TextBoxFor(model => model.username, new { @class = "form-control", @placeholder = "Tài khoản", @autocomplete = "off", @autocorrect = "off", @autocapitalize = "off", @spellcheck = "false" })
-                @Html.LabelFor(model => model.pass, new { @class = "sr-only" })
-                @Html.PasswordFor(model => model.pass, new { @class = "form-control", @placeholder = "Mật khẩu", @autocomplete = "off", @autocorrect = "off", @autocapitalize = "off", @spellcheck = "false" })
-
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.isRemember)
-                    @Html.LabelFor(model => model.isRemember)
-                </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Đăng nhập</button>
-            }
-        </div>
-    </div> <!-- /container -->
-
+    <div class="body"></div>
+    <div class="grad"></div>
+    <div class="header">
+        <div>Chi cuc Bao Ve Thuc Vat<p>Binh Duong</p></div>
+    </div>
+    <br>
+    <div class="login">
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.username, new { @class = "form-control", @placeholder = "Tài khoản", @autocomplete = "off", @autocorrect = "off", @autocapitalize = "off", @spellcheck = "false" })<br />
+            @Html.PasswordFor(model => model.pass, new { @class = "form-control", @placeholder = "Mật khẩu", @autocomplete = "off", @autocorrect = "off", @autocapitalize = "off", @spellcheck = "false" })<br />
+            <button type="submit">Đăng nhập</button>
+        }
+    </div>
 </body>
 </html>
-

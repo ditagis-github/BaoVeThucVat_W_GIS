@@ -217,6 +217,7 @@
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\map\geocoder.png" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\img\background-binhduong.jpg" />
     <Content Include="Content\map.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -327,6 +328,7 @@
     <Content Include="Scripts\GreenSeoul\bootstrap.min.js" />
     <Content Include="Scripts\GreenSeoul\jquery-1.12.0.min.js" />
     <Content Include="Scripts\jquery-3.2.0.min.js" />
+    <Content Include="Scripts\login\prefixfree.min.js" />
     <Content Include="Scripts\Map\config_layout.js" />
     <Content Include="Scripts\GreenSeoul\ajax-mail.js" />
     <Content Include="Scripts\GreenSeoul\main.js" />
