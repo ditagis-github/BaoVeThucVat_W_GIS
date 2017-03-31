@@ -138,6 +138,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -324,6 +325,7 @@
     <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.ttf" />
     <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.woff" />
     <Content Include="Content\bootstrap\fonts\Material-Design-Iconic-Font.woff2" />
+    <Content Include="Areas\Admin\Views\Web.config" />
     <None Include="Properties\PublishProfiles\BaoVeThucVat.pubxml" />
     <Content Include="Scripts\GreenSeoul\bootstrap.min.js" />
     <Content Include="Scripts\GreenSeoul\jquery-1.12.0.min.js" />
@@ -360,6 +362,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\Shared\" />
+    <Folder Include="Controllers\Admin\" />
     <Folder Include="Scripts\jquery\" />
   </ItemGroup>
   <ItemGroup>

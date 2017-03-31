@@ -17,59 +17,69 @@
 <script>
     var map, baseMap, sauBenhLayer, trongTrotLayer, SuDungDatTrong, doanhNghiepLayer, dynamicMapServiceLayer, hanhChinhHuyenLayer;
     require([
+      "dojo/dom-construct",
       "esri/Map",
       "esri/views/MapView",
       "esri/layers/MapImageLayer",
-      "esri/layers/FeatureLayer",
+      "esri/layers/FeatureLayer", "esri/tasks/support/Query", "esri/tasks/QueryTask",
+      "esri/widgets/Home",
       "esri/widgets/Expand",
       "esri/widgets/LayerList",
       "esri/widgets/Search",
+      "esri/widgets/Locate",
+      "esri/widgets/Legend",
       "dojo/domReady!"
-    ], function (Map, MapView,
+    ], function (
+        domConstruct,
+        Map, MapView,
         MapImageLayer,
-        FeatureLayer,
+        FeatureLayer, Query, QueryTask,
+        Home,
         Expand,
         LayerList,
-        Search
+        Search,
+        Locate,
+        Legend
         ) {
         map = new Map();
         var view = new MapView({
             container: "map",  // Reference to the scene div created in step 5
             map: map,  // Reference to the map object created before the scene
             zoom: 13,  // Sets the zoom level based on level of detail (LOD)
-            center: [106.688166, 11.172618]  // Sets the center point of view in lon/lat
+            center: [106.688166, 11.172618],  // Sets the center point of view in lon/lat
+            maxZoom: 13 //Sets the maxZoom level of the view
         });
-        
+
         baseMap = new MapImageLayer({
             url: "http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer",
-            title:"Bình Dương"
+            title: "Bình Dương"
         });
         map.add(baseMap);
         var esriImageWorld = new MapImageLayer({
             url: "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer",
             title: "Vệ tinh",
-            visible:false
+            visible: false
         });
         map.add(esriImageWorld);
         doanhNghiepLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0", {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"],
-            title:"Doanh nghiệp"
+            title: "Doanh nghiệp"
         });
         sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"],
-            title:"Sâu bệnh"
+            title: "Sâu bệnh"
         });
         SuDungDatTrong = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3", {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"],
-            title:"Sử dụng đất"
+            title: "Sử dụng đất"
         });
         trongTrotLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2", {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"],
-            title:"Trồng trọt"
+            title: "Trồng trọt"
         });
         //map.add(sauBenhLayer);
         map.addMany([trongTrotLayer, SuDungDatTrong, sauBenhLayer, doanhNghiepLayer]);
@@ -80,6 +90,15 @@
 
 
         //// --------------------------------- Widget ---------------------------------///
+
+        // Add the Home widget to the top left corner of the view
+        view.ui.add(new Home({
+            view: view
+        }), //Add Home Widget to top-left of the view
+        {
+            position: "top-left"
+        });
+
         // LayerList //
         var layerList = new LayerList({
             container: document.createElement("div"),
@@ -87,7 +106,7 @@
         });
         layerListExpand = new Expand({
             expandIconClass: "esri-icon-layer-list",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-            // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+            expandTooltip: "Lớp dữ liệu", ///Set tooltip when hover at button Expand of the view, defaults to "Expand" for English locale
             view: view,
             content: layerList.domNode
         });
@@ -101,7 +120,7 @@
             allPlaceholder: "District or Senator",
             sources: [{
                 featureLayer: sauBenhLayer,
-                searchFields: ["TenSauBenhGayHai","LoaiCayTrong"],
+                searchFields: ["TenSauBenhGayHai", "LoaiCayTrong"],
                 displayField: "TenSauBenhGayHai",
                 exactMatch: false,
                 outFields: ["*"],
@@ -115,112 +134,320 @@
             position: "top-right"
         });
 
+        //Add Logo DATAGIS to the bottom left of the view
+        var logo = domConstruct.create("img", {
+            src: "/Content/img/logo-ditagis.png",
+            id: "logo"
+        });
+        view.ui.add(logo, "bottom-left");
 
+        //Add Expand Search-Tab to top-left of the view
+        view.ui.add(new Expand({
+            expandIconClass: "esri-icon-search",//change icon for button Expand of the view
+            expandTooltip: "Tìm kiếm nâng cao",//Set tooltip when hover at button Expand of the view
+        }), "top-left");
+
+
+
+        // Add the locate widget to the top left corner of the view
+        view.ui.add(new Locate({
+            view: view
+        }), //Add Locate Widget to top-left of the view
+        {
+            position: "top-left"
+        });
+
+        // Add Legend widget to the bottom right corner of the view
+        view.ui.add(new Legend({
+            view: view,
+            layerInfos: [{
+                layer: sauBenhLayer,
+                title: "Sâu bệnh"
+            }, {
+                layer: doanhNghiepLayer,
+                title: "Doanh nghiệp"
+            }]
+        }), "bottom-right");
+
+
+        //-----------------------EVENT FIND AT TAB-----------------------//
+
+        function addSearchEvent(domId, feature, arrAttribute, selectProperty) {
+
+            var btnFindDom = $(domId + ' #btnFind'), resultDom = $(domId + ' #result'), counterDom = $(domId + ' #counter');
+            $(btnFindDom).click(function (e) {
+                var where = "1=1";
+
+                arrAttribute.forEach(function (value, index) {
+                    var domValue = $("#" + value.dom).val();
+                    if (domValue.trim().length > 0) {
+                        where += " AND " + value.property + " LIKE N'%" + domValue + "%'";
+                    }
+                });
+
+
+                $(".loading").css("display", "inline-block");
+                $(resultDom).html('');
+                $(counterDom).html('');
+                var query = new Query();
+                query.returnGeometry = true;
+                query.outFields = ["*"];
+                query.where = where;
+
+                feature.queryFeatures(query).then(function (results) {
+                    var html = "";
+                    var features = results.features;
+                    if (features.length > 0) {
+                        for (var i = 0 ; i < features.length ; i++) {
+                            var attr = features[i].attributes;
+                            var span = $('<span/>').text(attr[selectProperty[1]]);
+                            //span.text = attr[selectProperty[1]];
+                            span.click(function () {
+                                feature.queryExtent(new Query().where = [selectProperty[0], "='", attr[selectProperty[0]], "'"].join('')).then(function (result) {
+                                    view.goTo(result.extent);
+                                })
+                            });
+                            $(resultDom).append($('<tr/>').append($('<td/>').append(span)));
+
+                        }
+
+                        //.html(html);
+                        $(counterDom).html(results.length);
+
+                    }
+
+                    $(".loading").css("display", "none");
+
+                });
+
+            });
+
+
+            //$(resultDom).on("click", "span.viewdata", function () {
+            //    var value = $(this).attr('alt');
+            //    viewPoint((selectProperty[0] + " = '" + value + "'"), feature);
+            //});
+        }
+
+
+        function viewPoint(value, layer) {
+            var query = new Query();
+            query.returnGeometry = true;
+            query.outFields = ["*"];
+            query.where = value;
+            layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+                if (results.length > 0) {
+                    var feat = results[0];
+                    var point = feat.geometry;
+                    // var graphic1 = new esri.Graphic(point, ptSymbol1);
+
+                    var pt = new Point(point.x, point.y, map.spatialReference);
+                    if (pt) {
+                        var extent = new Extent((point.x + 40), (point.y + 40), (point.x - 40), (point.y - 40), map.spatialReference);
+                        var stateExtent = extent.expand(5.0);
+                        map.setExtent(stateExtent);
+                    }
+                }
+            });
+        }
+
+        function viewPolygon(value, layer) {
+            var query = new Query();
+            query.returnGeometry = true;
+            query.outFields = ["*"];
+            query.where = value;
+            layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+                if (results.length > 0) {
+                    var feat = results[0];
+                    var point = feat.geometry;
+                    // var graphic1 = new esri.Graphic(point, ptSymbol1);
+                    var stateExtent = point.getExtent().expand(8.0);
+                    map.setExtent(stateExtent);
+                }
+            });
+        }
+        addSearchEvent('#tab-doanhnghiep', doanhNghiepLayer, [{
+            dom: 'txtMaDN',
+            property: 'MaDoanhNghiep'
+        },
+        {
+            dom: 'txtTen',
+            property: 'NguoiDaiDienDoanhNghiep  '
+        }, {
+            dom: 'txtQuanHuyen',
+            property: 'QuanHuyen'
+        }
+        ], ['MaDoanhNghiep', 'NguoiDaiDienDoanhNghiep'])
+
+        //
+
+        function loadData(dom, fieldName, layer) {
+            var combo = $(dom);
+            if (combo.find("option").length > 1)
+                return;
+
+            layer.getField(fieldName).domain.codedValues.forEach(function (value, index) {
+                var code = value.code, name = value.name;
+                //create Element option item with Jquery
+                var option = $('<option/>').val(code).text(name);
+                combo.append(option);
+            })
+        }
+        //add event to update combobox  when click tab-saubenh
+        $('#a-tab-saubenh').on('click', function () {
+            loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer);
+        });
+
+
+        //add event to search with button
+        addSearchEvent('#tab-saubenh', sauBenhLayer, [{
+            dom: 'cbNhomCayTrong',
+            property: 'NhomCayTrong'
+        }, {
+            dom: 'cbLoaiCayTrong',
+            property: 'LoaiCayTrong'
+        }, {
+            dom: 'nbPhamViAnhHuong',
+            property: 'PhamViAnhHuong'
+        }, {
+            dom: 'nbDienTich',
+            property: 'DienTich'
+        }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }
+        ], ['LoaiCayTrong', 'TenSauBenhGayHai'])
+
+        //add event to update combobox  when click tab-trongtrot
+        $('#a-tab-trongtrot').first().on('click', function () {
+            loadData('#tab-trongtrot #cbNhomCayTrong', 'NhomCayTrong', trongTrotLayer), loadData('#tab-trongtrot #cbLoaiCayTrong', 'LoaiCayTrong', trongTrotLayer), loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
+        });
+
+
+        //add event to search with button
+        addSearchEvent('#tab-trongtrot', trongTrotLayer, [{
+            dom: 'cbNhomCayTrong',
+            property: 'NhomCayTrong'
+        }, {
+            dom: 'cbLoaiCayTrong',
+            property: 'LoaiCayTrong'
+        }, {
+            dom: 'cbPhuongThucTrong',
+            property: 'PhuongThucTrong'
+        }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }, {
+            dom: 'nbDienTich',
+            property: 'DienTich'
+        }
+        ], ['LoaiCayTrong', 'TenGiongCayTrong'])
     });
 </script>
-
+<style>
+</style>
 <section id="map-area" class="pb-100">
-    <div class="col-md-4 col-lg-3 undisplay" id="tabSearchControl" style="">
-        <h4>Tìm kiếm thông tin <span class="label label-danger pull-right" id="closeTabSearchControl" style="font-size: 0.6em; padding: 6px 10px; cursor: pointer;">Đóng</span></h4>
-        <ul class="nav nav-tabs nav-pills nav-justified responsive" id="myTab">
-            <li class="test-class active"><a class="deco-none red-class" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
-            <li class="test-class"><a href="#tab-saubenh">Sâu bệnh</a></li>
-            <li><a class="deco-none" href="#tab-trongtrot">Trồng trọt</a></li>
+    <div class="col-md-4 col-lg-3">
+        <ul class="nav nav-green">
+            <li class="active"><a data-toggle="pill" href="#home">Chỉnh sửa</a></li>
+            <li><a data-toggle="pill" href="#menu1">Tìm kiếm</a></li>
         </ul>
 
-        <div class="tab-content responsive">
-            <div class="tab-pane active" id="tab-doanhnghiep">
-                <h5>Tìm thông tin Doanh nghiệp</h5>
-                <div class="formSearch">
-                    <input type="text" id="txtMaDN" class="form-control" placeholder="Mã doanh nghiệp" />
-                    <input type="text" id="txtTen" class="form-control" placeholder="Tên doanh nghiệp" />
-                    <input type="text" id="txtQuanHuyen" class="form-control" placeholder="Quận/Huyện" />
-                    <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
-                    <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
-                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
-                </div>
-                <div class="resultFormSearch">
-                    <table data-toggle="table" class="table" data-row-style="rowStyle">
-                        <thead>
-                            <tr>
-                                <th>Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="result"></tbody>
-                    </table>
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <h4>Tìm kiếm thông tin</h4>
+                <ul class="nav nav-tabs nav-green nav-justified responsive" id="myTab">
+                    <li class="active"><a data-toggle="pill" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
+                    <li><a id="a-tab-saubenh" data-toggle="pill" href="#tab-saubenh">Sâu bệnh</a></li>
+                    <li><a id="a-tab-trongtrot" data-toggle="pill" href="#tab-trongtrot">Trồng trọt</a></li>
+                </ul>
+
+                <div class="tab-content responsive">
+                    <div class="tab-pane active" id="tab-doanhnghiep">
+                        <h5>Tìm thông tin Doanh nghiệp</h5>
+                        <div class="formSearch">
+                            <input type="text" id="txtMaDN" class="form-control" placeholder="Mã doanh nghiệp" />
+                            <input type="text" id="txtTen" class="form-control" placeholder="Tên doanh nghiệp" />
+                            <input type="text" id="txtQuanHuyen" class="form-control" placeholder="Quận/Huyện" />
+                            <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                            <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
+                            <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                        </div>
+                        <div class="resultFormSearch">
+                            <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                <thead>
+                                    <tr>
+                                        <th>Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="result"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-saubenh">
+
+                        <h5>Tìm thông tin Sâu bệnh</h5>
+                        <div class="formSearch">
+                            <select class="form-control" id="cbNhomCayTrong">
+                                <option value="" selected>Nhóm cây trồng</option>
+                            </select>
+                            <select class="form-control" id="cbLoaiCayTrong">
+                                <option value="" selected>Loại cây trồng</option>
+                            </select>
+                            <select class="form-control" id="cbCapDoGayHai">
+                                <option value="" selected>Cấp độ gây hại</option>
+                            </select>
+                            <input type="number" id="nbPhamViAnhHuong" class="form-control" placeholder="Phạm vi ảnh hưởng" />
+                            <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
+                            <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                            <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
+                            <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                        </div>
+                        <div class="resultFormSearch">
+                            <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                <thead>
+                                    <tr>
+                                        <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="result"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane" id="tab-trongtrot">
+
+                        <h5>Tìm thông tin Cây trồng</h5>
+                        <div class="formSearch">
+                            <select class="form-control" id="cbNhomCayTrong">
+                                <option value="" selected>Nhóm cây trồng</option>
+                            </select>
+                            <select class="form-control" id="cbLoaiCayTrong">
+                                <option value="" selected>Loại cây trồng</option>
+                            </select>
+                            <select class="form-control" id="cbPhuongThucTrong">
+                                <option value="" selected>Phương thức trồng</option>
+                            </select>
+                            <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
+                            <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
+                            <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
+                            <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                        </div>
+                        <div class="resultFormSearch">
+                            <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                <thead>
+                                    <tr>
+                                        <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="result"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <div class="tab-pane" id="tab-saubenh">
-
-                <h5>Tìm thông tin Sâu bệnh</h5>
-                <div class="formSearch">
-                    <select class="form-control" id="cbNhomCayTrong">
-                        <option value="" selected>Nhóm cây trồng</option>
-                    </select>
-                    <select class="form-control" id="cbLoaiCayTrong">
-                        <option value="" selected>Loại cây trồng</option>
-                    </select>
-                    <select class="form-control" id="cbCapDoGayHai">
-                        <option value="" selected>Cấp độ gây hại</option>
-                    </select>
-                    <input type="number" id="nbPhamViAnhHuong" class="form-control" placeholder="Phạm vi ảnh hưởng" />
-                    <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
-                    <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
-                    <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
-                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+            <div id="menu1" class="tab-pane fade">
+                <h4>Thêm mới dữ liệu</h4>
+                <div id="tabAddDataContent">
+                    <div id="templateDiv"></div>
+                    <div id="editorDiv"></div>
                 </div>
-                <div class="resultFormSearch">
-                    <table data-toggle="table" class="table" data-row-style="rowStyle">
-                        <thead>
-                            <tr>
-                                <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="result"></tbody>
-                    </table>
-                </div>
-
             </div>
-            <div class="tab-pane" id="tab-trongtrot">
-
-                <h5>Tìm thông tin Cây trồng</h5>
-                <div class="formSearch">
-                    <select class="form-control" id="cbNhomCayTrong">
-                        <option value="" selected>Nhóm cây trồng</option>
-                    </select>
-                    <select class="form-control" id="cbLoaiCayTrong">
-                        <option value="" selected>Loại cây trồng</option>
-                    </select>
-                    <select class="form-control" id="cbPhuongThucTrong">
-                        <option value="" selected>Phương thức trồng</option>
-                    </select>
-                    <input type="number" id="nbDienTich" class="form-control" placeholder="Diện tích" />
-                    <button type="button" class="btn btn-default" id="btnFind">Tìm kiếm</button>
-                    <button type="button" class="btn btn-default" id="btnExcel">Xuất Excel</button>
-                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
-                </div>
-                <div class="resultFormSearch">
-                    <table data-toggle="table" class="table" data-row-style="rowStyle">
-                        <thead>
-                            <tr>
-                                <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="result"></tbody>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-
-
-    </div>
-
-    <div class="col-md-4 col-lg-3" id="tabAddDataControl">
-        <h4 style="color: #2e7c0c;">Thêm mới dữ liệu <span class="label label-danger pull-right" id="closeTabAddDataControl" style="font-size: 0.6em; padding: 6px 10px; cursor: pointer;">Đóng</span></h4>
-        <div id="tabAddDataContent">
-            <div id="templateDiv"></div>
-            <div id="editorDiv"></div>
         </div>
     </div>
 

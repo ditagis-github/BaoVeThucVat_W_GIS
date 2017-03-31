@@ -68,35 +68,35 @@
 }
 
 
-/*Leaflet Slide menu*/
-.leaflet-control-geocoder {
-    box-shadow: 0 1px 7px #999;
-    /* background: #f8f8f9; */
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-    border: 1px solid #57585A;
-    background-color: #FFF;
-    top: 117px;
-    left: 37px;
-}
-.leaflet-control-logo {
-    bottom:10px;
-    left: 10px;
-}
-.leaflet-control {
-    position: absolute;
-    z-index: 100000;
+.logo {
+    bottom: 30px;
 }
 
-.leaflet-control-geocoder a {
-    background-image: url(img/map/geocoder.png);
-    width: 28px;
-    height: 28px;
+/*CSS at IndexMap*/
+.nav-green {
+    color: #6b6b6b;
 }
 
-.leaflet-control-geocoder a {
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    display: block;
-}
+    .nav-green li {
+        float: left;
+        font-size: 14px;
+        line-height: 30px;
+        font-weight: 500;
+    }
+
+        .nav-green li.active a, .nav-green li.active a:hover {
+            color: #6ab43e;
+            background-color: white;
+            border-bottom: 3px solid #6ab43e;
+        }
+
+        .nav-green li a {
+            color: #6b6b6b;
+            background-color: white;
+        }
+
+            .nav-green li a:hover {
+                color: #6ab43e;
+                background-color: white;
+                border-bottom: 3px solid #6ab43e;
+            }
