@@ -42,11 +42,11 @@
                             <div class="input-box input-2">
                                 @Html.TextBoxFor(m => m.Email, new { @placeholder = "Thư điện tử" })
                             </div>
-                                <div class="input-box">
-                                    @Html.TextAreaFor(m => m.Name, new { @placeholder = "Nội dung" })
-                                </div>
+                            <div class="input-box">
+                                @Html.TextAreaFor(m => m.Name, new { @placeholder = "Nội dung" })
+                            </div>
                                 <div class="input-box"><input type="submit" value="submit"></div>
-                                    @Html.ValidationSummary(true, "", new { @class = "form-messege" })
+                                @Html.ValidationSummary(true, "", new { @class = "form-messege" })
                         }
 
                     </div>
