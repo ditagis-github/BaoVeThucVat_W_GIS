@@ -1,0 +1,122 @@
+﻿
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@ViewBag.Title - Chi cục Bảo vệ thực vật tỉnh Bình Dương</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    @Styles.Render("~/Content/greensoul")
+    @Scripts.Render("~/bundles/jquery")
+
+</head>
+
+<body>
+    <!-- Body main wrapper start -->
+    <div class="wrapper fix">
+
+        <!-- Header Area Start -->
+        <section id="header-area" class="header-area">
+
+            <!-- Header Top Start -->
+            <div class="header-top">
+                <div class="container">
+                    <div class="row">
+                        <!-- Header Top Left -->
+                        <div class="header-top-left text-left col-md-6 col-sm-8 col-xs-12">
+                            <p><span>Đường dây nóng:</span> 06503-822215</p>
+                            <p><span>Thư điện tử:</span> ccbvtv@binhduong.gov.vn</p>
+                        </div>
+                        <!-- Header Top Right -->
+                        <div class="header-top-right col-md-6 col-sm-4 col-xs-12 hidden-xs">
+                            <!-- Header Quote Button -->
+                            @*@Html.ActionLink("Đăng xuất", "Logout", "Login", new { @class = "get-quote float-right" })*@
+                            <a href="@Url.Action("Logout","Login")" class="get-quote float-right">Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Header Top End -->
+            <!-- Header Bottom Start -->
+            <div class="header-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- Logo -->
+                            <div class="header-logo float-left">
+                                <a class="logo" href="index.html">
+                                    <img src="~/Content/GreenSoul/img/LogoCCBVTV.JPG" alt="">
+                                    <div class="slogan">
+                                        <p>
+                                            Chi cục BVTV - Bình Dương
+                                        </p>
+
+                                    </div>
+
+                                </a>
+                            </div>
+                            <!-- Main Menu -->
+                            <div id="main-menu" class="main-menu float-right hidden-xs">
+                                <nav>
+                                    <ul>
+                                        <li class="@Html.IsSelected(actions: "Index", controllers: "Home")">
+                                            @Html.ActionLink("Trang Chủ", "Index", "Home")
+                                            </li>
+                                        <li class="@Html.IsSelected(actions: "About", controllers: "Home")">
+                                            @Html.ActionLink("Giới thiệu", "About", "Home")
+                                        </li>
+                                        <li class="@Html.IsSelected(actions: "Index", controllers: "Map")">
+                                            @Html.ActionLink("Bản Đồ", "Index", "Map")
+                                        </li>
+
+                                        <li class="@Html.IsSelected(actions: "Index", controllers: "News")">
+                                            @Html.ActionLink("Thông tin", "Index", "News")
+                                        </li>
+
+                                        <li class="@Html.IsSelected(actions: "Contact", controllers: "Home")">
+                                            @Html.ActionLink("Liên hệ", "Contact", "Home")
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Header Bottom End -->
+
+        </section>
+        <!-- Header Area End -->
+        @RenderBody()
+
+        <!-- Footer Bottom Area Start -->
+        <section id="footer-bottom-area" class="footer-bottom-area ">
+            <!-- Footer Top Area End -->
+            <div class="container">
+                <div class="row">
+                    <!-- Copyright -->
+                    <div class="copyright text-left col-sm-6 col-xs-12">
+                        <p>Bản quyền &copy; <span>Chi cục bảo vệ thực vật tỉnh Bình Dương</span>. @DateTime.Now.Year</p>
+                    </div>
+                    <!-- Author Credit -->
+                    <div class="author-credit text-right col-sm-6 col-xs-12">
+                        <p>Giao diện được mode dựa trên Green Soul - 2017 của <a href="https://hastech.company/">Hastech</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer Bottom Area End -->
+        <!-- Body main wrapper end -->
+        <!-- JS -->
+        <!-- Bootstrap JS============================================ -->
+
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    </div>
+</body>
+
+</html>

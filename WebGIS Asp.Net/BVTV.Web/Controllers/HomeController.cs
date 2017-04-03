@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace BVTV.WebGIS.Controllers
+namespace BVTV.WebApplication.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         //

@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.Entity", "BVTV.Entity\BVTV.Entity.csproj", "{844A6B57-D1BB-4997-AA80-033A01593CC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.WebGIS", "BVTV.Web\BVTV.WebGIS.csproj", "{14E744D0-B97D-41EB-9D27-20B818EFC7C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.WebApplication", "BVTV.WebApplication\BVTV.WebApplication.csproj", "{3798D9B3-D586-4AFE-9B25-CDF294FF4576}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.WebApplication.Tests", "BVTV.WebApplication.Tests\BVTV.WebApplication.Tests.csproj", "{8C60CD70-AA2F-4945-B8E7-CC19071E720F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +25,14 @@ Global
 		{14E744D0-B97D-41EB-9D27-20B818EFC7C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14E744D0-B97D-41EB-9D27-20B818EFC7C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14E744D0-B97D-41EB-9D27-20B818EFC7C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B4CE4F4-DB31-44EF-A4E6-94CF22A04244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3798D9B3-D586-4AFE-9B25-CDF294FF4576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3798D9B3-D586-4AFE-9B25-CDF294FF4576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3798D9B3-D586-4AFE-9B25-CDF294FF4576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3798D9B3-D586-4AFE-9B25-CDF294FF4576}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C60CD70-AA2F-4945-B8E7-CC19071E720F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C60CD70-AA2F-4945-B8E7-CC19071E720F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C60CD70-AA2F-4945-B8E7-CC19071E720F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C60CD70-AA2F-4945-B8E7-CC19071E720F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

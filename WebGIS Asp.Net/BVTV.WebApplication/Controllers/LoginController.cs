@@ -1,32 +1,26 @@
-﻿using BVTV.WebGIS.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using BVTV.Entity;
+using BVTV.WebApplication.Models;
+using System.Web.Security;
 
-namespace BVTV.WebGIS.Controllers
+namespace BVTV.WebApplication.Controllers
 {
-    public class LoginController: Controller
+    public class LoginController : Controller
     {
-        //private Helper help;
+        private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
 
-        //public AdminAccountController(IUsersRepository usersRepository, Helper help)
-        //{
-        //    this.usersRepository = usersRepository;
-        //    this.help = help;
-        //}
-        //
-        // GET: /Admin/AdminAccount/
-        BaoVeThucVatEntities entities = new BaoVeThucVatEntities();
-            
+        // GET: Login
         public ActionResult Index()
         {
             return View();
         }
-
         [HttpPost]
         public ActionResult Index(Account account)
         {
@@ -36,7 +30,7 @@ namespace BVTV.WebGIS.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(account.username, account.isRemember);
 
-                        return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -57,7 +51,8 @@ namespace BVTV.WebGIS.Controllers
 
         private Boolean isValid(string username, string password)
         {
-            return entities.Users.Any(a=>a.username.Equals(username) && a.password.Equals(password));
+            return db.Users.Any(a => a.username.Equals(username) && a.password.Equals(password));
+            //return username.Equals("admin") && password.Equals("admin");
         }
 
 
@@ -248,5 +243,13 @@ namespace BVTV.WebGIS.Controllers
 
         //}
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

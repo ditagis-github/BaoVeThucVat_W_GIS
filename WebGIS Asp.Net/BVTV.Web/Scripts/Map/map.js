@@ -488,7 +488,7 @@ require([
     }
 
 
-    function viewPoint(value, layer) {
+    function viewPoint(query, layer) {
         var query = new Query();
         query.returnGeometry = true;
         query.outFields = ["*"];

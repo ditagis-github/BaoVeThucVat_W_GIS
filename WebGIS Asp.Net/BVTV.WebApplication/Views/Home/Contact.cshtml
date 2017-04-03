@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Liên hệ";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+@model BVTV.WebApplication.Models.Contact
+<!-- Contact Area Start -->
+<section id="contact-area" class="contact-area pt-120 pb-70">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-xs-12">
+                <!-- Contact Info -->
+                <div class="row mb-50">
+                    <div class="col-sm-4 col-xs-12 mb-30">
+                        <div class="single-contact-info text-center">
+                            <h4>Thư điện tử</h4>
+                            <p>bvtv@binhduong.gov.vn</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-xs-12 mb-30">
+                        <div class="single-contact-info text-center">
+                            <h4>Số điện thoại</h4>
+                            <p>06503-822215.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-xs-12 mb-30">
+                        <div class="single-contact-info text-center">
+                            <h4>Địa chỉ</h4>
+                            <p>Nguyễn Văn Lên - P. Phú Lợi - TP. TDM - Bình Dương</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Contact Form -->
+                    <div class="contact-form col-md-7 col-xs-12 mb-50">
+                        <h3 class="block-title">Liên hệ</h3>
+                        @using (Html.BeginForm("Send", "Home", FormMethod.Post, new { @class = "contact-form" }))
+                        {
+                            <div class="input-box input-2">
+                                @Html.TextBoxFor(m => m.Name, new { @placeholder = "Tên" })
+                            </div>
+                            <div class="input-box input-2">
+                                @Html.TextBoxFor(m => m.Email, new { @placeholder = "Thư điện tử" })
+                            </div>
+                            <div class="input-box">
+                                @Html.TextAreaFor(m => m.Name, new { @placeholder = "Nội dung" })
+                            </div>
+                            <div class="input-box"><input type="submit" value="Liên hệ"></div>
+                                @Html.ValidationSummary(true, "", new { @class = "form-messege" })
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Area End -->

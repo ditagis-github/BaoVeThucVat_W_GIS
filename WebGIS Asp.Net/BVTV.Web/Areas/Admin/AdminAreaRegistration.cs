@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace BVTV.WebGIS.Areas.Admin
+namespace BVTV.WebApplication.Areas.Admin
 {
     public class AdminAreaRegistration : AreaRegistration
     {

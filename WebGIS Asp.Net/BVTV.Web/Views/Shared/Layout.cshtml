@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>@ViewBag.Title</title>
+    <title>@ViewBag.Title - Chi cục Bảo vệ thực vật tỉnh Bình Dương</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -16,6 +16,7 @@
     ============================================ -->
     <link rel="stylesheet" href="~/Content/GreenSeoul/css/material-design-iconic-font.min.css">
     <link rel="stylesheet" href="~/Content/GreenSeoul/css/font-awesome.min.css">
+    
     
     <!-- Style CSS
     ============================================ -->
@@ -48,7 +49,8 @@
                         <!-- Header Top Right -->
                         <div class="header-top-right col-md-6 col-sm-4 col-xs-12 hidden-xs">
                             <!-- Header Quote Button -->
-                            <a href="@Url.Action("Logout","Login")" class="get-quote float-right">Đăng xuất</a>
+                            @Html.ActionLink("Đăng xuất", "Logout", "Login", new { @class = "get-quote float-right" })
+                            @*<a href="@Url.Action("Logout","Login")" class="get-quote float-right">Đăng xuất</a>*@
                         </div>
                     </div>
                 </div>
@@ -62,7 +64,7 @@
                             <!-- Logo -->
                             <div class="header-logo float-left">
                                 <a class="logo" href="index.html">
-                                    <img src="~/Content/GreenSeoul/img/LogoCCBVTV.JPG" alt="">
+                                    <img src="~/Content/GreenSoul/img/LogoCCBVTV.JPG" alt="">
                                     <div class="slogan">
                                         <p>
                                             Chi cục BVTV - Bình Dương
@@ -77,13 +79,26 @@
                                 <nav>
                                     <ul>
                                         <li class="active">
-                                            <a href="@Url.Action("Index","Home")">trang chủ</a>
+                                            @Html.ActionLink("Trang Chủ", "Index", "Home")
+                                            @*<a href="@Url.Action("Index","Home")">trang chủ</a>*@
                                         </li>
-                                        <li><a href="@Url.Action("About","Home")">Giới thiệu</a></li>
-                                        <li><a href="@Url.Action("Index","Map")">bản đồ</a></li>
-                                        <li><a href="@Url.Action("Index","Contact")">Liên hệ</a></li>
                                         <li>
-                                            <a href="#">sâu bệnh</a>
+                                            @Html.ActionLink("Giới thiệu", "About", "Home")
+                                            @*<a href="@Url.Action("About","Home")">Giới thiệu</a>*@
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Bản Đồ", "Index", "Map")
+                                            @*<a href="@Url.Action("Index","Map")">bản đồ</a>*@
+                                        </li>
+
+                                        <li>
+                                            @Html.ActionLink("Thông tin", "Index", "News")
+                                            @*<a href="#">sâu bệnh</a>*@
+                                        </li>
+
+                                        <li>
+                                            @Html.ActionLink("Đăng xuất", "Logout", "Login")
+                                            @*<a href="@Url.Action("Index","Contact")">Liên hệ</a>*@
                                         </li>
                                     </ul>
                                 </nav>
@@ -106,7 +121,7 @@
                 <div class="row">
                     <!-- Copyright -->
                     <div class="copyright text-left col-sm-6 col-xs-12">
-                        <p>Bản quyền &copy; <span>Chi cục bảo vệ thực vật tỉnh Bình Dương</span>. 2017</p>
+                        <p>Bản quyền &copy; <span>Chi cục bảo vệ thực vật tỉnh Bình Dương</span>. @DateTime.Now.Year</p>
                     </div>
                     <!-- Author Credit -->
                     <div class="author-credit text-right col-sm-6 col-xs-12">
@@ -121,7 +136,7 @@
         <!-- Bootstrap JS
         ============================================ -->
         <script src="~/Scripts/GreenSeoul/bootstrap.min.js"></script>
-        
+        </div>
 </body>
 
 </html>
