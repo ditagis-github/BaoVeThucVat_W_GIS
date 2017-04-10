@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         // GET: Admin/Home

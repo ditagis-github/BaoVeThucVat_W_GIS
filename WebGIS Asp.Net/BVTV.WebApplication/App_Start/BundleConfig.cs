@@ -30,7 +30,7 @@ namespace BVTV.WebApplication
                       ));
             bundles.Add(new ScriptBundle("~/bundles/map").Include(
                 "~/Scripts/Map/search-feature.js",
-                      "~/Scripts/Map/map.js"
+                      "~/Scripts/map/map.js"
                       ));
 
             bundles.Add(new ScriptBundle("~/js/lumino").Include(
@@ -44,7 +44,8 @@ namespace BVTV.WebApplication
                       "~/Content/lumino/js/easypiechart.js",
                       "~/Content/lumino/js/easypiechart-data.js"
                       ));
-
+            bundles.Add(new ScriptBundle("~/js/chartjs").Include(
+                        "~/Scripts/chartjs/chart.js"));
 
 
             bundles.Add(new StyleBundle("~/css/lumino").Include(
