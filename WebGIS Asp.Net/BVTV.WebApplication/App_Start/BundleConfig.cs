@@ -24,24 +24,47 @@ namespace BVTV.WebApplication
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/greensoul").Include(
-                      "~/Scripts/GreenSoul/plugins.js",
-                      "~/Scripts/GreenSoul/main.js"
+            bundles.Add(new ScriptBundle("~/js/hifugreen").Include(
+                      "~/Scripts/hifugreen/plugins.js",
+                      "~/Scripts/hifugreen/main.js"
                       ));
             bundles.Add(new ScriptBundle("~/bundles/map").Include(
-                      "~/Scripts/Map/map.js"
+                "~/Scripts/Map/search-feature.js",
+                      "~/Scripts/map/map.js"
                       ));
-                 bundles.Add(new StyleBundle("~/Content/map").Include(
+
+            bundles.Add(new ScriptBundle("~/js/lumino").Include(
+                "~/Scripts/jquery-{version}.js",
+                      "~/Scripts/bootstrap.min.js",
+                      "~/Content/lumino/js/bootstrap-datepicker.js"
+                      ));
+            bundles.Add(new ScriptBundle("~/js/lumino/chart").Include(
+                "~/Content/lumino/js/chart.min.js",
+                      "~/Content/lumino/js/chart-data.js",
+                      "~/Content/lumino/js/easypiechart.js",
+                      "~/Content/lumino/js/easypiechart-data.js"
+                      ));
+            bundles.Add(new ScriptBundle("~/js/chartjs").Include(
+                        "~/Scripts/chartjs/chart.js"));
+
+
+            bundles.Add(new StyleBundle("~/css/lumino").Include(
+                      "~/Content/bootstrap.min.css",
+                      "~/Content/material-design-iconic-font.min.css",
+                      "~/Content/lumino/css/datepicker3.css",
+                      "~/Content/lumino/css/styles.css"
+                      ));
+            bundles.Add(new StyleBundle("~/Content/map").Include(
                       "~/Content/esri.css"));
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
                       "~/Content/site.css"));
 
-            bundles.Add(new StyleBundle("~/Content/greensoul").Include(
+            bundles.Add(new StyleBundle("~/css/hifugreen").Include(
                     "~/Content/bootstrap.min.css",
-                    "~/Content/GreenSoul/css/material-design-iconic-font.min.css",
-                    "~/Content/GreenSoul/css/font-awesome.min.css",
-                    "~/Content/GreenSoul/css/style.css"
+                    "~/Content/material-design-iconic-font.min.css",
+                    "~/Content/font-awesome.min.css",
+                    "~/Content/hifugreen/css/style.css"
 
                     ));
 

@@ -20,6 +20,7 @@ namespace BVTV.Entity
         public Nullable<System.DateTime> ngayCapNhat { get; set; }
         public string maDoiTuong { get; set; }
         public Nullable<int> doiTuong { get; set; }
+        public string MaHuyenTP { get; set; }
         public System.Data.Entity.Spatial.DbGeometry SHAPE { get; set; }
     }
 }

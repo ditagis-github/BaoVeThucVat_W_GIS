@@ -1,0 +1,84 @@
+﻿@model IEnumerable<BVTV.Entity.SAUBENH>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+}
+
+<table data-toggle="table" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" >
+    <thead>
+        <tr>
+            <th data-field="id" data-checkbox="true">
+                @Html.DisplayNameFor(model => model.MaSauBenh)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.NhomCayTrong)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.LoaiCayTrong)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.TenSauBenhGayHai)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.MatDoSauBenhGayHai)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.PhamViAnhHuong)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.MucDoAnhHuong)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.CapDoGayHai)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.MaHuyenTP)
+            </th>
+            <th data-sortable="true">
+                @Html.DisplayNameFor(model => model.NgayCapNhat)
+            </th>
+            <th>Tác vụ</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaSauBenh)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NhomCayTrong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoaiCayTrong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenSauBenhGayHai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MatDoSauBenhGayHai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhamViAnhHuong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MucDoAnhHuong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CapDoGayHai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaHuyenTP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayCapNhat)
+            </td>
+            
+            <td>
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.OBJECTID }) |
+                @Html.ActionLink("Chi tiết", "Details", new { id = item.OBJECTID }) |
+                @Html.ActionLink("Xóa", "Delete", new { id = item.OBJECTID })
+            </td>
+        </tr>
+    }
+
+</table>

@@ -22,6 +22,7 @@ namespace BVTV.Entity
         public short loaiTrangThaiNuocMat { get; set; }
         public string danhTuChung { get; set; }
         public string diaDanh { get; set; }
+        public string MaHuyenTP { get; set; }
         public System.Data.Entity.Spatial.DbGeometry Shape { get; set; }
     }
 }

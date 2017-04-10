@@ -25,26 +25,23 @@ namespace BVTV.Entity
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<DanhMucCayTrongRauMau> DanhMucCayTrongRauMaus { get; set; }
         public virtual DbSet<DOANHNGHIEP> DOANHNGHIEPs { get; set; }
         public virtual DbSet<HANHCHINHHUYEN> HANHCHINHHUYENs { get; set; }
         public virtual DbSet<MATDUONGBO> MATDUONGBOes { get; set; }
+        public virtual DbSet<NhomCayTrong> NhomCayTrongs { get; set; }
         public virtual DbSet<PHUBEMAT> PHUBEMATs { get; set; }
         public virtual DbSet<QUYHOACHSUDUNGDAT> QUYHOACHSUDUNGDATs { get; set; }
         public virtual DbSet<SAUBENH> SAUBENHs { get; set; }
         public virtual DbSet<SONGHO> SONGHOes { get; set; }
         public virtual DbSet<TIMDUONG> TIMDUONGs { get; set; }
         public virtual DbSet<TRONGTROT> TRONGTROTs { get; set; }
-        public virtual DbSet<CONGNGHECAO> CONGNGHECAOs { get; set; }
-        public virtual DbSet<GIONGCAYTRONG> GIONGCAYTRONGs { get; set; }
-        public virtual DbSet<SAUBENHGAYHAI> SAUBENHGAYHAIs { get; set; }
-        public virtual DbSet<THOIGIANSANXUATTRONGTROT> THOIGIANSANXUATTRONGTROTs { get; set; }
-        public virtual DbSet<a34> a34 { get; set; }
-        public virtual DbSet<a35> a35 { get; set; }
-        public virtual DbSet<a36> a36 { get; set; }
-        public virtual DbSet<a37> a37 { get; set; }
-        public virtual DbSet<a39> a39 { get; set; }
-        public virtual DbSet<a41> a41 { get; set; }
-        public virtual DbSet<RANHGIOIHANHCHINH> RANHGIOIHANHCHINHs { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<CONGNGHECAO> CONGNGHECAOs { get; set; }
+        public virtual DbSet<GIAPHANBON_THUOCBVTT_NONGSAN_GIONG> GIAPHANBON_THUOCBVTT_NONGSAN_GIONG { get; set; }
+        public virtual DbSet<GIONGCAYTRONG> GIONGCAYTRONGs { get; set; }
+        public virtual DbSet<NGUOIDUNG> NGUOIDUNGs { get; set; }
+        public virtual DbSet<NGUOIDUNG_NHOMQUYEN> NGUOIDUNG_NHOMQUYEN { get; set; }
+        public virtual DbSet<SAUBENHGAYHAI> SAUBENHGAYHAIs { get; set; }
     }
 }

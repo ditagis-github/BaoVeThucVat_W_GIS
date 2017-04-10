@@ -9,7 +9,7 @@ namespace BVTV.WebApplication.App_Code
 {
     public static class HTMLExtension
     {
-        public static string IsSelected(this HtmlHelper html, string controllers = "", string actions = "", string cssClass = "active")
+        public static string IsSelected(this HtmlHelper<dynamic> html, string controllers = "", string actions = "", string cssClass = "active")
         {
             ViewContext viewContext = html.ViewContext;
             bool isChildAction = viewContext.Controller.ControllerContext.IsChildAction;

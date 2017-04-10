@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
-    @Styles.Render("~/Content/greensoul")
+    @Styles.Render("~/css/hifugreen")
     @Scripts.Render("~/bundles/jquery")
 
 </head>
@@ -27,14 +27,15 @@
                     <div class="row">
                         <!-- Header Top Left -->
                         <div class="header-top-left text-left col-md-6 col-sm-8 col-xs-12">
-                            <p><span>Đường dây nóng:</span> 06503-822215</p>
-                            <p><span>Thư điện tử:</span> ccbvtv@binhduong.gov.vn</p>
+                            <p><i class="fa fa-location-arrow" aria-hidden="true"></i>225 Trần Xuân Soạn</p>
+                            <p><i class="fa fa-phone" aria-hidden="true"></i>096867233</p>
+                            <p><i class="fa fa-envelope" aria-hidden="true"></i>bvtv@binhduong.gov.vn</p>
                         </div>
                         <!-- Header Top Right -->
                         <div class="header-top-right col-md-6 col-sm-4 col-xs-12 hidden-xs">
                             <!-- Header Quote Button -->
-                            @*@Html.ActionLink("Đăng xuất", "Logout", "Login", new { @class = "get-quote float-right" })*@
-                            <a href="@Url.Action("Logout","Login")" class="get-quote float-right">Đăng xuất</a>
+                            @*@Html.ActionLink("Đăng xuất", "Logout", "Login", new { @class = "contact float-right" })*@
+                            <a href="@Url.Action("Logout","Login")" class="contact float-right">Đăng xuất</a>
                         </div>
                     </div>
                 </div>
@@ -48,7 +49,7 @@
                             <!-- Logo -->
                             <div class="header-logo float-left">
                                 <a class="logo" href="index.html">
-                                    <img src="~/Content/GreenSoul/img/LogoCCBVTV.JPG" alt="">
+                                    <img src="~/Content/hifugreen/img/LogoCCBVTV.JPG" alt="">
                                     <div class="slogan">
                                         <p>
                                             Chi cục BVTV - Bình Dương
@@ -64,7 +65,7 @@
                                     <ul>
                                         <li class="@Html.IsSelected(actions: "Index", controllers: "Home")">
                                             @Html.ActionLink("Trang Chủ", "Index", "Home")
-                                            </li>
+                                        </li>
                                         <li class="@Html.IsSelected(actions: "About", controllers: "Home")">
                                             @Html.ActionLink("Giới thiệu", "About", "Home")
                                         </li>
@@ -100,11 +101,16 @@
                 <div class="row">
                     <!-- Copyright -->
                     <div class="copyright text-left col-sm-6 col-xs-12">
-                        <p>Bản quyền &copy; <span>Chi cục bảo vệ thực vật tỉnh Bình Dương</span>. @DateTime.Now.Year</p>
+                        <h4>Chi cục bảo vệ thực vật tỉnh Bình Dương</h4>
+                        <p>Địa chỉ: <span>Đường Nguyễn Văn Lên - Phường Phú Lợi - TP. TDM - tỉnh Bình Dương</span></p>
+                        <p>Điện thoại: <span>06503-822215</span> - Fax: <span>06503-822215</span></p>
                     </div>
                     <!-- Author Credit -->
                     <div class="author-credit text-right col-sm-6 col-xs-12">
-                        <p>Giao diện được mode dựa trên Green Soul - 2017 của <a href="https://hastech.company/">Hastech</a></p>
+                        <p>Xây dựng bởi: <span>Trung tâm công nghệ thông tin địa lý DITAGIS</span>- Đại học Bách Khoa TP. HCM</p>
+                        <p>Địa chỉ: <span>268, Lý Thường Kiệt, Quận 10, Tp.HCM (Lầu 4, Nhà B2)</span></p>
+                        <p>Điện thoại: <span> (+84.8).38642768</span> - Fax : <span>(+84.8).38686548</span></p>
+                        <p>Email : <span>ditagis@hcmut.edu.vn</span></p>
                     </div>
                 </div>
             </div>

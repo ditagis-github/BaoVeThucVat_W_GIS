@@ -28,6 +28,7 @@ namespace BVTV.Entity
         public string tenTuyen1 { get; set; }
         public string tenTuyen2 { get; set; }
         public string tenTuyen3 { get; set; }
+        public string MaHuyenTP { get; set; }
         public System.Data.Entity.Spatial.DbGeometry SHAPE { get; set; }
     }
 }

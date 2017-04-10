@@ -7,7 +7,6 @@ using System.Web.Mvc;
 
 namespace BVTV.WebApplication.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         //
