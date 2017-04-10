@@ -17,6 +17,7 @@ namespace BVTV.Entity
         public int OBJECTID { get; set; }
         public string MaSauBenh { get; set; }
         public Nullable<short> NhomCayTrong { get; set; }
+        public string LoaiCayTrong { get; set; }
         public string SauBenhGayHai1 { get; set; }
     }
 }

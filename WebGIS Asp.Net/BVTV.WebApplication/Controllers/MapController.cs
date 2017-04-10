@@ -15,6 +15,10 @@ namespace BVTV.WebApplication.Controllers
         {
             return View();
         }
+        public ActionResult Edit()
+        {
+            return View();
+        }
 
     }
 }

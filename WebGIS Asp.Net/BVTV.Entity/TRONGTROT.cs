@@ -18,7 +18,6 @@ namespace BVTV.Entity
         public string MaDoiTuong { get; set; }
         public Nullable<short> NhomCayTrong { get; set; }
         public string LoaiCayTrong { get; set; }
-        public string GiaiDoanSinhTruong { get; set; }
         public Nullable<decimal> DienTichTrong { get; set; }
         public Nullable<short> TinhHinhUngDungCongNghe { get; set; }
         public string ToChucCaNhanQuanLy { get; set; }
@@ -29,6 +28,11 @@ namespace BVTV.Entity
         public Nullable<short> ThoiVuTrongTrot { get; set; }
         public string MatDoCayTrong { get; set; }
         public string TenGiongCayTrong { get; set; }
+        public string MaHuyenTP { get; set; }
+        public Nullable<int> GiaiDoanSinhTruong { get; set; }
+        public string MaDuong { get; set; }
+        public Nullable<System.DateTime> NgayCapNhat { get; set; }
+        public string NguoiCapNhat { get; set; }
         public System.Data.Entity.Spatial.DbGeometry SHAPE { get; set; }
     }
 }

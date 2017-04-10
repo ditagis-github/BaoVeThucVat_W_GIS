@@ -17,10 +17,13 @@ namespace BVTV.Entity
         public int OBJECTID { get; set; }
         public string KyHieuLoaiDat { get; set; }
         public Nullable<decimal> DienTich { get; set; }
-        public string MucDichSuDungDat { get; set; }
         public string GhiChu { get; set; }
         public Nullable<short> GiaiDoanQuyHoach { get; set; }
         public string MaDoiTuong { get; set; }
+        public string MaHuyenTP { get; set; }
+        public Nullable<short> MucDichSuDungDat { get; set; }
+        public Nullable<System.DateTime> NgayCapNhat { get; set; }
+        public string NguoiCapNhat { get; set; }
         public System.Data.Entity.Spatial.DbGeometry SHAPE { get; set; }
     }
 }

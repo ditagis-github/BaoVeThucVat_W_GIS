@@ -23,6 +23,7 @@ namespace BVTV.Entity
         public Nullable<int> loaiPhuBeMat { get; set; }
         public Nullable<short> doiTuong { get; set; }
         public string ghichu { get; set; }
+        public string MaHuyenTP { get; set; }
         public System.Data.Entity.Spatial.DbGeometry SHAPE { get; set; }
     }
 }

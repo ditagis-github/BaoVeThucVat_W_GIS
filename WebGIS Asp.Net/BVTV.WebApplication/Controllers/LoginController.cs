@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using BVTV.Entity;
 using BVTV.WebApplication.Models;
 using System.Web.Security;
+using System.Security.Cryptography;
+using BVTV.Services;
 
 namespace BVTV.WebApplication.Controllers
 {
@@ -22,24 +24,30 @@ namespace BVTV.WebApplication.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Index(Account account)
+        public ActionResult Index(Account account, String redirect)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(account);
+            var per = this.isValid(account.username, account.pass);
+            if (per != -1)
             {
-                if (this.isValid(account.username, account.pass))
+                FormsAuthentication.SetAuthCookie(account.username, account.IsRemember);
+                switch (per)
                 {
-                    FormsAuthentication.SetAuthCookie(account.username, account.isRemember);
+                    case 1:
+                        return RedirectToAction("Index", "Home",new { area ="Admin"});
+                    default:
+                        return RedirectToAction(redirect);
+                }
 
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Đăng nhập không thành công ");
-                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu có thể không tồn tại !");
-                    ModelState.AddModelError("", "Tài khoản của bạn có thể bị khóa hoặc không có quyền truy cập trang này !");
-                }
             }
-            return View(account);
+            else
+            {
+                ModelState.AddModelError("", "Đăng nhập không thành công ");
+                ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu có thể không tồn tại !");
+                ModelState.AddModelError("", "Tài khoản của bạn có thể bị khóa hoặc không có quyền truy cập trang này !");
+                return View(account);
+            }
         }
 
         public ActionResult Logout()
@@ -49,9 +57,14 @@ namespace BVTV.WebApplication.Controllers
         }
 
 
-        private Boolean isValid(string username, string password)
+        private int isValid(string username, string password)
         {
-            return db.Users.Any(a => a.username.Equals(username) && a.password.Equals(password));
+            var pwHash = (MD5Util.GetMD5(password));
+            return db.Users
+                .Where(a =>
+                a.username.Equals(username) && a.password.Equals(pwHash))
+                .Select(a => a.permission)
+                .DefaultIfEmpty(-1).First().Value;
             //return username.Equals("admin") && password.Equals("admin");
         }
 

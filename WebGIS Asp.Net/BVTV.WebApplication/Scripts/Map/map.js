@@ -1,4 +1,4 @@
-﻿var map, view, baseMap, sauBenhLayer, trongTrotLayer, SuDungDatTrong, doanhNghiepLayer, dynamicMapServiceLayer, hanhChinhHuyenLayer;
+﻿var map, view, baseMap, sauBenhLayer, trongTrotLayer, SuDungDatTrong, doanhNghiepLayer, dynamicMapServiceLayer, hanhChinhHuyenLayer,query;
 require([
   "dojo/dom-construct",
   "esri/Map",
@@ -55,7 +55,7 @@ require([
         title: "Trồng trọt"
     });
     //map.add(sauBenhLayer);
-    map.addMany([trongTrotLayer, SuDungDatTrong, sauBenhLayer, doanhNghiepLayer]);
+    map.addMany([SuDungDatTrong,trongTrotLayer, sauBenhLayer, doanhNghiepLayer]);
 
 
 
@@ -99,6 +99,14 @@ require([
             outFields: ["*"],
             name: "Sâu hại",
             placeholder: "Ví dụ: Chuồn chuồn",
+        }, {
+            featureLayer: doanhNghiepLayer,
+            searchFields: ["MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
+            displayField: "NguoiDaiDienDoanhNghiep",
+            exactMatch: false,
+            outFields: ["*"],
+            name: "Doanh Nghiệp",
+            placeholder: "Nhập tên hoặc mã Doanh nghiệp",
         }]
     });
 
@@ -132,6 +140,9 @@ require([
         }, {
             layer: doanhNghiepLayer,
             title: "Doanh nghiệp"
+        }, {
+            layer: trongTrotLayer,
+            title: "Đất trồng"
         }]
     }), "bottom-right");
 
@@ -139,17 +150,13 @@ require([
         returnGeometry: true,
         outFields: ["*"]
     });
-    view.whenLayerView(sauBenhLayer).then(function (lyrView) {
-        lyrView.watch("updating", function (val) {
-            if (!val) {  // wait for the layer view to finish updating
-                lyrView.queryExtent().then(function (results) {
-                    view.goTo(results.extent);  // go to the extent of all the graphics in the layer view
-                });
-            }
-        });
-    });
+
     //-----------------------EVENT FIND AT TAB-----------------------//
 
+    query = new Query({
+        returnGeometry: true,
+        outFields: ["*"]
+    });
     function addSearchEvent(domId, feature, arrAttribute, selectProperty) {
 
         var btnFindDom = $(domId + ' #btnFind'), resultDom = $(domId + ' #result'), counterDom = $(domId + ' #counter');
@@ -168,7 +175,7 @@ require([
             $(resultDom).html('');
             $(counterDom).html('');
             query.where = where;
-           
+
             feature.queryFeatures(query).then(function (results) {
                 var html = "";
                 var features = results.features;
@@ -190,15 +197,12 @@ require([
                             })
                         });;
                         var tr = $('<tr/>');
-                        tr.append($('<td/>').text((i+1)+". "));
+                        tr.append($('<td/>').text((i + 1) + ". "));
                         tr.append($('<td/>').append(span));
                         $(resultDom).append(tr);
 
                     }
-
-                    //.html(html);
                     $(counterDom).html(features.length);
-
                 }
 
                 $(".loading").css("display", "none");
@@ -206,52 +210,15 @@ require([
             });
 
         });
-
-
-        //$(resultDom).on("click", "span.viewdata", function () {
-        //    var value = $(this).attr('alt');
-        //    viewPoint((selectProperty[0] + " = '" + value + "'"), feature);
-        //});
     }
 
-
-    function viewPoint(query, layer) {
-        var query = new Query();
-        query.returnGeometry = true;
-        query.outFields = ["*"];
-        query.where = value;
-        layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
-            if (results.length > 0) {
-                var feat = results[0];
-                var point = feat.geometry;
-                // var graphic1 = new esri.Graphic(point, ptSymbol1);
-
-                var pt = new Point(point.x, point.y, map.spatialReference);
-                if (pt) {
-                    var extent = new Extent((point.x + 40), (point.y + 40), (point.x - 40), (point.y - 40), map.spatialReference);
-                    var stateExtent = extent.expand(5.0);
-                    map.setExtent(stateExtent);
-                }
-            }
-        });
-    }
-
-    function viewPolygon(value, feature) {
-        var query = new Query();
-        query.returnGeometry = true;
-        query.outFields = ["*"];
-        query.where = value;
-        feature.queryExtent(query).then(function (result) {
-            view.goTo(result.extent);
-        })
-    }
     addSearchEvent('#tab-doanhnghiep', doanhNghiepLayer, [{
         dom: 'txtMaDN',
         property: 'MaDoanhNghiep'
     },
     {
         dom: 'txtTen',
-        property: 'NguoiDaiDienDoanhNghiep  '
+        property: 'NguoiDaiDienDoanhNghiep'
     }, {
         dom: 'txtQuanHuyen',
         property: 'QuanHuyen'

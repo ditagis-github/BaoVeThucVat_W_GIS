@@ -4,28 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f300d7b20b4a4db4b50706c4b974dbe2" Name="Diagram1" ZoomLevel="97">
-        <EntityTypeShape EntityType="BaoVeThucVatModel.DOANHNGHIEP" Width="1.5" PointX="0.75" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.HANHCHINHHUYEN" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.MATDUONGBO" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.PHUBEMAT" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.QUYHOACHSUDUNGDAT" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.SAUBENH" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.SONGHO" Width="1.5" PointX="6.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.TIMDUONG" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.TRONGTROT" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.CONGNGHECAO" Width="1.5" PointX="2.625" PointY="6.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.GIONGCAYTRONG" Width="1.5" PointX="8.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.SAUBENHGAYHAI" Width="1.5" PointX="4.75" PointY="7.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.THOIGIANSANXUATTRONGTROT" Width="1.5" PointX="2.875" PointY="9.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.a34" Width="1.5" PointX="4.625" PointY="10" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.a35" Width="1.5" PointX="6.625" PointY="10.375" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.a36" Width="1.5" PointX="8.5" PointY="10.125" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.a37" Width="1.5" PointX="10.125" PointY="10.25" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.a39" Width="1.5" PointX="8.375" PointY="7.625" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.a41" Width="1.5" PointX="16.75" PointY="18.5" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.RANHGIOIHANHCHINH" Width="1.5" PointX="22.75" PointY="20.5" />
-        <EntityTypeShape EntityType="BaoVeThucVatModel.User" Width="1.5" PointX="11.375" PointY="0.75" />
+      <Diagram DiagramId="9c773acd55ee4935bdd526bedce77963" Name="Diagram1">
+        <EntityTypeShape EntityType="BaoVeThucVatModel.DanhMucCayTrongRauMau" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.DOANHNGHIEP" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.HANHCHINHHUYEN" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.MATDUONGBO" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.NhomCayTrong" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.PHUBEMAT" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.QUYHOACHSUDUNGDAT" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.SAUBENH" Width="1.5" PointX="6.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.SONGHO" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.TIMDUONG" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.TRONGTROT" Width="1.5" PointX="8.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.User" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.CONGNGHECAO" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.GIAPHANBON_THUOCBVTT_NONGSAN_GIONG" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.GIONGCAYTRONG" Width="1.5" PointX="8.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.NGUOIDUNG" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.NGUOIDUNG_NHOMQUYEN" Width="1.5" PointX="2.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.SAUBENHGAYHAI" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

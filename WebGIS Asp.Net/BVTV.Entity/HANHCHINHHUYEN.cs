@@ -16,6 +16,7 @@ namespace BVTV.Entity
     {
         public int OBJECTID { get; set; }
         public string TenHuyen { get; set; }
+        public string MaHuyenTP { get; set; }
         public System.Data.Entity.Spatial.DbGeometry SHAPE { get; set; }
     }
 }

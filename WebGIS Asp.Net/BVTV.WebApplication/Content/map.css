@@ -1,20 +1,10 @@
-﻿#map {
+﻿
+#map{
+    height: 600px;
     padding: 0;
     margin: 0;
     height: 600px;
     width: 100%;
-}
-
-#map, #tabAddDataContent {
-    height: 600px;
-}
-
-.templatePicker {
-    border: none;
-}
-
-.undisplay {
-    display: none;
 }
 
 #tabAddDataContent {
@@ -24,55 +14,6 @@
     border-top: 1px solid #cdcdcd;
 }
 
-.dj_ie .infowindow .window .top .right .user .content {
-    position: relative;
-}
-
-.dj_ie .simpleInfoWindow .content {
-    position: relative;
-}
-
-.zoominIcon {
-    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_zoomin.png);
-    width: 16px;
-    height: 16px;
-}
-
-.zoomoutIcon {
-    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_zoomout.png);
-    width: 16px;
-    height: 16px;
-}
-
-.zoomfullextIcon {
-    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_fullextent.png);
-    width: 16px;
-    height: 16px;
-}
-
-.zoomprevIcon {
-    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_previous.png);
-    width: 16px;
-    height: 16px;
-}
-
-.zoomnextIcon {
-    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_next.png);
-    width: 16px;
-    height: 16px;
-}
-
-.panIcon {
-    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_pan.png);
-    width: 16px;
-    height: 16px;
-}
-
-.deactivateIcon {
-    background-image: url(https://developers.arcgis.com/javascript/3/samples/toolbar_navigation/images/nav_decline.png);
-    width: 16px;
-    height: 16px;
-}
 
 
 .logo {
@@ -123,18 +64,108 @@
     overflow-y: auto;
 }
 
-table{
-        font-family: "Montserrat", sans-serif;
+table {
+    font-family: "Montserrat", sans-serif;
 }
-#result tr:hover{
-    background-color:#6ab43e;
-    color:white;
-    cursor:pointer;
+
+#result tr:hover {
+    background-color: #6ab43e;
+    color: white;
+    cursor: pointer;
 }
+
 .resultFormSearch {
     height: 186px;
-    overflow-y:auto;
+    overflow-y: auto;
 }
-resultFormSearch table tr th:first-child{
-    width:10px;
+
+resultFormSearch table tr th:first-child {
+    width: 10px;
+}
+
+/*
+    Feature Layer Editor
+*/
+
+.edit-button:hover,
+.edit-button:focus {
+    background-color: #e4e4e4;
+}
+
+.inputInfo {
+    font-size: 12px;
+    height: 32px;
+    margin-bottom: 6px;
+    padding: 0 6px;
+    width: 100%;
+}
+
+.list-heading {
+    font-weight: normal;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #323232;
+}
+
+.edit-button {
+    font-size: 14px;
+    height: 32px;
+    margin-top: 10px;
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #0079c1;
+    color: #0079c1;
+}
+
+.or-wrap {
+    background-color: #e0e0e0;
+    height: 1px;
+    margin: 2em 0;
+    overflow: visible;
+}
+
+.or-text {
+    background: #fff;
+    line-height: 0;
+    padding: 0 1em;
+    position: relative;
+    top: -.75em;
+}
+
+.widget-container {
+    background: #fff;
+    font-family: "Avenir Next W00", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.5em;
+    overflow: auto;
+    padding: 12px 15px;
+    width: 500px;
+}
+ .editArea-container {
+            background: #fff;
+            font-family: "Avenir Next W00", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.5em;
+            overflow: auto;
+            padding: 12px 15px;
+            width: 300px;
+        }
+
+
+ input,select {
+    width: 100%;
+    border: 1px solid #e9e9e9;
+    height: 40px;
+    padding: 7px 16px;
+    line-height: 24px;
+    color: #b9b9b9;
+    font-weight: 300;
+    margin-bottom:5px;
+}
+ input[type="button"] {
+    width: auto;
+    padding: 8px 40px;
+    background-color: #6ab43e;
+    border: none;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 400;
 }

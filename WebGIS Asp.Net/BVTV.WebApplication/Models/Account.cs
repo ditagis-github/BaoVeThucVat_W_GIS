@@ -17,6 +17,7 @@ namespace BVTV.WebApplication.Models
         public string pass { get; set; }
 
         [Display(Name = "Giữ đăng nhập ")]
-        public Boolean isRemember { get; set; }
+        public Boolean IsRemember { get; set; }
+        public int Level { get; set; }
     }
 }
