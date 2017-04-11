@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using BVTV.Entity;
+using BVTV.WebApplication.Models;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
@@ -17,8 +15,9 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // GET: Admin/SauBenh
         public ActionResult Index()
         {
-            ViewBag.Entity = "Sâu bệnh";
-            return View(db.SAUBENHs.ToList());
+            var datas = from sb in db.SAUBENHs.ToList()
+                        select new SauBenh(sb);
+            return View(datas.ToList());
         }
 
         // GET: Admin/SauBenh/Details/5

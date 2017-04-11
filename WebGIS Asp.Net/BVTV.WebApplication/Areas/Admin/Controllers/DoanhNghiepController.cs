@@ -17,7 +17,6 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // GET: Admin/DoanhNghiep
         public ActionResult Index()
         {
-            ViewBag.Heading = "Doanh nghiệp";
             return View(db.DOANHNGHIEPs.ToList());
         }
 
@@ -116,7 +115,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -124,6 +123,33 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        public ActionResult GetById(int id)
+        {
+            try
+            {
+                var dn = db.DOANHNGHIEPs.Find(id);
+                if (dn != null)
+                {
+                    var data = new
+                    {
+                        MaDoanhNghiep = dn.MaDoanhNghiep,
+                        Ten = dn.TenDonViDoanhNghiep,
+                        DiaChi = dn.SoNha,
+                        SoLanViPham = dn.SoLanViPham,
+                        SanLuong = dn.SanLuongTrongNam,
+                        NguoiCapNhat = dn.NguoiCapNhat,
+                        MucPhat = dn.MucPhat
+                    };
+                    return Json(data, JsonRequestBehavior.AllowGet);
+                }
+                return null;
+
+            }
+            catch (Exception ex)
+            {
+                return View("Index");
+            }
         }
     }
 }

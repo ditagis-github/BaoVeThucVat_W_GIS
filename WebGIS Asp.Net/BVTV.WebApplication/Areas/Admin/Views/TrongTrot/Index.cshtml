@@ -2,21 +2,22 @@
 
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    ViewBag.Title = "Trồng trọt";
 }
 
-<table data-toggle="table" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true">
+<table id="table" data-toggle="table" data-show-export="true" data-detail-view="true" data-detail-formatter="detailFormatter" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true">
     <thead>
         <tr>
-            <th>
+            <th data-field="id" data-sortable="true">
                 @Html.DisplayNameFor(model => model.MaDoiTuong)
             </th>
-            <th>
+            <th data-sortable="true">
                 @Html.DisplayNameFor(model => model.NhomCayTrong)
             </th>
-            <th>
+            <th data-sortable="true">
                 @Html.DisplayNameFor(model => model.LoaiCayTrong)
             </th>
-            <th>
+            <th data-sortable="true">
                 @Html.DisplayNameFor(model => model.DienTichTrong)
             </th>
             <th>
@@ -46,7 +47,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.TenGiongCayTrong)
             </th>
-            <th>
+            <th data-sortable="true">
                 @Html.DisplayNameFor(model => model.MaHuyenTP)
             </th>
             <th>
@@ -55,7 +56,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.MaDuong)
             </th>
-            <th>
+            <th data-sortable="true">
                 @Html.DisplayNameFor(model => model.NgayCapNhat)
             </th>
             <th>
@@ -63,7 +64,7 @@
             </th>
             <th>Tác vụ</th>
         </tr>
-        </thead>
+    </thead>
     <tbody>
         @foreach (var item in Model)
         {

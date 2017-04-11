@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace BVTV.WebApplication.Areas.Admin.Models
+namespace BVTV.WebApplication.Models
 {
-    public class DoanhNghiep:DOANHNGHIEP
+    public class DoanhNghiep
     {
         [DisplayName("Mã")]
         public string MaDoanhNghiep { get; set; }

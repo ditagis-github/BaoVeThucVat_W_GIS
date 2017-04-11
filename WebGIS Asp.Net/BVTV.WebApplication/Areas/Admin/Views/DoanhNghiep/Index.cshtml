@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<BVTV.Entity.DOANHNGHIEP>
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    ViewBag.Title = "Doanh nghiệp";
 }
 
-<table data-toggle="table" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
+<table id="table" data-toggle="table" data-detail-view="true" data-detail-formatter="detailFormatter"  data-show-export="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
     <thead>
         <tr>
-            <th data-field="id" data-checkbox="true">@Html.DisplayNameFor(model => model.MaDoanhNghiep)</th>
-            <th data-sortable="true">@Html.DisplayNameFor(model => model.TenDonViDoanhNghiep)</th>
-            <th data-field="address" data-sortable="true"@Html.DisplayNameFor(model => model.SoNha)></th>
-            <th data-field="phone" data-sortable="true"@Html.DisplayNameFor(model => model.DienThoai)></th>
-            <th data-field="fax" data-sortable="true">@Html.DisplayNameFor(model => model.Fax)</th>
-            <th data-field="email" data-sortable="true">@Html.DisplayNameFor(model => model.Email)</th>
-            <th>Thao tác</th>
+            <th data-field="id">@Html.DisplayNameFor(model => model.MaDoanhNghiep)</th>
+            <th data-sortable="true">@Html.DisplayNameFor(model => model.NguoiDaiDienDoanhNghiep)</th>
+            <th data-sortable="true" @Html.DisplayNameFor(model => model.SoNha)></th>
+            <th data-sortable="true" @Html.DisplayNameFor(model => model.DienThoai)></th>
+            <th data-sortable="true">@Html.DisplayNameFor(model => model.Fax)</th>
+            <th data-sortable="true">@Html.DisplayNameFor(model => model.Email)</th>
+            <th>Tác vụ</th>
         </tr>
     </thead>
-    <tbody>
         @foreach (var item in Model)
         {
             <tr>
@@ -44,5 +44,4 @@
                 </td>
             </tr>
         }
-    </tbody>
 </table>

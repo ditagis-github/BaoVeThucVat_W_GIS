@@ -6,37 +6,69 @@ Version 1.0
 
 /*Global Styles*/
 
+/*-- Font Family --*/
+@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900|Poppins:300,400,500,600,700");
+/*-- Common Style --*/
+
 body {
-	background: #f1f4f7;
-	padding-top: 50px;
-	color: #a4a4a4;
-font-family: "Montserrat", sans-serif;
-}
-
-p {
-	color: #777;
-}
-
-a, a:hover, a:focus {
-	color: #6b6b6b;
+	line-height: 24px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    visibility: visible;
+    font-family: "Montserrat", sans-serif;
+    color: #757575;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	color: #5f6468;
+    color: #424242;
+    font-weight: 700;
+    margin-top: 0;
+    font-family: "Montserrat", sans-serif;
 }
 
-h1 {
-	font-weight: 300;
-	font-size: 40px;
+p:last-child {
+    margin-bottom: 0;
 }
 
-h2 {
-	font-weight: 300;
-	margin-bottom: 20px;
+a, button {
+    color: inherit;
+    display: inline-block;
+    line-height: inherit;
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
 }
 
-h3, h4 {
-	font-weight: 300;
+input, select, textarea {
+    font-family: "Montserrat", sans-serif;
+}
+
+a, i, button, img, input, span,
+*:before, *:after {
+    -webkit-transition: all 0.3s ease 0s;
+    -ms-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
+
+*:focus {
+    outline: 0px solid transparent;
+}
+
+a:focus {
+    color: inherit;
+    outline: medium none;
+    transform: scale(1);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
 }
 
 .large {
@@ -99,144 +131,6 @@ h3, h4 {
 	color: #6ab43e;
 }
 
-/*Buttons*/
-
-a.btn:hover,
-button:hover {
-	opacity: 0.8;
-}
-
-a.btn:active,
-button:active {
-	box-shadow: inset 0px 0px 500px rgba(0,0,0,.1);
-	opacity: 1;
-}
-
-.btn-default,
-.btn-default:hover,
-.btn-default:focus,
-.btn-default:active,
-.btn-default.active,
-.open > .dropdown-toggle.btn-default,
-.btn-default.disabled,
-.btn-default[disabled],
-fieldset[disabled] .btn-default,
-.btn-default.disabled:hover,
-.btn-default[disabled]:hover,
-fieldset[disabled] .btn-default:hover,
-.btn-default.disabled:focus,
-.btn-default[disabled]:focus,
-fieldset[disabled] .btn-default:focus,
-.btn-default.disabled:active,
-.btn-default[disabled]:active,
-fieldset[disabled] .btn-default:active,
-.btn-default.disabled.active,
-.btn-default[disabled].active,
-fieldset[disabled] .btn-default.active {
-	background-color: #e9ecf2;
-	border-color: #e9ecf2;
-	color: #1b3548;
-}
-
-.btn-primary,
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary.active,
-.open > .dropdown-toggle.btn-primary,
-.btn-primary.disabled,
-.btn-primary[disabled],
-fieldset[disabled] .btn-primary,
-.btn-primary.disabled:hover,
-.btn-primary[disabled]:hover,
-fieldset[disabled] .btn-primary:hover,
-.btn-primary.disabled:focus,
-.btn-primary[disabled]:focus,
-fieldset[disabled] .btn-primary:focus,
-.btn-primary.disabled:active,
-.btn-primary[disabled]:active,
-fieldset[disabled] .btn-primary:active,
-.btn-primary.disabled.active,
-.btn-primary[disabled].active,
-fieldset[disabled] .btn-primary.active {
-	background-color: #6ab43e;
-	border-color: #6ab43e;
-}
-
-.btn-success,
-.btn-success:hover,
-.btn-success:focus,
-.btn-success:active,
-.btn-success.active,
-.open > .dropdown-toggle.btn-success,
-.btn-success.disabled,
-.btn-success[disabled],
-fieldset[disabled] .btn-success,
-.btn-success.disabled:hover,
-.btn-success[disabled]:hover,
-fieldset[disabled] .btn-success:hover,
-.btn-success.disabled:focus,
-.btn-success[disabled]:focus,
-fieldset[disabled] .btn-success:focus,
-.btn-success.disabled:active,
-.btn-success[disabled]:active,
-fieldset[disabled] .btn-success:active,
-.btn-success.disabled.active,
-.btn-success[disabled].active,
-fieldset[disabled] .btn-success.active {
-	background-color: #8ad919;
-	border-color: #8ad919;
-}
-
-.btn-warning,
-.btn-warning:hover,
-.btn-warning:focus,
-.btn-warning:active,
-.btn-warning.active,
-.open > .dropdown-toggle.btn-warning,
-.btn-warning.disabled,
-.btn-warning[disabled],
-fieldset[disabled] .btn-warning,
-.btn-warning.disabled:hover,
-.btn-warning[disabled]:hover,
-fieldset[disabled] .btn-warning:hover,
-.btn-warning.disabled:focus,
-.btn-warning[disabled]:focus,
-fieldset[disabled] .btn-warning:focus,
-.btn-warning.disabled:active,
-.btn-warning[disabled]:active,
-fieldset[disabled] .btn-warning:active,
-.btn-warning.disabled.active,
-.btn-warning[disabled].active,
-fieldset[disabled] .btn-warning.active {
-	background-color: #ffb53e;
-	border-color: #ffb53e;
-}
-
-.btn-danger,
-.btn-danger:hover,
-.btn-danger:focus,
-.btn-danger:active,
-.btn-danger.active,
-.open > .dropdown-toggle.btn-danger,
-.btn-danger.disabled,
-.btn-danger[disabled],
-fieldset[disabled] .btn-danger,
-.btn-danger.disabled:hover,
-.btn-danger[disabled]:hover,
-fieldset[disabled] .btn-danger:hover,
-.btn-danger.disabled:focus,
-.btn-danger[disabled]:focus,
-fieldset[disabled] .btn-danger:focus,
-.btn-danger.disabled:active,
-.btn-danger[disabled]:active,
-fieldset[disabled] .btn-danger:active,
-.btn-danger.disabled.active,
-.btn-danger[disabled].active,
-fieldset[disabled] .btn-danger.active {
-	background-color: #f9243f;
-	border-color: #f9243f;
-}
 
 /*Backgrounds*/
 
@@ -431,6 +325,9 @@ a.bg-danger:hover {
 .panel-widget {
 	background: #fff;
 }
+.panel-widget .fa{
+    font-size:50px;
+}
 
 /*Jumbotron*/
 
@@ -491,6 +388,10 @@ a.bg-danger:hover {
 
 .navbar {
 	border: 0;
+}
+
+.navbar-inverse{
+    background-color:#6ab43e;
 }
 
 .navbar input {
@@ -944,11 +845,23 @@ h1.page-header {
 	overflow: scroll;
 }
 
+/*-- Input Placeholder --*/
+input:-moz-placeholder, textarea:-moz-placeholder, select:-moz-placeholder {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
 
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder, select::-webkit-input-placeholder {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
 
+input::-moz-placeholder, textarea::-moz-placeholder, select::-moz-placeholder {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
 
-
-
-
-
-
+input:-ms-input-placeholder, textarea:-ms-input-placeholder, select:-ms-input-placeholder {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}

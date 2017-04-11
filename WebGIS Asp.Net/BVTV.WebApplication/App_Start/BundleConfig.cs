@@ -47,18 +47,26 @@ namespace BVTV.WebApplication
             bundles.Add(new ScriptBundle("~/js/chartjs").Include(
                         "~/Scripts/chartjs/chart.js"));
 
+            bundles.Add(new ScriptBundle("~/js/bootstrap-table").Include(
+               "~/Scripts/bootstrap-table.min.js",
+               "~/Scripts/tableExport.js",
+               "~/Scripts/jquery.base64.js",
+               "~/Scripts/bootstrap-table-export.js",
+               "~/Scripts/jspdf.min.js",
+               "~/Scripts/xlsx.core.min.js",
+               "~/Scripts/bootstrap-table-detail.js"
+               ));
+
 
             bundles.Add(new StyleBundle("~/css/lumino").Include(
                       "~/Content/bootstrap.min.css",
                       "~/Content/material-design-iconic-font.min.css",
+                      "~/Content/font-awesome.min.css",
                       "~/Content/lumino/css/datepicker3.css",
                       "~/Content/lumino/css/styles.css"
                       ));
             bundles.Add(new StyleBundle("~/Content/map").Include(
                       "~/Content/esri.css"));
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.min.css",
-                      "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/css/hifugreen").Include(
                     "~/Content/bootstrap.min.css",

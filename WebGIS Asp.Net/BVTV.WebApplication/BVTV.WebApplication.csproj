@@ -193,8 +193,22 @@
     <Compile Include="Areas\Admin\Controllers\SauBenhController.cs" />
     <Compile Include="Areas\Admin\Controllers\TrongTrotController.cs" />
     <Compile Include="Areas\Admin\Interfaces\IChartJson.cs" />
-    <Compile Include="Areas\Admin\Models\DoanhNghiep.cs" />
-    <Compile Include="Areas\Admin\Models\SauBenh.cs" />
+    <Compile Include="Models\CONGNGHECAO.cs" />
+    <Compile Include="Models\DanhMucCayTrongRauMau.cs" />
+    <Compile Include="Models\DoanhNghiep.cs" />
+    <Compile Include="Models\GIAPHANBON_THUOCBVTT_NONGSAN_GIONG.cs" />
+    <Compile Include="Models\GIONGCAYTRONG.cs" />
+    <Compile Include="Models\HANHCHINHHUYEN.cs" />
+    <Compile Include="Models\MATDUONGBO.cs" />
+    <Compile Include="Models\NhomCayTrong.cs" />
+    <Compile Include="Models\PHUBEMAT.cs" />
+    <Compile Include="Models\QUYHOACHSUDUNGDAT.cs" />
+    <Compile Include="Models\SauBenh.cs" />
+    <Compile Include="Models\SAUBENHGAYHAI.cs" />
+    <Compile Include="Models\SONGHO.cs" />
+    <Compile Include="Models\TIMDUONG.cs" />
+    <Compile Include="Models\TRONGTROT.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Startup.cs" />
     <Content Include="App_Code\HTMLExtension.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -297,7 +311,6 @@
     <Content Include="Content\lumino\icons.html" />
     <Content Include="Content\lumino\index.html" />
     <Content Include="Content\lumino\js\bootstrap-datepicker.js" />
-    <Content Include="Content\lumino\js\bootstrap-table.js" />
     <Content Include="Content\lumino\js\chart-data.js" />
     <Content Include="Content\lumino\js\chart.min.js" />
     <Content Include="Content\lumino\js\easypiechart-data.js" />
@@ -314,6 +327,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-table-detail.js" />
+    <Content Include="Scripts\bootstrap-table-export.js" />
+    <Content Include="Scripts\bootstrap-table.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -404,14 +420,18 @@
     <Content Include="Scripts\hifugreen\bootstrap.min.js" />
     <Content Include="Scripts\hifugreen\main.js" />
     <Content Include="Scripts\hifugreen\plugins.js" />
+    <Content Include="Scripts\html2canvas.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-3.2.0.min.js" />
+    <Content Include="Scripts\jquery.base64.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\xlsx.core.min.js" />
+    <Content Include="Scripts\jspdf.min.js" />
     <Content Include="Scripts\map\init.js" />
     <Content Include="Scripts\map\map.js" />
     <Content Include="Scripts\map\map1.js" />
@@ -420,6 +440,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\tableExport.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -461,6 +482,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

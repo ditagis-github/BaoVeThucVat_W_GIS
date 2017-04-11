@@ -169,3 +169,8 @@ resultFormSearch table tr th:first-child {
     color: #ffffff;
     font-weight: 400;
 }
+
+ /*EsriWidget Font*/
+ .esri-widget{
+     font-family:"Montserrat", sans-serif;
+ }

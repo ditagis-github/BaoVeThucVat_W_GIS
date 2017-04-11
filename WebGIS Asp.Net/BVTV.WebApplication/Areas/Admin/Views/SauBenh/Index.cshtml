@@ -1,12 +1,13 @@
-﻿@model IEnumerable<BVTV.Entity.SAUBENH>
+﻿@model IEnumerable<BVTV.WebApplication.Models.SauBenh>
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    ViewBag.Title = "Sâu bệnh";
 }
 
-<table data-toggle="table" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" >
+<table id="table" data-toggle="table" data-show-export="true" data-detail-view="true" data-detail-formatter="detailFormatter" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true">
     <thead>
         <tr>
-            <th data-field="id" data-checkbox="true">
+            <th data-field="id">
                 @Html.DisplayNameFor(model => model.MaSauBenh)
             </th>
             <th data-sortable="true">
@@ -72,7 +73,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NgayCapNhat)
             </td>
-            
+
             <td>
                 @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.OBJECTID }) |
                 @Html.ActionLink("Chi tiết", "Details", new { id = item.OBJECTID }) |

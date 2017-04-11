@@ -33,16 +33,24 @@ require([
         title: "Vệ tinh",
         visible: false
     });
-    map.add(esriImageWorld);
+    //map.add(esriImageWorld);
     doanhNghiepLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0", {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"],
-        title: "Doanh nghiệp"
+        title: "Doanh nghiệp",
+        popupTemplate: {
+            title: "{NguoiDaiDienDoanhNghiep}",
+            content:"Mã: {MaDoanhNghiep}"
+        }
     });
     sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"],
-        title: "Sâu bệnh"
+        title: "Sâu bệnh",
+        popupTemplate: {
+            title: "{TenSauBenhGayHai}",
+            content:"Chưa có thông tin"
+        }
     });
     SuDungDatTrong = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3", {
         mode: FeatureLayer.MODE_ONDEMAND,
@@ -90,7 +98,7 @@ require([
     // Widget Search Features //
     var searchWidget = new Search({
         view: view,
-        allPlaceholder: "District or Senator",
+        allPlaceholder: "Nhập nội dung tìm kiếm",
         sources: [{
             featureLayer: sauBenhLayer,
             searchFields: ["TenSauBenhGayHai", "LoaiCayTrong"],
@@ -98,7 +106,7 @@ require([
             exactMatch: false,
             outFields: ["*"],
             name: "Sâu hại",
-            placeholder: "Ví dụ: Chuồn chuồn",
+            placeholder: "Ví dụ: Bọ hung, Bọ rầy",
         }, {
             featureLayer: doanhNghiepLayer,
             searchFields: ["MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
