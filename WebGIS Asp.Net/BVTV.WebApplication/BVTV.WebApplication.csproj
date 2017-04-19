@@ -444,6 +444,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\tableExport.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\404.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
