@@ -1,5 +1,4 @@
-﻿function drawOverview(div, controller) {
-    var url = controller + '/GetAll';
+﻿function drawOverview(div, url) {
     $.getJSON(url, displayData);
     var labels = [], datas = [];
     function displayData(response) {

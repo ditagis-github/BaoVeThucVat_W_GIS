@@ -1,14 +1,13 @@
 ﻿@{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    ViewBag.Title = "Biểu đồ trồng trọt";
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
 
 <canvas id="myChart" width="400" height="400"></canvas>
-<canvas id="myChart1" width="400" height="400"></canvas>
 @section scripts{
-    <script src="~/Content/draw-chart.js"></script>
+    <script src="~/Scripts/chartjs/draw-chart.js"></script>
     <script>
-        drawOverview($('#myChart'), 'ChartDoanhNghiep')
-        drawOverview($('#myChart1'), 'ChartTrongTrot')
+        drawOverview($('#myChart'), '@Url.Action("GetAll","ChartDoanhNghiep")')
     </script>
 }

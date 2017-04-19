@@ -6,8 +6,8 @@ namespace BVTV.WebApplication.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Display(Name = "UserName")]
+        public string UserName { get; set; }
     }
 
     public class ExternalLoginListViewModel
@@ -42,32 +42,32 @@ namespace BVTV.WebApplication.Models
     public class ForgotViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Display(Name = "UserName")]
+        public string UserName { get; set; }
     }
 
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Tài khoản")]
+        
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Mật khẩu")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Nhớ đăng nhập?")]
         public bool RememberMe { get; set; }
     }
 
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        
+        [Display(Name = "UserName")]
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -84,9 +84,9 @@ namespace BVTV.WebApplication.Models
     public class ResetPasswordViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        
+        [Display(Name = "UserName")]
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -105,8 +105,8 @@ namespace BVTV.WebApplication.Models
     public class ForgotPasswordViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        
+        [Display(Name = "UserName")]
+        public string UserName { get; set; }
     }
 }

@@ -29,5 +29,27 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 
             return Json(datas, JsonRequestBehavior.AllowGet);
         }
+        
+    }
+    public class ChartTrongTrotController : Controller, IChartJson
+    {
+        private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult GetAll() {
+            var query = from nct in db.NhomCayTrongs
+                        select new
+                        {
+                            Count = from tt in db.TRONGTROTs
+                                    where nct.id.Equals(tt.NhomCayTrong.Value)
+                                    select tt.OBJECTID
+                        };
+
+            return Json(query.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

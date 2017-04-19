@@ -189,6 +189,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Admin\Controllers\AdminAuthorize.cs" />
     <Compile Include="Areas\Admin\Controllers\ChartDoanhNghiepController.cs" />
     <Compile Include="Areas\Admin\Controllers\SauBenhController.cs" />
     <Compile Include="Areas\Admin\Controllers\TrongTrotController.cs" />
@@ -223,7 +224,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
@@ -244,7 +244,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\draw-chart.js" />
+    <Content Include="Scripts\chartjs\draw-chart.js" />
     <Content Include="Content\esri.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -340,7 +340,6 @@
     <Content Include="fonts\Material-Design-Iconic-Font.woff" />
     <Content Include="fonts\Material-Design-Iconic-Font.woff2" />
     <Content Include="Areas\Admin\Views\web.config" />
-    <Content Include="Areas\Admin\Views\Login\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Content\lumino\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\lumino\fonts\glyphicons-halflings-regular.ttf" />
@@ -373,6 +372,8 @@
     <Content Include="Areas\Admin\Views\TrongTrot\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\TrongTrot\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ChartDoanhNghiep\Index.cshtml" />
+    <Content Include="Content\jquery-ui-slider-pips.css" />
+    <Content Include="Areas\Admin\Views\ChartTrongTrot\Index.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartjs\chart.js" />
     <Content Include="Scripts\chartjs\charts\Chart.Bar.js" />
@@ -425,6 +426,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-3.2.0.min.js" />
+    <Content Include="Scripts\jquery-ui-slider-pips.js" />
     <Content Include="Scripts\jquery.base64.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -442,7 +444,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\tableExport.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
