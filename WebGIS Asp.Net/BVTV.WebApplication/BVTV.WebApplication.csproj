@@ -191,6 +191,8 @@
   <ItemGroup>
     <Compile Include="Areas\Admin\Controllers\AdminAuthorize.cs" />
     <Compile Include="Areas\Admin\Controllers\ChartDoanhNghiepController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManagerRoleController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManagerUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\SauBenhController.cs" />
     <Compile Include="Areas\Admin\Controllers\TrongTrotController.cs" />
     <Compile Include="Areas\Admin\Interfaces\IChartJson.cs" />
@@ -374,6 +376,13 @@
     <Content Include="Areas\Admin\Views\ChartDoanhNghiep\Index.cshtml" />
     <Content Include="Content\jquery-ui-slider-pips.css" />
     <Content Include="Areas\Admin\Views\ChartTrongTrot\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerRole\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerRole\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerRole\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerUser\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerUser\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerUser\EditRole.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerUser\Index.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartjs\chart.js" />
     <Content Include="Scripts\chartjs\charts\Chart.Bar.js" />

@@ -18,5 +18,6 @@ namespace BVTV.Entity
         public Nullable<short> NhomGia { get; set; }
         public Nullable<short> TenDoiTuong { get; set; }
         public string Gia { get; set; }
+        public string MaDoiTuong { get; set; }
     }
 }

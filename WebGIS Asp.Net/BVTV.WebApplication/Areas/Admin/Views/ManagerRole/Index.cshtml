@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework;
+@model IEnumerable<IdentityRole>
+
+@{
+    ViewBag.Title = "Quản lý quyền hạn người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+}
+@Html.ActionLink("Tạo role", "Create", null,new { @class= "btn-primary"})
+
+
+
+
+<div class="row">
+
+    <div class="col-sm-12">
+
+        <h2>@ViewBag.Title</h2>
+
+        <hr />
+
+        <table class="table table-borderer">
+            <thead>
+                <tr>
+                    <th data-field="id">@Html.DisplayNameFor(model => model.Id)</th>
+                    <th data-sortable="true">@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>Tác vụ</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+
+            {
+
+                <tr>
+
+                    <td>@item.Id</td>
+
+                    <td>@item.Name</td>
+
+                    <td>@Html.ActionLink("Xóa", "Delete", new { id = item.Id })</td>
+
+                </tr>
+
+            }
+        </table>
+    </div>
+</div>

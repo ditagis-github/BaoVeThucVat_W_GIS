@@ -42,7 +42,15 @@ a, button {
 input, select, textarea {
     font-family: "Montserrat", sans-serif;
 }
-
+input[type="button"],.btn-primary {
+    width: auto;
+    padding: 8px 40px;
+    background-color: #6ab43e;
+    border: none;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 400;
+}
 a, i, button, img, input, span,
 *:before, *:after {
     -webkit-transition: all 0.3s ease 0s;

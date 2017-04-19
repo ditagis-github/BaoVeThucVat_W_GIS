@@ -19,5 +19,7 @@ namespace BVTV.Entity
         public Nullable<short> NhomCayTrong { get; set; }
         public string LoaiCayTrong { get; set; }
         public string SauBenhGayHai1 { get; set; }
+        public Nullable<short> Thang { get; set; }
+        public Nullable<short> Nam { get; set; }
     }
 }

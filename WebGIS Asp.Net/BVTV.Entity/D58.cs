@@ -12,12 +12,10 @@ namespace BVTV.Entity
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class D58
     {
-        public int id { get; set; }
-        public Nullable<int> permission { get; set; }
-        public Nullable<bool> active { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
+        public long SDE_STATE_ID { get; set; }
+        public int SDE_DELETES_ROW_ID { get; set; }
+        public long DELETED_AT { get; set; }
     }
 }

@@ -3,7 +3,6 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css" />
 
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
@@ -18,7 +17,9 @@
         </div>
     </div><!--/.row-->
 </div>
-@section scripts{
+@if (IsSectionDefined("scripts"))
+{
+    RenderSection("scripts");
     @Scripts.Render("~/js/bootstrap-table")
     @RenderSection("scripts", required: false)
 }

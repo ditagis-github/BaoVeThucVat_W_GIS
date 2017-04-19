@@ -19,7 +19,6 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         [DisplayName("Đất trồng")]
         public int DatTrongCount { get; set; }
     }
-    [Authorize]
     public class HomeController : Controller
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
@@ -30,7 +29,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             {
                 DatTrongCount = db.TRONGTROTs.Count(),
                 DoanhNghiepCount = db.DOANHNGHIEPs.Count(),
-                MemberCount = db.Users.Count(),
+                MemberCount = db.AspNetRoles.Count(),
                 SauBenhCount = db.SAUBENHs.Count()
             };
             return View(md);
