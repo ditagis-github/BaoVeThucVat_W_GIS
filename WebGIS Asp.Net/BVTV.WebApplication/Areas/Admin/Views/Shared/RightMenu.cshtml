@@ -12,8 +12,11 @@
         <li>
             @Html.ActionLink("Quản lý nội dung", "Index", "News")
         </li>
-        <li>
+        <li class="parent">
             @Html.ActionLink("Doanh Nghiệp", "Index", "DoanhNghiep")
+            <ul class="children collapse" id="sub-item-1">
+                <li>SXX</li>
+            </ul>
         </li>
         <li>
             @Html.ActionLink("Sâu bệnh", "Index", "SauBenh")
@@ -23,7 +26,7 @@
         </li>
         <li role="presentation" class="divider"></li>
         <li>
-            @Html.ActionLink("Bản đồ", "", "",new { area=""}))
+            @Html.ActionLink("Bản đồ", "Index", "Map", new { area = "" })
         </li>
     </ul>
 </div><!--/.sidebar-->

@@ -7,20 +7,31 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BVTV.Entity;
+using System.Web.Security;
+using Microsoft.AspNet.Identity;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
+    [Authorize]
     public class TrongTrotController : Controller
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot
         public ActionResult Index()
         {
-            
-            return View(db.TRONGTROTs.Take(100).ToList());
+            var data = db.TRONGTROTs.ToList();
+            if (!User.IsInRole("Admin") && !User.IsInRole("Mod")) {
+                var roles = Roles.GetRolesForUser(User.Identity.Name);
+                var qr = from tt in db.TRONGTROTs
+                         from rl in roles
+                         where tt.MaHuyenTP.Equals(rl)
+                         select tt;
+                data = qr.ToList();
+            }
+            return View(data);
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot/Details/5
         public ActionResult Details(int? id)
         {
@@ -35,7 +46,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot/Create
         public ActionResult Create()
         {
@@ -45,6 +56,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/TrongTrot/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Mod")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "OBJECTID,MaDoiTuong,NhomCayTrong,LoaiCayTrong,DienTichTrong,TinhHinhUngDungCongNghe,ToChucCaNhanQuanLy,TinhTrangThuHoach,GhiChu,MaLoaiCayTrong,PhuongThucTrong,ThoiVuTrongTrot,MatDoCayTrong,TenGiongCayTrong,MaHuyenTP,GiaiDoanSinhTruong,MaDuong,NgayCapNhat,NguoiCapNhat,SHAPE")] TRONGTROT tRONGTROT)
@@ -58,7 +70,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 
             return View(tRONGTROT);
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -73,7 +85,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // POST: Admin/TrongTrot/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -89,7 +101,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -104,7 +116,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // POST: Admin/TrongTrot/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

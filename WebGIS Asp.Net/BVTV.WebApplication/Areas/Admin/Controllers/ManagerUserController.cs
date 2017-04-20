@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ManagerUserController : Controller
     {
 

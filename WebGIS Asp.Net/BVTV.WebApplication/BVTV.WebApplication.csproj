@@ -189,8 +189,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\Admin\Controllers\AdminAuthorize.cs" />
-    <Compile Include="Areas\Admin\Controllers\ChartDoanhNghiepController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManagerRoleController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManagerUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
@@ -241,7 +239,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\ChartDoanhNghiep\chart.html" />
     <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -675,9 +672,7 @@
     <Content Include="Areas\Admin\Views\TrongTrot\Details.cshtml" />
     <Content Include="Areas\Admin\Views\TrongTrot\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\TrongTrot\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ChartDoanhNghiep\Index.cshtml" />
     <Content Include="Content\jquery-ui-slider-pips.css" />
-    <Content Include="Areas\Admin\Views\ChartTrongTrot\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ManagerRole\Create.cshtml" />
     <Content Include="Areas\Admin\Views\ManagerRole\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\ManagerRole\Index.cshtml" />

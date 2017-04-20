@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class ManagerRoleController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();

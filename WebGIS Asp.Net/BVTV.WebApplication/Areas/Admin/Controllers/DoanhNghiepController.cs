@@ -7,19 +7,21 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BVTV.Entity;
+using BVTV.WebApplication.Areas.Admin.Interfaces;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
-    public class DoanhNghiepController : Controller
+    [Authorize]
+    public class DoanhNghiepController : Controller,IChartJson
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/DoanhNghiep
         public ActionResult Index()
         {
             return View(db.DOANHNGHIEPs.ToList());
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/DoanhNghiep/Details/5
         public ActionResult Details(int? id)
         {
@@ -35,7 +37,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             ViewBag.Heading = "Chi tiết " + dOANHNGHIEP.OBJECTID;
             return View(dOANHNGHIEP);
         }
-
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/DoanhNghiep/Create
         public ActionResult Create()
         {
@@ -45,6 +47,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/DoanhNghiep/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Mod")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "OBJECTID,MaDoanhNghiep,NguoiDaiDienDoanhNghiep,SoNha,TenDuong,PhuongXa,QuanHuyen,Website,DiaChiKho,TenCBPhuTrach,DienThoai,Fax,Email,LoaiDonViSXKD,DanhMucSanPham,GiayPhepSXKD,SanLuongTrongNam,GiayCNDuDieuKienSXKD,DanhGiaXepLoai,ThoiGianThanhTra,NguyenNhanThanhTra,HinhThucPhat,MucPhat,MaHoSoLuuTru,SoLanViPham,SHAPE")] DOANHNGHIEP dOANHNGHIEP)
@@ -60,6 +63,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/DoanhNghiep/Edit/5
+        [Authorize(Roles = "Admin,Mod")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -77,6 +81,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/DoanhNghiep/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Mod")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OBJECTID,MaDoanhNghiep,NguoiDaiDienDoanhNghiep,SoNha,TenDuong,PhuongXa,QuanHuyen,Website,DiaChiKho,TenCBPhuTrach,DienThoai,Fax,Email,LoaiDonViSXKD,DanhMucSanPham,GiayPhepSXKD,SanLuongTrongNam,GiayCNDuDieuKienSXKD,DanhGiaXepLoai,ThoiGianThanhTra,NguyenNhanThanhTra,HinhThucPhat,MucPhat,MaHoSoLuuTru,SoLanViPham,SHAPE")] DOANHNGHIEP dOANHNGHIEP)
@@ -91,6 +96,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/DoanhNghiep/Delete/5
+        [Authorize(Roles = "Admin,Mod")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -108,6 +114,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/DoanhNghiep/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Mod")]
         public ActionResult DeleteConfirmed(int id)
         {
             DOANHNGHIEP dOANHNGHIEP = db.DOANHNGHIEPs.Find(id);
@@ -124,32 +131,19 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
-        public ActionResult GetById(int id)
-        {
-            try
-            {
-                var dn = db.DOANHNGHIEPs.Find(id);
-                if (dn != null)
-                {
-                    var data = new
-                    {
-                        MaDoanhNghiep = dn.MaDoanhNghiep,
-                        Ten = dn.TenDonViDoanhNghiep,
-                        DiaChi = dn.SoNha,
-                        SoLanViPham = dn.SoLanViPham,
-                        SanLuong = dn.SanLuongTrongNam,
-                        NguoiCapNhat = dn.NguoiCapNhat,
-                        MucPhat = dn.MucPhat
-                    };
-                    return Json(data, JsonRequestBehavior.AllowGet);
-                }
-                return null;
 
-            }
-            catch (Exception ex)
-            {
-                return View("Index");
-            }
+        public ActionResult GetAll()
+        {
+            //use linq for get list data doanhnghiep with EntityFramework,
+            //after set Data Property and Label Property, its provider for jquery getJson for drawChart
+            var datas = from dn in db.DOANHNGHIEPs.ToList()
+                        select new
+                        {
+                            Data = dn.SoLanViPham,
+                            Label = dn.NguoiDaiDienDoanhNghiep
+                        };
+
+            return Json(datas, JsonRequestBehavior.AllowGet);
         }
     }
 }

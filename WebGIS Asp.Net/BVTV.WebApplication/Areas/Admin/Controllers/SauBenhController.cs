@@ -5,10 +5,11 @@ using System.Net;
 using System.Web.Mvc;
 using BVTV.Entity;
 using BVTV.WebApplication.Models;
+using BVTV.WebApplication.Areas.Admin.Interfaces;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
-    public class SauBenhController : Controller
+    public class SauBenhController : Controller,IChartJson
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
 
@@ -122,6 +123,19 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult GetAll()
+        {
+            var query = from nct in db.NhomCayTrongs
+                        select new
+                        {
+                            Count = from tt in db.TRONGTROTs
+                                    where nct.id.Equals(tt.NhomCayTrong.Value)
+                                    select tt.OBJECTID
+                        };
+
+            return Json(query.ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

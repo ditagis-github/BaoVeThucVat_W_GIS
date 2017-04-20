@@ -1,4 +1,5 @@
-﻿function drawOverview(div, url) {
+﻿function drawBar(div, url, options) {
+    options = options || { label: 'Chưa có tiêu đề' };
     $.getJSON(url, displayData);
     var labels = [], datas = [];
     function displayData(response) {
@@ -11,6 +12,7 @@
             data: {
                 labels: labels,
                 datasets: [{
+                    label: options.label,
                     data: datas,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',

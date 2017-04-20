@@ -4,7 +4,7 @@
     ViewBag.Title = "Doanh nghiệp";
 }
 
-<table id="table" data-toggle="table" data-detail-view="true" data-detail-formatter="detailFormatter"  data-show-export="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
+<table id="table" data-toggle="table" data-detail-view="true" data-detail-formatter="detailFormatter" data-show-export="true" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
     <thead>
         <tr>
             <th data-field="id">@Html.DisplayNameFor(model => model.MaDoanhNghiep)</th>
@@ -16,32 +16,42 @@
             <th>Tác vụ</th>
         </tr>
     </thead>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaDoanhNghiep)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NguoiDaiDienDoanhNghiep)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SoNha)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DienThoai)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Fax)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.OBJECTID }) |
-                    @Html.ActionLink("Chi tiết", "Details", new { id = item.OBJECTID }) |
-                    @Html.ActionLink("Xóa", "Delete", new { id = item.OBJECTID })
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaDoanhNghiep)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NguoiDaiDienDoanhNghiep)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoNha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DienThoai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.OBJECTID }) |
+                @Html.ActionLink("Chi tiết", "Details", new { id = item.OBJECTID }) |
+                @Html.ActionLink("Xóa", "Delete", new { id = item.OBJECTID })
+            </td>
+        </tr>
+    }
 </table>
+
+@section scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+    <script src="~/Scripts/chartjs/draw-chart.js"></script>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script>
+        drawBar($('#myChart'), '@Url.Action("GetAll")',{label:'Số lần vi phạm'})
+    </script>
+}

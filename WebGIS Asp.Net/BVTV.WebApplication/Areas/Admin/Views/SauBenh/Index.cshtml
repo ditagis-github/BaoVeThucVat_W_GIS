@@ -83,3 +83,12 @@
     }
 
 </table>
+@section scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+    <script src="~/Scripts/chartjs/draw-chart.js"></script>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script>
+        drawBar($('#myChart'), '@Url.Action("GetAll")')
+    </script>
+}
