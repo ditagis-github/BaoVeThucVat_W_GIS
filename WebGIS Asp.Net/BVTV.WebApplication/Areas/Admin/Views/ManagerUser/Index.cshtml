@@ -10,14 +10,7 @@
 
 }
 
-<div class="row">
-
-    <div class="col-sm-12">
-
-        <h2>@ViewBag.Title</h2>
-
-        <hr />
-        @Html.ActionLink("Tạo", "Register","Account",new { area=""}, new { @class = "button" })
+        @Html.ActionLink("Tạo", "Register",null, new { @class = "button" })
         <table class="table table-borderer">
 
             <thead>
@@ -65,6 +58,3 @@
 
         </table>
 
-    </div>
-
-</div>

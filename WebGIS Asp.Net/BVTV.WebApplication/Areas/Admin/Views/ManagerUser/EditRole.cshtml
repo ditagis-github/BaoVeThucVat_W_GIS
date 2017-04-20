@@ -1,104 +1,105 @@
 ﻿@model BVTV.WebApplication.Models.ApplicationUser
 @{
     ViewBag.Title = "Thay đổi quyền - " + @Model.Email;
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">@ViewBag.Title</div>
+                <div class="panel-body">
 
-<div class="row">
+                    <h5><strong>Các quyền hiện tại của thành viên @Model.Email:</strong> </h5>
 
-    <div class="col-sm-6">
+                    <table class="table">
 
-        <h2>@ViewBag.Title</h2>
+                        <thead>
 
-        <hr />
+                            <tr>
 
-        <h5><strong>Các quyền hiện tại của thành viên @Model.Email:</strong> </h5>
+                                <th>Quyền</th>
 
-        <table class="table">
+                                <th></th>
 
-            <thead>
+                            </tr>
 
-                <tr>
+                        </thead>
+                        <tbody>
 
-                    <th>Quyền</th>
+                            @if (Model.Roles.Count > 0)
 
-                    <th></th>
+                            {
 
-                </tr>
+                                foreach (var item in Model.Roles)
 
-            </thead>
-            <tbody>
+                                {
 
-                @if (Model.Roles.Count > 0)
+                                    <tr>
 
-                {
+                                        <td>@item.RoleId</td>
 
-                    foreach (var item in Model.Roles)
+                                        <td>
 
-                    {
+                                            <form action="@Url.Action("DeleteRoleFromUser", new { UserId = item.UserId, RoleId = item.RoleId })" method="post">
 
-                        <tr>
+                                                @Html.AntiForgeryToken()
 
-                            <td>@item.RoleId</td>
+                                                <button type="submit" class="btn btn-xs btn-danger">Gỡ bỏ</button>
 
-                            <td>
+                                            </form>
 
-                                <form action="@Url.Action("DeleteRoleFromUser", new { UserId = item.UserId, RoleId = item.RoleId })" method="post">
+                                        </td>
 
-                                    @Html.AntiForgeryToken()
+                                    </tr>
 
-                                    <button type="submit" class="btn btn-xs btn-danger">Gỡ bỏ</button>
+                                }
 
-                                </form>
+                            }
 
-                            </td>
+                            else
 
-                        </tr>
+                            {
 
-                    }
+                                <tr>
 
-                }
+                                    <td colspan="2">
 
-                else
+                                        <p>Thành viên chưa có quyền nào</p>
 
-                {
+                                    </td>
 
-                    <tr>
+                                </tr>
 
-                        <td colspan="2">
+                            }
 
-                            <p>Thành viên chưa có quyền nào</p>
+                        </tbody>
 
-                        </td>
+                    </table>
 
-                    </tr>
+                    <h5><strong>Thêm quyền cho thành viên này:</strong></h5>
 
-                }
+                    <form action="@Url.Action("AddToRole")" method="post">
 
-            </tbody>
+                        <input type="hidden" name="UserId" value="@Url.RequestContext.RouteData.Values["Id"]" />
 
-        </table>
+                        @Html.AntiForgeryToken()
 
-        <h5><strong>Thêm quyền cho thành viên này:</strong></h5>
+                        @Html.ListBox("RoleId", null, new { @class = "form-control", multiple = "multiple" })
 
-        <form action="@Url.Action("AddToRole")" method="post">
+                        <div class="form-group">
 
-            <input type="hidden" name="UserId" value="@Url.RequestContext.RouteData.Values["Id"]" />
+                            <br />
 
-            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary">Thêm </button>
 
-            @Html.ListBox("RoleId", null, new { @class = "form-control", multiple = "multiple" })
+                        </div>
 
-            <div class="form-group">
+                    </form>
 
-                <br />
-
-                <button type="submit" class="btn btn-primary">Thêm </button>
+                </div>
 
             </div>
-
-        </form>
-
+        </div>
     </div>
-
 </div>

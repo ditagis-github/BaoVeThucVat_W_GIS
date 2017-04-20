@@ -11,6 +11,7 @@ Version 1.0
 /*-- Common Style --*/
 
 body {
+    padding-top: 50px;
 	line-height: 24px;
     font-size: 14px;
     font-style: normal;
@@ -881,4 +882,16 @@ input::-moz-placeholder, textarea::-moz-placeholder, select::-moz-placeholder {
 input:-ms-input-placeholder, textarea:-ms-input-placeholder, select:-ms-input-placeholder {
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
+/*Table CSS*/
+table .fa{
+    margin-right: 5px;
+    color:#6ab43e;
+}
+#table thead th{
+        background-color: #6ab43e;
+        color:white;
+}
+.glyphicon {
+    color:#6ab43e;
 }

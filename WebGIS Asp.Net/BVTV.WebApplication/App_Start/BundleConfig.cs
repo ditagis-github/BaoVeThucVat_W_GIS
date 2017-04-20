@@ -36,7 +36,8 @@ namespace BVTV.WebApplication
             bundles.Add(new ScriptBundle("~/js/lumino").Include(
                 "~/Scripts/jquery-{version}.js",
                       "~/Scripts/bootstrap.min.js",
-                      "~/Content/lumino/js/bootstrap-datepicker.js"
+                      "~/Content/lumino/js/bootstrap-datepicker.js",
+                      "~/Content/lumino/js/lumino.js"
                       ));
             bundles.Add(new ScriptBundle("~/js/lumino/chart").Include(
                 "~/Content/lumino/js/chart.min.js",

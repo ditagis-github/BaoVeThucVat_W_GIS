@@ -195,22 +195,7 @@
     <Compile Include="Areas\Admin\Controllers\SauBenhController.cs" />
     <Compile Include="Areas\Admin\Controllers\TrongTrotController.cs" />
     <Compile Include="Areas\Admin\Interfaces\IChartJson.cs" />
-    <Compile Include="Models\CONGNGHECAO.cs" />
-    <Compile Include="Models\DanhMucCayTrongRauMau.cs" />
-    <Compile Include="Models\DoanhNghiep.cs" />
-    <Compile Include="Models\GIAPHANBON_THUOCBVTT_NONGSAN_GIONG.cs" />
-    <Compile Include="Models\GIONGCAYTRONG.cs" />
-    <Compile Include="Models\HANHCHINHHUYEN.cs" />
-    <Compile Include="Models\MATDUONGBO.cs" />
-    <Compile Include="Models\NhomCayTrong.cs" />
-    <Compile Include="Models\PHUBEMAT.cs" />
-    <Compile Include="Models\QUYHOACHSUDUNGDAT.cs" />
-    <Compile Include="Models\SauBenh.cs" />
-    <Compile Include="Models\SAUBENHGAYHAI.cs" />
-    <Compile Include="Models\SONGHO.cs" />
-    <Compile Include="Models\TIMDUONG.cs" />
-    <Compile Include="Models\TRONGTROT.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Areas\Admin\Models\FeatureLayerViewModel.cs" />
     <Compile Include="Startup.cs" />
     <Content Include="App_Code\HTMLExtension.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -545,6 +530,7 @@
     <Content Include="Content\ckeditor\skins\moono-lisa\images\refresh.png" />
     <Content Include="Content\ckeditor\skins\moono-lisa\images\spinner.gif" />
     <Content Include="Content\ckeditor\styles.js" />
+    <Content Include="Content\lumino\js\lumino.js" />
     <Content Include="Scripts\chartjs\draw-chart.js" />
     <Content Include="Content\esri.css" />
     <Content Include="Content\font-awesome.css" />
@@ -702,6 +688,13 @@
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Content\ckeditor\skins\moono-lisa\readme.md" />
+    <Content Include="Areas\Admin\Views\ManagerUser\Register.cshtml" />
+    <Content Include="Areas\Admin\Views\SauBenh\Map.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutMap.cshtml" />
+    <Content Include="Areas\Admin\Views\DoanhNghiep\Map.cshtml" />
+    <Content Include="Areas\Admin\Views\TrongTrot\Map.cshtml" />
+    <Content Include="Areas\Admin\Views\DoanhNghiep\Chart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutChart.cshtml" />
     <None Include="Properties\PublishProfiles\bvtvbd.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartjs\chart.js" />
@@ -814,7 +807,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

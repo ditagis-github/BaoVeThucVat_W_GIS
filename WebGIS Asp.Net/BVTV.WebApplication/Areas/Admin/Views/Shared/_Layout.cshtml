@@ -11,9 +11,7 @@
 </head>
 
 <body>
-    @using (Html.BeginForm("LogOff", "Account", new { area = ""},FormMethod.Post, new {id = "logoutForm", @class = "navbar-right" }))
-    {
-    @Html.AntiForgeryToken()
+
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -24,24 +22,42 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">Trang quản lý</a>
-                <ul class="user-menu">
-                    <li class="dropdown pull-right">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o" aria-hidden="true"></i> @User.Identity.GetUserName() <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="@Url.Action("Index","Manage",new { area = ""})"><i class="fa fa-info" aria-hidden="true"></i>Thông tin</a></li>
-                            <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <ul class="user-menu">
+                        <li class="dropdown pull-right">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o" aria-hidden="true"></i> @User.Identity.GetUserName() <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="@Url.Action("Index", "Manage", new { area = "" })"><i class="fa fa-info" aria-hidden="true"></i>Thông tin</a></li>
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
             </div>
 
         </div><!-- /.container-fluid -->
     </nav>
-    }
     @RenderPage("RightMenu.cshtml")
     @RenderBody()
 
     @Scripts.Render("~/js/lumino")
+    <script>
+		!function ($) {
+			$(document).on("click","ul.nav li.parent > a > span.icon", function(){
+				$(this).find('em:first').toggleClass("glyphicon-minus");
+			});
+			$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+    </script>	
     @RenderSection("scripts", required: false)
 </body>
 </html>

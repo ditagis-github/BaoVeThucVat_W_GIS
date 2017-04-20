@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BVTV.Entity;
 using BVTV.WebApplication.Areas.Admin.Interfaces;
+using BVTV.WebApplication.Areas.Admin.Models;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
@@ -19,7 +20,15 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // GET: Admin/DoanhNghiep
         public ActionResult Index()
         {
-            return View(db.DOANHNGHIEPs.ToList());
+            var datas = from sb in db.DOANHNGHIEPs.ToList()
+                        select new DoanhNghiep(sb);
+            return View(datas.ToList());
+        }
+        [Authorize(Roles = "Admin,Mod")]
+        // GET: Admin/DoanhNghiep/Map
+        public ActionResult Map()
+        {
+            return View();
         }
         [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/DoanhNghiep/Details/5
@@ -131,7 +140,11 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
-
+        /// <summary>
+        /// Dùng hiển thị biểu đồ mặc định để chartjs dùng ajax load dữ liệu
+        /// </summary>
+        /// <returns>Dữ liệu Json chứa Data và Label</returns>
+        [AllowAnonymous]
         public ActionResult GetAll()
         {
             //use linq for get list data doanhnghiep with EntityFramework,
@@ -144,6 +157,10 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
                         };
 
             return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Chart()
+        {
+            return View();
         }
     }
 }

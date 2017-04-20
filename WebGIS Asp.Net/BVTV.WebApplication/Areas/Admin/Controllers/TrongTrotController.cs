@@ -32,6 +32,12 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             return View(data);
         }
         [Authorize(Roles = "Admin,Mod")]
+        // GET: Admin/TrongTrot
+        public ActionResult Map()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot/Details/5
         public ActionResult Details(int? id)
         {

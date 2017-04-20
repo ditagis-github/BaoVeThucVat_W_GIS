@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Chart";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutChart.cshtml";
+}
+
+
+<canvas id="myChart" width="400" height="400"></canvas>
+@section scripts{
+    <script>
+        drawBar($('#myChart'), '@Url.Action("GetAll")',{label:'Số lần vi phạm'})
+    </script>
+}

@@ -124,9 +124,9 @@
                     @Html.DisplayFor(modelItem => item.NguoiCapNhat)
                 </td>
                 <td>
-                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.OBJECTID }) |
-                    @Html.ActionLink("Chi tiết", "Details", new { id = item.OBJECTID }) |
-                    @Html.ActionLink("Xóa", "Delete", new { id = item.OBJECTID })
+                    <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.OBJECTID })"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.OBJECTID })"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.OBJECTID })"><i class="fa fa-info" aria-hidden="true"></i></a>
                 </td>
             </tr>
         }

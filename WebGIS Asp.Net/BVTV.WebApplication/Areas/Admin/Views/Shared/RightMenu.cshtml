@@ -12,21 +12,41 @@
         <li>
             @Html.ActionLink("Quản lý nội dung", "Index", "News")
         </li>
-        <li class="parent">
-            @Html.ActionLink("Doanh Nghiệp", "Index", "DoanhNghiep")
-            <ul class="children collapse" id="sub-item-1">
-                <li>SXX</li>
+
+        <li class="dropdown">
+            <a class="dropdown-toggle"  href="@Url.Action("Index", "DoanhNghiep")">
+                Doanh nghiệp
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Bản đồ", "Map", "DoanhNghiep")</li>
+                <li>@Html.ActionLink("Biểu đồ", "Chart", "DoanhNghiep")</li>
             </ul>
         </li>
-        <li>
-            @Html.ActionLink("Sâu bệnh", "Index", "SauBenh")
+            
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="@Url.Action("Index", "SauBenh")">
+                Sâu bệnh
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Bản đồ", "Map", "SauBenh")</li>
+                <li>@Html.ActionLink("Biểu đồ", "Chart", "SauBenh")</li>
+            </ul>
         </li>
-        <li>
-            @Html.ActionLink("Trồng trọt", "Index", "TrongTrot")
+        <li class="dropdown">
+            <a class="dropdown-toggle"  href="@Url.Action("Index", "TrongTrot")">
+                Trồng trọt
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Bản đồ", "Map", "TrongTrot")</li>
+                <li>@Html.ActionLink("Biểu đồ", "Chart", "TrongTrot")</li>
+            </ul>
         </li>
         <li role="presentation" class="divider"></li>
         <li>
-            @Html.ActionLink("Bản đồ", "Index", "Map", new { area = "" })
+            @Html.ActionLink("Bản đồ", "Index", "Map", new { area = "" },null)
         </li>
     </ul>
 </div><!--/.sidebar-->

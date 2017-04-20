@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BVTV.WebApplication.Models.SauBenh>
+﻿@model IEnumerable<BVTV.WebApplication.Areas.Admin.Models.SauBenh>
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
     ViewBag.Title = "Sâu bệnh";
@@ -75,20 +75,11 @@
             </td>
 
             <td>
-                @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.OBJECTID }) |
-                @Html.ActionLink("Chi tiết", "Details", new { id = item.OBJECTID }) |
-                @Html.ActionLink("Xóa", "Delete", new { id = item.OBJECTID })
+                <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.OBJECTID })"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.OBJECTID })"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.OBJECTID })"><i class="fa fa-info" aria-hidden="true"></i></a>
             </td>
         </tr>
     }
 
 </table>
-@section scripts{
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-    <script src="~/Scripts/chartjs/draw-chart.js"></script>
-    <canvas id="myChart" width="400" height="400"></canvas>
-    <script>
-        drawBar($('#myChart'), '@Url.Action("GetAll")')
-    </script>
-}

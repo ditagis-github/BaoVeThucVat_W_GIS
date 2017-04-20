@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using BVTV.Entity;
-using BVTV.WebApplication.Models;
 using BVTV.WebApplication.Areas.Admin.Interfaces;
+using BVTV.WebApplication.Areas.Admin.Models;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
@@ -38,6 +38,11 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 
         // GET: Admin/SauBenh/Create
         public ActionResult Create()
+        {
+            return View();
+        }
+
+        public ActionResult Map()
         {
             return View();
         }
