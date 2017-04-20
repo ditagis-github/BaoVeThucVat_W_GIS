@@ -1,11 +1,9 @@
 ﻿@model BVTV.Entity.News
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Chỉnh sửa - " + Model.title;
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
 }
-
-<h2>Chỉnh sửa</h2>
 
 @using (Html.BeginForm())
 {

@@ -2,11 +2,10 @@
     ViewBag.Title = "Bản đồ";
     
 }
-<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+
 <link rel="stylesheet" href="https://js.arcgis.com/4.3/esri/css/main.css">
 <link href="~/Content/map.css" rel="stylesheet" />
-<script src="https://js.arcgis.com/4.3/"></script>
-@Scripts.Render("~/bundles/map")
+
 
 <section id="map-area" class="pb-100">
     <div class="col-md-4 col-lg-3">
@@ -128,12 +127,17 @@
     </div>
 
 
-    <script type="text/javascript">
+    
+</section>
+@section scripts{
+<script src="https://js.arcgis.com/4.3/"></script>
+@Scripts.Render("~/bundles/map")
+<script type="text/javascript">
 
         $('ul.nav.nav-tabs  a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
         });
 
-    </script>
-</section>
+</script>
+}

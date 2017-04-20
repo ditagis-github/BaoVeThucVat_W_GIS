@@ -1,105 +1,92 @@
 ﻿@model BVTV.WebApplication.Models.ApplicationUser
+@using BVTV.Entity
 @{
-    ViewBag.Title = "Thay đổi quyền - " + @Model.Email;
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Thay đổi quyền - " + @Model.UserName;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutEdit.cshtml";
+
+    BaoVeThucVatEntities db = new BaoVeThucVatEntities();
 }
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">@ViewBag.Title</div>
-                <div class="panel-body">
+<h5><strong>Các quyền hiện tại của thành viên @Model.UserName:</strong> </h5>
 
-                    <h5><strong>Các quyền hiện tại của thành viên @Model.Email:</strong> </h5>
+<table class="table">
 
-                    <table class="table">
+    <thead>
 
-                        <thead>
+        <tr>
 
-                            <tr>
+            <th>Quyền</th>
 
-                                <th>Quyền</th>
+            <th></th>
 
-                                <th></th>
+        </tr>
 
-                            </tr>
+    </thead>
+    <tbody>
+        @if (Model.Roles.Count > 0)
+            {
+                foreach (var item in Model.Roles)
+                {
 
-                        </thead>
-                        <tbody>
+                <tr>
+                    <td>
+                        @db.AspNetRoles.First(f => f.Id.Equals(item.RoleId)).Name
+                    </td>
 
-                            @if (Model.Roles.Count > 0)
+                    <td>
 
-                            {
+                        <form action="@Url.Action("DeleteRoleFromUser", new { UserId = item.UserId, RoleId = item.RoleId })" method="post">
 
-                                foreach (var item in Model.Roles)
+                            @Html.AntiForgeryToken()
 
-                                {
+                            <button type="submit" class="btn btn-xs btn-danger">Gỡ bỏ</button>
 
-                                    <tr>
+                        </form>
 
-                                        <td>@item.RoleId</td>
+                    </td>
 
-                                        <td>
+                </tr>
 
-                                            <form action="@Url.Action("DeleteRoleFromUser", new { UserId = item.UserId, RoleId = item.RoleId })" method="post">
+            }
 
-                                                @Html.AntiForgeryToken()
+        }
 
-                                                <button type="submit" class="btn btn-xs btn-danger">Gỡ bỏ</button>
+        else
 
-                                            </form>
+        {
 
-                                        </td>
+            <tr>
 
-                                    </tr>
+                <td colspan="2">
 
-                                }
+                    <p>Thành viên chưa có quyền nào</p>
 
-                            }
+                </td>
 
-                            else
+            </tr>
 
-                            {
+        }
 
-                                <tr>
+    </tbody>
 
-                                    <td colspan="2">
+</table>
 
-                                        <p>Thành viên chưa có quyền nào</p>
+<h5><strong>Thêm quyền cho thành viên này:</strong></h5>
 
-                                    </td>
+<form action="@Url.Action("AddToRole")" method="post">
 
-                                </tr>
+    <input type="hidden" name="UserId" value="@Url.RequestContext.RouteData.Values["Id"]" />
 
-                            }
+    @Html.AntiForgeryToken()
 
-                        </tbody>
+    @Html.ListBox("RoleId", null, new { @class = "form-control", multiple = "multiple" })
 
-                    </table>
+    <div class="form-group">
 
-                    <h5><strong>Thêm quyền cho thành viên này:</strong></h5>
+        <br />
 
-                    <form action="@Url.Action("AddToRole")" method="post">
+        <button type="submit" class="button">Thêm </button>
 
-                        <input type="hidden" name="UserId" value="@Url.RequestContext.RouteData.Values["Id"]" />
-
-                        @Html.AntiForgeryToken()
-
-                        @Html.ListBox("RoleId", null, new { @class = "form-control", multiple = "multiple" })
-
-                        <div class="form-group">
-
-                            <br />
-
-                            <button type="submit" class="btn btn-primary">Thêm </button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-        </div>
     </div>
-</div>
+
+</form>
+

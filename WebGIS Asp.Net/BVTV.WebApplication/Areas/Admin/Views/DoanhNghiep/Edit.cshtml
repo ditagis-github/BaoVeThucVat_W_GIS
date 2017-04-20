@@ -1,7 +1,8 @@
 ﻿@model BVTV.Entity.DOANHNGHIEP
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    ViewBag.Title = "Chính sửa doanh nghiệp - " + Model.TenDonViDoanhNghiep;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutEdit.cshtml";
 }
 @using (Html.BeginForm())
 {

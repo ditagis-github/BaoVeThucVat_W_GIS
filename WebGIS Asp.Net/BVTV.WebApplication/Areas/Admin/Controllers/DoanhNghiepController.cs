@@ -20,9 +20,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // GET: Admin/DoanhNghiep
         public ActionResult Index()
         {
-            var datas = from sb in db.DOANHNGHIEPs.ToList()
-                        select new DoanhNghiep(sb);
-            return View(datas.ToList());
+            return View(db.DOANHNGHIEPs.ToList());
         }
         [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/DoanhNghiep/Map
@@ -53,23 +51,6 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Admin/DoanhNghiep/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Admin,Mod")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "OBJECTID,MaDoanhNghiep,NguoiDaiDienDoanhNghiep,SoNha,TenDuong,PhuongXa,QuanHuyen,Website,DiaChiKho,TenCBPhuTrach,DienThoai,Fax,Email,LoaiDonViSXKD,DanhMucSanPham,GiayPhepSXKD,SanLuongTrongNam,GiayCNDuDieuKienSXKD,DanhGiaXepLoai,ThoiGianThanhTra,NguyenNhanThanhTra,HinhThucPhat,MucPhat,MaHoSoLuuTru,SoLanViPham,SHAPE")] DOANHNGHIEP dOANHNGHIEP)
-        {
-            if (ModelState.IsValid)
-            {
-                db.DOANHNGHIEPs.Add(dOANHNGHIEP);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(dOANHNGHIEP);
-        }
 
         // GET: Admin/DoanhNghiep/Edit/5
         [Authorize(Roles = "Admin,Mod")]
@@ -140,10 +121,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
-        /// <summary>
-        /// Dùng hiển thị biểu đồ mặc định để chartjs dùng ajax load dữ liệu
-        /// </summary>
-        /// <returns>Dữ liệu Json chứa Data và Label</returns>
+       
         [AllowAnonymous]
         public ActionResult GetAll()
         {

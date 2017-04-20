@@ -2,10 +2,9 @@
 
 @{
     ViewBag.Title = "Edit";
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutEdit.cshtml";
 }
 
-<h2>Edit</h2>
 
 @using (Html.BeginForm())
 {
@@ -120,5 +119,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Quay trở lại", "Index")
 </div>

@@ -1,7 +1,8 @@
 ﻿@model BVTV.Entity.DOANHNGHIEP
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    ViewBag.Title = "Xem chi tiết doanh nghiệp - " + Model.TenDonViDoanhNghiep;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutDetails.cshtml";
 }
 <dl class="dl-horizontal">
     <dt>

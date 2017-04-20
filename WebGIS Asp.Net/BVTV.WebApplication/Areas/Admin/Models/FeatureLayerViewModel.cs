@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BVTV.Entity;
+using System;
 using System.ComponentModel;
 
 namespace BVTV.WebApplication.Areas.Admin.Models

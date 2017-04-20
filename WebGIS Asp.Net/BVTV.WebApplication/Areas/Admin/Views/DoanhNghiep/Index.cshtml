@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BVTV.WebApplication.Areas.Admin.Models.DoanhNghiep>
+﻿@model IEnumerable<BVTV.Entity.DOANHNGHIEP>
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
     ViewBag.Title = "Doanh nghiệp";
@@ -38,9 +38,9 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.ObjectID })"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.ObjectID })"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.ObjectID })"><i class="fa fa-info" aria-hidden="true"></i></a>
+                <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.OBJECTID })"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a title="Xóa" href="@Url.Action("Delete",new { id = item.OBJECTID })"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                <a title="Xem chi tiết" href="@Url.Action("Details",new { id = item.OBJECTID })"><i class="fa fa-info" aria-hidden="true"></i></a>
             </td>
         </tr>
     }

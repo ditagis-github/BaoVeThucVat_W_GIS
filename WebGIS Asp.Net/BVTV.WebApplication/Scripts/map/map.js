@@ -49,7 +49,21 @@ require([
         title: "Sâu bệnh",
         popupTemplate: {
             title: "{TenSauBenhGayHai}",
-            content:"Chưa có thông tin"
+            content:"<table>"+
+                "<tr><td>Nhóm cây trồng: </td><td>{NhomCayTrong}</td>"+
+                "<tr><td>Loại cây trồng: {LoaiCayTrong}</td>"+
+                "<tr><td>Tên sâu bệnh gây hại: </td><td>{TenSauBenhGayHai}</td>" +
+                "<tr><td>Mật độ sâu bệnh gây hại: </td><td>{MatDoSauBenhGayHai}</td>" +
+                "<tr><td>Phạm vi ảnh ưởng: </td><td>{PhamViAnhHuong}</td>" +
+                "<tr><td>Mức độ ảnh hưởng: </td><td>{MucDoAnhHuong}</td>" +
+                "<tr><td>Thời gian gây hại: </td><td>{ThoiGianGayHai}</td>" +
+                "<tr><td>Cấp độ gây hại: </td><td>{CapDoGayHai}</td>" +
+                "<tr><td>Tình hình kiểm soát dịch: </td><td>{TinhHinhKiemSoatDichBenh}</td>" +
+                "<tr><td>Mức độ kiểm soát: </td><td>{MucDoKiemSoat}</td>" +
+                "<tr><td>Biện pháp xử lý: </td><td>{BienPhapXuLy}</td>" +
+                "<tr><td>Diện tích: </td><td>{DienTich}</td>" +
+                "<tr><td>Huyện/TP: </td><td>{MaHuyenTP}</td>" +
+                "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td>"
         }
     });
     SuDungDatTrong = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3", {
@@ -101,12 +115,12 @@ require([
         allPlaceholder: "Nhập nội dung tìm kiếm",
         sources: [{
             featureLayer: sauBenhLayer,
-            searchFields: ["TenSauBenhGayHai", "LoaiCayTrong"],
+            searchFields: ["TenSauBenhGayHai", "LoaiCayTrong","HuyenTP"],
             displayField: "TenSauBenhGayHai",
             exactMatch: false,
             outFields: ["*"],
             name: "Sâu hại",
-            placeholder: "Ví dụ: Bọ hung, Bọ rầy",
+            placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
         }, {
             featureLayer: doanhNghiepLayer,
             searchFields: ["MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],

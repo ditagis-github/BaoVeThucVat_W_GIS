@@ -29,6 +29,12 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 
         }
 
+        //GET: Admin/ManagerUser/Manage
+        public ActionResult Manage()
+        {
+            return View();
+        }
+
         public ActionResult Edit(string Id)
 
         {
@@ -75,6 +81,22 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         {
             //tìm một một model sử dụng EF(entity framework) với id truyền vào
             ApplicationUser model = context.Users.Find(Id);
+
+            //ApplicationUserCustom model = new ApplicationUserCustom
+            //{
+            //    AccessFailedCount = au.AccessFailedCount,
+            //    DisplayName = au.DisplayName,
+            //    Email = au.Email,
+            //    Id = au.Id,
+            //    RolesCustom = from rl in au.Roles
+            //                  select new RoleCustom
+            //                  {
+            //                      RoleId = rl.RoleId,
+            //                      RoleName = context.Roles.First(f => f.Id.Equals(rl.RoleId)).Name,
+            //                      UserId = rl.UserId
+            //                  }
+            
+            //};
 
             //set một combobox tất cả các quyền mà user chưa có
             ViewBag.RoleId = new SelectList(context.Roles.ToList().Where(item => model.Roles.FirstOrDefault(r => r.RoleId == item.Id) == null).ToList(), "Id", "Name");
@@ -194,7 +216,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
 
         }
-       
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
@@ -239,11 +261,11 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.UserName };
+                var user = new ApplicationUser { UserName = model.UserName, DisplayName = model.DisplayName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -265,6 +287,45 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("", error);
             }
+        }
+        //
+        // GET: /Manage/ChangePassword
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+        public enum ManageMessageId
+        {
+            AddPhoneSuccess,
+            ChangePasswordSuccess,
+            SetTwoFactorSuccess,
+            SetPasswordSuccess,
+            RemoveLoginSuccess,
+            RemovePhoneSuccess,
+            Error
+        }
+        //
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+            }
+            AddErrors(result);
+            return View(model);
         }
     }
 }

@@ -1,20 +1,9 @@
 ﻿@model BVTV.Entity.SAUBENH
 
 @{
-    Layout = null;
+    ViewBag.Title = "Xem chi tiết sâu bệnh - " + Model.MaSauBenh;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutDetails.cshtml";
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-    <div>
-        <h4>SAUBENH</h4>
-        <hr />
         <dl class="dl-horizontal">
             <dt>
                 @Html.DisplayNameFor(model => model.NhomCayTrong)
@@ -161,10 +150,7 @@
             </dd>
     
         </dl>
-    </div>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.OBJECTID }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Quay trở lại", "Index")
     </p>
-</body>
-</html>

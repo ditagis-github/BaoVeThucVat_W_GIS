@@ -634,7 +634,6 @@
     <Content Include="Content\lumino\tables\data1.json" />
     <Content Include="Content\lumino\tables\data2.json" />
     <Content Include="Areas\Admin\Views\Shared\RightMenu.cshtml" />
-    <Content Include="Areas\Admin\Views\DoanhNghiep\Create.cshtml" />
     <Content Include="Areas\Admin\Views\DoanhNghiep\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\DoanhNghiep\Details.cshtml" />
     <Content Include="Areas\Admin\Views\DoanhNghiep\Edit.cshtml" />
@@ -642,7 +641,6 @@
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Areas\Admin\Views\SauBenh\Create.cshtml" />
     <Content Include="Areas\Admin\Views\SauBenh\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\SauBenh\Details.cshtml" />
     <Content Include="Areas\Admin\Views\SauBenh\Edit.cshtml" />
@@ -653,7 +651,6 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="Areas\Admin\Views\TrongTrot\Create.cshtml" />
     <Content Include="Areas\Admin\Views\TrongTrot\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\TrongTrot\Details.cshtml" />
     <Content Include="Areas\Admin\Views\TrongTrot\Edit.cshtml" />
@@ -695,6 +692,12 @@
     <Content Include="Areas\Admin\Views\TrongTrot\Map.cshtml" />
     <Content Include="Areas\Admin\Views\DoanhNghiep\Chart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_LayoutChart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutCreate.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutDelete.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerUser\ChangePassword.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerUser\Manage.cshtml" />
     <None Include="Properties\PublishProfiles\bvtvbd.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartjs\chart.js" />

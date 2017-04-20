@@ -65,9 +65,12 @@ namespace BVTV.WebApplication.Models
     public class RegisterViewModel
     {
         [Required]
-        
         [Display(Name = "Tên đăng nhập")]
         public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "Tên hiển thị")]
+        public string DisplayName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "Mật khẩu {0} phải có ít nhất {2} ký tự.", MinimumLength = 6)]

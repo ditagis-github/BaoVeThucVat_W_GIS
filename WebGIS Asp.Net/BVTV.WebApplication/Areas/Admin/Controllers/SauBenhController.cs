@@ -14,14 +14,20 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
 
         // GET: Admin/SauBenh
+        [Authorize(Roles = "Admin,Mod")]
         public ActionResult Index()
         {
-            var datas = from sb in db.SAUBENHs.ToList()
-                        select new SauBenh(sb);
-            return View(datas.ToList());
+            return View(db.SAUBENHs.ToList());
+        }
+        // GET: Admin/SauBenh/Map
+        [Authorize(Roles = "Admin,Mod")]
+        public ActionResult Map()
+        {
+            return View();
         }
 
         // GET: Admin/SauBenh/Details/5
+        [Authorize(Roles = "Admin,Mod")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,35 +42,8 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             return View(sAUBENH);
         }
 
-        // GET: Admin/SauBenh/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        public ActionResult Map()
-        {
-            return View();
-        }
-
-        // POST: Admin/SauBenh/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "OBJECTID,NhomCayTrong,LoaiCayTrong,TenSauBenhGayHai,MatDoSauBenhGayHai,PhamViAnhHuong,MucDoAnhHuong,ThoiGianGayHai,CapDoGayHai,TinhHinhKiemSoatDichBenh,MucDoKiemSoat,BienPhapXuLy,DienTich,MaHuyenTP,GiaiDoanSinhTruong,NgayCapNhat,NguoiCapNhat,MaSauBenh,SHAPE")] SAUBENH sAUBENH)
-        {
-            if (ModelState.IsValid)
-            {
-                db.SAUBENHs.Add(sAUBENH);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(sAUBENH);
-        }
-
         // GET: Admin/SauBenh/Edit/5
+        [Authorize(Roles = "Admin,Mod")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -82,6 +61,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/SauBenh/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Mod")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OBJECTID,NhomCayTrong,LoaiCayTrong,TenSauBenhGayHai,MatDoSauBenhGayHai,PhamViAnhHuong,MucDoAnhHuong,ThoiGianGayHai,CapDoGayHai,TinhHinhKiemSoatDichBenh,MucDoKiemSoat,BienPhapXuLy,DienTich,MaHuyenTP,GiaiDoanSinhTruong,NgayCapNhat,NguoiCapNhat,MaSauBenh,SHAPE")] SAUBENH sAUBENH)
@@ -96,6 +76,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/SauBenh/Delete/5
+        [Authorize(Roles = "Admin,Mod")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -129,7 +110,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
-
+        [AllowAnonymous]
         public ActionResult GetAll()
         {
             var query = from nct in db.NhomCayTrongs
@@ -141,6 +122,11 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
                         };
 
             return Json(query.ToList(), JsonRequestBehavior.AllowGet);
+        }
+        [Authorize(Roles = "Admin,Mod")]
+        public ActionResult Chart()
+        {
+            return View();
         }
     }
 }

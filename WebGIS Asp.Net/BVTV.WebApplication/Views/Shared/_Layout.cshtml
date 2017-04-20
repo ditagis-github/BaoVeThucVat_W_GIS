@@ -10,7 +10,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
     @Styles.Render("~/css/hifugreen")
-    @Scripts.Render("~/bundles/jquery")
+    
 
 </head>
 
@@ -111,7 +111,7 @@
         <!-- Body main wrapper end -->
         <!-- JS -->
         <!-- Bootstrap JS============================================ -->
-
+        @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)
     </div>

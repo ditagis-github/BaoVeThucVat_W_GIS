@@ -1,8 +1,10 @@
 ﻿@model BVTV.Entity.DOANHNGHIEP
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
+    ViewBag.Title = "Xóa doanh nghiệp - " + Model.MaDoanhNghiep;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutDelete.cshtml";
 }
+<h3>Bạn chắc chắn muốn xóa?</h3>
 <dl class="dl-horizontal">
     <dt>
         @Html.DisplayNameFor(model => model.MaDoanhNghiep)
@@ -188,7 +190,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-actions no-color">
-        <input type="submit" value="Delete" class="btn btn-primary" /> |
+        <input type="submit" value="Delete" class="button" /> |
         @Html.ActionLink("Quay lại", "Index")
     </div>
 }

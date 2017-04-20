@@ -34,26 +34,24 @@
     opacity: 0.7;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1200px) {
-    .header {
-        position: absolute;
-        top: calc(40% - 55px);
-        left: calc(30% - 255px);
-        z-index: 2;
+.header {
+    position: absolute;
+    top: calc(40% - 55px);
+    left: calc(30% - 255px);
+    z-index: 2;
+}
+
+    .header div {
+        float: left;
+        color: #fff;
+        font-family: "Montserrat", sans-serif;
+        font-size: 35px;
+        font-weight: 200;
     }
 
-        .header div {
-            float: left;
-            color: #fff;
-            font-family: "Montserrat", sans-serif;
-            font-size: 35px;
-            font-weight: 200;
+        .header div p {
+            color: #6ab43e !important;
         }
-
-            .header div p {
-                color: #6ab43e !important;
-            }
-}
 
 .login {
     position: absolute;
@@ -141,7 +139,7 @@
 .text-danger {
     font-family: "Montserrat", sans-serif;
     font-size: 15px;
-    color:white;
+    color: white;
 }
 
     .text-danger ul li {

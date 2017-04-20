@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using BVTV.WebApplication.Models
 
 <!DOCTYPE html>
 <html>
@@ -27,9 +28,13 @@
                     @Html.AntiForgeryToken()
                     <ul class="user-menu">
                         <li class="dropdown pull-right">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o" aria-hidden="true"></i> @User.Identity.GetUserName() <span class="caret"></span></a>
+                            @{
+                                var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
+                                var currentUser = manager.FindById(User.Identity.GetUserId());
+                            }
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o" aria-hidden="true"></i> @currentUser.DisplayName <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="@Url.Action("Index", "Manage", new { area = "" })"><i class="fa fa-info" aria-hidden="true"></i>Thông tin</a></li>
+                                <li><a href="@Url.Action("ChangePassword", "ManagerUser")"><i class="fa fa-info" aria-hidden="true"></i>   Thay đổi mật khẩu</a></li>
                                 <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
                             </ul>
                         </li>
@@ -43,6 +48,7 @@
     @RenderBody()
 
     @Scripts.Render("~/js/lumino")
+    @RenderSection("scripts", required: false)
     <script>
 		!function ($) {
 			$(document).on("click","ul.nav li.parent > a > span.icon", function(){
@@ -58,6 +64,5 @@
 		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
 		})
     </script>	
-    @RenderSection("scripts", required: false)
 </body>
 </html>

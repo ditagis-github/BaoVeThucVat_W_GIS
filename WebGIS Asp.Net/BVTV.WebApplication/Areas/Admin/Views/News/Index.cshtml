@@ -1,14 +1,12 @@
 ﻿@model IEnumerable<BVTV.Entity.News>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Quản lý nội dung";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
 }
 
-<h2>Trang quản lý</h2>
-
 <p>
-    @Html.ActionLink("Thêm", "Create",null,new { @class="btn-primary"})
+    @Html.ActionLink("Thêm", "Create",null,new { @class="button"})
 </p>
 <table class="table">
     <tr>
@@ -66,9 +64,9 @@
             @Html.DisplayFor(modelItem => item.last_user_modify)
         </td>
         <td>
-            @Html.ActionLink("Sửa", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Chi tiết", "Details", new { id=item.id }) |
-            @Html.ActionLink("Xóa", "Delete", new { id=item.id })
+            <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.id })"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            <a title="Xóa" href="@Url.Action("Delete",new { id = item.id })"><i class="fa fa-trash" aria-hidden="true"></i></a>
+            <a title="Xem chi tiết" href="@Url.Action("Details",new { id = item.id })"><i class="fa fa-info" aria-hidden="true"></i></a>
         </td>
     </tr>
 }

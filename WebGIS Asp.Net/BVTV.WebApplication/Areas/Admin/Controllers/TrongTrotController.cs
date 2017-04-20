@@ -9,11 +9,12 @@ using System.Web.Mvc;
 using BVTV.Entity;
 using System.Web.Security;
 using Microsoft.AspNet.Identity;
+using BVTV.WebApplication.Areas.Admin.Interfaces;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
     [Authorize]
-    public class TrongTrotController : Controller
+    public class TrongTrotController : Controller,IChartJson
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
         [Authorize(Roles = "Admin,Mod")]
@@ -53,29 +54,6 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             return View(tRONGTROT);
         }
         [Authorize(Roles = "Admin,Mod")]
-        // GET: Admin/TrongTrot/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Admin/TrongTrot/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Admin,Mod")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "OBJECTID,MaDoiTuong,NhomCayTrong,LoaiCayTrong,DienTichTrong,TinhHinhUngDungCongNghe,ToChucCaNhanQuanLy,TinhTrangThuHoach,GhiChu,MaLoaiCayTrong,PhuongThucTrong,ThoiVuTrongTrot,MatDoCayTrong,TenGiongCayTrong,MaHuyenTP,GiaiDoanSinhTruong,MaDuong,NgayCapNhat,NguoiCapNhat,SHAPE")] TRONGTROT tRONGTROT)
-        {
-            if (ModelState.IsValid)
-            {
-                db.TRONGTROTs.Add(tRONGTROT);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(tRONGTROT);
-        }
         [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot/Edit/5
         public ActionResult Edit(int? id)
@@ -141,6 +119,11 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult GetAll()
+        {
+            return Json(new object());
         }
     }
 }
