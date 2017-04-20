@@ -284,6 +284,9 @@
     <Compile Include="MATDUONGBO.cs">
       <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="News.cs">
+      <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="NGUOIDUNG.cs">
       <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
     </Compile>

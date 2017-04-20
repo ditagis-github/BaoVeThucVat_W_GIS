@@ -1,6 +1,6 @@
-﻿@model 
+﻿@model BVTV.WebApplication.Models.ApplicationUser
 @{
-    ViewBag.Title = "EditRole";
+    ViewBag.Title = "Thay đổi quyền - " + @Model.Email;
     Layout = "~/Areas/Admin/Views/Shared/_LayoutTable.cshtml";
 }
 
@@ -27,7 +27,6 @@
                 </tr>
 
             </thead>
-
             <tbody>
 
                 @if (Model.Roles.Count > 0)

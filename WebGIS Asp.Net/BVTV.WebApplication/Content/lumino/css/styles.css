@@ -19,7 +19,11 @@ body {
     font-family: "Montserrat", sans-serif;
     color: #757575;
 }
-
+a, i, button, img, input, span, *:before, *:after {
+    -webkit-transition: all 0.3s ease 0s;
+    -ms-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
 h1, h2, h3, h4, h5, h6 {
     color: #424242;
     font-weight: 700;
@@ -42,7 +46,7 @@ a, button {
 input, select, textarea {
     font-family: "Montserrat", sans-serif;
 }
-input[type="button"],.btn-primary {
+input[type="button"],.button {
     width: auto;
     padding: 8px 40px;
     background-color: #6ab43e;
@@ -50,6 +54,11 @@ input[type="button"],.btn-primary {
     text-transform: uppercase;
     color: #ffffff;
     font-weight: 400;
+}
+input[type="button"]:hover,.button:hover {
+    border-color: #6ab43e;
+    background-color: transparent;
+    color: #6ab43e;
 }
 a, i, button, img, input, span,
 *:before, *:after {

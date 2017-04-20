@@ -17,9 +17,8 @@
         </div>
     </div><!--/.row-->
 </div>
-@if (IsSectionDefined("scripts"))
-{
-    RenderSection("scripts");
+@section scripts{
+    
     @Scripts.Render("~/js/bootstrap-table")
     @RenderSection("scripts", required: false)
 }

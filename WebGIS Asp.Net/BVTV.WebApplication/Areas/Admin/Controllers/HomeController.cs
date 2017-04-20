@@ -29,7 +29,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             {
                 DatTrongCount = db.TRONGTROTs.Count(),
                 DoanhNghiepCount = db.DOANHNGHIEPs.Count(),
-                MemberCount = db.AspNetRoles.Count(),
+                MemberCount = db.AspNetUsers.Count(),
                 SauBenhCount = db.SAUBENHs.Count()
             };
             return View(md);

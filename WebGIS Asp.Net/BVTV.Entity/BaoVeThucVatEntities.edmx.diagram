@@ -144,6 +144,7 @@
         <AssociationConnector Association="BaoVeThucVatModel.xml_indextags_fk1" ManuallyRouted="false" />
         <AssociationConnector Association="BaoVeThucVatModel.AspNetUserRoles" ManuallyRouted="false" />
         <AssociationConnector Association="BaoVeThucVatModel.SDE_mvtables_modified" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BaoVeThucVatModel.News" Width="1.5" PointX="33.375" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

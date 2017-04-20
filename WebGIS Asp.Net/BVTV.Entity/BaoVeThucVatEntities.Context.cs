@@ -150,5 +150,6 @@ namespace BVTV.Entity
         public virtual DbSet<NHOMQUYEN> NHOMQUYENs { get; set; }
         public virtual DbSet<SAUBENHGAYHAI> SAUBENHGAYHAIs { get; set; }
         public virtual DbSet<THOIGIANSANXUATTRONGTROT> THOIGIANSANXUATTRONGTROTs { get; set; }
+        public virtual DbSet<News> News { get; set; }
     }
 }

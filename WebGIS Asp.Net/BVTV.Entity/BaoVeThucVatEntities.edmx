@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BaoVeThucVatModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BaoVeThucVatModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -964,6 +964,21 @@ warning 6002: The table/view 'BaoVeThucVat.dbo.GIONGCAYTRONG' does not have a pr
           <Property Name="MaHuyenTP" Type="nvarchar" MaxLength="10" />
           <Property Name="SHAPE" Type="geometry" />
         </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="50" />
+          <Property Name="full_content" Type="ntext" />
+          <Property Name="description" Type="ntext" />
+          <Property Name="author" Type="nvarchar" MaxLength="30" />
+          <Property Name="create_date" Type="datetime" />
+          <Property Name="last_modify_date" Type="datetime" />
+          <Property Name="category" Type="int" />
+          <Property Name="status" Type="int" />
+          <Property Name="last_user_modify" Type="nchar" MaxLength="10" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'BaoVeThucVat.dbo.NGUOIDUNG' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="NGUOIDUNG">
@@ -1019,22 +1034,6 @@ warning 6002: The table/view 'BaoVeThucVat.dbo.NHOMQUYEN' does not have a primar
           <Property Name="MaHuyenTP" Type="nvarchar" MaxLength="10" />
           <Property Name="SHAPE" Type="geometry" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'BaoVeThucVat.dbo.QUYENGROUP' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="QUYENGROUP">
-          <Property Name="IDNhomQuyen" Type="int" />
-          <Property Name="QuyenBang" Type="nvarchar" MaxLength="50" />
-          <Property Name="QuyenFilde" Type="nvarchar" MaxLength="50" />
-          <Property Name="Quyen" Type="smallint" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'BaoVeThucVat.dbo.QUYENUSER' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="QUYENUSER">
-          <Property Name="IDNguoiDung" Type="int" />
-          <Property Name="QuyenBang" Type="nvarchar" MaxLength="50" />
-          <Property Name="QuyenFilde" Type="nvarchar" MaxLength="50" />
-          <Property Name="Quyen" Type="smallint" />
-        </EntityType>-->
         <EntityType Name="QUYHOACHSUDUNGDAT">
           <Key>
             <PropertyRef Name="OBJECTID" />
@@ -1974,6 +1973,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <EntitySet Name="i62" EntityType="Self.i62" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="i63" EntityType="Self.i63" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MATDUONGBO" EntityType="Self.MATDUONGBO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NhomCayTrong" EntityType="Self.NhomCayTrong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PHUBEMAT" EntityType="Self.PHUBEMAT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QUYHOACHSUDUNGDAT" EntityType="Self.QUYHOACHSUDUNGDAT" Schema="dbo" store:Type="Tables" />
@@ -2214,8 +2214,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
             <End Role="SDE_xml_index_tags" EntitySet="SDE_xml_index_tags" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BaoVeThucVatModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -4223,7 +4222,23 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
             <End Role="SDE_states" EntitySet="SDE_states" />
             <End Role="SDE_table_registry" EntitySet="SDE_table_registry" />
           </AssociationSet>
+          <EntitySet Name="News" EntityType="BaoVeThucVatModel.News" />
         </EntityContainer>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="full_content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="author" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="create_date" Type="DateTime" Precision="3" />
+          <Property Name="last_modify_date" Type="DateTime" Precision="3" />
+          <Property Name="category" Type="Int32" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="last_user_modify" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5860,6 +5875,22 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
               <ScalarProperty Name="registration_id" ColumnName="registration_id" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="last_user_modify" ColumnName="last_user_modify" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="category" ColumnName="category" />
+                <ScalarProperty Name="last_modify_date" ColumnName="last_modify_date" />
+                <ScalarProperty Name="create_date" ColumnName="create_date" />
+                <ScalarProperty Name="author" ColumnName="author" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="full_content" ColumnName="full_content" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
