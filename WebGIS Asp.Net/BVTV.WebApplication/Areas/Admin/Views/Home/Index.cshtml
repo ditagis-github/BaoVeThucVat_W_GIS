@@ -1,8 +1,62 @@
 ﻿@model BVTV.WebApplication.Areas.Admin.Controllers.DashBoard
-@{ 
+@{
     ViewBag.Title = "Trang chủ";
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+@using Microsoft.AspNet.Identity
+@using BVTV.WebApplication.Models
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Quản trị - Cục Bảo vệ thực vật tỉnh Bình Dương</title>
+
+    @Styles.Render("~/css/lumino")
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Trang quản lý</a>
+                @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <ul class="user-menu">
+                        <li class="dropdown pull-right">
+                            @{
+                                var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
+                                var currentUser = manager.FindById(User.Identity.GetUserId());
+                            }
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o" aria-hidden="true"></i> @currentUser.DisplayName <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="@Url.Action("ChangePassword", "ManagerUser")"><i class="fa fa-info" aria-hidden="true"></i>   Thay đổi mật khẩu</a></li>
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                                }
+            </div>
+
+        </div><!-- /.container-fluid -->
+    </nav>
+    @RenderPage("RightMenu.cshtml")
+
+    <link href="~/Content/map.css" rel="stylesheet" />
+    <style>
+        section {
+            float: left;
+            width: 100%;
+        }
+    </style>
     <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 
         <div class="row">
@@ -19,7 +73,7 @@
                             <i class="fa fa-address-card " aria-hidden="true"></i>
                         </div>
                         <div class="col-sm-9 col-lg-7 widget-right">
-                            <div class="large">@Html.DisplayFor(a=>a.DoanhNghiepCount)</div>
+                            <div class="large">@Html.DisplayFor(a => a.DoanhNghiepCount)</div>
                             <div class="text-muted">@Html.DisplayNameFor(a => a.DoanhNghiepCount)</div>
                         </div>
                     </div>
@@ -38,7 +92,7 @@
                     </div>
                 </div>
             </div>
-           
+
             <div class="col-xs-12 col-md-6 col-lg-3">
                 <div class="panel panel-red panel-widget">
                     <div class="row no-padding">
@@ -47,7 +101,7 @@
                         </div>
                         <div class="col-sm-9 col-lg-7 widget-right">
                             <div class="large">@Html.DisplayFor(a => a.DatTrongCount)</div>
-                            <div class="text-muted">@Html.DisplayNameFor(a=>a.DatTrongCount)</div>
+                            <div class="text-muted">@Html.DisplayNameFor(a => a.DatTrongCount)</div>
                         </div>
                     </div>
                 </div>
@@ -71,15 +125,165 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Bản đồ sâu bệnh gây hại</div>
+                    <div class="panel-heading">Bản đồ</div>
                     <div class="panel-body">
-                        <div class="canvas-wrapper">
-                            <canvas class="main-chart" id="line-chart" height="200" width="600"></canvas>
-                        </div>
+                        <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
+                        <section id="map-area" class="pb-100">
+                            <div class="col-md-4 col-lg-3">
+                                <ul class="nav nav-green">
+                                    <li class="active"><a data-toggle="pill" href="#home">Tìm kiếm</a></li>
+                                    <li><a data-toggle="pill" href="#menu1">Chỉnh sửa</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="home" class="tab-pane fade in active">
+                                        <h4>Tìm kiếm thông tin</h4>
+                                        <ul class="nav nav-tabs nav-green nav-justified responsive" id="myTab">
+                                            <li class="active"><a data-toggle="pill" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
+                                            <li><a id="a-tab-saubenh" data-toggle="pill" href="#tab-saubenh">Sâu bệnh</a></li>
+                                            <li><a id="a-tab-trongtrot" data-toggle="pill" href="#tab-trongtrot">Trồng trọt</a></li>
+                                        </ul>
+
+                                        <div class="tab-content responsive">
+                                            <div class="tab-pane active" id="tab-doanhnghiep">
+                                                <h5>Tìm thông tin Doanh nghiệp</h5>
+                                                <div class="formSearch">
+                                                    <input type="text" id="txtMaDN" placeholder="Mã doanh nghiệp" />
+                                                    <input type="text" id="txtTen" placeholder="Tên doanh nghiệp" />
+                                                    <input type="text" id="txtQuanHuyen" placeholder="Quận/Huyện" />
+                                                    <input type="button" id="btnFind" value="Tìm kiếm">
+                                                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                                                </div>
+                                                <div class="resultFormSearch">
+                                                    <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>STT</th>
+                                                                <th>Mã</th>
+                                                                <th>Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody id="result"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="tab-saubenh">
+
+                                                <h5>Tìm thông tin Sâu bệnh</h5>
+                                                <div class="formSearch">
+                                                    <select id="cbNhomCayTrong">
+                                                        <option value="" selected>Nhóm cây trồng</option>
+                                                    </select>
+                                                    <select id="cbLoaiCayTrong">
+                                                        <option value="" selected>Loại cây trồng</option>
+                                                    </select>
+                                                    <select id="cbCapDoGayHai">
+                                                        <option value="" selected>Cấp độ gây hại</option>
+                                                    </select>
+                                                    <input type="number" id="nbPhamViAnhHuong" placeholder="Phạm vi ảnh hưởng" />
+                                                    <input type="number" id="nbDienTich" placeholder="Diện tích" />
+                                                    <input type="button" id="btnFind" value="Tìm kiếm" />
+                                                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                                                </div>
+                                                <div class="resultFormSearch">
+                                                    <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>STT</th>
+                                                                <th>Mã</th>
+                                                                <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="result"></tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <div class="tab-pane" id="tab-trongtrot">
+
+                                                <h5>Tìm thông tin Cây trồng</h5>
+                                                <div class="formSearch">
+                                                    <select id="cbNhomCayTrong">
+                                                        <option value="" selected>Nhóm cây trồng</option>
+                                                    </select>
+                                                    <select id="cbLoaiCayTrong">
+                                                        <option value="" selected>Loại cây trồng</option>
+                                                    </select>
+                                                    <select id="cbPhuongThucTrong">
+                                                        <option value="" selected>Phương thức trồng</option>
+                                                    </select>
+                                                    <input type="number" id="nbDienTich" placeholder="Diện tích" />
+                                                    <input type="button" id="btnFind" value="Tìm kiếm" />
+                                                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                                                </div>
+                                                <div class="resultFormSearch">
+                                                    <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>STT</th>
+                                                                <th>Mã</th>
+                                                                <th>Huyện/TP  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="result"></tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="menu1" class="tab-pane fade">
+                                        <h4>Thêm mới dữ liệu</h4>
+                                        <div id="tabAddDataContent">
+                                            <div id="templateDiv"></div>
+                                            <div id="editorDiv"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8 col-lg-9" id="tabMapControl">
+                                <div id="map">
+                                </div>
+                            </div>
+                        </section>
+                        @section scripts{
+                            <script src="https://js.arcgis.com/3.20/"></script>
+                            <script src="~/Scripts/map/map-admin.js"></script>
+                            <script type="text/javascript">
+
+                            $('ul.nav.nav-tabs  a').click(function (e) {
+                                e.preventDefault();
+                                $(this).tab('show');
+                            });
+
+                            </script>
+                        }
                     </div>
                 </div>
             </div>
         </div><!--/.row-->
 
     </div>	<!--/.main-->
-   
+
+
+    @Scripts.Render("~/js/lumino")
+    @RenderSection("scripts", required: false)
+    <script>
+		!function ($) {
+			$(document).on("click","ul.nav li.parent > a > span.icon", function(){
+				$(this).find('em:first').toggleClass("glyphicon-minus");
+			});
+			$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+    </script>
+</body>
+</html>

@@ -10,17 +10,20 @@ using BVTV.Entity;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin,newseditor")]
     public class NewsController : Controller
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
 
         // GET: Admin/News
+        [Authorize(Roles = "admin,newseditor")]
         public ActionResult Index()
         {
             return View(db.News.ToList());
         }
 
         // GET: Admin/News/Details/5
+        [Authorize(Roles = "admin,newseditor")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -34,8 +37,9 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(news);
         }
-        
+
         // GET: Admin/News/Create
+        [Authorize(Roles = "admin,newseditor")]
         public ActionResult Create()
         {
             return View();
@@ -44,6 +48,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/News/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,newseditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -61,6 +66,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/News/Edit/5
+        [Authorize(Roles = "admin,newseditor")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -78,6 +84,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/News/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin,newseditor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -95,6 +102,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/News/Delete/5
+        [Authorize(Roles = "admin,newseditor")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -110,6 +118,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // POST: Admin/News/Delete/5
+        [Authorize(Roles = "admin,newseditor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

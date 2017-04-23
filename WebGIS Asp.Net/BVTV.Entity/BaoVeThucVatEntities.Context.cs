@@ -40,7 +40,6 @@ namespace BVTV.Entity
         public virtual DbSet<a58> a58 { get; set; }
         public virtual DbSet<a59> a59 { get; set; }
         public virtual DbSet<a60> a60 { get; set; }
-        public virtual DbSet<a63> a63 { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
@@ -151,5 +150,6 @@ namespace BVTV.Entity
         public virtual DbSet<SAUBENHGAYHAI> SAUBENHGAYHAIs { get; set; }
         public virtual DbSet<THOIGIANSANXUATTRONGTROT> THOIGIANSANXUATTRONGTROTs { get; set; }
         public virtual DbSet<News> News { get; set; }
+        public virtual DbSet<PhuongThucTrong> PhuongThucTrongs { get; set; }
     }
 }

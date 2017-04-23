@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using BVTV.Entity;
 using System.Web.Security;
-using Microsoft.AspNet.Identity;
 using BVTV.WebApplication.Areas.Admin.Interfaces;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
@@ -17,11 +15,11 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
     public class TrongTrotController : Controller,IChartJson
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
-        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot
+        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
         public ActionResult Index()
         {
-            var data = db.TRONGTROTs.ToList();
+            var data = db.TRONGTROTs.Take(100).ToList();
             if (!User.IsInRole("Admin") && !User.IsInRole("Mod")) {
                 var roles = Roles.GetRolesForUser(User.Identity.Name);
                 var qr = from tt in db.TRONGTROTs
@@ -32,13 +30,13 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(data);
         }
-        [Authorize(Roles = "Admin,Mod")]
         // GET: Admin/TrongTrot
+        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
         public ActionResult Map()
         {
             return View();
         }
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         // GET: Admin/TrongTrot/Details/5
         public ActionResult Details(int? id)
         {
@@ -53,8 +51,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "Admin,Mod")]
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         // GET: Admin/TrongTrot/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -69,7 +66,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         // POST: Admin/TrongTrot/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -85,7 +82,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         // GET: Admin/TrongTrot/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -100,7 +97,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         // POST: Admin/TrongTrot/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -121,9 +118,38 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             base.Dispose(disposing);
         }
 
+        [HttpGet]
         public ActionResult GetAll()
         {
-            return Json(new object());
+            List<object> datas = new List<object>();
+            var tts = db.TRONGTROTs;
+            foreach(var nct in db.NhomCayTrongs)
+            {
+                datas.Add(new
+                {
+                    Label = nct.name,
+                    Data = tts.Where(w=>w.NhomCayTrong.Value == nct.id).Count()
+                });
+            }
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetAllByPhuongThucTrong()
+        {
+            var ptts = (from tt in db.TRONGTROTs
+                        where tt.PhuongThucTrong.HasValue
+                         select tt.PhuongThucTrong.Value).Distinct();
+            var datas = from ptt in ptts
+                        join pttName in db.PhuongThucTrongs on ptt equals pttName.id
+                        select new
+                        {
+                            Label = pttName.Name,
+                            Data = db.TRONGTROTs.Where(w => w.PhuongThucTrong.Value.Equals(ptt)).Count()
+                        };
+            return Json(datas.ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Chart()
+        {
+            return View();
         }
     }
 }

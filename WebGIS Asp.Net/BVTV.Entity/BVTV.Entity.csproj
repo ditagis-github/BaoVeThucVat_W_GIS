@@ -95,9 +95,6 @@
     <Compile Include="a60.cs">
       <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="a63.cs">
-      <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
-    </Compile>
     <Compile Include="AspNetRole.cs">
       <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
     </Compile>
@@ -300,6 +297,9 @@
       <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="PHUBEMAT.cs">
+      <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PhuongThucTrong.cs">
       <DependentUpon>BaoVeThucVatEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

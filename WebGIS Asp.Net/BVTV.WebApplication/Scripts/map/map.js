@@ -40,7 +40,13 @@ require([
         title: "Doanh nghiệp",
         popupTemplate: {
             title: "{NguoiDaiDienDoanhNghiep}",
-            content:"Mã: {MaDoanhNghiep}"
+            content: "<table>" +
+                "<tr><td>Tên: </td><td>{NguoiDaiDienDoanhNghiep}</td></tr>" +
+                "<tr><td>Địa chỉ: </td><td>{SoNha}</td></tr>" +
+                "<tr><td>Website: </td><td>{Website}</td></tr>" +
+                "<tr><td>Email: </td><td>{Email}</td></tr>" +
+                "<tr><td>Danh mục sản phẩm: </td><td>{DanhMucSanPham}</td></tr>" +
+                "</table>"
         }
     });
     sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
@@ -50,20 +56,21 @@ require([
         popupTemplate: {
             title: "{TenSauBenhGayHai}",
             content:"<table>"+
-                "<tr><td>Nhóm cây trồng: </td><td>{NhomCayTrong}</td>"+
-                "<tr><td>Loại cây trồng: {LoaiCayTrong}</td>"+
-                "<tr><td>Tên sâu bệnh gây hại: </td><td>{TenSauBenhGayHai}</td>" +
-                "<tr><td>Mật độ sâu bệnh gây hại: </td><td>{MatDoSauBenhGayHai}</td>" +
-                "<tr><td>Phạm vi ảnh ưởng: </td><td>{PhamViAnhHuong}</td>" +
-                "<tr><td>Mức độ ảnh hưởng: </td><td>{MucDoAnhHuong}</td>" +
-                "<tr><td>Thời gian gây hại: </td><td>{ThoiGianGayHai}</td>" +
-                "<tr><td>Cấp độ gây hại: </td><td>{CapDoGayHai}</td>" +
-                "<tr><td>Tình hình kiểm soát dịch: </td><td>{TinhHinhKiemSoatDichBenh}</td>" +
-                "<tr><td>Mức độ kiểm soát: </td><td>{MucDoKiemSoat}</td>" +
-                "<tr><td>Biện pháp xử lý: </td><td>{BienPhapXuLy}</td>" +
-                "<tr><td>Diện tích: </td><td>{DienTich}</td>" +
-                "<tr><td>Huyện/TP: </td><td>{MaHuyenTP}</td>" +
-                "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td>"
+                "<tr><td>Nhóm cây trồng: </td><td>{NhomCayTrong}</td></tr>"+
+                "<tr><td>Loại cây trồng: {LoaiCayTrong}</td></tr>"+
+                "<tr><td>Tên sâu bệnh gây hại: </td><td>{TenSauBenhGayHai}</td></tr>" +
+                "<tr><td>Mật độ sâu bệnh gây hại: </td><td>{MatDoSauBenhGayHai}</td></tr>" +
+                "<tr><td>Phạm vi ảnh ưởng: </td><td>{PhamViAnhHuong}</td></tr>" +
+                "<tr><td>Mức độ ảnh hưởng: </td><td>{MucDoAnhHuong}</td></tr>" +
+                "<tr><td>Thời gian gây hại: </td><td>{ThoiGianGayHai}</td></tr>" +
+                "<tr><td>Cấp độ gây hại: </td><td>{CapDoGayHai}</td></tr>" +
+                "<tr><td>Tình hình kiểm soát dịch: </td><td>{TinhHinhKiemSoatDichBenh}</td></tr>" +
+                "<tr><td>Mức độ kiểm soát: </td><td>{MucDoKiemSoat}</td></tr>" +
+                "<tr><td>Biện pháp xử lý: </td><td>{BienPhapXuLy}</td></tr>" +
+                "<tr><td>Diện tích: </td><td>{DienTich}</td></tr>" +
+                "<tr><td>Huyện/TP: </td><td>{MaHuyenTP}</td></tr>" +
+                "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td></tr>"+
+                "</table>"
         }
     });
     SuDungDatTrong = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3", {
@@ -212,15 +219,17 @@ require([
                                     var f = response.features[0];
                                     var p = response.features[0].geometry;
                                     p.latitude = p.y, p.longitude = p.x;
-                                    view.goTo(p);
-                                    view.zoom = 5;
+                                    view.goTo(p, { zoom: 15 });
+                                    view.goTo(f, { zoom: 15 });
                                 }
 
                             })
                         });;
                         var tr = $('<tr/>');
                         tr.append($('<td/>').text((i + 1) + ". "));
+                        tr.append($('<td/>').text(attr[selectProperty[2]]));
                         tr.append($('<td/>').append(span));
+                        
                         $(resultDom).append(tr);
 
                     }
@@ -245,7 +254,7 @@ require([
         dom: 'txtQuanHuyen',
         property: 'QuanHuyen'
     }
-    ], ['MaDoanhNghiep', 'NguoiDaiDienDoanhNghiep'])
+    ], ['MaDoanhNghiep', 'NguoiDaiDienDoanhNghiep','MaDoanhNghiep'])
 
     //
 
@@ -281,7 +290,7 @@ require([
         dom: 'nbDienTich',
         property: 'DienTich'
     }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }
-    ], ['LoaiCayTrong', 'TenSauBenhGayHai'])
+    ], ['LoaiCayTrong', 'TenSauBenhGayHai','MaSauBenh'])
 
     //add event to update combobox  when click tab-trongtrot
     $('#a-tab-trongtrot').first().on('click', function () {
@@ -303,5 +312,5 @@ require([
         dom: 'nbDienTich',
         property: 'DienTich'
     }
-    ], ['LoaiCayTrong', 'TenGiongCayTrong'])
+    ], ['LoaiCayTrong', 'MaHuyenTP','MaDoiTuong'])
 });

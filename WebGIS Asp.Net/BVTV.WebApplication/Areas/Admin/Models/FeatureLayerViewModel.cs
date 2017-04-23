@@ -116,7 +116,7 @@ namespace BVTV.WebApplication.Areas.Admin.Models
         [DisplayName("Huyện/TP")]
         public string MaHuyenTP { get; set; }
         [DisplayName("Giai đoạn sinh trưởng")]
-        public Nullable<int> GiaiDoanSinhTruong { get; set; }
+        public string GiaiDoanSinhTruong { get; set; }
         [DisplayName("Ngày cập nhật")]
         public Nullable<System.DateTime> NgayCapNhat { get; set; }
         [DisplayName("Người cập nhật")]

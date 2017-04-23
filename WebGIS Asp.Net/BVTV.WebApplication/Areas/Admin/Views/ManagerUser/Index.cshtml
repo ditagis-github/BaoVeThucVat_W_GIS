@@ -16,6 +16,7 @@
         <tr>
             <th>Tài khoản</th>
             <th>Tên hiển thị</th>
+            <th>Quyền</th>
             <th>Tác vụ</th>
         </tr>
     </thead>
@@ -26,7 +27,14 @@
                 <td>@item.UserName</td>
 
                 <td>@item.DisplayName</td>
-
+                @{
+                    string displayRole = null;
+                    foreach (var role in item.Roles)
+                    {
+                        displayRole += @role.RoleId+" ";
+                    }
+                }
+                <td>@displayRole</td>
                 <td>
                     <a title="Chỉnh sửa" href="@Url.Action("Edit",new { id = item.Id })"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                     <a title="Chỉnh sửa quyền" href="@Url.Action("EditRole",new { id = item.Id })"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>

@@ -5,10 +5,14 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace BVTV.WebApplication.Areas.Admin
+namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
     public static class HTMLExtension
     {
+        public static MvcHtmlString If(this MvcHtmlString value, bool evaluation)
+        {
+            return evaluation ? value : MvcHtmlString.Empty;
+        }
         public static string IsSelected(this HtmlHelper<dynamic> html, string controllers = "", string actions = "", string cssClass = "active")
         {
             ViewContext viewContext = html.ViewContext;

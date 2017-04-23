@@ -272,34 +272,6 @@
           <Property Name="Thang" Type="smallint" />
           <Property Name="Nam" Type="smallint" />
         </EntityType>
-        <EntityType Name="a63">
-          <Key>
-            <PropertyRef Name="OBJECTID" />
-            <PropertyRef Name="SDE_STATE_ID" />
-          </Key>
-          <Property Name="OBJECTID" Type="int" Nullable="false" />
-          <Property Name="NhomCayTrong" Type="smallint" />
-          <Property Name="LoaiCayTrong" Type="nvarchar" MaxLength="50" />
-          <Property Name="TenSauBenhGayHai" Type="nvarchar" MaxLength="50" />
-          <Property Name="MatDoSauBenhGayHai" Type="smallint" />
-          <Property Name="PhamViAnhHuong" Type="smallint" />
-          <Property Name="MucDoAnhHuong" Type="smallint" />
-          <Property Name="ThoiGianGayHai" Type="smallint" />
-          <Property Name="CapDoGayHai" Type="smallint" />
-          <Property Name="TinhHinhKiemSoatDichBenh" Type="smallint" />
-          <Property Name="MucDoKiemSoat" Type="smallint" />
-          <Property Name="BienPhapXuLy" Type="nvarchar" MaxLength="50" />
-          <Property Name="DienTich" Type="numeric" Precision="38" Scale="8" />
-          <Property Name="MaHuyenTP" Type="nvarchar" MaxLength="10" />
-          <Property Name="GiaiDoanSinhTruong" Type="int" />
-          <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
-          <Property Name="NguoiCapNhat" Type="nvarchar" MaxLength="20" />
-          <Property Name="MaSauBenh" Type="nvarchar" MaxLength="50" />
-          <Property Name="NgayXayRa" Type="datetime2" Precision="7" />
-          <Property Name="SauBenhGayHai" Type="nvarchar" MaxLength="50" />
-          <Property Name="SHAPE" Type="geometry" />
-          <Property Name="SDE_STATE_ID" Type="bigint" Nullable="false" />
-        </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
@@ -350,6 +322,7 @@
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'BaoVeThucVat.dbo.AUDIT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1034,6 +1007,13 @@ warning 6002: The table/view 'BaoVeThucVat.dbo.NHOMQUYEN' does not have a primar
           <Property Name="MaHuyenTP" Type="nvarchar" MaxLength="10" />
           <Property Name="SHAPE" Type="geometry" />
         </EntityType>
+        <EntityType Name="PhuongThucTrong">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="QUYHOACHSUDUNGDAT">
           <Key>
             <PropertyRef Name="OBJECTID" />
@@ -1093,13 +1073,13 @@ warning 6002: The table/view 'BaoVeThucVat.dbo.NHOMQUYEN' does not have a primar
           <Property Name="BienPhapXuLy" Type="nvarchar" MaxLength="50" />
           <Property Name="DienTich" Type="numeric" Precision="38" Scale="8" />
           <Property Name="MaHuyenTP" Type="nvarchar" MaxLength="10" />
-          <Property Name="GiaiDoanSinhTruong" Type="int" />
           <Property Name="NgayCapNhat" Type="datetime2" Precision="7" />
           <Property Name="NguoiCapNhat" Type="nvarchar" MaxLength="20" />
           <Property Name="MaSauBenh" Type="nvarchar" MaxLength="50" />
           <Property Name="NgayXayRa" Type="datetime2" Precision="7" />
           <Property Name="SauBenhGayHai" Type="nvarchar" MaxLength="50" />
           <Property Name="SHAPE" Type="geometry" />
+          <Property Name="GiaiDoanSinhTruong" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'BaoVeThucVat.dbo.SAUBENHGAYHAI' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1924,7 +1904,6 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <EntitySet Name="a58" EntityType="Self.a58" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="a59" EntityType="Self.a59" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="a60" EntityType="Self.a60" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="a63" EntityType="Self.a63" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
@@ -1976,6 +1955,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NhomCayTrong" EntityType="Self.NhomCayTrong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PHUBEMAT" EntityType="Self.PHUBEMAT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PhuongThucTrong" EntityType="Self.PhuongThucTrong" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QUYHOACHSUDUNGDAT" EntityType="Self.QUYHOACHSUDUNGDAT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RANHGIOIHANHCHINH" EntityType="Self.RANHGIOIHANHCHINH" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SAUBENH" EntityType="Self.SAUBENH" Schema="dbo" store:Type="Tables" />
@@ -2485,34 +2465,6 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <Property Name="Thang" Type="Int16" />
           <Property Name="Nam" Type="Int16" />
         </EntityType>
-        <EntityType Name="a63">
-          <Key>
-            <PropertyRef Name="OBJECTID" />
-            <PropertyRef Name="SDE_STATE_ID" />
-          </Key>
-          <Property Name="OBJECTID" Type="Int32" Nullable="false" />
-          <Property Name="NhomCayTrong" Type="Int16" />
-          <Property Name="LoaiCayTrong" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TenSauBenhGayHai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MatDoSauBenhGayHai" Type="Int16" />
-          <Property Name="PhamViAnhHuong" Type="Int16" />
-          <Property Name="MucDoAnhHuong" Type="Int16" />
-          <Property Name="ThoiGianGayHai" Type="Int16" />
-          <Property Name="CapDoGayHai" Type="Int16" />
-          <Property Name="TinhHinhKiemSoatDichBenh" Type="Int16" />
-          <Property Name="MucDoKiemSoat" Type="Int16" />
-          <Property Name="BienPhapXuLy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DienTich" Type="Decimal" Precision="38" Scale="8" />
-          <Property Name="MaHuyenTP" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="GiaiDoanSinhTruong" Type="Int32" />
-          <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
-          <Property Name="NguoiCapNhat" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="MaSauBenh" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="NgayXayRa" Type="DateTime" Precision="7" />
-          <Property Name="SauBenhGayHai" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="SHAPE" Type="Geometry" />
-          <Property Name="SDE_STATE_ID" Type="Int64" Nullable="false" />
-        </EntityType>
         <EntityType Name="AspNetRole">
           <Key>
             <PropertyRef Name="Id" />
@@ -2561,6 +2513,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+          <Property Name="DisplayName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="D47">
           <Key>
@@ -3134,7 +3087,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <Property Name="BienPhapXuLy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DienTich" Type="Decimal" Precision="38" Scale="8" />
           <Property Name="MaHuyenTP" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="GiaiDoanSinhTruong" Type="Int32" />
+          <Property Name="GiaiDoanSinhTruong" Type="String" />
           <Property Name="NgayCapNhat" Type="DateTime" Precision="7" />
           <Property Name="NguoiCapNhat" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="MaSauBenh" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -4056,7 +4009,6 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <EntitySet Name="a58" EntityType="Self.a58" />
           <EntitySet Name="a59" EntityType="Self.a59" />
           <EntitySet Name="a60" EntityType="Self.a60" />
-          <EntitySet Name="a63" EntityType="Self.a63" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
@@ -4223,6 +4175,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
             <End Role="SDE_table_registry" EntitySet="SDE_table_registry" />
           </AssociationSet>
           <EntitySet Name="News" EntityType="BaoVeThucVatModel.News" />
+          <EntitySet Name="PhuongThucTrongs" EntityType="BaoVeThucVatModel.PhuongThucTrong" />
         </EntityContainer>
         <EntityType Name="News">
           <Key>
@@ -4238,6 +4191,13 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <Property Name="category" Type="Int32" />
           <Property Name="status" Type="Int32" />
           <Property Name="last_user_modify" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PhuongThucTrong">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -4512,34 +4472,6 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="a63">
-            <EntityTypeMapping TypeName="BaoVeThucVatModel.a63">
-              <MappingFragment StoreEntitySet="a63">
-                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
-                <ScalarProperty Name="NhomCayTrong" ColumnName="NhomCayTrong" />
-                <ScalarProperty Name="LoaiCayTrong" ColumnName="LoaiCayTrong" />
-                <ScalarProperty Name="TenSauBenhGayHai" ColumnName="TenSauBenhGayHai" />
-                <ScalarProperty Name="MatDoSauBenhGayHai" ColumnName="MatDoSauBenhGayHai" />
-                <ScalarProperty Name="PhamViAnhHuong" ColumnName="PhamViAnhHuong" />
-                <ScalarProperty Name="MucDoAnhHuong" ColumnName="MucDoAnhHuong" />
-                <ScalarProperty Name="ThoiGianGayHai" ColumnName="ThoiGianGayHai" />
-                <ScalarProperty Name="CapDoGayHai" ColumnName="CapDoGayHai" />
-                <ScalarProperty Name="TinhHinhKiemSoatDichBenh" ColumnName="TinhHinhKiemSoatDichBenh" />
-                <ScalarProperty Name="MucDoKiemSoat" ColumnName="MucDoKiemSoat" />
-                <ScalarProperty Name="BienPhapXuLy" ColumnName="BienPhapXuLy" />
-                <ScalarProperty Name="DienTich" ColumnName="DienTich" />
-                <ScalarProperty Name="MaHuyenTP" ColumnName="MaHuyenTP" />
-                <ScalarProperty Name="GiaiDoanSinhTruong" ColumnName="GiaiDoanSinhTruong" />
-                <ScalarProperty Name="NgayCapNhat" ColumnName="NgayCapNhat" />
-                <ScalarProperty Name="NguoiCapNhat" ColumnName="NguoiCapNhat" />
-                <ScalarProperty Name="MaSauBenh" ColumnName="MaSauBenh" />
-                <ScalarProperty Name="NgayXayRa" ColumnName="NgayXayRa" />
-                <ScalarProperty Name="SauBenhGayHai" ColumnName="SauBenhGayHai" />
-                <ScalarProperty Name="SHAPE" ColumnName="SHAPE" />
-                <ScalarProperty Name="SDE_STATE_ID" ColumnName="SDE_STATE_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="AspNetRoles">
             <EntityTypeMapping TypeName="BaoVeThucVatModel.AspNetRole">
               <MappingFragment StoreEntitySet="AspNetRoles">
@@ -4570,6 +4502,7 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="BaoVeThucVatModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
@@ -5887,6 +5820,14 @@ warning 6035: The relationship 'sdelayer_stats_fk1' has columns that are not par
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="full_content" ColumnName="full_content" />
                 <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PhuongThucTrongs">
+            <EntityTypeMapping TypeName="BaoVeThucVatModel.PhuongThucTrong">
+              <MappingFragment StoreEntitySet="PhuongThucTrong">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

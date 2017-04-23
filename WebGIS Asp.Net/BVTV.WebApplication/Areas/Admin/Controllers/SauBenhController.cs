@@ -1,33 +1,33 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using BVTV.Entity;
 using BVTV.WebApplication.Areas.Admin.Interfaces;
-using BVTV.WebApplication.Areas.Admin.Models;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
-    public class SauBenhController : Controller,IChartJson
+    public class SauBenhController : Controller,IChartJson,IFeatureLayerController
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
 
         // GET: Admin/SauBenh
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
         public ActionResult Index()
         {
             return View(db.SAUBENHs.ToList());
         }
         // GET: Admin/SauBenh/Map
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
         public ActionResult Map()
         {
             return View();
         }
 
         // GET: Admin/SauBenh/Details/5
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -43,7 +43,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/SauBenh/Edit/5
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -61,7 +61,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/SauBenh/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OBJECTID,NhomCayTrong,LoaiCayTrong,TenSauBenhGayHai,MatDoSauBenhGayHai,PhamViAnhHuong,MucDoAnhHuong,ThoiGianGayHai,CapDoGayHai,TinhHinhKiemSoatDichBenh,MucDoKiemSoat,BienPhapXuLy,DienTich,MaHuyenTP,GiaiDoanSinhTruong,NgayCapNhat,NguoiCapNhat,MaSauBenh,SHAPE")] SAUBENH sAUBENH)
@@ -76,7 +76,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/SauBenh/Delete/5
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -92,6 +92,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // POST: Admin/SauBenh/Delete/5
+        [Authorize(Roles = "admin,updater,testerandupdater")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -123,10 +124,20 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 
             return Json(query.ToList(), JsonRequestBehavior.AllowGet);
         }
-        [Authorize(Roles = "Admin,Mod")]
+        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
         public ActionResult Chart()
         {
             return View();
+        }
+
+        public ActionResult Create()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult Search()
+        {
+            throw new NotImplementedException();
         }
     }
 }

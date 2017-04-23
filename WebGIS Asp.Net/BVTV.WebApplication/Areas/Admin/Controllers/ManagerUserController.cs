@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]
     public class ManagerUserController : Controller
     {
 

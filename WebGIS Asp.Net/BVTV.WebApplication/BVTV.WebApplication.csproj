@@ -189,6 +189,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Admin\Controllers\IFeatureLayerController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManagerRoleController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManagerUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
@@ -206,7 +207,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\DoanhNghiepController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
-    <Content Include="Areas\Admin\HTMLExtension.cs" />
+    <Content Include="Areas\Admin\Controllers\HTMLExtension.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -698,6 +699,8 @@
     <Content Include="Areas\Admin\Views\Shared\_LayoutDetails.cshtml" />
     <Content Include="Areas\Admin\Views\ManagerUser\ChangePassword.cshtml" />
     <Content Include="Areas\Admin\Views\ManagerUser\Manage.cshtml" />
+    <Content Include="Areas\Admin\Views\TrongTrot\Chart.cshtml" />
+    <Content Include="Areas\Admin\Views\SauBenh\Chart.cshtml" />
     <None Include="Properties\PublishProfiles\bvtvbd.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartjs\chart.js" />
@@ -757,6 +760,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\map\map-admin.js" />
     <Content Include="Scripts\xlsx.core.min.js" />
     <Content Include="Scripts\jspdf.min.js" />
     <Content Include="Scripts\map\init.js" />
