@@ -1,0 +1,41 @@
+﻿#map {
+    margin-right: 5px;
+    padding: 0;
+    height: 600px;
+}
+
+#templatePickerPane {
+    overflow: hidden;
+}
+
+#panelHeader {
+    background-color: #92A661;
+    border-bottom: solid 1px #92A860;
+    color: #FFF;
+    font-size: 18px;
+    height: 24px;
+    line-height: 22px;
+    margin: 0;
+    overflow: hidden;
+    padding: 10px 10px 10px 10px;
+}
+
+.esriEditor .templatePicker {
+    padding-bottom: 5px;
+    padding-top: 5px;
+    height: 500px;
+    border-radius: 0px 0px 4px 4px;
+    border: solid 1px #92A661;
+}
+
+.dj_ie .infowindow .window .top .right .user .content,
+.dj_ie .simpleInfoWindow .content {
+    position: relative;
+}
+
+#LocateButton {
+    position: absolute;
+    top: 95px;
+    left: 20px;
+    z-index: 50;
+}

@@ -16,7 +16,7 @@ namespace BVTV.WebApplication
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Map", action = "Index", id = UrlParameter.Optional },
+                defaults: new { controller = "Home", action = "Map", id = UrlParameter.Optional },
                 namespaces: new[] { "BVTV.WebApplication.Controllers" }
             );
 

@@ -1,0 +1,24 @@
+﻿ <!-- Main Menu -->
+<div id="main-menu" class="main-menu float-right hidden-xs">
+    <nav>
+        <ul>
+            <li class="@Html.IsSelected(actions: "Index", controllers: "Home")">
+                @Html.ActionLink("Trang Chủ", "Index", "Home")
+            </li>
+            <li class="@Html.IsSelected(actions: "About", controllers: "Home")">
+                @Html.ActionLink("Giới thiệu", "About", "Home")
+            </li>
+            <li class="@Html.IsSelected(actions: "Map", controllers: "Home")">
+                @Html.ActionLink("Bản Đồ", "Index", "Map")
+            </li>
+
+            <li class="@Html.IsSelected(actions: "Index", controllers: "News")">
+                @Html.ActionLink("Thông tin", "Index", "News")
+            </li>
+
+            <li class="@Html.IsSelected(actions: "Contact", controllers: "Home")">
+                @Html.ActionLink("Liên hệ", "Contact", "Home")
+            </li>
+        </ul>
+    </nav>
+</div>

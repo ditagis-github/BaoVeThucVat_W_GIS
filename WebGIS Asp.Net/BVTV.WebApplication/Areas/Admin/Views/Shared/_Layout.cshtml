@@ -5,10 +5,13 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+
     <title>@ViewBag.Title - Quản trị - Cục Bảo vệ thực vật tỉnh Bình Dương</title>
 
     @Styles.Render("~/css/lumino")
+    @RenderSection("headtag", false)
 </head>
 
 <body>
@@ -39,7 +42,7 @@
                             </ul>
                         </li>
                     </ul>
-                }
+                                }
             </div>
 
         </div><!-- /.container-fluid -->
@@ -50,19 +53,19 @@
     @Scripts.Render("~/js/lumino")
     @RenderSection("scripts", required: false)
     <script>
-		!function ($) {
-			$(document).on("click","ul.nav li.parent > a > span.icon", function(){
-				$(this).find('em:first').toggleClass("glyphicon-minus");
-			});
-			$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
-		}(window.jQuery);
+        !function ($) {
+            $(document).on("click", "ul.nav li.parent > a > span.icon", function () {
+                $(this).find('em:first').toggleClass("glyphicon-minus");
+            });
+            $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+        }(window.jQuery);
 
-		$(window).on('resize', function () {
-		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
-		})
-		$(window).on('resize', function () {
-		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
-		})
-    </script>	
+        $(window).on('resize', function () {
+            if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+        })
+        $(window).on('resize', function () {
+            if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+        })
+    </script>
 </body>
 </html>

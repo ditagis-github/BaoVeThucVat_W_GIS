@@ -20,14 +20,14 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         public ActionResult Index()
         {
             var data = db.TRONGTROTs.Take(100).ToList();
-            if (!User.IsInRole("Admin") && !User.IsInRole("Mod")) {
-                var roles = Roles.GetRolesForUser(User.Identity.Name);
-                var qr = from tt in db.TRONGTROTs
-                         from rl in roles
-                         where tt.MaHuyenTP.Equals(rl)
-                         select tt;
-                data = qr.ToList();
-            }
+            //if (!User.IsInRole("Admin") && !User.IsInRole("Mod")) {
+            //    var roles = Roles.GetRolesForUser(User.Identity.Name);
+            //    var qr = from tt in db.TRONGTROTs
+            //             from rl in roles
+            //             where tt.MaHuyenTP.Equals(rl)
+            //             select tt;
+            //    data = qr.ToList();
+            //}
             return View(data);
         }
         // GET: Admin/TrongTrot

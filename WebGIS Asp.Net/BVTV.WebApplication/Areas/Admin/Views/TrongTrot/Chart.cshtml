@@ -3,11 +3,16 @@
     ViewBag.Title = "Biểu đồ trồng trọt";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutChart.cshtml";
 }
+<div class="col-lg-6">
+    <h3>Biểu đồ phân bố trồng trọt theo nhóm cây trồng</h3>
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
 
-<h3>Biểu đồ phân bố trồng trọt theo nhóm cây trồng</h3>
-<canvas id="myChart" width="400" height="400"></canvas>
-<h3>Biểu đồ phân bố trồng trọt theo phương thức trồng</h3>
-<canvas id="chart2" width="400" height="400"></canvas>
+<div class="col-lg-6">
+    <h3>Biểu đồ phân bố trồng trọt theo phương thức trồng</h3>
+    <canvas id="chart2" width="400" height="400"></canvas>
+</div>
+
 @section scripts{
     <script>
         drawPie($('#myChart'), '@Url.Action("GetAll")', { label: 'Diện tích gieo trồng' })

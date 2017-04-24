@@ -81,7 +81,22 @@ require([
     trongTrotLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2", {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"],
-        title: "Trồng trọt"
+        title: "Trồng trọt",
+        popupTemplate: {
+            title: "{TenGiongCayTrong}",
+            content: "<table>" +
+                "<tr><td>Nhóm cây trồng: </td><td>{NhomCayTrong}</td></tr>" +
+                "<tr><td>Loại cây trồng: {LoaiCayTrong}</td></tr>" +
+                "<tr><td>Diện tích trồng: </td><td>{DienTichTrong}</td></tr>" +
+                "<tr><td>Tình hình ứng dụng công nghệ: </td><td>{TinhHinhUngDungCongNghe}</td></tr>" +
+                "<tr><td>Tổ chức cá nhân quản lý: </td><td>{ToChucCaNhanQuanLy}</td></tr>" +
+                "<tr><td>Tình trạng thu hoạch: </td><td>{TinhTrangThuHoach}</td></tr>" +
+                "<tr><td>Phương thức trồng: </td><td>{PhuongThucTrong}</td></tr>" +
+                "<tr><td>Thời vụ trồng: </td><td>{ThoiVuTrongTrot}</td></tr>" +
+                "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td></tr>" +
+                "<tr><td>Ghi chú: </td><td>{GhiChu}</td></tr>" +
+                "</table>"
+        }
     });
     //map.add(sauBenhLayer);
     map.addMany([SuDungDatTrong,trongTrotLayer, sauBenhLayer, doanhNghiepLayer]);

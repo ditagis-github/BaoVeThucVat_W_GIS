@@ -24,6 +24,10 @@ namespace BVTV.WebApplication.Controllers
         {
             return View();
         }
+        public ActionResult Map()
+        {
+            return View();
+        }
         [HttpPost]
         public ActionResult Send(Contact contact)
         {
