@@ -1,21 +1,21 @@
 ﻿@using Microsoft.AspNet.Identity
 @using BVTV.WebApplication.Models
 <ul class="nav navbar-nav">
-    <li>
+    <li class="@Html.IsSelected(actions: "Index", controllers: "Home")">
         @Html.ActionLink("Trang Chủ", "Index", "Home")
     </li>
-    <li>
+    <li class="@Html.IsSelected(actions: "Index", controllers: "ManagerRole")">
         @Html.ActionLink("Quản lý quyền", "Index", "ManagerRole").If(User.IsInRole("admin"))
     </li>
-    <li>
+    <li class="@Html.IsSelected(actions: "Index", controllers: "ManagerUser")">
         @Html.ActionLink("Quản lý tài khoản", "Index", "ManagerUser").If(User.IsInRole("admin"))
     </li>
-    <li>
+    <li class="@Html.IsSelected(actions: "Index", controllers: "News")">
         @Html.ActionLink("Quản lý nội dung", "Index", "News").If(User.IsInRole("admin") || User.IsInRole("newseditor"))
     </li>
     @if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater") || User.IsInRole("tester"))
     {
-        <li class="dropdown">
+        <li class="dropdown @Html.IsSelected(actions: "Index", controllers: "DoanhNghiep")">
             <a class="dropdown-toggle" href="@Url.Action("Index", "DoanhNghiep")">
                 Doanh nghiệp
                 <span class="caret"></span>
@@ -26,26 +26,26 @@
             </ul>
         </li>
 
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" href="@Url.Action("Index", "SauBenh")">
-                            Sâu bệnh
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Bản đồ", "Map", "SauBenh").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
-                            <li>@Html.ActionLink("Biểu đồ", "Chart", "SauBenh")</li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" href="@Url.Action("Index", "TrongTrot")">
-                            Trồng trọt
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Bản đồ", "Map", "TrongTrot").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
-                            <li>@Html.ActionLink("Biểu đồ", "Chart", "TrongTrot")</li>
-                        </ul>
-                    </li>
+        <li class="dropdown @Html.IsSelected(actions: "Index", controllers: "SauBenh")">
+            <a class="dropdown-toggle" href="@Url.Action("Index", "SauBenh")">
+                Sâu bệnh
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Bản đồ", "Map", "SauBenh").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
+                <li>@Html.ActionLink("Biểu đồ", "Chart", "SauBenh")</li>
+            </ul>
+        </li>
+        <li class="dropdown @Html.IsSelected(actions: "Index", controllers: "TrongTrot")">
+            <a class="dropdown-toggle" href="@Url.Action("Index", "TrongTrot")">
+                Trồng trọt
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Bản đồ", "Map", "TrongTrot").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
+                <li>@Html.ActionLink("Biểu đồ", "Chart", "TrongTrot")</li>
+            </ul>
+        </li>
     }
     <li role="presentation" class="divider"></li>
     <li>

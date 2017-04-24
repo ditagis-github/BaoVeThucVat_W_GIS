@@ -148,5 +148,46 @@ namespace BVTV.WebApplication.Areas.Admin.Models
             this.ThoiGianGayHai = obj.ThoiGianGayHai;
             this.TinhHinhKiemSoatDichBenh = obj.TinhHinhKiemSoatDichBenh;
         }
+        public partial class TrongTrot
+        {
+            public int OBJECTID { get; set; }
+            [DisplayName("Mã")]
+            public string MaDoiTuong { get; set; }
+            [DisplayName("Nhóm cây trồng")]
+            public Nullable<short> NhomCayTrong { get; set; }
+            [DisplayName("Loại cây trồng")]
+            public string LoaiCayTrong { get; set; }
+            [DisplayName("Diện tích trồng")]
+            public Nullable<decimal> DienTichTrong { get; set; }
+            [DisplayName("Tình hình ứng dụng công nghệ")]
+            public Nullable<short> TinhHinhUngDungCongNghe { get; set; }
+            [DisplayName("Tổ chức quản lý")]
+            public string ToChucCaNhanQuanLy { get; set; }
+            [DisplayName("Tình trạng thu hoạch")]
+            public string TinhTrangThuHoach { get; set; }
+            [DisplayName("Ghi chú")]
+            public string GhiChu { get; set; }
+            [DisplayName("Mã loại cây trồng")]
+            public string MaLoaiCayTrong { get; set; }
+            [DisplayName("Phương thức trồng")]
+            public Nullable<short> PhuongThucTrong { get; set; }
+            [DisplayName("Thời vụ")]
+            public Nullable<short> ThoiVuTrongTrot { get; set; }
+            [DisplayName("Mật độ")]
+            public string MatDoCayTrong { get; set; }
+            [DisplayName("Tên giống cây trồng")]
+            public string TenGiongCayTrong { get; set; }
+            [DisplayName("Hành chính")]
+            public string MaHuyenTP { get; set; }
+            [DisplayName("Giai đoạn sinh trưởng")]
+            public Nullable<int> GiaiDoanSinhTruong { get; set; }
+            [DisplayName("Địa chỉ")]
+            public string MaDuong { get; set; }
+            [DisplayName("Ngày cập nhật")]
+            public Nullable<System.DateTime> NgayCapNhat { get; set; }
+            [DisplayName("Người cập nhật")]
+            public string NguoiCapNhat { get; set; }
+            public System.Data.Entity.Spatial.DbGeometry SHAPE { get; set; }
+        }
     }
 }
