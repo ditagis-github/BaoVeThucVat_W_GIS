@@ -4,93 +4,91 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">Thông tin</h1>
-        </div>
-    </div><!--/.row-->
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Thông tin</h1>
+    </div>
+</div><!--/.row-->
 
-    <div class="row">
-        <div class="col-xs-12 col-md-6 col-lg-3">
-            <div class="panel panel-blue panel-widget ">
-                <div class="row no-padding">
-                    <div class="col-sm-3 col-lg-5 widget-left">
-                        <i class="fa fa-address-card " aria-hidden="true"></i>
-                    </div>
-                    <div class="col-sm-9 col-lg-7 widget-right">
-                        <div class="large">@Html.DisplayFor(a => a.DoanhNghiepCount)</div>
-                        <div class="text-muted">@Html.DisplayNameFor(a => a.DoanhNghiepCount)</div>
-                    </div>
+<div class="row">
+    <div class="col-xs-12 col-md-6 col-lg-3">
+        <div class="panel panel-blue panel-widget ">
+            <div class="row no-padding">
+                <div class="col-sm-3 col-lg-5 widget-left">
+                    <i class="fa fa-address-card " aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-9 col-lg-7 widget-right">
+                    <div class="large">@Html.DisplayFor(a => a.DoanhNghiepCount)</div>
+                    <div class="text-muted">@Html.DisplayNameFor(a => a.DoanhNghiepCount)</div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-6 col-lg-3">
-            <div class="panel panel-orange panel-widget">
-                <div class="row no-padding">
-                    <div class="col-sm-3 col-lg-5 widget-left">
-                        <i class="fa fa-bug" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-sm-9 col-lg-7 widget-right">
-                        <div class="large">@Html.DisplayFor(a => a.SauBenhCount)</div>
-                        <div class="text-muted">@Html.DisplayNameFor(a => a.SauBenhCount)</div>
-                    </div>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-3">
+        <div class="panel panel-orange panel-widget">
+            <div class="row no-padding">
+                <div class="col-sm-3 col-lg-5 widget-left">
+                    <i class="fa fa-bug" aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-9 col-lg-7 widget-right">
+                    <div class="large">@Html.DisplayFor(a => a.SauBenhCount)</div>
+                    <div class="text-muted">@Html.DisplayNameFor(a => a.SauBenhCount)</div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-xs-12 col-md-6 col-lg-3">
-            <div class="panel panel-red panel-widget">
-                <div class="row no-padding">
-                    <div class="col-sm-3 col-lg-5 widget-left">
-                        <i class="fa fa-tree" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-sm-9 col-lg-7 widget-right">
-                        <div class="large">@Html.DisplayFor(a => a.DatTrongCount)</div>
-                        <div class="text-muted">@Html.DisplayNameFor(a => a.DatTrongCount)</div>
-                    </div>
+    <div class="col-xs-12 col-md-6 col-lg-3">
+        <div class="panel panel-red panel-widget">
+            <div class="row no-padding">
+                <div class="col-sm-3 col-lg-5 widget-left">
+                    <i class="fa fa-tree" aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-9 col-lg-7 widget-right">
+                    <div class="large">@Html.DisplayFor(a => a.DatTrongCount)</div>
+                    <div class="text-muted">@Html.DisplayNameFor(a => a.DatTrongCount)</div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-xs-12 col-md-6 col-lg-3">
-            <div class="panel panel-teal panel-widget">
-                <div class="row no-padding">
-                    <div class="col-sm-3 col-lg-5 widget-left">
-                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-sm-9 col-lg-7 widget-right">
-                        <div class="large">@Html.DisplayFor(a => a.MemberCount)</div>
-                        <div class="text-muted">@Html.DisplayNameFor(a => a.MemberCount)</div>
-                    </div>
+    <div class="col-xs-12 col-md-6 col-lg-3">
+        <div class="panel panel-teal panel-widget">
+            <div class="row no-padding">
+                <div class="col-sm-3 col-lg-5 widget-left">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                </div>
+                <div class="col-sm-9 col-lg-7 widget-right">
+                    <div class="large">@Html.DisplayFor(a => a.MemberCount)</div>
+                    <div class="text-muted">@Html.DisplayNameFor(a => a.MemberCount)</div>
                 </div>
             </div>
         </div>
-    </div><!--/.row-->
+    </div>
+</div><!--/.row-->
 
 
-    @if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))
-    {
-        @section headtag{
-            <link rel="stylesheet" href="https://js.arcgis.com/3.20/dijit/themes/claro/claro.css">
-            <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
-            <link href="~/Content/admin-map.css" rel="stylesheet" />
-            <script src="https://js.arcgis.com/3.20/"></script>
-            <script src="~/Scripts/map/map-admin.js"></script>
-        }
-
-        <div class="row">
-            <div id="templatePickerPane" class="col-xs-2 col-md-2 col-lg-2">
-                <div id="panelHeader">
-                    Chỉnh sửa
-                </div>
-                <div style="padding:10px;" id="editorDiv">
-                </div>
-            </div>
-            <div id="map" class="col-xs-9 col-md-9 col-lg-9">
-                <div id="LocateButton"></div>
-            </div>
-        </div><!--/.row-->
+@if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))
+{
+    @section headtag{
+        <link rel="stylesheet" href="https://js.arcgis.com/3.20/dijit/themes/claro/claro.css">
+        <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
+        <link href="~/Content/admin-map.css" rel="stylesheet" />
+        <script src="https://js.arcgis.com/3.20/"></script>
+        <script src="~/Scripts/map/map-admin.js"></script>
     }
-</div>
+
+    <div class="row">
+        <div id="templatePickerPane" class="col-xs-2 col-md-2">
+            <div id="panelHeader">
+                Chỉnh sửa
+            </div>
+            <div id="editorDiv">
+            </div>
+        </div>
+        <div id="map" class="col-xs-10 col-md-10">
+            <div id="LocateButton"></div>
+        </div>
+    </div><!--/.row-->
+}

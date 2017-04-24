@@ -635,7 +635,7 @@
     <Content Include="Content\lumino\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\lumino\tables\data1.json" />
     <Content Include="Content\lumino\tables\data2.json" />
-    <Content Include="Areas\Admin\Views\Shared\RightMenu.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\Menu.cshtml" />
     <Content Include="Areas\Admin\Views\DoanhNghiep\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\DoanhNghiep\Details.cshtml" />
     <Content Include="Areas\Admin\Views\DoanhNghiep\Edit.cshtml" />

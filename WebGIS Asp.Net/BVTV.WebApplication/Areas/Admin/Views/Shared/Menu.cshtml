@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNet.Identity
+@using BVTV.WebApplication.Models
+<ul class="nav navbar-nav">
+    <li>
+        @Html.ActionLink("Trang Chủ", "Index", "Home")
+    </li>
+    <li>
+        @Html.ActionLink("Quản lý quyền", "Index", "ManagerRole").If(User.IsInRole("admin"))
+    </li>
+    <li>
+        @Html.ActionLink("Quản lý tài khoản", "Index", "ManagerUser").If(User.IsInRole("admin"))
+    </li>
+    <li>
+        @Html.ActionLink("Quản lý nội dung", "Index", "News").If(User.IsInRole("admin") || User.IsInRole("newseditor"))
+    </li>
+    @if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater") || User.IsInRole("tester"))
+    {
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="@Url.Action("Index", "DoanhNghiep")">
+                Doanh nghiệp
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Bản đồ", "Map", "DoanhNghiep").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
+                <li>@Html.ActionLink("Biểu đồ", "Chart", "DoanhNghiep")</li>
+            </ul>
+        </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="@Url.Action("Index", "SauBenh")">
+                            Sâu bệnh
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Bản đồ", "Map", "SauBenh").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
+                            <li>@Html.ActionLink("Biểu đồ", "Chart", "SauBenh")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="@Url.Action("Index", "TrongTrot")">
+                            Trồng trọt
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Bản đồ", "Map", "TrongTrot").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
+                            <li>@Html.ActionLink("Biểu đồ", "Chart", "TrongTrot")</li>
+                        </ul>
+                    </li>
+    }
+    <li role="presentation" class="divider"></li>
+    <li>
+        @Html.ActionLink("Trang khách", "Map", "Home", new { area = "" }, null)
+    </li>
+    @*<li class="active"><a href="#">Trang chủ</a></li>
+        <li><a href="#">Giới thiệu</a></li>
+        <li><a href="#">Liên hệ</a></li>*@
+</ul>
+@using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            {
+    @Html.AntiForgeryToken()
+
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown pull-right">
+            @{
+                var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
+                var currentUser = manager.FindById(User.Identity.GetUserId());
+            }
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o" aria-hidden="true"></i> @currentUser.DisplayName <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="@Url.Action("ChangePassword", "ManagerUser")"><i class="fa fa-info" aria-hidden="true"></i>   Thay đổi mật khẩu</a></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</a></li>
+            </ul>
+        </li>
+    </ul>
+                }

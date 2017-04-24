@@ -173,6 +173,33 @@ ul {
         color: #6ab43e;
     }
 
+.navbar-inverse {
+    background-color: #20c063;
+    border-color: #20c063;
+}
+
+    .navbar-inverse .navbar-brand {
+        color: #fff;
+    }
+
+    .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+        color: #ffffff;
+        background-color: #4e9921;
+    }
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: #fff;
+    }
+
+        .navbar-inverse .navbar-nav > li > a:hover {
+            background-color: #4e9921;
+        }
+
+    .navbar-inverse .navbar-nav > .dropdown > a .caret {
+        border-top-color: #4e9921;
+        border-bottom-color: #4e9921;
+    }
+
 
 /*Backgrounds*/
 
@@ -975,7 +1002,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder, select:-ms-input-pl
 }
 /*Table CSS*/
 table .fa {
-    margin:0 5px 0 5px;
+    margin: 0 5px 0 5px;
     color: #6ab43e;
     font-size: 20px;
 }
