@@ -60,7 +60,7 @@
     @Html.AntiForgeryToken()
 
     <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown pull-right">
+        <li class="dropdown pull-right not-hover">
             @{
                 var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
                 var currentUser = manager.FindById(User.Identity.GetUserId());

@@ -499,6 +499,9 @@ a.bg-danger:hover {
         .navbar-inverse .navbar-nav > li > a:hover {
             background-color: #4e9921;
         }
+         .navbar-inverse .navbar-nav > li.not-hover > a:hover {
+            background-color: #6ab43e;
+        }
 
     .navbar-inverse .navbar-nav > .dropdown > a .caret {
         border-top-color: #4e9921;
