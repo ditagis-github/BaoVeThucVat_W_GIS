@@ -11,11 +11,12 @@ Version 1.0
 /*-- Common Style --*/
 
 body {
-    padding-top: 50px;
     line-height: 24px;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
+    padding:0;
+    margin:0;
     visibility: visible;
     font-family: "Montserrat", sans-serif;
     color: #757575;
@@ -26,6 +27,7 @@ a, i, button, img, input, span, *:before, *:after {
     -ms-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
 }
+
 
 h1, h2, h3, h4, h5, h6 {
     color: #424242;
@@ -571,9 +573,6 @@ a.bg-danger:hover {
         box-shadow: 1px 0px 10px rgba(0, 0, 0, .05);
     }
 
-    .navbar-header {
-        width: 100%;
-    }
 }
 
 .sidebar ul.nav a:hover,

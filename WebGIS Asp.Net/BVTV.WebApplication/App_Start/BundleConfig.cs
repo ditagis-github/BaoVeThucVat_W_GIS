@@ -62,20 +62,17 @@ namespace BVTV.WebApplication
             bundles.Add(new StyleBundle("~/css/lumino").Include(
                       "~/Content/bootstrap.min.css",
                       "~/Content/material-design-iconic-font.min.css",
-                      "~/Content/font-awesome.min.css",
                       "~/Content/lumino/css/datepicker3.css",
                       "~/Content/lumino/css/styles.css"
-                      ));
+                      ).Include("~/Content/font-awesome.min.css", new CssRewriteUrlTransform()));
             bundles.Add(new StyleBundle("~/Content/map").Include(
                       "~/Content/esri.css"));
 
             bundles.Add(new StyleBundle("~/css/hifugreen").Include(
                     "~/Content/bootstrap.min.css",
                     "~/Content/material-design-iconic-font.min.css",
-                    "~/Content/font-awesome.min.css",
                     "~/Content/hifugreen/css/style.css"
-
-                    ));
+                    ).Include("~/Content/font-awesome.min.css", new CssRewriteUrlTransform()));
 
         }
     }

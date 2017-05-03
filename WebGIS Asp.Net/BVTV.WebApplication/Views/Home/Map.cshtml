@@ -2,10 +2,11 @@
     ViewBag.Title = "Bản đồ";
 
 }
-
-<link rel="stylesheet" href="https://js.arcgis.com/4.3/esri/css/main.css">
-<link href="~/Content/map.css" rel="stylesheet" />
-
+@section headtag{
+    <link rel="stylesheet" href="https://js.arcgis.com/4.3/esri/css/main.css">
+    <link href="~/Content/map.css" rel="stylesheet" />
+    <script src="https://js.arcgis.com/4.3/"></script>
+}
 
 <section id="map-area" class="pb-100">
     <div class="col-md-4 col-lg-3">
@@ -119,7 +120,6 @@
 
 </section>
 @section scripts{
-    <script src="https://js.arcgis.com/4.3/"></script>
     @Scripts.Render("~/bundles/map")
     <script type="text/javascript">
 

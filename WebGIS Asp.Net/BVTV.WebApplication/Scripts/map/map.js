@@ -1,18 +1,18 @@
-﻿var map, view, baseMap, sauBenhLayer, trongTrotLayer, SuDungDatTrong, doanhNghiepLayer, dynamicMapServiceLayer, hanhChinhHuyenLayer,query;
+﻿var map, view, baseMap, sauBenhLayer, trongTrotLayer, SuDungDatTrong, doanhNghiepLayer, dynamicMapServiceLayer, hanhChinhHuyenLayer, query;
 require([
   "dojo/dom-construct",
   "esri/Map",
   "esri/views/MapView",
   "esri/layers/MapImageLayer",
   "esri/layers/FeatureLayer", "esri/tasks/support/Query", "esri/tasks/QueryTask",
-  "esri/widgets/Home","esri/widgets/Expand","esri/widgets/LayerList","esri/widgets/Search","esri/widgets/Locate","esri/widgets/Legend",//widget
+  "esri/widgets/Home", "esri/widgets/Expand", "esri/widgets/LayerList", "esri/widgets/Search", "esri/widgets/Locate", "esri/widgets/Legend",//widget
   "dojo/domReady!"
 ], function (
     domConstruct,
     Map, MapView,
     MapImageLayer,
     FeatureLayer, Query, QueryTask,
-    Home,Expand,LayerList,Search,Locate,Legend//widget
+    Home, Expand, LayerList, Search, Locate, Legend//widget
     ) {
     map = new Map();
     view = new MapView({
@@ -53,11 +53,78 @@ require([
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"],
         title: "Sâu bệnh",
+        fields: [
+               {
+                   name: 'OBJECTID',
+                   alias: 'Nhóm cây trồng',
+                   visible: false,
+                   editable: false //disable editing on this field 
+               }, {
+                   name: 'MaSauBenh',
+                   alias: 'Mã sâu bệnh'
+               }, {
+                   name: 'NhomCayTrong',
+                   alias: 'Nhóm cây trồng',
+                   editable: false //disable editing on this field 
+               }, {
+                   name: 'LoaiCayTrong',
+                   alias: 'Loại cây trồng'
+               }, {
+                   name: 'TenSauBenhGayHai',
+                   alias: 'Tên sâu bệnh gây hại'
+               }, {
+                   name: 'MatDoSauBenhGayHai',
+                   alias: 'Mật độ'
+               }, {
+                   name: 'PhamViAnhHuong',
+                   alias: 'Phạm vi ảnh huoqngr'
+               }, {
+                   name: 'MucDoAnhHuong',
+                   alias: 'Mức độ ảnh hưởng'
+               }, {
+                   name: 'ThoiGianGayHai',
+                   alias: 'Thời gian gây hại'
+               }, {
+                   name: 'CapDoGayHai',
+                   alias: 'Cấp độ gây hại'
+               }, {
+                   name: 'TinhHinhKiemSoatDichBenh',
+                   alias: 'Tình hình kiểm soát dịch bệnh'
+               }, {
+                   name: 'BienPhapXuLy',
+                   alias: 'Biện pháp xử lý'
+               }, {
+                   name: 'DienTich',
+                   alias: 'Diện tích'
+               }, {
+                   name: 'MaHuyenTP',
+                   alias: 'Huyện/TP',
+                   format: {
+
+                   }
+               }, {
+                   name: 'GiaiDoanSinhTruong',
+                   alias: 'Giai đoạn sinh trưởng'
+               }, {
+                   name: 'NgayCapNhat',
+                   alias: 'Ngày cập nhật'
+               }, {
+                   name: 'NguoiCapNhat',
+                   alias: 'Người cập nhật'
+               }, {
+                   name: 'NgayXuatHien',
+                   alias: 'Ngày xuất hiện'
+               }, {
+                   name: 'SauBenhGayHai',
+                   alias: 'Sâu bệnh gây hại',
+                   visible: false
+               }
+        ],
         popupTemplate: {
             title: "{TenSauBenhGayHai}",
-            content:"<table>"+
-                "<tr><td>Nhóm cây trồng: </td><td>{NhomCayTrong}</td></tr>"+
-                "<tr><td>Loại cây trồng: {LoaiCayTrong}</td></tr>"+
+            content: "<table>" +
+                "<tr><td>Nhóm cây trồng: </td><td>{NhomCayTrong}</td></tr>" +
+                "<tr><td>Loại cây trồng: {LoaiCayTrong}</td></tr>" +
                 "<tr><td>Tên sâu bệnh gây hại: </td><td>{TenSauBenhGayHai}</td></tr>" +
                 "<tr><td>Mật độ sâu bệnh gây hại: </td><td>{MatDoSauBenhGayHai}</td></tr>" +
                 "<tr><td>Phạm vi ảnh ưởng: </td><td>{PhamViAnhHuong}</td></tr>" +
@@ -69,7 +136,7 @@ require([
                 "<tr><td>Biện pháp xử lý: </td><td>{BienPhapXuLy}</td></tr>" +
                 "<tr><td>Diện tích: </td><td>{DienTich}</td></tr>" +
                 "<tr><td>Huyện/TP: </td><td>{MaHuyenTP}</td></tr>" +
-                "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td></tr>"+
+                "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td></tr>" +
                 "</table>"
         }
     });
@@ -99,7 +166,7 @@ require([
         }
     });
     //map.add(sauBenhLayer);
-    map.addMany([SuDungDatTrong,trongTrotLayer, sauBenhLayer, doanhNghiepLayer]);
+    map.addMany([SuDungDatTrong, trongTrotLayer, sauBenhLayer, doanhNghiepLayer]);
 
 
 
@@ -137,7 +204,7 @@ require([
         allPlaceholder: "Nhập nội dung tìm kiếm",
         sources: [{
             featureLayer: sauBenhLayer,
-            searchFields: ["TenSauBenhGayHai", "LoaiCayTrong","HuyenTP"],
+            searchFields: ["TenSauBenhGayHai", "LoaiCayTrong", "HuyenTP"],
             displayField: "TenSauBenhGayHai",
             exactMatch: false,
             outFields: ["*"],
@@ -244,7 +311,7 @@ require([
                         tr.append($('<td/>').text((i + 1) + ". "));
                         tr.append($('<td/>').text(attr[selectProperty[2]]));
                         tr.append($('<td/>').append(span));
-                        
+
                         $(resultDom).append(tr);
 
                     }
@@ -269,7 +336,7 @@ require([
         dom: 'txtQuanHuyen',
         property: 'QuanHuyen'
     }
-    ], ['MaDoanhNghiep', 'NguoiDaiDienDoanhNghiep','MaDoanhNghiep'])
+    ], ['MaDoanhNghiep', 'NguoiDaiDienDoanhNghiep', 'MaDoanhNghiep'])
 
     //
 
@@ -305,7 +372,7 @@ require([
         dom: 'nbDienTich',
         property: 'DienTich'
     }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }
-    ], ['LoaiCayTrong', 'TenSauBenhGayHai','MaSauBenh'])
+    ], ['LoaiCayTrong', 'TenSauBenhGayHai', 'MaSauBenh'])
 
     //add event to update combobox  when click tab-trongtrot
     $('#a-tab-trongtrot').first().on('click', function () {
@@ -327,5 +394,5 @@ require([
         dom: 'nbDienTich',
         property: 'DienTich'
     }
-    ], ['LoaiCayTrong', 'MaHuyenTP','MaDoiTuong'])
+    ], ['LoaiCayTrong', 'MaHuyenTP', 'MaDoiTuong'])
 });

@@ -197,6 +197,16 @@
     <Compile Include="Areas\Admin\Controllers\TrongTrotController.cs" />
     <Compile Include="Areas\Admin\Interfaces\IChartJson.cs" />
     <Compile Include="Areas\Admin\Models\FeatureLayerViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Admin\Models\ViewModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
     <Content Include="App_Code\HTMLExtension.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -225,6 +235,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Admin\Models\ViewModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ViewModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Areas\Admin\Models\ViewModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ViewModel.cs</LastGenOutput>
+    </Content>
     <Content Include="Content\admin-map.css" />
     <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -835,6 +853,12 @@
       <Project>{816c91e3-65d4-41f9-a7b1-95106d5c6c11}</Project>
       <Name>BVTV.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

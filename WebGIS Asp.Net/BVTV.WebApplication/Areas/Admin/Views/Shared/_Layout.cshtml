@@ -1,6 +1,4 @@
-﻿
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -15,15 +13,9 @@
 
 <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
            @Html.Partial("Menu")
-        </div>
-    </nav>
     @*@RenderPage("RightMenu.cshtml")*@
-    <div class="container">
         @RenderBody()
-    </div>
     @Scripts.Render("~/js/lumino")
     @RenderSection("scripts", required: false)
     <script>

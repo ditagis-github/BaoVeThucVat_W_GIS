@@ -33,9 +33,97 @@
 #LocateButton {
     position: absolute;
     top: 95px;
-    left: 20px;
+    left: 36px;
     z-index: 50;
 }
-#editorDiv{
-    font-size:14px;
+
+#editorDiv {
+    font-size: 14px;
+}
+
+
+#tabAddDataContent {
+    width: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+    border-top: 1px solid #cdcdcd;
+}
+
+
+
+.logo {
+    bottom: 30px;
+}
+
+/*CSS at IndexMap*/
+.nav-green {
+    color: #6b6b6b;
+    margin-bottom: 25px;
+}
+
+    .nav-green li {
+        float: left;
+        font-size: 14px;
+        line-height: 30px;
+        font-weight: 500;
+    }
+
+        .nav-green li.active a, .nav-green li.active a:hover {
+            color: #6ab43e;
+            background-color: white;
+            border-bottom: 3px solid #6ab43e;
+        }
+
+        .nav-green li a {
+            font-size: 14px;
+            line-height: 30px;
+            font-weight: 500;
+            color: #6b6b6b;
+            text-transform: uppercase;
+            position: relative;
+            padding: 12px 21px;
+        }
+
+        .nav-green li.active a {
+            color: #6ab43e;
+        }
+
+        .nav-green li a:hover {
+            color: #6ab43e;
+            background-color: white;
+            border-bottom: 3px solid #6ab43e;
+        }
+
+.tav-content {
+    height: 385px;
+    overflow-y: auto;
+}
+
+table {
+    font-family: "Montserrat", sans-serif;
+}
+
+#result tr:hover {
+    background-color: #6ab43e;
+    color: white;
+    cursor: pointer;
+}
+
+.resultFormSearch {
+    height: 186px;
+    overflow-y: auto;
+}
+
+resultFormSearch table tr th:first-child {
+    width: 10px;
+}
+
+.formSearch input, .formSearch select {
+    width: 100%;
+    border: 1px solid #e9e9e9;
+    height: 40px;
+    padding: 7px 16px;
+    line-height: 24px;
+    font-weight: 300;
+    margin-bottom: 5px;
 }

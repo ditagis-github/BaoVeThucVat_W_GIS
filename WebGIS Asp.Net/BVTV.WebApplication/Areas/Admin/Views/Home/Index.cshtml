@@ -4,13 +4,6 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">Thông tin</h1>
-    </div>
-</div><!--/.row-->
-
 <div class="row">
     <div class="col-xs-12 col-md-6 col-lg-3">
         <div class="panel panel-blue panel-widget ">
@@ -78,17 +71,130 @@
         <script src="https://js.arcgis.com/3.20/"></script>
         <script src="~/Scripts/map/map-admin.js"></script>
     }
-
     <div class="row">
-        <div id="templatePickerPane" class="col-xs-2 col-md-2">
-            <div id="panelHeader">
-                Chỉnh sửa
-            </div>
-            <div id="editorDiv">
+        <div class="col-xs-12 col-md-4 col-lg-4">
+            <ul class="nav nav-green">
+                <li class="active"><a data-toggle="pill" href="#menu1">Chỉnh sửa</a></li>
+                <li><a data-toggle="pill" href="#home">Tìm kiếm</a></li>
+            </ul>
+
+            <div class="tab-content">
+
+                <div id="menu1" class="tab-pane fade in active">
+                    @*<div id="templatePickerPane">
+                            <div id="panelHeader">
+                                Chỉnh sửa
+                            </div>
+                            <div id="editorDiv">
+                            </div>
+                        </div>*@
+                    <div id="templatePickerPane">
+                        <div id="editorDiv"></div>
+                    </div>
+                </div>
+                <div id="home" class="tab-pane fade">
+                    <ul class="nav nav-tabs nav-green nav-justified responsive" id="myTab">
+                        <li class="active"><a data-toggle="pill" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
+                        <li><a id="a-tab-saubenh" data-toggle="pill" href="#tab-saubenh">Sâu bệnh</a></li>
+                        <li><a id="a-tab-trongtrot" data-toggle="pill" href="#tab-trongtrot">Trồng trọt</a></li>
+                    </ul>
+
+                    <div class="tab-content responsive">
+                        <div class="tab-pane active" id="tab-doanhnghiep">
+                            <h5>Tìm thông tin Doanh nghiệp</h5>
+                            <div class="formSearch">
+                                <input type="text" id="txtMaDN" placeholder="Mã doanh nghiệp" />
+                                <input type="text" id="txtTen" placeholder="Tên doanh nghiệp" />
+                                <input type="text" id="txtQuanHuyen" placeholder="Quận/Huyện" disabled />
+                                <input type="button" id="btnFind" value="Tìm kiếm">
+                                <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                            </div>
+                            <div class="resultFormSearch">
+                                <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã</th>
+                                            <th>Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="result"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-saubenh">
+
+                            <h5>Tìm thông tin Sâu bệnh</h5>
+                            <div class="formSearch">
+                                <select id="cbNhomCayTrong">
+                                    <option value="" selected>Nhóm cây trồng</option>
+                                </select>
+                                <select id="cbLoaiCayTrong">
+                                    <option value="" selected>Loại cây trồng</option>
+                                </select>
+                                <select id="cbCapDoGayHai">
+                                    <option value="" selected>Cấp độ gây hại</option>
+                                </select>
+                                <input type="number" id="nbPhamViAnhHuong" placeholder="Phạm vi ảnh hưởng" />
+                                <input type="number" id="nbDienTich" placeholder="Diện tích" />
+                                <input type="button" id="btnFind" value="Tìm kiếm" />
+                                <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                            </div>
+                            <div class="resultFormSearch">
+                                <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã</th>
+                                            <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="result"></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane" id="tab-trongtrot">
+
+                            <h5>Tìm thông tin Cây trồng</h5>
+                            <div class="formSearch">
+                                <select id="cbNhomCayTrong">
+                                    <option value="" selected>Nhóm cây trồng</option>
+                                </select>
+                                <select id="cbLoaiCayTrong">
+                                    <option value="" selected>Loại cây trồng</option>
+                                </select>
+                                <select id="cbPhuongThucTrong">
+                                    <option value="" selected>Phương thức trồng</option>
+                                </select>
+                                <input type="number" id="nbDienTich" placeholder="Diện tích" />
+                                <input type="button" id="btnFind" value="Tìm kiếm" />
+                                <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
+                            </div>
+                            <div class="resultFormSearch">
+                                <table data-toggle="table" class="table" data-row-style="rowStyle">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã</th>
+                                            <th>Huyện/TP  <span class="label label-danger  pull-right" id="counter">0</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="result"></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="map" class="col-xs-10 col-md-10">
-            <div id="LocateButton"></div>
+
+        <div class="col-xs-12 col-md-8 col-lg-8" id="tabMapControl">
+            <div id="map">
+                <div id="LocateButton"></div>
+            </div>
         </div>
-    </div><!--/.row-->
+    </div>
 }
