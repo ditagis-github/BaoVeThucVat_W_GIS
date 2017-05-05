@@ -4,6 +4,10 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+
+
+
+
 <div class="row">
     <div class="col-xs-12 col-md-6 col-lg-3">
         <div class="panel panel-blue panel-widget ">
@@ -65,14 +69,14 @@
 @if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))
 {
     @section headtag{
-        <link rel="stylesheet" href="https://js.arcgis.com/3.20/dijit/themes/claro/claro.css">
+       <link rel="stylesheet" href="//js.arcgis.com/3.20/esri/themes/calcite/dijit/calcite.css">
         <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
         <link href="~/Content/admin-map.css" rel="stylesheet" />
         <script src="https://js.arcgis.com/3.20/"></script>
         <script src="~/Scripts/map/map-admin.js"></script>
     }
     <div class="row">
-        <div class="col-xs-12 col-md-4 col-lg-4">
+        <div class="col-xs-12 col-md-3 col-lg-3 tab-search">
             <ul class="nav nav-green">
                 <li class="active"><a data-toggle="pill" href="#menu1">Chỉnh sửa</a></li>
                 <li><a data-toggle="pill" href="#home">Tìm kiếm</a></li>
@@ -191,9 +195,27 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-md-8 col-lg-8" id="tabMapControl">
-            <div id="map">
-                <div id="LocateButton"></div>
+        <div class="col-xs-12 col-md-9 col-lg-9 tap-map" id="tabMapControl">
+            <div id="mainContainer" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false">
+                <div id="map" dir="ltr" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="height:80%">
+                    <div id="LocateButton">
+                    </div>
+                    <div id="tableControl" class="dropdown map-control">
+                        <button type="button" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a onclick="loadTableDoanhNghiep();" href="#">Doanh nghiệp</a></li>
+                            <li><a onclick="loadTableSauBenh();" href="#">Sâu bệnh</a></li>
+                            <li><a onclick="loadTableTrongTrot();" href="#">Trồng trọt</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true" style="height:20%">
+                    <div id="tableLayerSauBenh"></div>
+                    <div id="tableDoanhNghiep"></div>
+                    <div id="tableTrongTrot"></div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿#map {
+﻿#mainContainer,#map {
     padding: 0;
     height: 600px;
 }
@@ -16,7 +16,9 @@
     overflow: hidden;
     padding: 10px 10px 10px 10px;
 }
-
+.claro .dijitSplitContainer-child, .claro .dijitBorderContainer-child {
+    border: 1px #b5bcc7 solid;
+}
 .esriEditor .templatePicker {
     padding-bottom: 5px;
     padding-top: 5px;
@@ -32,8 +34,8 @@
 
 #LocateButton {
     position: absolute;
-    top: 95px;
-    left: 36px;
+    top: 128px;
+    left: 20px;
     z-index: 50;
 }
 
@@ -41,7 +43,13 @@
     font-size: 14px;
 }
 
-
+.tab-search {
+    border: #c5c3c3 1px solid;
+}
+.tap-map {
+    border: #c5c3c3 1px solid;
+   padding-top:10px;
+}
 #tabAddDataContent {
     width: 100%;
     overflow: hidden;
@@ -49,7 +57,34 @@
     border-top: 1px solid #cdcdcd;
 }
 
+   #contentPane {
+        padding: 0;
+    }
 
+    .map-control {
+        position: absolute;
+        z-index: 50;
+        border-radius: 5px;
+        width: 30px;
+        height: 30px;
+        border: 1px solid #57585A;
+        background-color: #FFF;
+        color: #4C4C4C;
+    }
+
+    #map #tableControl {
+        top: 90px;
+        left: 20px;
+    }
+
+    .map-control .glyphicon {
+        top: 5px;
+    }
+
+    .map-control button {
+        background-color: transparent;
+        border-color: transparent;
+    }
 
 .logo {
     bottom: 30px;
