@@ -33,8 +33,15 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
                 MemberCount = db.AspNetUsers.Count(),
                 SauBenhCount = db.SAUBENHs.Count()
             };
+            ViewBag.QuanHuyen = from qh in db.HANHCHINHHUYENs
+                                select new SelectListItem
+                                {
+                                    Text = qh.TenHuyen,
+                                    Value = qh.MaHuyenTP
+                                };
             return View(md);
         }
+       
         [ChildActionOnly]
         public PartialViewResult GetRightMenu()
         {

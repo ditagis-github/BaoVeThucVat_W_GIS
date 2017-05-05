@@ -108,7 +108,7 @@ require([
 
             arrAttribute.forEach(function (value, index) {
                 var domValue = $("#" + value.dom).val();
-                if (domValue.trim().length > 0) {
+                if (domValue.length > 0) {
                     where += " AND " + value.property + " LIKE N'%" + domValue + "%'";
                 }
             });
@@ -187,8 +187,8 @@ require([
         dom: 'txtTen',
         property: 'NguoiDaiDienDoanhNghiep'
     }, {
-        dom: 'txtQuanHuyen',
-        property: 'QuanHuyen'
+        dom: 'cbQuanHuyen',
+        property: 'MaHuyenTP'
     }
     ], ['MaDoanhNghiep', 'NguoiDaiDienDoanhNghiep', 'MaDoanhNghiep'])
 

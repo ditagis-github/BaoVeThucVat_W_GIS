@@ -12,7 +12,7 @@ using BVTV.WebApplication.Areas.Admin.Models;
 
 namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
-    [Authorize]
+   [Authorize]
     public class DoanhNghiepController : Controller,IChartJson,IFeatureLayerController
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();

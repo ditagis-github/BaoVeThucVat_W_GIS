@@ -1,4 +1,5 @@
-﻿using BVTV.WebApplication.Models;
+﻿using BVTV.Entity;
+using BVTV.WebApplication.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace BVTV.WebApplication.Controllers
 {
     public class HomeController : Controller
     {
+        private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
         //
         // GET: /Home/
 
@@ -26,6 +28,12 @@ namespace BVTV.WebApplication.Controllers
         }
         public ActionResult Map()
         {
+            ViewBag.QuanHuyen = from qh in db.HANHCHINHHUYENs
+                                select new SelectListItem
+                                {
+                                    Text = qh.TenHuyen,
+                                    Value = qh.MaHuyenTP
+                                };
             return View();
         }
         [HttpPost]
@@ -36,3 +44,4 @@ namespace BVTV.WebApplication.Controllers
         }
     }
 }
+
