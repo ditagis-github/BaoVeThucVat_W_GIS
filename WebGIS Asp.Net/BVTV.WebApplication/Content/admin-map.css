@@ -1,8 +1,10 @@
-﻿#mainContainer,#map {
+﻿#mainContainer {
     padding: 0;
     height: 600px;
 }
-
+#map{
+    height:100%;
+}
 #templatePickerPane {
     overflow: hidden;
 }

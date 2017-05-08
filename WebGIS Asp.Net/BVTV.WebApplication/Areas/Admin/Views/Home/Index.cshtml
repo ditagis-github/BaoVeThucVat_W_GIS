@@ -197,7 +197,7 @@
 
         <div class="col-xs-12 col-md-9 col-lg-9 tap-map" id="tabMapControl">
             <div id="mainContainer" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false">
-                <div id="map" dir="ltr" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="height:80%">
+                <div id="map" dir="ltr" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
                     <div id="LocateButton">
                     </div>
                     <div id="tableControl" class="dropdown map-control">
@@ -205,13 +205,13 @@
                             <span class="glyphicon glyphicon-tasks"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a onclick="loadTableDoanhNghiep();" href="#">Doanh nghiệp</a></li>
-                            <li><a onclick="loadTableSauBenh();" href="#">Sâu bệnh</a></li>
-                            <li><a onclick="loadTableTrongTrot();" href="#">Trồng trọt</a></li>
+                            <li><a onclick="loadTableDoanhNghiep();" href="javascript:void(0)">Doanh nghiệp</a></li>
+                            <li><a onclick="loadTableSauBenh();" href="javascript:void(0)">Sâu bệnh</a></li>
+                            <li><a onclick="loadTableTrongTrot();" href="javascript:void(0)">Trồng trọt</a></li>
                         </ul>
                     </div>
                 </div>
-                <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true" style="height:20%">
+                <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true" >
                     <div id="tableLayerSauBenh"></div>
                     <div id="tableDoanhNghiep"></div>
                     <div id="tableTrongTrot"></div>

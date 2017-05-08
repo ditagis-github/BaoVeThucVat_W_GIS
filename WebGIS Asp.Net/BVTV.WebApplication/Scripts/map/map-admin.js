@@ -71,17 +71,26 @@ require([
     var heatmapFeatureLayerOptions = {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"],
-        maxScale: 10
+        maxScale: 18056
     };
     var heatmapFeatureLayer = new FeatureLayer(serviceURL,  heatmapFeatureLayerOptions);
     var heatmapRenderer = new HeatmapRenderer();
     heatmapFeatureLayer.setRenderer(heatmapRenderer);
     map.addLayer(heatmapFeatureLayer);
-    var sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
+    
+    var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer");
+    map.addLayer(dynamicMapServiceLayer);
+    map.on("layers-add-result", initEditing);
+
+    doanhNghiepLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0", {
+        mode: FeatureLayer.MODE_ONDEMAND,
+        outFields: ["*"]
+    });
+    sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"],
         title: "Sâu bệnh",
-        minScale: 10,
+        minScale:18056,
         fields: [{
             name: 'OBJECTID',
             alias: 'Nhóm cây trồng',
@@ -167,19 +176,7 @@ require([
                 "</table>"
         }
     });
-    map.addLayer(sauBenhLayer);
-    var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer");
-    map.addLayer(dynamicMapServiceLayer);
-    map.on("layers-add-result", initEditing);
-
-    doanhNghiepLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0", {
-        mode: FeatureLayer.MODE_ONDEMAND,
-        outFields: ["*"]
-    });
-    sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
-        mode: FeatureLayer.MODE_ONDEMAND,
-        outFields: ["*"]
-    });
+    
     suDungDatTrongLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3", {
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"]
@@ -375,9 +372,17 @@ require([
 
 
     //Table Feature
-
+    function resizeSplitter(height) {
+        domstyle.set('contentPane', {
+            height: height
+        });
+        registry.byId('mainContainer').resize();
+    }
     function loadTable(layer, div) {
-
+        if (isLoadTable.firstClick) {
+            resizeSplitter('100px');
+            isLoadTable.firstClick = false;
+        }
         // listen to featurelayer click event to handle selection 
         // from layer to the table. 
         // when user clicks on a feature on the map, the corresponding 
@@ -424,11 +429,7 @@ require([
             menuFunctions: [{
                 label: "Ẩn bảng",
                 callback: function (evt) {
-                    domstyle.set('contentPane', {
-                        padding: 0,
-                        height: 0
-                    });
-                    registry.byId('mainContainer').resize();
+                    resizeSplitter(0);
                 }
             }]
         }, div);
@@ -442,20 +443,30 @@ require([
         if (!isLoadTable.sauBenh) {
             loadTable(sauBenhLayer, 'tableLayerSauBenh');
             isLoadTable.sauBenh = true;
+        //    //isLoadTable.trongTrot = false;
+        //    //isLoadTable.doanhNghiep = false;
         }
+        console.log($(".dijitContentPane").height());
         document.getElementById('tableDoanhNghiep').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'none';
         document.getElementById('tableLayerSauBenh').style.display = 'block';
+        resizeSplitter($("#contentPane").height());
     }
 
     function loadTableDoanhNghiep() {
         if (!isLoadTable.doanhNghiep) {
             loadTable(doanhNghiepLayer, 'tableDoanhNghiep');
-            isLoadTable.doanhNghiep = true;
+           isLoadTable.doanhNghiep = true;
+        //    //isLoadTable.trongTrot = false;
+        //    //isLoadTable.sauBenh = false;
         }
+        
+        console.log($(".dijitContentPane").height());
+       
         document.getElementById('tableLayerSauBenh').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'none';
         document.getElementById('tableDoanhNghiep').style.display = 'block';
+        resizeSplitter($("#contentPane").height());
     }
 
     function loadTableTrongTrot() {
@@ -463,18 +474,26 @@ require([
             loadTable(trongTrotLayer, 'tableTrongTrot');
             isLoadTable.trongTrot = true;
         }
+       
         document.getElementById('tableDoanhNghiep').style.display = 'none';
         document.getElementById('tableLayerSauBenh').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'block';
+        resizeSplitter($("#contentPane").height());
     }
+    
 
     var isLoadTable = {
+        firstClick:true,
         sauBenh: false,
         trongTrot: false,
         doanhNghiep: false
     }
-    loadTableSauBenh();
     window.loadTableSauBenh = loadTableSauBenh;
     window.loadTableDoanhNghiep = loadTableDoanhNghiep;
     window.loadTableTrongTrot = loadTableTrongTrot;
+    $(document).ready(function () {
+        $('ul.dropdown-menu li').click(function (e) {
+           
+        });
+    });
 });
