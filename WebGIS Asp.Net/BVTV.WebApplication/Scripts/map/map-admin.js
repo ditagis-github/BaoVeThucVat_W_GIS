@@ -71,7 +71,7 @@ require([
     var heatmapFeatureLayerOptions = {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"],
-        maxScale: 18056
+        maxScale: 22000
     };
     var heatmapFeatureLayer = new FeatureLayer(serviceURL,  heatmapFeatureLayerOptions);
     var heatmapRenderer = new HeatmapRenderer();
@@ -90,7 +90,7 @@ require([
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"],
         title: "Sâu bệnh",
-        minScale:18056,
+        minScale:22000,
         fields: [{
             name: 'OBJECTID',
             alias: 'Nhóm cây trồng',

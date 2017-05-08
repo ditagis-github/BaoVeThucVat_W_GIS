@@ -7,7 +7,8 @@
 
 
 
-
+@if (User.IsInRole("tester") )
+{
 <div class="row">
     <div class="col-xs-12 col-md-6 col-lg-3">
         <div class="panel panel-blue panel-widget ">
@@ -64,12 +65,12 @@
         </div>
     </div>
 </div><!--/.row-->
-
+}
 
 @if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))
 {
     @section headtag{
-       <link rel="stylesheet" href="//js.arcgis.com/3.20/esri/themes/calcite/dijit/calcite.css">
+<link rel="stylesheet" href="~/Content/claro.css">
         <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
         <link href="~/Content/admin-map.css" rel="stylesheet" />
         <script src="https://js.arcgis.com/3.20/"></script>
@@ -80,18 +81,69 @@
             <ul class="nav nav-green">
                 <li class="active"><a data-toggle="pill" href="#menu1">Chỉnh sửa</a></li>
                 <li><a data-toggle="pill" href="#home">Tìm kiếm</a></li>
+                <li><a data-toggle="pill" href="#thongke">Thống kê</a></li>
             </ul>
 
             <div class="tab-content">
+                <div id="thongke" class="tab-pane fade">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-blue panel-widget ">
+                                <div class="row no-padding">
+                                    <div class="col-sm-3 col-lg-5 widget-left">
+                                        <i class="fa fa-address-card " aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-sm-9 col-lg-7 widget-right">
+                                        <div class="large">@Html.DisplayFor(a => a.DoanhNghiepCount)</div>
+                                        <div class="text-muted">@Html.DisplayNameFor(a => a.DoanhNghiepCount)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="panel panel-orange panel-widget">
+                                <div class="row no-padding">
+                                    <div class="col-sm-3 col-lg-5 widget-left">
+                                        <i class="fa fa-bug" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-sm-9 col-lg-7 widget-right">
+                                        <div class="large">@Html.DisplayFor(a => a.SauBenhCount)</div>
+                                        <div class="text-muted">@Html.DisplayNameFor(a => a.SauBenhCount)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="col-lg-12">
+                            <div class="panel panel-red panel-widget">
+                                <div class="row no-padding">
+                                    <div class="col-sm-3 col-lg-5 widget-left">
+                                        <i class="fa fa-tree" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-sm-9 col-lg-7 widget-right">
+                                        <div class="large">@Html.DisplayFor(a => a.DatTrongCount)</div>
+                                        <div class="text-muted">@Html.DisplayNameFor(a => a.DatTrongCount)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="panel panel-teal panel-widget">
+                                <div class="row no-padding">
+                                    <div class="col-sm-3 col-lg-5 widget-left">
+                                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-sm-9 col-lg-7 widget-right">
+                                        <div class="large">@Html.DisplayFor(a => a.MemberCount)</div>
+                                        <div class="text-muted">@Html.DisplayNameFor(a => a.MemberCount)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--/.row-->
+                </div>
                 <div id="menu1" class="tab-pane fade in active">
-                    @*<div id="templatePickerPane">
-                            <div id="panelHeader">
-                                Chỉnh sửa
-                            </div>
-                            <div id="editorDiv">
-                            </div>
-                        </div>*@
                     <div id="templatePickerPane">
                         <div id="editorDiv"></div>
                     </div>

@@ -22,11 +22,11 @@ body {
     color: #757575;
 }
 
-a, i, button, img, input, span, *:before, *:after {
+/*a, i, button, img, input, span, *:before, *:after {
     -webkit-transition: all 0.3s ease 0s;
     -ms-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
-}
+}*/
 
 
 h1, h2, h3, h4, h5, h6 {
@@ -40,7 +40,7 @@ p:last-child {
     margin-bottom: 0;
 }
 
-a, button {
+.dtg a, .dtg button {
     color: inherit;
     display: inline-block;
     line-height: inherit;
@@ -48,11 +48,11 @@ a, button {
     font-family: "Montserrat", sans-serif;
 }
 
-input, select, textarea {
+.dtg>input, .dtg>select, .dtg>textarea {
     font-family: "Montserrat", sans-serif;
 }
 
-    input[type="button"], .button {
+     .button {
         width: auto;
         padding: 8px 40px;
         background-color: #6ab43e;
@@ -62,32 +62,17 @@ input, select, textarea {
         font-weight: 400;
     }
 
-        input[type="button"]:hover, .button:hover {
+        .button:hover {
             border-color: #6ab43e;
             background-color: #77c14b;
         }
 
-a, i, button, img, input, span,
-*:before, *:after {
-    -webkit-transition: all 0.3s ease 0s;
-    -ms-transition: all 0.3s ease 0s;
-    transition: all 0.3s ease 0s;
-}
+
 
 *:focus {
     outline: 0px solid transparent;
 }
 
-a:focus {
-    color: inherit;
-    outline: medium none;
-    transform: scale(1);
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: none;
-}
 
 ul {
     list-style: outside none none;

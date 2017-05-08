@@ -164,3 +164,21 @@ resultFormSearch table tr th:first-child {
     font-weight: 300;
     margin-bottom: 5px;
 }
+
+
+/*    dijitCalendar */
+
+.dijitButton .dijitButtonNode {
+        width: auto;
+        padding: 8px 40px;
+        background-color: #6ab43e;
+        border: none;
+        text-transform: uppercase;
+        color: #ffffff;
+        font-weight: 400;
+    }
+
+        .dijitButton .dijitButtonNode:hover {
+            border-color: #6ab43e;
+            background-color: #77c14b;
+        }

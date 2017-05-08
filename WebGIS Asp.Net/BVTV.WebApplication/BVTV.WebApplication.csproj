@@ -550,6 +550,8 @@
     <Content Include="Content\ckeditor\skins\moono-lisa\images\refresh.png" />
     <Content Include="Content\ckeditor\skins\moono-lisa\images\spinner.gif" />
     <Content Include="Content\ckeditor\styles.js" />
+    <Content Include="Content\claro.css" />
+    <Content Include="Content\images\commonFormArrows.png" />
     <Content Include="Content\lumino\js\lumino.js" />
     <Content Include="Scripts\chartjs\draw-chart.js" />
     <Content Include="Content\esri.css" />
