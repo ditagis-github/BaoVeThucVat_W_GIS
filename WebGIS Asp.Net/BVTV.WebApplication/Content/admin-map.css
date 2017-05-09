@@ -1,6 +1,17 @@
-﻿#mainContainer {
+﻿html, body, div#tabMapControl, .col-xs-12.col-md-3.col-lg-3.tab-search{
+    height:640px;
+}
+#mainContainer {
     padding: 0;
-    height: 600px;
+    height: 630px;
+}
+.tab-content{
+    margin-right: 28px;
+}
+div#home{
+        border: 1px #b5bcc7 solid;
+    margin-left: -10px;
+    margin-right: -30px;
 }
 #map{
     height:100%;
@@ -55,6 +66,7 @@
 #tabAddDataContent {
     width: 100%;
     overflow: hidden;
+    height:100%;
     overflow-y: scroll;
     border-top: 1px solid #cdcdcd;
 }
@@ -181,4 +193,7 @@ resultFormSearch table tr th:first-child {
         .dijitButton .dijitButtonNode:hover {
             border-color: #6ab43e;
             background-color: #77c14b;
+        }
+        div#dojox_grid_DataGrid_0{
+                width: 100%;
         }

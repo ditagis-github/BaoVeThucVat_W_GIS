@@ -380,7 +380,7 @@ require([
     }
     function loadTable(layer, div) {
         if (isLoadTable.firstClick) {
-            resizeSplitter('100px');
+            resizeSplitter('115px');
             isLoadTable.firstClick = false;
         }
         // listen to featurelayer click event to handle selection 
@@ -446,7 +446,6 @@ require([
         //    //isLoadTable.trongTrot = false;
         //    //isLoadTable.doanhNghiep = false;
         }
-        console.log($(".dijitContentPane").height());
         document.getElementById('tableDoanhNghiep').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'none';
         document.getElementById('tableLayerSauBenh').style.display = 'block';
