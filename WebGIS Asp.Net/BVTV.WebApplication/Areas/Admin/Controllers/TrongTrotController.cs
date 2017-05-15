@@ -119,16 +119,50 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetAll()
+        //public ActionResult GetAll(int ?thang)
+        //{
+        //    List<object> datas = new List<object>();
+        //    var tts = db.THOIGIANSANXUATTRONGTROTs.Where(w => w.Thang.Value == thang );
+        //    //if (thang.HasValue)
+        //        tts.Where(w => w.Thang.HasValue && w.Nam.Value == 2017);
+        //    foreach (var nct in db.NhomCayTrongs)
+        //    {
+        //        datas.Add(new
+        //        {
+        //            Label = nct.name,
+        //            Data = tts.Where(w=>w.NhomCayTrong.Value == nct.id).Count()
+        //        });
+        //    }
+        //    return Json(datas, JsonRequestBehavior.AllowGet);
+        //}
+        public ActionResult GetAll(int? thang, int? nam)
         {
             List<object> datas = new List<object>();
-            var tts = db.TRONGTROTs;
-            foreach(var nct in db.NhomCayTrongs)
+            var tts = db.THOIGIANSANXUATTRONGTROTs.Where(w => w.Nam.Value == nam);
+            if (thang.HasValue)
+                tts =tts.Where(w => w.Thang.HasValue && w.Thang.Value == thang);
+            foreach (var nct in db.NhomCayTrongs)
             {
                 datas.Add(new
                 {
-                    Label = nct.name,
-                    Data = tts.Where(w=>w.NhomCayTrong.Value == nct.id).Count()
+                    Label = nct.name + nam,
+                    Data = tts.Where(w => w.NhomCayTrong.Value == nct.id).Count()
+                });
+            }
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+        
+        public ActionResult GetAll()
+        {
+            List<object> datas = new List<object>();
+            var tts = db.THOIGIANSANXUATTRONGTROTs.Where(w => w.Nam.Value == 2015);    
+                   
+            foreach (var nct in db.NhomCayTrongs)
+            {
+                datas.Add(new
+                {
+                    Label = nct.name + 10,
+                    Data = tts.Where(w => w.NhomCayTrong.Value == nct.id).Count()
                 });
             }
             return Json(datas, JsonRequestBehavior.AllowGet);
@@ -149,7 +183,22 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
         public ActionResult Chart()
         {
+
+            ViewBag.Thang = from qh in db.THOIGIANSANXUATTRONGTROTs.Select(o => o.Thang.Value).Distinct().OrderBy(p => p)
+            select new SelectListItem
+                                {
+                                    Text = qh.ToString(),
+                                    Value = qh.ToString()
+                            };
+
+            ViewBag.Nam = from qh in db.THOIGIANSANXUATTRONGTROTs.Select(o => o.Nam.Value).Distinct().OrderBy(p => p)
+                          select new SelectListItem
+                            {
+                                Text = qh.ToString(),
+                                Value = qh.ToString()
+                            };
             return View();
+
         }
     }
 }

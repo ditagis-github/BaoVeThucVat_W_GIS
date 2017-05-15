@@ -6,6 +6,7 @@ require([
   "esri/layers/MapImageLayer",
   "esri/layers/FeatureLayer", "esri/tasks/support/Query", "esri/tasks/QueryTask",
   "esri/widgets/Home", "esri/widgets/Expand", "esri/widgets/LayerList", "esri/widgets/Search", "esri/widgets/Locate", "esri/widgets/Legend",//widget
+
   "dojo/domReady!"
 ], function (
     domConstruct,
@@ -14,6 +15,7 @@ require([
     FeatureLayer, Query, QueryTask,
     Home, Expand, LayerList, Search, Locate, Legend//widget
     ) {
+
     map = new Map();
     view = new MapView({
         container: "map",  // Reference to the scene div created in step 5
@@ -53,73 +55,6 @@ require([
         mode: FeatureLayer.MODE_ONDEMAND,
         outFields: ["*"],
         title: "Sâu bệnh",
-        fields: [
-               {
-                   name: 'OBJECTID',
-                   alias: 'Nhóm cây trồng',
-                   visible: false,
-                   editable: false //disable editing on this field 
-               }, {
-                   name: 'MaSauBenh',
-                   alias: 'Mã sâu bệnh'
-               }, {
-                   name: 'NhomCayTrong',
-                   alias: 'Nhóm cây trồng',
-                   editable: false //disable editing on this field 
-               }, {
-                   name: 'LoaiCayTrong',
-                   alias: 'Loại cây trồng'
-               }, {
-                   name: 'TenSauBenhGayHai',
-                   alias: 'Tên sâu bệnh gây hại'
-               }, {
-                   name: 'MatDoSauBenhGayHai',
-                   alias: 'Mật độ'
-               }, {
-                   name: 'PhamViAnhHuong',
-                   alias: 'Phạm vi ảnh huoqngr'
-               }, {
-                   name: 'MucDoAnhHuong',
-                   alias: 'Mức độ ảnh hưởng'
-               }, {
-                   name: 'ThoiGianGayHai',
-                   alias: 'Thời gian gây hại'
-               }, {
-                   name: 'CapDoGayHai',
-                   alias: 'Cấp độ gây hại'
-               }, {
-                   name: 'TinhHinhKiemSoatDichBenh',
-                   alias: 'Tình hình kiểm soát dịch bệnh'
-               }, {
-                   name: 'BienPhapXuLy',
-                   alias: 'Biện pháp xử lý'
-               }, {
-                   name: 'DienTich',
-                   alias: 'Diện tích'
-               }, {
-                   name: 'MaHuyenTP',
-                   alias: 'Huyện/TP',
-                   format: {
-
-                   }
-               }, {
-                   name: 'GiaiDoanSinhTruong',
-                   alias: 'Giai đoạn sinh trưởng'
-               }, {
-                   name: 'NgayCapNhat',
-                   alias: 'Ngày cập nhật'
-               }, {
-                   name: 'NguoiCapNhat',
-                   alias: 'Người cập nhật'
-               }, {
-                   name: 'NgayXuatHien',
-                   alias: 'Ngày xuất hiện'
-               }, {
-                   name: 'SauBenhGayHai',
-                   alias: 'Sâu bệnh gây hại',
-                   visible: false
-               }
-        ],
         popupTemplate: {
             title: "{TenSauBenhGayHai}",
             content: "<table>" +
@@ -204,23 +139,26 @@ require([
         allPlaceholder: "Nhập nội dung tìm kiếm",
         sources: [{
             featureLayer: sauBenhLayer,
-            searchFields: ["TenSauBenhGayHai", "LoaiCayTrong", "HuyenTP"],
-            displayField: "TenSauBenhGayHai",
+            searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
+            //searchFields: ["TenSauBenhGayHai", "LoaiCayTrong", "HuyenTP"],
+            displayField: "MaSauBenh",
             exactMatch: false,
             outFields: ["*"],
             name: "Sâu hại",
             placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
-        }, {
+        }
+        , {
             featureLayer: doanhNghiepLayer,
             searchFields: ["MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
             displayField: "NguoiDaiDienDoanhNghiep",
+
             exactMatch: false,
             outFields: ["*"],
             name: "Doanh Nghiệp",
             placeholder: "Nhập tên hoặc mã Doanh nghiệp",
-        }]
+        }
+        ]
     });
-
     // Add the search widget to the top left corner of the view
     view.ui.add(searchWidget, {
         position: "top-right"
@@ -277,7 +215,7 @@ require([
             arrAttribute.forEach(function (value, index) {
                 var domValue = $("#" + value.dom).val();
                 if (domValue.length > 0) {
-                    where += " AND " + value.property + " LIKE N'%" + domValue + "%'";
+                    where += " AND " + value.property + " LIKE 'N%" + domValue + "%'";
                 }
             });
 
@@ -303,6 +241,8 @@ require([
                                     p.latitude = p.y, p.longitude = p.x;
                                     view.goTo(p, { zoom: 15 });
                                     view.goTo(f, { zoom: 15 });
+
+
                                 }
 
                             })
@@ -329,6 +269,8 @@ require([
         dom: 'txtMaDN',
         property: 'MaDoanhNghiep'
     },
+
+
     {
         dom: 'txtTen',
         property: 'NguoiDaiDienDoanhNghiep'
@@ -345,7 +287,7 @@ require([
         if (combo.find("option").length > 1)
             return;
 
-        layer.getField(fieldName).domain.codedValues.forEach(function (value, index) {
+        layer.getFieldDomain(fieldName).codedValues.forEach(function (value, index) {
             var code = value.code, name = value.name;
             //create Element option item with Jquery
             var option = $('<option/>').val(code).text(name);
@@ -354,7 +296,10 @@ require([
     }
     //add event to update combobox  when click tab-saubenh
     $('#a-tab-saubenh').on('click', function () {
-        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer);
+        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer),
+        loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer),
+        loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer);
+        
     });
 
 

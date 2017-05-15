@@ -20,6 +20,12 @@ namespace BVTV.WebApplication.Areas.Admin
                 new { action = "Index", controller="Home",id = UrlParameter.Optional },
                 namespaces: new[] { "BVTV.WebApplication.Areas.Admin.Controllers" }
             );
+            context.MapRoute(
+              "Chart",
+              "Admin/{controller}/{action}/{thang}/{nam}",
+              new { action = "Chart", controller = "TrongTrot", thang = UrlParameter.Optional,nam=UrlParameter.Optional },
+              namespaces: new[] { "BVTV.WebApplication.Areas.Admin.Controllers" }
+          );
         }
     }
 }
