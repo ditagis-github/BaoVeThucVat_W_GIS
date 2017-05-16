@@ -145,7 +145,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             {
                 datas.Add(new
                 {
-                    Label = nct.name + nam,
+                    Label = nct.name,
                     Data = tts.Where(w => w.NhomCayTrong.Value == nct.id).Count()
                 });
             }

@@ -155,7 +155,7 @@ resultFormSearch table tr th:first-child {
     height: 40px;
     padding: 7px 16px;
     line-height: 24px;
-    color: #b9b9b9;
+    color: #000;
     font-weight: 300;
     margin-bottom:5px;
 }
