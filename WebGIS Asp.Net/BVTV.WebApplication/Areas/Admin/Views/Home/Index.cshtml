@@ -1,4 +1,5 @@
 ﻿@model BVTV.WebApplication.Areas.Admin.Controllers.DashBoard
+@using BVTV.WebApplication.Areas.Admin.Models
 @{
     ViewBag.Title = "Trang chủ";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -7,73 +8,88 @@
 
 
 
-@if (User.IsInRole("tester") )
+
+@if (User.IsInRole("tester"))
 {
-<div class="row">
-    <div class="col-xs-12 col-md-6 col-lg-3">
-        <div class="panel panel-blue panel-widget ">
-            <div class="row no-padding">
-                <div class="col-sm-3 col-lg-5 widget-left">
-                    <i class="fa fa-address-card " aria-hidden="true"></i>
-                </div>
-                <div class="col-sm-9 col-lg-7 widget-right">
-                    <div class="large">@Html.DisplayFor(a => a.DoanhNghiepCount)</div>
-                    <div class="text-muted">@Html.DisplayNameFor(a => a.DoanhNghiepCount)</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xs-12 col-md-6 col-lg-3">
-        <div class="panel panel-orange panel-widget">
-            <div class="row no-padding">
-                <div class="col-sm-3 col-lg-5 widget-left">
-                    <i class="fa fa-bug" aria-hidden="true"></i>
-                </div>
-                <div class="col-sm-9 col-lg-7 widget-right">
-                    <div class="large">@Html.DisplayFor(a => a.SauBenhCount)</div>
-                    <div class="text-muted">@Html.DisplayNameFor(a => a.SauBenhCount)</div>
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-lg-3">
+            <div class="panel panel-blue panel-widget ">
+                <div class="row no-padding">
+                    <div class="col-sm-3 col-lg-5 widget-left">
+                        <i class="fa fa-address-card " aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-9 col-lg-7 widget-right">
+                        <div class="large">@Html.DisplayFor(a => a.DoanhNghiepCount)</div>
+                        <div class="text-muted">@Html.DisplayNameFor(a => a.DoanhNghiepCount)</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="col-xs-12 col-md-6 col-lg-3">
+            <div class="panel panel-orange panel-widget">
+                <div class="row no-padding">
+                    <div class="col-sm-3 col-lg-5 widget-left">
+                        <i class="fa fa-bug" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-9 col-lg-7 widget-right">
+                        <div class="large">@Html.DisplayFor(a => a.SauBenhCount)</div>
+                        <div class="text-muted">@Html.DisplayNameFor(a => a.SauBenhCount)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="col-xs-12 col-md-6 col-lg-3">
-        <div class="panel panel-red panel-widget">
-            <div class="row no-padding">
-                <div class="col-sm-3 col-lg-5 widget-left">
-                    <i class="fa fa-tree" aria-hidden="true"></i>
-                </div>
-                <div class="col-sm-9 col-lg-7 widget-right">
-                    <div class="large">@Html.DisplayFor(a => a.DatTrongCount)</div>
-                    <div class="text-muted">@Html.DisplayNameFor(a => a.DatTrongCount)</div>
+        <div class="col-xs-12 col-md-6 col-lg-3">
+            <div class="panel panel-red panel-widget">
+                <div class="row no-padding">
+                    <div class="col-sm-3 col-lg-5 widget-left">
+                        <i class="fa fa-tree" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-9 col-lg-7 widget-right">
+                        <div class="large">@Html.DisplayFor(a => a.DatTrongCount)</div>
+                        <div class="text-muted">@Html.DisplayNameFor(a => a.DatTrongCount)</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-xs-12 col-md-6 col-lg-3">
-        <div class="panel panel-teal panel-widget">
-            <div class="row no-padding">
-                <div class="col-sm-3 col-lg-5 widget-left">
-                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                </div>
-                <div class="col-sm-9 col-lg-7 widget-right">
-                    <div class="large">@Html.DisplayFor(a => a.MemberCount)</div>
-                    <div class="text-muted">@Html.DisplayNameFor(a => a.MemberCount)</div>
+        <div class="col-xs-12 col-md-6 col-lg-3">
+            <div class="panel panel-teal panel-widget">
+                <div class="row no-padding">
+                    <div class="col-sm-3 col-lg-5 widget-left">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-9 col-lg-7 widget-right">
+                        <div class="large">@Html.DisplayFor(a => a.MemberCount)</div>
+                        <div class="text-muted">@Html.DisplayNameFor(a => a.MemberCount)</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div><!--/.row-->
+    </div><!--/.row-->
 }
 
 @if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))
 {
     @section headtag{
-<link rel="stylesheet" href="~/Content/claro.css">
+        <link rel="stylesheet" href="~/Content/claro.css">
         <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
         <link href="~/Content/admin-map.css" rel="stylesheet" />
         <script src="https://js.arcgis.com/3.20/"></script>
+
+
+    }
+    @section scripts{
+        <script>
+            var roles = [];
+            $.getJSON('@Url.Action("GetRoles")', function (response) {
+                for (var i in response) {
+                    roles.push(response[i]);
+                }
+            }
+            );
+
+        </script>
         <script src="~/Scripts/map/map-admin.js"></script>
     }
     <div class="row">
@@ -250,6 +266,9 @@
         <div class="col-xs-12 col-md-9 col-lg-9 tap-map" id="tabMapControl">
             <div id="mainContainer" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false">
                 <div id="map" dir="ltr" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+                    @*<div id="layerListPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">*@
+                    <div id="layerList"></div>
+                    @*</div>*@
                     <div id="LocateButton">
                     </div>
                     <div id="tableControl" class="dropdown map-control">
@@ -263,7 +282,7 @@
                         </ul>
                     </div>
                 </div>
-                <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true" >
+                <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true">
                     <div id="tableLayerSauBenh"></div>
                     <div id="tableDoanhNghiep"></div>
                     <div id="tableTrongTrot"></div>

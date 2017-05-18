@@ -47,5 +47,12 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         {
             return PartialView("~/Areas/Admin/Views/Shared/RightMenu");
         }
+        [Authorize]
+        public ActionResult GetRoles()
+        {
+            var query = from role in db.AspNetUsers.First(f => f.UserName.Equals(User.Identity.Name)).AspNetRoles
+                        select role.Id;
+            return Json(query.ToList(),JsonRequestBehavior.AllowGet);
+        }
     }
 }

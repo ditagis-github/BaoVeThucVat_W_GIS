@@ -43,6 +43,15 @@
     <Compile Include="MD5Util.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BVTV.Entity\BVTV.Entity.csproj">
+      <Project>{844a6b57-d1bb-4997-aa80-033a01593cc0}</Project>
+      <Name>BVTV.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

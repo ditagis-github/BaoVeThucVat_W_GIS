@@ -197,6 +197,7 @@
     <Compile Include="Areas\Admin\Controllers\TrongTrotController.cs" />
     <Compile Include="Areas\Admin\Interfaces\IChartJson.cs" />
     <Compile Include="Areas\Admin\Models\FeatureLayerViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\RolesManager.cs" />
     <Compile Include="Areas\Admin\Models\ViewModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

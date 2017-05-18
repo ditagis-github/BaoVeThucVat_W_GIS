@@ -51,6 +51,12 @@ div#home{
     left: 20px;
     z-index: 50;
 }
+#layerList{
+    position: absolute;
+    top: 165px;
+    left: 20px;
+    z-index: 50;
+}
 
 #editorDiv {
     font-size: 14px;
@@ -197,3 +203,4 @@ resultFormSearch table tr th:first-child {
         div#dojox_grid_DataGrid_0{
                 width: 100%;
         }
+

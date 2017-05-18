@@ -1,4 +1,5 @@
-﻿var map;
+﻿var map,basemap;
+var myWidget;
 
 require([
     "esri/config",
@@ -35,11 +36,12 @@ require([
     "esri/geometry/geometryEngine",
     "esri/InfoTemplate",
     "esri/renderers/HeatmapRenderer",
+    "esri/dijit/LayerList",
     "dojo/domReady!"
 ], function (
     esriConfig, Map, LocateButton, ArcGISDynamicMapServiceLayer, SnappingManager, Editor, FeatureLayer,Query,Point,Extent, GeometryService,
     Draw, keys, parser, arrayUtils, i18n, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
-    dom, domstyle, registry, domAttr, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer
+    dom, domstyle, registry, domAttr, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
 ) {
 
     parser.parse();
@@ -55,12 +57,12 @@ require([
 
     //This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications
     esriConfig.defaults.geometryService = new GeometryService("https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
-
+    var 
 
     map = new Map("map", {
-        basemap: "dark-gray",
-        zoom: 11,
-        center: [106.688166, 11.172618]
+        zoom: 12,
+        //center: [106.688166, 11.172618]
+        center: [106.3158585, 11.3191916]
     });
     var infoContentDesc = "<p>${numfatal:formatFatalities} died when a ${age} year old ${sex:formatGender} was involved in a fatal speeding accident.</p>";
     var infoContentDetails = "${atmcond:formatConditions}${conszone:formatWorkZone}${alcres:formatAlcoholTestResults}";
@@ -78,8 +80,35 @@ require([
     heatmapFeatureLayer.setRenderer(heatmapRenderer);
     map.addLayer(heatmapFeatureLayer);
     
-    var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer");
-    map.addLayer(dynamicMapServiceLayer);
+    basemap = new ArcGISDynamicMapServiceLayer("http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer");
+    //Phan quyen cap nhat theo huyen
+    var huyen = undefined;
+    for (let i in roles) {
+        let rl = roles[i];
+        if (rl.toString().length == 3) {
+            huyen = 'MaHuyenTP = ' + rl;
+        }
+    }
+    huyen = "MaHuyenTP = 218  | MaHuyenTP = 210";
+    if (huyen != undefined) {
+        var layerDefinitions = [];
+        layerDefinitions[0] = huyen;
+        layerDefinitions[1] = huyen;
+        layerDefinitions[2] = huyen;
+        layerDefinitions[3] = huyen;
+        layerDefinitions[4] = huyen;
+        layerDefinitions[5] = huyen;
+        layerDefinitions[6] = huyen;
+        layerDefinitions[7] = huyen;
+        layerDefinitions[8] = huyen;
+        layerDefinitions[9] = huyen;
+        basemap.setLayerDefinitions(layerDefinitions);
+    }
+
+    
+
+
+    map.addLayer(basemap);
     map.on("layers-add-result", initEditing);
 
     doanhNghiepLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0", {
@@ -215,7 +244,12 @@ require([
         map: map
     }, "LocateButton");
     geoLocate.startup();
-
+   myWidget = new LayerList({
+        map: map,
+        layers: basemap
+    }, "layerList");
+    myWidget.startup();
+    
     var query = new Query();
    
 
@@ -490,9 +524,4 @@ require([
     window.loadTableSauBenh = loadTableSauBenh;
     window.loadTableDoanhNghiep = loadTableDoanhNghiep;
     window.loadTableTrongTrot = loadTableTrongTrot;
-    $(document).ready(function () {
-        $('ul.dropdown-menu li').click(function (e) {
-           
-        });
-    });
 });
