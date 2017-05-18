@@ -944,7 +944,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder, select:-ms-input-pl
     margin: 8px 0;
 }
 
-@media only screen and (max-width: 479px) {
+@media only screen and (max-width: 759px) {
     .header-top-left {
         text-align: center;
     }
@@ -961,7 +961,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder, select:-ms-input-pl
     margin-bottom: 0;
 }
 
-@media only screen and (max-width: 479px) {
+@media only screen and (max-width: 759px) {
     .header-top-left p {
         display: block;
         line-height: 20px;
@@ -4385,4 +4385,8 @@ a.meanmenu-reveal i {
 
     .footer-bottom-area .author-credit p span {
         color: #ffffff;
+    }
+
+    .border{
+        border:1px solid #ececec;
     }

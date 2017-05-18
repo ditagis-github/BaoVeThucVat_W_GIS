@@ -26,7 +26,17 @@
                 </li>
                 @if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater") || User.IsInRole("tester"))
             {
-                    <li class="dropdown @Html.IsSelected(actions: "Index", controllers: "DoanhNghiep")">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0)">
+                            Biểu đồ
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Doanh nghiệp", "Chart", "DoanhNghiep")</li>
+                            <li>@Html.ActionLink("Tròng trọt", "Chart", "TrongTrot")</li>
+                        </ul>
+                    </li>
+                    @*<li class="dropdown @Html.IsSelected(actions: "Index", controllers: "DoanhNghiep")">
                         <a class="dropdown-toggle" href="@Url.Action("Index", "DoanhNghiep")">
                             Doanh nghiệp
                             <span class="caret"></span>
@@ -56,7 +66,7 @@
                             <li>@Html.ActionLink("Bản đồ", "Map", "TrongTrot").If(User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))</li>
                             <li>@Html.ActionLink("Biểu đồ", "Chart", "TrongTrot")</li>
                         </ul>
-                    </li>
+                    </li>*@
                 }
                 @*<li class="active"><a href="#">Trang chủ</a></li>
                     <li><a href="#">Giới thiệu</a></li>

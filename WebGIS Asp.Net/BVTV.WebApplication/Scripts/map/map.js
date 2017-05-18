@@ -231,26 +231,29 @@ require([
                 if (features.length > 0) {
                     for (var i = 0 ; i < features.length ; i++) {
                         var attr = features[i].attributes;
-                        var span = $('<span/>').text(attr[selectProperty[1]]).click(function () {
-                            query.where = [selectProperty[0], "='", attr[selectProperty[0]], "'"].join('');
+                        //var span = $('<span/>').text(attr[selectProperty[1]]).click(function () {
+                        //    query.where = [selectProperty[0], "='", attr[selectProperty[0]], "'"].join('');
 
-                            feature.queryFeatures(query).then(function (response) {
-                                if (response.features.length > 0) {
-                                    var f = response.features[0];
-                                    var p = response.features[0].geometry;
-                                    p.latitude = p.y, p.longitude = p.x;
-                                    view.goTo(p, { zoom: 15 });
-                                    view.goTo(f, { zoom: 15 });
+                        //    feature.queryFeatures(query).then(function (response) {
+                        //        if (response.features.length > 0) {
+                        //            var f = response.features[0];
+                        //            var p = response.features[0].geometry;
+                        //            p.latitude = p.y, p.longitude = p.x;
+                        //            view.goTo(p, { zoom: 15 });
+                        //            view.goTo(f, { zoom: 15 });
 
 
-                                }
+                        //        }
 
-                            })
-                        });;
+                        //    })
+                        //});;
                         var tr = $('<tr/>');
+                        tr.click(function () {
+                            console.log('ahihi')
+                        });
                         tr.append($('<td/>').text((i + 1) + ". "));
                         tr.append($('<td/>').text(attr[selectProperty[2]]));
-                        tr.append($('<td/>').append(span));
+                        tr.append($('<td/>').append(attr[selectProperty[1]]));
 
                         $(resultDom).append(tr);
 

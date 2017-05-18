@@ -57,7 +57,6 @@ require([
 
     //This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications
     esriConfig.defaults.geometryService = new GeometryService("https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
-    var 
 
     map = new Map("map", {
         zoom: 12,
@@ -130,8 +129,7 @@ require([
             alias: 'Mã sâu bệnh'
         }, {
             name: 'NhomCayTrong',
-            alias: 'Nhóm cây trồng',
-            editable: false //disable editing on this field 
+            alias: 'Nhóm cây trồng'
         }, {
             name: 'LoaiCayTrong',
             alias: 'Loại cây trồng'
@@ -361,7 +359,10 @@ require([
     }
     //add event to update combobox  when click tab-saubenh
     $('#a-tab-saubenh').on('click', function () {
-        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer);
+        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer),
+        loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer),
+        loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer);
+        
     });
 
 

@@ -16,7 +16,7 @@ namespace BVTV.WebApplication.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return View("Map");
         }
         public ActionResult About()
         {

@@ -609,7 +609,6 @@
     <Content Include="Content\img\Image-not-found.gif" />
     <Content Include="Content\img\logo-ditagis.png" />
     <Content Include="Content\img\logo.gif" />
-    <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\map\geocoder.png" />
     <Content Include="Content\login.css" />
     <Content Include="Content\lumino\charts.html" />
@@ -723,6 +722,7 @@
     <Content Include="Areas\Admin\Views\ManagerUser\Manage.cshtml" />
     <Content Include="Areas\Admin\Views\TrongTrot\Chart.cshtml" />
     <Content Include="Areas\Admin\Views\SauBenh\Chart.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Map.cshtml" />
     <None Include="Properties\PublishProfiles\bvtvbd.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartjs\chart.js" />
