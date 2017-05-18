@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
     @Styles.Render("~/css/hifugreen")
     @RenderSection("headtag",false)
     
@@ -27,7 +28,7 @@
                 <div class="container">
                     <div class="row">
                         <!-- Header Top Left -->
-                        <div class="header-top-left text-left col-md-12 col-sm-12 col-xs-12">
+                        <div class="header-top-left text-left col-md-12 col-sm-12 col-xs-12 hidden-xs">
                             <p><i class="fa fa-location-arrow" aria-hidden="true"></i>Đường Nguyễn Văn Lên - Phường Phú Lợi - TP. TDM - tỉnh Bình Dương</p>
                             <p><i class="fa fa-phone" aria-hidden="true"></i>06503-822215</p>
                             <p><i class="fa fa-fax" aria-hidden="true"></i>06503-822215</p>
@@ -49,7 +50,7 @@
                             <!-- Logo -->
                             <div class="header-logo float-left">
                                 <a class="logo" href="@Url.Action("Index")">
-                                    <img src="~/Content/hifugreen/img/LogoCCBVTV.JPG" alt="">
+                                    <img src="~/Content/img/logo.gif" alt="Bảo vệ thực vật bình dương - LOGO">
                                 </a>
                             </div>
                            @Html.Partial("Menu")

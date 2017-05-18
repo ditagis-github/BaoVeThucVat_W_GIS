@@ -101,8 +101,7 @@ require([
             alias: 'Mã sâu bệnh'
         }, {
             name: 'NhomCayTrong',
-            alias: 'Nhóm cây trồng',
-            editable: false //disable editing on this field 
+            alias: 'Nhóm cây trồng'
         }, {
             name: 'LoaiCayTrong',
             alias: 'Loại cây trồng'
@@ -327,7 +326,10 @@ require([
     }
     //add event to update combobox  when click tab-saubenh
     $('#a-tab-saubenh').on('click', function () {
-        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer), loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer);
+        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer),
+        loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer),
+        loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer);
+        
     });
 
 
@@ -490,9 +492,12 @@ require([
     window.loadTableSauBenh = loadTableSauBenh;
     window.loadTableDoanhNghiep = loadTableDoanhNghiep;
     window.loadTableTrongTrot = loadTableTrongTrot;
+
+    //bat su kien map-menu
     $(document).ready(function () {
         $('ul.dropdown-menu li').click(function (e) {
-           
+
         });
     });
+
 });

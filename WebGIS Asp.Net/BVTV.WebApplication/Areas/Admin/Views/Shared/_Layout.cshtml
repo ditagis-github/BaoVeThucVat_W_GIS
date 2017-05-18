@@ -6,16 +6,15 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
 
     <title>@ViewBag.Title - Quản trị - Cục Bảo vệ thực vật tỉnh Bình Dương</title>
-
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
     @Styles.Render("~/css/lumino")
     @RenderSection("headtag", false)
 </head>
 
 <body>
 
-           @Html.Partial("Menu")
-    @*@RenderPage("RightMenu.cshtml")*@
-        @RenderBody()
+    @Html.Partial("Menu")
+    @RenderBody()
     @Scripts.Render("~/js/lumino")
     @RenderSection("scripts", required: false)
     <script>

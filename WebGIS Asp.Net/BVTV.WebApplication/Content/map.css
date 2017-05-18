@@ -1,9 +1,12 @@
 ﻿
-#map{
+.tab-map,.tab-utilies{
     padding: 0;
     margin: 0;
     height: 600px;
-    width: 100%;
+}
+#map{
+    height:100%;
+    width:100%;
 }
 
 #tabAddDataContent {
