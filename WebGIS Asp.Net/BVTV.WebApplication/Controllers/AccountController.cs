@@ -388,7 +388,7 @@ namespace BVTV.WebApplication.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("", "");
+            return RedirectToAction("Login");
         }
 
         //

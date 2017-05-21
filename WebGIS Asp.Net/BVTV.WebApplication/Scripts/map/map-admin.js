@@ -1,6 +1,116 @@
-﻿var map,basemap;
-var myWidget;
+﻿
+var mapconfigs = {
+    basemapUrl: "http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer",
+    doanhNghiepUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0",
+    sauBenhUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1",
+    trongTrotUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2"
+};
+require(["esri/tasks/query",
+    "esri/geometry/Point",
+    "esri/geometry/Extent"
+], function (Query, Point, Extent) {
+    var SearchEvent = {
+        options: {
+            domId: undefined,
+            feature: undefined,
+            arrAttribute: undefined,
+            selectProperty: undefined
+        },
+        init: function (options) {
+            for (var i in options) {
+                this.options[i] = options[i];
+            }
+        },
+        _findClick: function () {
 
+        },
+        _getQuery: function () {
+            var query = new Query();
+
+            arrAttribute.forEach(function (value, index) {
+                var domValue = $("#" + value.dom).val();
+                var where =['1=1'];
+                if (domValue.length > 0) {
+                    where.push(value.property + " LIKE N'%" + domValue + "%'");
+                }
+            });
+            where.join(' AND');
+            query.where = where;
+            return query;
+        },
+        _selectFeatures: function () {
+            var viewPoint = this._viewPoint;
+            this.options.feature.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (features) {
+                var html = "";
+                for (var i = 0 ; i < features.length ; i++) {
+                    var attr = features[i].attributes;
+                    var span = $('<span/>').text(attr[selectProperty[1]]).attr('alt', attr[selectProperty[0]]).click(function () {
+                        var where = [selectProperty[0], "='", this.attributes['alt'].nodeValue, "'"].join('');
+                        console.log(where);
+                        viewPoint(where, feature)
+                    });;
+                    var tr = $('<tr/>');
+                    tr.append($('<td/>').text((i + 1) + ". "));
+                    tr.append($('<td/>').text(attr[selectProperty[2]]));
+                    tr.append($('<td/>').append(span));
+
+                    $(resultDom).append(tr);
+
+                }
+                $(counterDom).html(features.length);
+                $(".loading").css("display", "none");
+
+            });
+        },
+        _viewPoint: function (value, layer) {
+            query.where = value;
+            query.returnGeometry = true;
+            query.outFields = ["*"];
+            layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+                if (results.length > 0) {
+                    var feat = results[0];
+                    var point = feat.geometry;
+                    // var graphic1 = new esri.Graphic(point, ptSymbol1);
+
+                    var pt = new Point(point.x, point.y, map.spatialReference);
+                    if (pt) {
+                        var extent = new Extent((point.x + 40), (point.y + 40), (point.x - 40), (point.y - 40), map.spatialReference);
+                        var stateExtent = extent.expand(5.0);
+                        map.setExtent(stateExtent);
+                    }
+                }
+            });
+        }, _viewPolygon: function (value, layer) {
+            var query = new Query();
+            query.returnGeometry = true;
+            query.outFields = ["*"];
+            query.where = value;
+            layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
+                if (results.length > 0) {
+                    var feat = results[0];
+                    var point = feat.geometry;
+                    // var graphic1 = new esri.Graphic(point, ptSymbol1);
+                    var stateExtent = point.getExtent().expand(8.0);
+                    map.setExtent(stateExtent);
+                }
+            });
+        }
+    }
+});
+function getDefinition() {
+    var result = [];
+    for (let i in roles) {
+        let rl = roles[i].toString();
+        //kiem tra ma role co bat dau bang chu MH hay khong
+        if (rl.startsWith('MH')) {
+            result.push('MaHuyenTP = ' + rl.slice(2, rl.length));
+        }
+    }
+    result = result.join(' or ');
+    return result;
+}
+//khai bao bien
+var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMapLayer;
 require([
     "esri/config",
     "esri/map",
@@ -39,183 +149,82 @@ require([
     "esri/dijit/LayerList",
     "dojo/domReady!"
 ], function (
-    esriConfig, Map, LocateButton, ArcGISDynamicMapServiceLayer, SnappingManager, Editor, FeatureLayer,Query,Point,Extent, GeometryService,
+    esriConfig, Map, LocateButton, ArcGISDynamicMapServiceLayer, SnappingManager, Editor, FeatureLayer, Query, Point, Extent, GeometryService,
     Draw, keys, parser, arrayUtils, i18n, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
     dom, domstyle, registry, domAttr, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
 ) {
-
+    
     parser.parse();
 
-    //snapping is enabled for this sample - change the tooltip to reflect this
-    i18n.toolbars.draw.start += "<br/>Press <b>CTRL</b> to enable snapping";
-    i18n.toolbars.draw.addPoint += "<br/>Press <b>CTRL</b> to enable snapping";
 
-    //This sample requires a proxy page to handle communications with the ArcGIS Server services. You will need to
-    //replace the url below with the location of a proxy on your machine. See the 'Using the proxy page' help topic
-    //for details on setting up a proxy page.
-    esriConfig.defaults.io.proxyUrl = "/proxy/";
-
-    //This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications
-    esriConfig.defaults.geometryService = new GeometryService("https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
     map = new Map("map", {
-        zoom: 12,
-        //center: [106.688166, 11.172618]
-        center: [106.3158585, 11.3191916]
+        basemap: "dark-gray",
+        zoom: 10,
+        center: [106.725785, 11.188761 ],
+        logo: false
     });
-    var infoContentDesc = "<p>${numfatal:formatFatalities} died when a ${age} year old ${sex:formatGender} was involved in a fatal speeding accident.</p>";
-    var infoContentDetails = "${atmcond:formatConditions}${conszone:formatWorkZone}${alcres:formatAlcoholTestResults}";
-    var infoContent = infoContentDesc + infoContentDetails;
-    var infoTemplate = new InfoTemplate("Accident details", infoContent);
-
-    var serviceURL = "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1";
-    var heatmapFeatureLayerOptions = {
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"],
-        maxScale: 22000
-    };
-    var heatmapFeatureLayer = new FeatureLayer(serviceURL,  heatmapFeatureLayerOptions);
-    var heatmapRenderer = new HeatmapRenderer();
-    heatmapFeatureLayer.setRenderer(heatmapRenderer);
-    map.addLayer(heatmapFeatureLayer);
-    
-    basemap = new ArcGISDynamicMapServiceLayer("http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer");
-    //Phan quyen cap nhat theo huyen
-    var huyen = undefined;
-    for (let i in roles) {
-        let rl = roles[i];
-        if (rl.toString().length == 3) {
-            huyen = 'MaHuyenTP = ' + rl;
-        }
-    }
-    huyen = "MaHuyenTP = 218  | MaHuyenTP = 210";
-    if (huyen != undefined) {
-        var layerDefinitions = [];
-        layerDefinitions[0] = huyen;
-        layerDefinitions[1] = huyen;
-        layerDefinitions[2] = huyen;
-        layerDefinitions[3] = huyen;
-        layerDefinitions[4] = huyen;
-        layerDefinitions[5] = huyen;
-        layerDefinitions[6] = huyen;
-        layerDefinitions[7] = huyen;
-        layerDefinitions[8] = huyen;
-        layerDefinitions[9] = huyen;
-        basemap.setLayerDefinitions(layerDefinitions);
-    }
-
-    
-
-
-    map.addLayer(basemap);
     map.on("layers-add-result", initEditing);
-
-    doanhNghiepLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0", {
-        mode: FeatureLayer.MODE_ONDEMAND,
-        outFields: ["*"]
-    });
-    sauBenhLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1", {
-        mode: FeatureLayer.MODE_ONDEMAND,
-        outFields: ["*"],
-        title: "Sâu bệnh",
-        minScale:22000,
-        fields: [{
-            name: 'OBJECTID',
-            alias: 'Nhóm cây trồng',
-            visible: false,
-            editable: false //disable editing on this field 
-        }, {
-            name: 'MaSauBenh',
-            alias: 'Mã sâu bệnh'
-        }, {
-            name: 'NhomCayTrong',
-            alias: 'Nhóm cây trồng'
-        }, {
-            name: 'LoaiCayTrong',
-            alias: 'Loại cây trồng'
-        }, {
-            name: 'TenSauBenhGayHai',
-            alias: 'Tên sâu bệnh gây hại'
-        }, {
-            name: 'MatDoSauBenhGayHai',
-            alias: 'Mật độ'
-        }, {
-            name: 'PhamViAnhHuong',
-            alias: 'Phạm vi ảnh huoqngr'
-        }, {
-            name: 'MucDoAnhHuong',
-            alias: 'Mức độ ảnh hưởng'
-        }, {
-            name: 'ThoiGianGayHai',
-            alias: 'Thời gian gây hại'
-        }, {
-            name: 'CapDoGayHai',
-            alias: 'Cấp độ gây hại'
-        }, {
-            name: 'TinhHinhKiemSoatDichBenh',
-            alias: 'Tình hình kiểm soát dịch bệnh'
-        }, {
-            name: 'BienPhapXuLy',
-            alias: 'Biện pháp xử lý'
-        }, {
-            name: 'DienTich',
-            alias: 'Diện tích'
-        }, {
-            name: 'MaHuyenTP',
-            alias: 'Huyện/TP',
-            format: {
-
-            }
-        }, {
-            name: 'GiaiDoanSinhTruong',
-            alias: 'Giai đoạn sinh trưởng'
-        }, {
-            name: 'NgayCapNhat',
-            alias: 'Ngày cập nhật'
-        }, {
-            name: 'NguoiCapNhat',
-            alias: 'Người cập nhật'
-        }, {
-            name: 'NgayXuatHien',
-            alias: 'Ngày xuất hiện'
-        }, {
-            name: 'SauBenhGayHai',
-            alias: 'Sâu bệnh gây hại',
-            visible: false
-        }],
-        popupTemplate: {
-            title: "{TenSauBenhGayHai}",
-            content: "<table>" +
-                "<tr><td>Nhóm cây trồng: </td><td>{NhomCayTrong}</td></tr>" +
-                "<tr><td>Loại cây trồng: {LoaiCayTrong}</td></tr>" +
-                "<tr><td>Tên sâu bệnh gây hại: </td><td>{TenSauBenhGayHai}</td></tr>" +
-                "<tr><td>Mật độ sâu bệnh gây hại: </td><td>{MatDoSauBenhGayHai}</td></tr>" +
-                "<tr><td>Phạm vi ảnh ưởng: </td><td>{PhamViAnhHuong}</td></tr>" +
-                "<tr><td>Mức độ ảnh hưởng: </td><td>{MucDoAnhHuong}</td></tr>" +
-                "<tr><td>Thời gian gây hại: </td><td>{ThoiGianGayHai}</td></tr>" +
-                "<tr><td>Cấp độ gây hại: </td><td>{CapDoGayHai}</td></tr>" +
-                "<tr><td>Tình hình kiểm soát dịch: </td><td>{TinhHinhKiemSoatDichBenh}</td></tr>" +
-                "<tr><td>Mức độ kiểm soát: </td><td>{MucDoKiemSoat}</td></tr>" +
-                "<tr><td>Biện pháp xử lý: </td><td>{BienPhapXuLy}</td></tr>" +
-                "<tr><td>Diện tích: </td><td>{DienTich}</td></tr>" +
-                "<tr><td>Huyện/TP: </td><td>{MaHuyenTP}</td></tr>" +
-                "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td></tr>" +
-                "</table>"
+    var definition = getDefinition();
+    initBasemap();
+    initFeatureLayer();
+    initWidget();
+  
+    function initBasemap() {
+        basemap = new ArcGISDynamicMapServiceLayer(mapconfigs.basemapUrl);
+        basemap.setVisibleLayers([5, 6, 8, 9]);
+        //Phan quyen cap nhat theo huyen
+        
+        if (definition != undefined && definition != '') {
+            var layerDefinitions = [];
+            layerDefinitions[0] = definition;
+            layerDefinitions[1] = definition;
+            layerDefinitions[2] = definition;
+            layerDefinitions[3] = definition;
+            layerDefinitions[4] = definition;
+            layerDefinitions[5] = definition;
+            layerDefinitions[6] = definition;
+            layerDefinitions[7] = definition;
+            layerDefinitions[8] = definition;
+            layerDefinitions[9] = definition;
+            basemap.setLayerDefinitions(layerDefinitions);
         }
-    });
-    
-    suDungDatTrongLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/3", {
-        mode: FeatureLayer.MODE_ONDEMAND,
-        outFields: ["*"]
-    });
-    trongTrotLayer = new FeatureLayer("http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2", {
-        mode: FeatureLayer.MODE_ONDEMAND,
-        outFields: ["*"]
-    });
 
 
-    map.addLayers([trongTrotLayer, suDungDatTrongLayer, sauBenhLayer, doanhNghiepLayer]);
-    map.infoWindow.resize(400, 300);
+
+
+        map.addLayer(basemap);
+    }
+
+    function initFeatureLayer() {
+        doanhNghiepLayer = new FeatureLayer(mapconfigs.doanhNghiepUrl, {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"]
+        });
+        sauBenhLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            title: "Sâu bệnh",
+            minScale: 22000
+        });
+
+        trongTrotLayer = new FeatureLayer(mapconfigs.trongTrotUrl, {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"]
+        });
+        sauBenhHeatMapLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
+            mode: FeatureLayer.MODE_SNAPSHOT,
+            outFields: ["*"],
+            maxScale: 22000
+        });
+        if (definition != undefined && definition != '') {
+            doanhNghiepLayer.setDefinitionExpression(definition);
+            trongTrotLayer.setDefinitionExpression(definition);
+            sauBenhLayer.setDefinitionExpression(definition);
+            sauBenhHeatMapLayer.setDefinitionExpression(definition);
+        }
+        map.addLayers([trongTrotLayer, sauBenhLayer, sauBenhHeatMapLayer, doanhNghiepLayer]);
+    };
 
     function initEditing(event) {
         var featureLayerInfos = arrayUtils.map(event.layers, function (layer) {
@@ -238,18 +247,25 @@ require([
         //specify "snapKey" option only if you want a different key combination for snapping
         map.enableSnapping();
     }
-    var geoLocate = new LocateButton({
-        map: map
-    }, "LocateButton");
-    geoLocate.startup();
-   myWidget = new LayerList({
-        map: map,
-        layers: basemap
-    }, "layerList");
-    myWidget.startup();
-    
+
+    function initWidget() {
+        var geoLocate = new LocateButton({
+            map: map
+        }, "LocateButton"),
+        layerList = new LayerList({
+            map: map,
+            layers: [{
+                layer: basemap,
+                id: 'Dữ liệu nền Bình Dương'
+            }],
+        }, "layerList");
+
+        geoLocate.startup();
+        layerList.startup();
+    }
+
     var query = new Query();
-   
+
 
     function addSearchEvent(domId, feature, arrAttribute, selectProperty) {
 
@@ -268,27 +284,27 @@ require([
             $(".loading").css("display", "inline-block");
             $(resultDom).html('');
             $(counterDom).html('');
-           
+
             query.where = where;
 
             feature.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (features) {
                 var html = "";
-                    for (var i = 0 ; i < features.length ; i++) {
-                        var attr = features[i].attributes;
-                        var span = $('<span/>').text(attr[selectProperty[1]]).attr('alt', attr[selectProperty[0]]).click(function () {
-                            var where = [selectProperty[0], "='", this.attributes['alt'].nodeValue, "'"].join('');
-                            console.log(where);
-                            viewPoint(where, feature)
-                        });;
-                        var tr = $('<tr/>');
-                        tr.append($('<td/>').text((i + 1) + ". "));
-                        tr.append($('<td/>').text(attr[selectProperty[2]]));
-                        tr.append($('<td/>').append(span));
+                for (var i = 0 ; i < features.length ; i++) {
+                    var attr = features[i].attributes;
+                    var span = $('<span/>').text(attr[selectProperty[1]]).attr('alt', attr[selectProperty[0]]).click(function () {
+                        var where = [selectProperty[0], "='", this.attributes['alt'].nodeValue, "'"].join('');
+                        console.log(where);
+                        viewPoint(where, feature)
+                    });;
+                    var tr = $('<tr/>');
+                    tr.append($('<td/>').text((i + 1) + ". "));
+                    tr.append($('<td/>').text(attr[selectProperty[2]]));
+                    tr.append($('<td/>').append(span));
 
-                        $(resultDom).append(tr);
+                    $(resultDom).append(tr);
 
-                    }
-                    $(counterDom).html(features.length);
+                }
+                $(counterDom).html(features.length);
                 $(".loading").css("display", "none");
 
             });
@@ -362,7 +378,7 @@ require([
         loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer),
         loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer),
         loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer);
-        
+
     });
 
 
@@ -384,7 +400,9 @@ require([
 
     //add event to update combobox  when click tab-trongtrot
     $('#a-tab-trongtrot').first().on('click', function () {
-        loadData('#tab-trongtrot #cbNhomCayTrong', 'NhomCayTrong', trongTrotLayer), loadData('#tab-trongtrot #cbLoaiCayTrong', 'LoaiCayTrong', trongTrotLayer), loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
+        loadData('#tab-trongtrot #cbNhomCayTrong', 'NhomCayTrong', trongTrotLayer),
+         loadData('#tab-trongtrot #cbLoaiCayTrong', 'LoaiCayTrong', trongTrotLayer),
+         loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
     });
 
 
@@ -478,8 +496,8 @@ require([
         if (!isLoadTable.sauBenh) {
             loadTable(sauBenhLayer, 'tableLayerSauBenh');
             isLoadTable.sauBenh = true;
-        //    //isLoadTable.trongTrot = false;
-        //    //isLoadTable.doanhNghiep = false;
+            //    //isLoadTable.trongTrot = false;
+            //    //isLoadTable.doanhNghiep = false;
         }
         document.getElementById('tableDoanhNghiep').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'none';
@@ -490,13 +508,13 @@ require([
     function loadTableDoanhNghiep() {
         if (!isLoadTable.doanhNghiep) {
             loadTable(doanhNghiepLayer, 'tableDoanhNghiep');
-           isLoadTable.doanhNghiep = true;
-        //    //isLoadTable.trongTrot = false;
-        //    //isLoadTable.sauBenh = false;
+            isLoadTable.doanhNghiep = true;
+            //    //isLoadTable.trongTrot = false;
+            //    //isLoadTable.sauBenh = false;
         }
-        
+
         console.log($(".dijitContentPane").height());
-       
+
         document.getElementById('tableLayerSauBenh').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'none';
         document.getElementById('tableDoanhNghiep').style.display = 'block';
@@ -508,16 +526,16 @@ require([
             loadTable(trongTrotLayer, 'tableTrongTrot');
             isLoadTable.trongTrot = true;
         }
-       
+
         document.getElementById('tableDoanhNghiep').style.display = 'none';
         document.getElementById('tableLayerSauBenh').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'block';
         resizeSplitter($("#contentPane").height());
     }
-    
+
 
     var isLoadTable = {
-        firstClick:true,
+        firstClick: true,
         sauBenh: false,
         trongTrot: false,
         doanhNghiep: false

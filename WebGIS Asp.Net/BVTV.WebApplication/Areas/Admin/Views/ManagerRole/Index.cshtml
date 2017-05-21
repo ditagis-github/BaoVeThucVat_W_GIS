@@ -13,8 +13,8 @@
 <table class="table table-borderer">
     <thead>
         <tr>
-            <th data-field="id">@Html.DisplayNameFor(model => model.Id)</th>
-            <th data-sortable="true">@Html.DisplayNameFor(model => model.Name)</th>
+            <th data-field="id">Mã quyền</th>
+            <th data-sortable="true">Tên quyền</th>
             <th>Tác vụ</th>
         </tr>
     </thead>
@@ -29,7 +29,7 @@
 
             <td>@item.Name</td>
 
-            <td>@Html.ActionLink("Xóa", "Delete", new { id = item.Id })</td>
+            <td>@Html.ActionLink("Xóa", "Delete", new { id = item.Id }) | @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.Id })</td>
 
         </tr>
 

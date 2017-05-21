@@ -82,35 +82,8 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             //tìm một một model sử dụng EF(entity framework) với id truyền vào
             ApplicationUser model = context.Users.Find(Id);
 
-            //ApplicationUserCustom model = new ApplicationUserCustom
-            //{
-            //    AccessFailedCount = au.AccessFailedCount,
-            //    DisplayName = au.DisplayName,
-            //    Email = au.Email,
-            //    Id = au.Id,
-            //    RolesCustom = from rl in au.Roles
-            //                  select new RoleCustom
-            //                  {
-            //                      RoleId = rl.RoleId,
-            //                      RoleName = context.Roles.First(f => f.Id.Equals(rl.RoleId)).Name,
-            //                      UserId = rl.UserId
-            //                  }
-            
-            //};
-
             //set một combobox tất cả các quyền mà user chưa có
             ViewBag.RoleId = new SelectList(context.Roles.ToList().Where(item => model.Roles.FirstOrDefault(r => r.RoleId == item.Id) == null).ToList(), "Id", "Name");
-
-            ////tạo roles name gán vào Viewbag để hiển thị ở ViewỀ
-            //var roleQuery = from role in context.Roles.ToList()
-            //                join mdRole in model.Roles.ToList() on role.Id equals mdRole.RoleId
-            //                select new
-            //                {
-            //                    RoleId = mdRole.RoleId,
-            //                    UserId = mdRole.UserId,
-            //                    RoleName = role.Name
-            //                };
-            //ViewBag.RolesName = roleQuery.ToList();
             return View(model);
 
         }

@@ -16,20 +16,20 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
     public class DoanhNghiepController : Controller,IChartJson,IFeatureLayerController
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         // GET: Admin/DoanhNghiep
         public ActionResult Index()
         {
             return View(db.DOANHNGHIEPs.ToList());
         }
         // GET: Admin/DoanhNghiep/Map
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         public ActionResult Map()
         {
             return View();
         }
         // GET: Admin/DoanhNghiep/Details/5
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -46,7 +46,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
         
         // GET: Admin/DoanhNghiep/Create
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult Create()
         {
             return View();
@@ -54,7 +54,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 
 
         // GET: Admin/DoanhNghiep/Edit/5
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -72,7 +72,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/DoanhNghiep/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "MaDoanhNghiep,NguoiDaiDienDoanhNghiep,SoNha,TenDuong,PhuongXa,QuanHuyen,Website,DiaChiKho,TenCBPhuTrach,DienThoai,Fax,Email,LoaiDonViSXKD,DanhMucSanPham,GiayPhepSXKD,SanLuongTrongNam,GiayCNDuDieuKienSXKD,DanhGiaXepLoai,ThoiGianThanhTra,NguyenNhanThanhTra,HinhThucPhat,MucPhat,MaHoSoLuuTru,SoLanViPham")] DOANHNGHIEP dOANHNGHIEP)
@@ -87,7 +87,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/DoanhNghiep/Delete/5
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -105,7 +105,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/DoanhNghiep/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult DeleteConfirmed(int id)
         {
             DOANHNGHIEP dOANHNGHIEP = db.DOANHNGHIEPs.Find(id);

@@ -14,20 +14,20 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
 
         // GET: Admin/SauBenh
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         public ActionResult Index()
         {
             return View(db.SAUBENHs.ToList());
         }
         // GET: Admin/SauBenh/Map
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         public ActionResult Map()
         {
             return View();
         }
 
         // GET: Admin/SauBenh/Details/5
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -43,7 +43,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/SauBenh/Edit/5
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -61,7 +61,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         // POST: Admin/SauBenh/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OBJECTID,NhomCayTrong,LoaiCayTrong,TenSauBenhGayHai,MatDoSauBenhGayHai,PhamViAnhHuong,MucDoAnhHuong,ThoiGianGayHai,CapDoGayHai,TinhHinhKiemSoatDichBenh,MucDoKiemSoat,BienPhapXuLy,DienTich,MaHuyenTP,GiaiDoanSinhTruong,NgayCapNhat,NguoiCapNhat,MaSauBenh,SHAPE")] SAUBENH sAUBENH)
@@ -76,7 +76,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // GET: Admin/SauBenh/Delete/5
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -92,7 +92,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
         }
 
         // POST: Admin/SauBenh/Delete/5
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -124,7 +124,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 
             return Json(query.ToList(), JsonRequestBehavior.AllowGet);
         }
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         public ActionResult Chart()
         {
             return View();

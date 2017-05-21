@@ -9,16 +9,16 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
 {
     public interface IFeatureLayerController
     {
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         ActionResult Index();
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         ActionResult Map();
         ActionResult Details(int? id);
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         ActionResult Create();
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         ActionResult Chart();
-        [Authorize(Roles = "admin,testerandupdater,tester")]
+        [Authorize(Roles = "admin,tester")]
         ActionResult Search();
     }
 }

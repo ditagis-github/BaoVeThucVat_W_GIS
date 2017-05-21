@@ -16,7 +16,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
     {
         private BaoVeThucVatEntities db = new BaoVeThucVatEntities();
         // GET: Admin/TrongTrot
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         public ActionResult Index()
         {
             var data = db.TRONGTROTs.Take(100).ToList();
@@ -31,12 +31,12 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             return View(data);
         }
         // GET: Admin/TrongTrot
-        [Authorize(Roles = "admin,updater,testerandupdater,tester")]
+        [Authorize(Roles = "admin,updater,tester")]
         public ActionResult Map()
         {
             return View();
         }
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         // GET: Admin/TrongTrot/Details/5
         public ActionResult Details(int? id)
         {
@@ -51,7 +51,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         // GET: Admin/TrongTrot/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -66,7 +66,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         // POST: Admin/TrongTrot/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -82,7 +82,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         // GET: Admin/TrongTrot/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -97,7 +97,7 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             }
             return View(tRONGTROT);
         }
-        [Authorize(Roles = "admin,updater,testerandupdater")]
+        [Authorize(Roles = "admin,updater")]
         // POST: Admin/TrongTrot/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

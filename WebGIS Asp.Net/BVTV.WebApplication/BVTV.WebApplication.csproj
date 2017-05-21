@@ -244,7 +244,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ViewModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Content\admin-map.css" />
+    <Content Include="Content\map-admin.css" />
     <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -561,7 +561,7 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Content\material-design-iconic-font.min.css" />
     <Content Include="Content\hifugreen\css\plugins.css" />
-    <Content Include="Content\hifugreen\css\style.css" />
+    <Content Include="Content\hifugreen\css\hifugreen.css" />
     <Content Include="fonts\Material-Design-Iconic-Font.svg" />
     <Content Include="Content\hifugreen\img\1%281%29.jpg" />
     <Content Include="Content\hifugreen\img\1%282%29.jpg" />
@@ -614,7 +614,7 @@
     <Content Include="Content\lumino\charts.html" />
     <Content Include="Content\lumino\css\datepicker.css" />
     <Content Include="Content\lumino\css\datepicker3.css" />
-    <Content Include="Content\lumino\css\styles.css" />
+    <Content Include="Content\lumino\css\admin.css" />
     <Content Include="Content\lumino\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\lumino\forms.html" />
     <Content Include="Content\lumino\icons.html" />
@@ -723,6 +723,7 @@
     <Content Include="Areas\Admin\Views\TrongTrot\Chart.cshtml" />
     <Content Include="Areas\Admin\Views\SauBenh\Chart.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Map.cshtml" />
+    <Content Include="Areas\Admin\Views\ManagerRole\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\bvtvbd.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartjs\chart.js" />
