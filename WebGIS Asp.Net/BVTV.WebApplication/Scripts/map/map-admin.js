@@ -231,8 +231,6 @@ require([
                 featureLayer: sauBenhLayer
             },{
                 featureLayer: doanhNghiepLayer
-            }, {
-                featureLayer: trongTrotLayer
             }]
         };
         var params = {
@@ -248,18 +246,20 @@ require([
         var drawToolbar = new Draw(map);
         on(dom.byId('addDNFL'), 'click', function () {
             drawToolbar.activate(Draw.POINT);
-            drawToolbar.on("draw-end", function (evt) {
+            let event = drawToolbar.on("draw-end", function (evt) {
                 drawToolbar.deactivate();
                 var newGraphic = new Graphic(evt.geometry, null, { });
                 doanhNghiepLayer.applyEdits([newGraphic], null, null);
+                event.remove();
             });
         });
         on(dom.byId('addSBFL'), 'click', function () {
             drawToolbar.activate(Draw.POINT);
-            drawToolbar.on("draw-end", function (evt) {
+            let event = drawToolbar.on("draw-end", function (evt) {
                 drawToolbar.deactivate();
                 var newGraphic = new Graphic(evt.geometry, null, { CapDoGayHai: 1 });
                 sauBenhLayer.applyEdits([newGraphic], null, null);
+                event.remove();
             });
         });
         
