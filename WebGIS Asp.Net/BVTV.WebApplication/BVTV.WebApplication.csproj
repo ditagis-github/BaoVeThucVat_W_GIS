@@ -244,6 +244,8 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ViewModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Content\images\dialogCloseIcon.png" />
+    <Content Include="Content\images\spriteArrows.png" />
     <Content Include="Content\map-admin.css" />
     <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\bootstrap-theme.css" />

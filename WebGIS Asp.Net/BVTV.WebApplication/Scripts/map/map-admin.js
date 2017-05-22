@@ -119,7 +119,6 @@ require([
     "esri/map",
     "esri/dijit/LocateButton",
     "esri/layers/ArcGISDynamicMapServiceLayer",
-    "esri/SnappingManager",
     "esri/dijit/editing/Editor",
     "esri/layers/FeatureLayer",
     "esri/tasks/query",
@@ -127,10 +126,9 @@ require([
     "esri/geometry/Extent",
     "esri/tasks/GeometryService",
     "esri/toolbars/draw",
-    "dojo/keys",
+    "esri/dijit/editing/TemplatePicker",
     "dojo/parser",
     "dojo/_base/array",
-    "dojo/i18n!esri/nls/jsapi",
     "dijit/layout/BorderContainer",
     "dijit/layout/ContentPane",
     "esri/dijit/FeatureTable",
@@ -139,7 +137,6 @@ require([
     "dojo/dom",
     "dojo/dom-style",
     "dijit/registry",
-    "dojo/dom-attr",
     "dojo/ready",
     "dojo/on",
     "esri/Color",
@@ -152,22 +149,19 @@ require([
     "esri/dijit/LayerList",
     "dojo/domReady!"
 ], function (
-    esriConfig, Map, LocateButton, ArcGISDynamicMapServiceLayer, SnappingManager, Editor, FeatureLayer, Query, Point, Extent, GeometryService,
-    Draw, keys, parser, arrayUtils, i18n, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
-    dom, domstyle, registry, domAttr, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
+    esriConfig, Map, LocateButton, ArcGISDynamicMapServiceLayer, Editor, FeatureLayer, Query, Point, Extent, GeometryService,
+    Draw,TemplatePicker, parser, arrayUtils, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
+    dom, domstyle, registry, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
 ) {
 
     parser.parse();
-
-
-
     map = new Map("map", {
         basemap: "dark-gray",
         zoom: 10,
         center: [106.725785, 11.188761],
         logo: false
     });
-    //map.on("layers-add-result", initEditing);
+    map.on("layers-add-result", initEditing);
     var definition = getDefinition();
     initBasemap();
     initFeatureLayer();
@@ -207,7 +201,6 @@ require([
         sauBenhLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"],
-            title: "Sâu bệnh",
             minScale: 22000
         });
 
@@ -226,19 +219,21 @@ require([
             sauBenhLayer.setDefinitionExpression(definition);
             sauBenhHeatMapLayer.setDefinitionExpression(definition);
         }
-        map.addLayers([trongTrotLayer, sauBenhLayer, sauBenhHeatMapLayer, doanhNghiepLayer]);
+        var heatmapRenderer = new HeatmapRenderer();
+        sauBenhHeatMapLayer.setRenderer(heatmapRenderer);
+        map.addLayers([trongTrotLayer, sauBenhLayer,sauBenhHeatMapLayer, doanhNghiepLayer]);
     };
 
     function initEditing(event) {
-        var featureLayerInfos = arrayUtils.map(event.layers, function (layer) {
-            return {
-                "featureLayer": layer.layer
-            };
-        });
-
         var settings = {
             map: map,
-            layerInfos: featureLayerInfos
+            layerInfos: [{
+                featureLayer: sauBenhLayer
+            },{
+                featureLayer: doanhNghiepLayer
+            }, {
+                featureLayer: trongTrotLayer
+            }]
         };
         var params = {
             settings: settings
@@ -246,9 +241,28 @@ require([
         var editorWidget = new Editor(params, 'editorDiv');
         editorWidget.startup();
 
-        //snapping defaults to Cmd key in Mac & Ctrl in PC.
-        //specify "snapKey" option only if you want a different key combination for snapping
-        map.enableSnapping();
+        ////snapping defaults to Cmd key in Mac & Ctrl in PC.
+        ////specify "snapKey" option only if you want a different key combination for snapping
+        //map.enableSnapping();
+
+        var drawToolbar = new Draw(map);
+        on(dom.byId('addDNFL'), 'click', function () {
+            drawToolbar.activate(Draw.POINT);
+            drawToolbar.on("draw-end", function (evt) {
+                drawToolbar.deactivate();
+                var newGraphic = new Graphic(evt.geometry, null, { });
+                doanhNghiepLayer.applyEdits([newGraphic], null, null);
+            });
+        });
+        on(dom.byId('addSBFL'), 'click', function () {
+            drawToolbar.activate(Draw.POINT);
+            drawToolbar.on("draw-end", function (evt) {
+                drawToolbar.deactivate();
+                var newGraphic = new Graphic(evt.geometry, null, { CapDoGayHai: 1 });
+                sauBenhLayer.applyEdits([newGraphic], null, null);
+            });
+        });
+        
     }
 
     function initWidget() {
@@ -440,15 +454,15 @@ require([
         //    where.push("OBJECTID LIKE N'%" + arguments.OBJECTID + "%'");
         //}
         for (var i in arguments) {
-            if(arguments[i])
-            where.push(i + " LIKE N'%" + arguments[i] + "%'");
+            if (arguments[i])
+                where.push(i + " LIKE N'%" + arguments[i] + "%'");
         }
         query.where = where.join(' AND ');
         let objectid = [];
-        if(type = "DN")
+        if (type = "DN")
             doanhNghiepLayer.selectFeatures(query);
         if (type = "SB")
             sauBenhLayer.selectFeatures(query);
     }
-    
+
 });

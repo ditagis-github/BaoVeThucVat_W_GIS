@@ -251,12 +251,10 @@
                 </div>
             </div>*@
 
-       
+
         <div id="mainContainer" class="col-lg-12" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false">
             <div id="map" dir="ltr" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-                @*<div id="layerListPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">*@
                 <div id="layerList"></div>
-                @*</div>*@
                 <div id="LocateButton">
                 </div>
                 <div id="tableControl" class="dropdown map-control">
@@ -269,6 +267,15 @@
                         <li><a onclick="loadTableTrongTrot();" href="javascript:void(0)">Trồng trọt</a></li>
                     </ul>
                 </div>
+                <div id="addFeatureControl" class="dropdown map-control">
+                    <button type="button" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon glyphicon-plus"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a id="addDNFL" href="javascript:void(0)">Doanh nghiệp</a></li>
+                        <li><a  id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
+                    </ul>
+                </div>
             </div>
             <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true">
                 <div id="tableLayerSauBenh"></div>
@@ -279,8 +286,7 @@
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmDoanhNghiep" title="Tìm kiếm doanh nghiệp"
          execute="findRecordsDN(dojo.toJson(arguments[0], true),'DN')">
-        @*doanh nghiep*@
-        <div class="dijitDialogPaneContentArea" >
+        <div class="dijitDialogPaneContentArea">
             <table>
                 <tr>
                     <td><label for="name">Mã doanh nghiệp: </label></td>
@@ -305,78 +311,75 @@
             </button>
         </div>
     </div>
-        <div data-dojo-type="dijit/Dialog" data-dojo-id="frmSauBenh" title="Tìm kiếm sâu bệnh"
-             execute="findRecordsDN(dojo.toJson(arguments[0], true),'SB')">
-            @*sau benh*@
-            <div class="dijitDialogPaneContentArea" >
-                <table>
-                    <tr>
-                        <td><label for="name">Mã sâu bệnh: </label></td>
-                        <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="tensaubenh">Tên sâu bệnh: </label></td>
-                        <td><input data-dojo-type="dijit/form/TextBox" type="text" name="TenSauBenhGayHai" id="TenSauBenhGayHai"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                        <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện")</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="dijitDialogPaneActionBar">
-                <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
-                    OK
-                </button>
-                <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
-                    Cancel
-                </button>
-            </div>
+    <div data-dojo-type="dijit/Dialog" data-dojo-id="frmSauBenh" title="Tìm kiếm sâu bệnh"
+         execute="findRecordsDN(dojo.toJson(arguments[0], true),'SB')">
+        <div class="dijitDialogPaneContentArea">
+            <table>
+                <tr>
+                    <td><label for="name">Mã sâu bệnh: </label></td>
+                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
+                </tr>
+                <tr>
+                    <td><label for="tensaubenh">Tên sâu bệnh: </label></td>
+                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="TenSauBenhGayHai" id="TenSauBenhGayHai"></td>
+                </tr>
+                <tr>
+                    <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
+                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện")</td>
+                </tr>
+            </table>
         </div>
-        <div data-dojo-type="dijit/Dialog" data-dojo-id="frmTrongTrot" title="Tìm kiếm trồng trọt"
-             execute="findRecordsDN(dojo.toJson(arguments[0], true),'TT')">
-            @*sau benh*@
-            <div class="dijitDialogPaneContentArea">
-                <table>
-                    <tr>
-                        <td><label for="name">Mã trồng trọt: </label></td>
-                        <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="tensaubenh">Tên sâu bệnh: </label></td>
-                        <td><input data-dojo-type="dijit/form/TextBox" type="text" name="TenSauBenhGayHai" id="TenSauBenhGayHai"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                        <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>,"Quận/Huyện", new { @name = "MaHuyenTP"})</td>
-                        
-                    </tr>
-                </table>
-            </div>
-            <div class="dijitDialogPaneActionBar">
-                <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
-                    OK
-                </button>
-                <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
-                    Cancel
-                </button>
-            </div>
+        <div class="dijitDialogPaneActionBar">
+            <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
+                OK
+            </button>
+            <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
+                Cancel
+            </button>
         </div>
+    </div>
+    <div data-dojo-type="dijit/Dialog" data-dojo-id="frmTrongTrot" title="Tìm kiếm trồng trọt"
+         execute="findRecordsDN(dojo.toJson(arguments[0], true),'TT')">
+        @*sau benh*@
+        <div class="dijitDialogPaneContentArea">
+            <table>
+                <tr>
+                    <td><label for="name">Mã trồng trọt: </label></td>
+                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
+                </tr>
+                <tr>
+                    <td><label for="tensaubenh">Tên sâu bệnh: </label></td>
+                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="TenSauBenhGayHai" id="TenSauBenhGayHai"></td>
+                </tr>
+                <tr>
+                    <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
+                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện", new { @name = "MaHuyenTP" })</td>
 
-        @section scripts{
-            <script>
-                var roles = [];
-                $.getJSON('@Url.Action("GetRoles")', function (response) {
-                    for (var i in response) {
-                        roles.push(response[i]);
-                    }
+                </tr>
+            </table>
+        </div>
+        <div class="dijitDialogPaneActionBar">
+            <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
+                OK
+            </button>
+            <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    @section scripts{
+        <script>
+            var roles = [];
+            $.getJSON('@Url.Action("GetRoles")', function (response) {
+                for (var i in response) {
+                    roles.push(response[i]);
                 }
-                );
+            });
+        </script>
+        <script src="~/Scripts/map/map-admin.js"></script>
+        <script>
 
-            </script>
-            <script src="~/Scripts/map/map-admin.js"></script>
-            <script>
-
-            </script>
-        }
+        </script>
+    }
 }
