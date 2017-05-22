@@ -273,7 +273,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a id="addDNFL" href="javascript:void(0)">Doanh nghiệp</a></li>
-                        <li><a  id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
+                        <li><a id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
                     </ul>
                 </div>
             </div>
@@ -285,11 +285,11 @@
         </div>
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmDoanhNghiep" title="Tìm kiếm doanh nghiệp"
-         execute="findRecordsDN(dojo.toJson(arguments[0], true),'DN')">
+         execute="findRecordsFeatureLayer(dojo.toJson(arguments[0], true),'DN')">
         <div class="dijitDialogPaneContentArea">
             <table>
                 <tr>
-                    <td><label for="name">Mã doanh nghiệp: </label></td>
+                    <td><label for="MaDoanhNghiep">Mã doanh nghiệp: </label></td>
                     <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaDoanhNghiep" id="MaDoanhNghiep"></td>
                 </tr>
                 <tr>
@@ -297,8 +297,17 @@
                     <td><input data-dojo-type="dijit/form/TextBox" type="text" name="Ten" id="Ten"></td>
                 </tr>
                 <tr>
-                    <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện")</td>
+                    <td><label for="MaHuyenTP">Quận/Huyện: </label></td>
+                    <td>
+                        <select name="MaHuyenTP" data-dojo-type="dijit/form/Select">
+                            @{
+                                foreach (var slt in ViewBag.QuanHuyen as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@slt.Value">@slt.Text</option>
+                                }
+                            }
+                        </select>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -312,11 +321,11 @@
         </div>
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmSauBenh" title="Tìm kiếm sâu bệnh"
-         execute="findRecordsDN(dojo.toJson(arguments[0], true),'SB')">
+         execute="findRecordsFeatureLayer(dojo.toJson(arguments[0], true),'SB')">
         <div class="dijitDialogPaneContentArea">
             <table>
                 <tr>
-                    <td><label for="name">Mã sâu bệnh: </label></td>
+                    <td><label for="MaSauBenh">Mã sâu bệnh: </label></td>
                     <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
                 </tr>
                 <tr>
@@ -325,7 +334,16 @@
                 </tr>
                 <tr>
                     <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện")</td>
+                    <td>
+                        <select name="MaHuyenTP" data-dojo-type="dijit/form/Select">
+                            @{
+                                foreach (var slt in ViewBag.QuanHuyen as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@slt.Value">@slt.Text</option>
+                                }
+                            }
+                        </select>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -339,21 +357,24 @@
         </div>
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmTrongTrot" title="Tìm kiếm trồng trọt"
-         execute="findRecordsDN(dojo.toJson(arguments[0], true),'TT')">
-        @*sau benh*@
+         execute="findRecordsFeatureLayer(dojo.toJson(arguments[0], true),'TT')">
         <div class="dijitDialogPaneContentArea">
             <table>
                 <tr>
-                    <td><label for="name">Mã trồng trọt: </label></td>
-                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
+                    <td><label for="MaTrongTrot">Mã trồng trọt: </label></td>
+                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaTrongTrot" id="MaTrongTrot"></td>
                 </tr>
                 <tr>
-                    <td><label for="tensaubenh">Tên sâu bệnh: </label></td>
-                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="TenSauBenhGayHai" id="TenSauBenhGayHai"></td>
-                </tr>
-                <tr>
-                    <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện", new { @name = "MaHuyenTP" })</td>
+                    <td><label for="MaHuyenTP">Quận/Huyện: </label></td>
+                    <td>
+                        <select name="MaHuyenTP" data-dojo-type="dijit/form/Select">
+                            @{
+                                foreach (var slt in ViewBag.QuanHuyen as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@slt.Value">@slt.Text</option>
+                                }
+                            }
+                        </select>
 
                 </tr>
             </table>
@@ -382,4 +403,4 @@
 
         </script>
     }
-}
+                                }

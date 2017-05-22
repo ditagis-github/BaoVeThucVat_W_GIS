@@ -113,7 +113,7 @@ function getDefinition() {
 var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMapLayer;
 
 //khai bao bien su kien
-var loadTableTrongTrot, loadTableSauBenh, loadTableDoanhNghiep, findRecordsDN;
+var loadTableTrongTrot, loadTableSauBenh, loadTableDoanhNghiep, findRecordsFeatureLayer,changeModeSauBenh;
 require([
     "esri/config",
     "esri/map",
@@ -150,7 +150,7 @@ require([
     "dojo/domReady!"
 ], function (
     esriConfig, Map, LocateButton, ArcGISDynamicMapServiceLayer, Editor, FeatureLayer, Query, Point, Extent, GeometryService,
-    Draw,TemplatePicker, parser, arrayUtils, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
+    Draw, TemplatePicker, parser, arrayUtils, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
     dom, domstyle, registry, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
 ) {
 
@@ -166,6 +166,7 @@ require([
     initBasemap();
     initFeatureLayer();
     initWidget();
+    initEvents();
 
     function initBasemap() {
         basemap = new ArcGISDynamicMapServiceLayer(mapconfigs.basemapUrl);
@@ -194,25 +195,42 @@ require([
     }
 
     function initFeatureLayer() {
+        FeatureLayer.prototype.hide = function () {
+            map.removeLayer(this);
+        };
+        FeatureLayer.prototype.show = function () {
+            map.addLayer(this);
+        }
+        FeatureLayer.prototype.EditsComplete = function () {
+            if (this.featureTable) {
+                this.featureTable.refresh();
+            }
+        };
         doanhNghiepLayer = new FeatureLayer(mapconfigs.doanhNghiepUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"]
         });
+        
         sauBenhLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
-            outFields: ["*"],
-            minScale: 22000
+            outFields: ["*"]
+            //,minScale: 22000
         });
-
+        //on(sauBenhLayer, "edits-complete", function () {
+        //    if (sauBenhLayer.featureTable) {
+        //        sauBenhLayer.featureTable.refresh();
+        //    }
+        //});
         trongTrotLayer = new FeatureLayer(mapconfigs.trongTrotUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"]
         });
         sauBenhHeatMapLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
             mode: FeatureLayer.MODE_SNAPSHOT,
-            outFields: ["*"],
-            maxScale: 22000
+            outFields: ["*"]
+            //,maxScale: 22000
         });
+
         if (definition != undefined && definition != '') {
             doanhNghiepLayer.setDefinitionExpression(definition);
             trongTrotLayer.setDefinitionExpression(definition);
@@ -221,7 +239,7 @@ require([
         }
         var heatmapRenderer = new HeatmapRenderer();
         sauBenhHeatMapLayer.setRenderer(heatmapRenderer);
-        map.addLayers([trongTrotLayer, sauBenhLayer,sauBenhHeatMapLayer, doanhNghiepLayer]);
+        map.addLayers([trongTrotLayer, sauBenhHeatMapLayer, doanhNghiepLayer]);
     };
 
     function initEditing(event) {
@@ -229,7 +247,7 @@ require([
             map: map,
             layerInfos: [{
                 featureLayer: sauBenhLayer
-            },{
+            }, {
                 featureLayer: doanhNghiepLayer
             }]
         };
@@ -248,7 +266,7 @@ require([
             drawToolbar.activate(Draw.POINT);
             let event = drawToolbar.on("draw-end", function (evt) {
                 drawToolbar.deactivate();
-                var newGraphic = new Graphic(evt.geometry, null, { });
+                var newGraphic = new Graphic(evt.geometry, null, {});
                 doanhNghiepLayer.applyEdits([newGraphic], null, null);
                 event.remove();
             });
@@ -262,7 +280,7 @@ require([
                 event.remove();
             });
         });
-        
+
     }
 
     function initWidget() {
@@ -281,8 +299,6 @@ require([
         layerList.startup();
     }
 
-    var query = new Query();
-
     function loadData(dom, fieldName, layer) {
         var combo = $(dom);
         if (combo.find("option").length > 1)
@@ -295,20 +311,20 @@ require([
             combo.append(option);
         })
     }
-    //add event to update combobox  when click tab-saubenh
-    $('#a-tab-saubenh').on('click', function () {
-        loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer),
-        loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer),
-        loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer);
+    ////add event to update combobox  when click tab-saubenh
+    //$('#a-tab-saubenh').on('click', function () {
+    //    loadData('#tab-saubenh #cbNhomCayTrong', 'NhomCayTrong', sauBenhLayer),
+    //    loadData('#tab-saubenh #cbCapDoGayHai', 'CapDoGayHai', sauBenhLayer),
+    //    loadData('#tab-saubenh #cbLoaiCayTrong', 'LoaiCayTrong', sauBenhLayer);
 
-    });
+    //});
 
-    //add event to update combobox  when click tab-trongtrot
-    $('#a-tab-trongtrot').first().on('click', function () {
-        loadData('#tab-trongtrot #cbNhomCayTrong', 'NhomCayTrong', trongTrotLayer),
-         loadData('#tab-trongtrot #cbLoaiCayTrong', 'LoaiCayTrong', trongTrotLayer),
-         loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
-    });
+    ////add event to update combobox  when click tab-trongtrot
+    //$('#a-tab-trongtrot').first().on('click', function () {
+    //    loadData('#tab-trongtrot #cbNhomCayTrong', 'NhomCayTrong', trongTrotLayer),
+    //     loadData('#tab-trongtrot #cbLoaiCayTrong', 'LoaiCayTrong', trongTrotLayer),
+    //     loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
+    //});
 
     //Table Feature
     function resizeSplitter(height) {
@@ -316,12 +332,6 @@ require([
             height: height
         });
         registry.byId('mainContainer').resize();
-    }
-    FeatureLayer.prototype.getFeatureTable = function () {
-        return this.featureTable;
-    }
-    FeatureLayer.prototype.setFeatureTable = function (featureTable) {
-        this.featureTable = featureTable;
     }
     function loadTable(layer, div) {
         if (isLoadTable.firstClick) {
@@ -384,13 +394,27 @@ require([
                 callback: function () {
                     layer.frmSearchDlg.show();
                 }
+            }, {
+                label: "Xóa lựa chọn",
+                callback: function () {
+                    let selecteds = myFeatureTable.selectedRowIds;
+                    let graphics = [];
+                    for (let i in selecteds) {
+                        let select = selecteds[i];
+                        graphics.push(new Graphic(null, null, { OBJECTID: select }));
+                        
+                    }
+                    layer.applyEdits(null, null, graphics );
+                    myFeatureTable.refresh();
+                    layer.refresh();
+                }
             }]
         }, div);
-        on(myFeatureTable, 'row-select', function () {
-            map.setZoom(15);
-        });
+        //on(myFeatureTable, 'row-select', function () {
+        //    map.setZoom(15);
+        //});
+        layer.featureTable = myFeatureTable;
         myFeatureTable.startup();
-        layer.setFeatureTable(myFeatureTable);
 
     }
 
@@ -401,68 +425,65 @@ require([
         trongTrot: false,
         doanhNghiep: false
     }
-
-    loadTableSauBenh = function () {
-        if (!isLoadTable.sauBenh) {
-            sauBenhLayer.frmSearchDlg = frmSauBenh;
-            loadTable(sauBenhLayer, 'tableLayerSauBenh');
-            isLoadTable.sauBenh = true;
+    function iniEvents() {
+        loadTableSauBenh = function () {
+            if (!isLoadTable.sauBenh) {
+                sauBenhLayer.frmSearchDlg = frmSauBenh;
+                loadTable(sauBenhLayer, 'tableLayerSauBenh');
+                isLoadTable.sauBenh = true;
+            }
+            document.getElementById('tableDoanhNghiep').style.display = 'none';
+            document.getElementById('tableTrongTrot').style.display = 'none';
+            document.getElementById('tableLayerSauBenh').style.display = 'block';
+            resizeSplitter($("#contentPane").height());
         }
-        document.getElementById('tableDoanhNghiep').style.display = 'none';
-        document.getElementById('tableTrongTrot').style.display = 'none';
-        document.getElementById('tableLayerSauBenh').style.display = 'block';
-        resizeSplitter($("#contentPane").height());
+
+        loadTableDoanhNghiep = function () {
+            if (!isLoadTable.doanhNghiep) {
+                doanhNghiepLayer.frmSearchDlg = frmDoanhNghiep;
+                loadTable(doanhNghiepLayer, 'tableDoanhNghiep');
+                isLoadTable.doanhNghiep = true;
+            }
+
+            document.getElementById('tableLayerSauBenh').style.display = 'none';
+            document.getElementById('tableTrongTrot').style.display = 'none';
+            document.getElementById('tableDoanhNghiep').style.display = 'block';
+            resizeSplitter($("#contentPane").height());
+        }
+
+        loadTableTrongTrot = function () {
+            if (!isLoadTable.trongTrot) {
+                loadTable(trongTrotLayer, 'tableTrongTrot');
+                isLoadTable.trongTrot = true;
+            }
+
+            document.getElementById('tableDoanhNghiep').style.display = 'none';
+            document.getElementById('tableLayerSauBenh').style.display = 'none';
+            document.getElementById('tableTrongTrot').style.display = 'block';
+            resizeSplitter($("#contentPane").height());
+        }
+        findRecordsFeatureLayer = function (arguments, type) {
+            arguments = JSON.parse(arguments);
+            let featureLayer = type == "DN" ? doanhNghiepLayer : type == "SB" ? sauBenhLayer : trongTrotLayer;
+            let query = new Query();
+            let where = ['1=1'];
+            let attributes = featureLayer.attributes;
+            for (var i in arguments) {
+                if (arguments[i])
+                    where.push(i + " LIKE N'%" + arguments[i] + "%'");
+            }
+            query.where = where.join(' AND ');
+            let objectid = [];
+            featureLayer.selectFeatures(query);
+        }
+        changeModeSauBenh = function (mode) {
+            if (mode === 'heatmap') {
+                sauBenhLayer.hide();
+                sauBenhHeatMapLayer.show();
+            } else if (mode == 'normal') {
+                sauBenhLayer.show();
+                sauBenhHeatMapLayer.hide();
+            }
+        }
     }
-
-    loadTableDoanhNghiep = function () {
-        if (!isLoadTable.doanhNghiep) {
-            doanhNghiepLayer.frmSearchDlg = frmDoanhNghiep;
-            loadTable(doanhNghiepLayer, 'tableDoanhNghiep');
-            isLoadTable.doanhNghiep = true;
-        }
-
-        document.getElementById('tableLayerSauBenh').style.display = 'none';
-        document.getElementById('tableTrongTrot').style.display = 'none';
-        document.getElementById('tableDoanhNghiep').style.display = 'block';
-        resizeSplitter($("#contentPane").height());
-    }
-
-    loadTableTrongTrot = function () {
-        if (!isLoadTable.trongTrot) {
-            loadTable(trongTrotLayer, 'tableTrongTrot');
-            isLoadTable.trongTrot = true;
-        }
-
-        document.getElementById('tableDoanhNghiep').style.display = 'none';
-        document.getElementById('tableLayerSauBenh').style.display = 'none';
-        document.getElementById('tableTrongTrot').style.display = 'block';
-        resizeSplitter($("#contentPane").height());
-    }
-    findRecordsDN = function (arguments, type) {
-        arguments = JSON.parse(arguments);
-        let query = new Query();
-        let where = ['1=1'];
-        if (arguments.madoanhnghiep) {
-            where.push("MaDoanhNghiep LIKE N'%" + arguments.tendoanhnghiep + "%'");
-        }
-        if (arguments.tendoanhnghiep) {
-            where.push("NguoiDaiDienDoanhNghiep LIKE N'%" + arguments.tendoanhnghiep + "%'");
-        } if (arguments.cbQuanHuyen) {
-            where.push('MaHuyenTP = ' + arguments.cbQuanHuyen);
-        }
-        //if (arguments.OBJECTID) {
-        //    where.push("OBJECTID LIKE N'%" + arguments.OBJECTID + "%'");
-        //}
-        for (var i in arguments) {
-            if (arguments[i])
-                where.push(i + " LIKE N'%" + arguments[i] + "%'");
-        }
-        query.where = where.join(' AND ');
-        let objectid = [];
-        if (type = "DN")
-            doanhNghiepLayer.selectFeatures(query);
-        if (type = "SB")
-            sauBenhLayer.selectFeatures(query);
-    }
-
 });
