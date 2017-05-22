@@ -36,8 +36,8 @@ require(["esri/layers/FeatureLayer", "esri/tasks/support/Query", "esri/geometry/
                     where.push(value.property + " LIKE N'%" + domValue + "%'");
                 }
             });
-            where.join(' AND');
-            query.where = where;
+            
+            query.where = where.join(' AND ');
             return query;
         }
         selectFeatures(query) {
@@ -331,7 +331,7 @@ require([
         ],
         selectProperties: ['LoaiCayTrong', 'TenSauBenhGayHai', 'MaSauBenh']
     }),
- trongTrotSearch = doanhNghiepSearch = new SearchEvent({
+ trongTrotSearch  = new SearchEvent({
      domId: '#tab-trongtrot',
      feature: trongTrotLayer,
      attributes: [{

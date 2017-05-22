@@ -29,7 +29,7 @@ require(["esri/tasks/query",
 
             arrAttribute.forEach(function (value, index) {
                 var domValue = $("#" + value.dom).val();
-                var where =['1=1'];
+                var where = ['1=1'];
                 if (domValue.length > 0) {
                     where.push(value.property + " LIKE N'%" + domValue + "%'");
                 }
@@ -111,6 +111,9 @@ function getDefinition() {
 }
 //khai bao bien
 var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMapLayer;
+
+//khai bao bien su kien
+var loadTableTrongTrot, loadTableSauBenh, loadTableDoanhNghiep, findRecordsDN;
 require([
     "esri/config",
     "esri/map",
@@ -153,7 +156,7 @@ require([
     Draw, keys, parser, arrayUtils, i18n, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
     dom, domstyle, registry, domAttr, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
 ) {
-    
+
     parser.parse();
 
 
@@ -161,20 +164,20 @@ require([
     map = new Map("map", {
         basemap: "dark-gray",
         zoom: 10,
-        center: [106.725785, 11.188761 ],
+        center: [106.725785, 11.188761],
         logo: false
     });
-    map.on("layers-add-result", initEditing);
+    //map.on("layers-add-result", initEditing);
     var definition = getDefinition();
     initBasemap();
     initFeatureLayer();
     initWidget();
-  
+
     function initBasemap() {
         basemap = new ArcGISDynamicMapServiceLayer(mapconfigs.basemapUrl);
         basemap.setVisibleLayers([5, 6, 8, 9]);
         //Phan quyen cap nhat theo huyen
-        
+
         if (definition != undefined && definition != '') {
             var layerDefinitions = [];
             layerDefinitions[0] = definition;
@@ -266,101 +269,6 @@ require([
 
     var query = new Query();
 
-
-    function addSearchEvent(domId, feature, arrAttribute, selectProperty) {
-
-        var btnFindDom = $(domId + ' #btnFind'), resultDom = $(domId + ' #result'), counterDom = $(domId + ' #counter');
-        $(btnFindDom).click(function (e) {
-            var where = "1=1";
-
-            arrAttribute.forEach(function (value, index) {
-                var domValue = $("#" + value.dom).val();
-                if (domValue.length > 0) {
-                    where += " AND " + value.property + " LIKE N'%" + domValue + "%'";
-                }
-            });
-
-
-            $(".loading").css("display", "inline-block");
-            $(resultDom).html('');
-            $(counterDom).html('');
-
-            query.where = where;
-
-            feature.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (features) {
-                var html = "";
-                for (var i = 0 ; i < features.length ; i++) {
-                    var attr = features[i].attributes;
-                    var span = $('<span/>').text(attr[selectProperty[1]]).attr('alt', attr[selectProperty[0]]).click(function () {
-                        var where = [selectProperty[0], "='", this.attributes['alt'].nodeValue, "'"].join('');
-                        console.log(where);
-                        viewPoint(where, feature)
-                    });;
-                    var tr = $('<tr/>');
-                    tr.append($('<td/>').text((i + 1) + ". "));
-                    tr.append($('<td/>').text(attr[selectProperty[2]]));
-                    tr.append($('<td/>').append(span));
-
-                    $(resultDom).append(tr);
-
-                }
-                $(counterDom).html(features.length);
-                $(".loading").css("display", "none");
-
-            });
-
-        });
-    }
-    function viewPoint(value, layer) {
-        query.where = value;
-        query.returnGeometry = true;
-        query.outFields = ["*"];
-        layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
-            if (results.length > 0) {
-                var feat = results[0];
-                var point = feat.geometry;
-                // var graphic1 = new esri.Graphic(point, ptSymbol1);
-
-                var pt = new Point(point.x, point.y, map.spatialReference);
-                if (pt) {
-                    var extent = new Extent((point.x + 40), (point.y + 40), (point.x - 40), (point.y - 40), map.spatialReference);
-                    var stateExtent = extent.expand(5.0);
-                    map.setExtent(stateExtent);
-                }
-            }
-        });
-    }
-
-    function viewPolygon(value, layer) {
-        var query = new Query();
-        query.returnGeometry = true;
-        query.outFields = ["*"];
-        query.where = value;
-        layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
-            if (results.length > 0) {
-                var feat = results[0];
-                var point = feat.geometry;
-                // var graphic1 = new esri.Graphic(point, ptSymbol1);
-                var stateExtent = point.getExtent().expand(8.0);
-                map.setExtent(stateExtent);
-            }
-        });
-    };
-    addSearchEvent('#tab-doanhnghiep', doanhNghiepLayer, [{
-        dom: 'txtMaDN',
-        property: 'MaDoanhNghiep'
-    },
-    {
-        dom: 'txtTen',
-        property: 'NguoiDaiDienDoanhNghiep'
-    }, {
-        dom: 'cbQuanHuyen',
-        property: 'MaHuyenTP'
-    }
-    ], ['MaDoanhNghiep', 'NguoiDaiDienDoanhNghiep', 'MaDoanhNghiep'])
-
-    //
-
     function loadData(dom, fieldName, layer) {
         var combo = $(dom);
         if (combo.find("option").length > 1)
@@ -381,23 +289,6 @@ require([
 
     });
 
-
-    //add event to search with button
-    addSearchEvent('#tab-saubenh', sauBenhLayer, [{
-        dom: 'cbNhomCayTrong',
-        property: 'NhomCayTrong'
-    }, {
-        dom: 'cbLoaiCayTrong',
-        property: 'LoaiCayTrong'
-    }, {
-        dom: 'nbPhamViAnhHuong',
-        property: 'PhamViAnhHuong'
-    }, {
-        dom: 'nbDienTich',
-        property: 'DienTich'
-    }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }
-    ], ['LoaiCayTrong', 'TenSauBenhGayHai', 'MaSauBenh'])
-
     //add event to update combobox  when click tab-trongtrot
     $('#a-tab-trongtrot').first().on('click', function () {
         loadData('#tab-trongtrot #cbNhomCayTrong', 'NhomCayTrong', trongTrotLayer),
@@ -405,31 +296,18 @@ require([
          loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
     });
 
-
-    //add event to search with button
-    addSearchEvent('#tab-trongtrot', trongTrotLayer, [{
-        dom: 'cbNhomCayTrong',
-        property: 'NhomCayTrong'
-    }, {
-        dom: 'cbLoaiCayTrong',
-        property: 'LoaiCayTrong'
-    }, {
-        dom: 'cbPhuongThucTrong',
-        property: 'PhuongThucTrong'
-    }, { dom: 'cbCapDoGayHai', property: 'CapDoGayHai' }, {
-        dom: 'nbDienTich',
-        property: 'DienTich'
-    }
-    ], ['LoaiCayTrong', 'MaHuyenTP', 'MaDoiTuong']);
-
-
-
     //Table Feature
     function resizeSplitter(height) {
         domstyle.set('contentPane', {
             height: height
         });
         registry.byId('mainContainer').resize();
+    }
+    FeatureLayer.prototype.getFeatureTable = function () {
+        return this.featureTable;
+    }
+    FeatureLayer.prototype.setFeatureTable = function (featureTable) {
+        this.featureTable = featureTable;
     }
     function loadTable(layer, div) {
         if (isLoadTable.firstClick) {
@@ -464,7 +342,6 @@ require([
         var myFeatureTable = new FeatureTable({
             featureLayer: layer,
             map: map,
-            showAttachments: true,
             // only allows selection from the table to the map 
             syncSelection: true,
             zoomToSelection: true,
@@ -473,7 +350,6 @@ require([
                 allowSelectAll: true,
                 allowTextSelection: true,
             },
-            editable: true,
             dateOptions: {
                 // set date options at the feature table level 
                 // all date fields will adhere this 
@@ -484,20 +360,39 @@ require([
                 callback: function (evt) {
                     resizeSplitter(0);
                 }
+            }, {
+                label: "Phóng đến",
+                callback: function () {
+                    map.setZoom(15);
+                }
+            }, {
+                label: "Tìm kiếm",
+                callback: function () {
+                    layer.frmSearchDlg.show();
+                }
             }]
         }, div);
+        on(myFeatureTable, 'row-select', function () {
+            map.setZoom(15);
+        });
         myFeatureTable.startup();
+        layer.setFeatureTable(myFeatureTable);
 
     }
 
 
+    var isLoadTable = {
+        firstClick: true,
+        sauBenh: false,
+        trongTrot: false,
+        doanhNghiep: false
+    }
 
-    function loadTableSauBenh() {
+    loadTableSauBenh = function () {
         if (!isLoadTable.sauBenh) {
+            sauBenhLayer.frmSearchDlg = frmSauBenh;
             loadTable(sauBenhLayer, 'tableLayerSauBenh');
             isLoadTable.sauBenh = true;
-            //    //isLoadTable.trongTrot = false;
-            //    //isLoadTable.doanhNghiep = false;
         }
         document.getElementById('tableDoanhNghiep').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'none';
@@ -505,15 +400,12 @@ require([
         resizeSplitter($("#contentPane").height());
     }
 
-    function loadTableDoanhNghiep() {
+    loadTableDoanhNghiep = function () {
         if (!isLoadTable.doanhNghiep) {
+            doanhNghiepLayer.frmSearchDlg = frmDoanhNghiep;
             loadTable(doanhNghiepLayer, 'tableDoanhNghiep');
             isLoadTable.doanhNghiep = true;
-            //    //isLoadTable.trongTrot = false;
-            //    //isLoadTable.sauBenh = false;
         }
-
-        console.log($(".dijitContentPane").height());
 
         document.getElementById('tableLayerSauBenh').style.display = 'none';
         document.getElementById('tableTrongTrot').style.display = 'none';
@@ -521,7 +413,7 @@ require([
         resizeSplitter($("#contentPane").height());
     }
 
-    function loadTableTrongTrot() {
+    loadTableTrongTrot = function () {
         if (!isLoadTable.trongTrot) {
             loadTable(trongTrotLayer, 'tableTrongTrot');
             isLoadTable.trongTrot = true;
@@ -532,15 +424,31 @@ require([
         document.getElementById('tableTrongTrot').style.display = 'block';
         resizeSplitter($("#contentPane").height());
     }
-
-
-    var isLoadTable = {
-        firstClick: true,
-        sauBenh: false,
-        trongTrot: false,
-        doanhNghiep: false
+    findRecordsDN = function (arguments, type) {
+        arguments = JSON.parse(arguments);
+        let query = new Query();
+        let where = ['1=1'];
+        if (arguments.madoanhnghiep) {
+            where.push("MaDoanhNghiep LIKE N'%" + arguments.tendoanhnghiep + "%'");
+        }
+        if (arguments.tendoanhnghiep) {
+            where.push("NguoiDaiDienDoanhNghiep LIKE N'%" + arguments.tendoanhnghiep + "%'");
+        } if (arguments.cbQuanHuyen) {
+            where.push('MaHuyenTP = ' + arguments.cbQuanHuyen);
+        }
+        //if (arguments.OBJECTID) {
+        //    where.push("OBJECTID LIKE N'%" + arguments.OBJECTID + "%'");
+        //}
+        for (var i in arguments) {
+            if(arguments[i])
+            where.push(i + " LIKE N'%" + arguments[i] + "%'");
+        }
+        query.where = where.join(' AND ');
+        let objectid = [];
+        if(type = "DN")
+            doanhNghiepLayer.selectFeatures(query);
+        if (type = "SB")
+            sauBenhLayer.selectFeatures(query);
     }
-    window.loadTableSauBenh = loadTableSauBenh;
-    window.loadTableDoanhNghiep = loadTableDoanhNghiep;
-    window.loadTableTrongTrot = loadTableTrongTrot;
+    
 });
