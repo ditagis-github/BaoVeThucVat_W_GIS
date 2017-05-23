@@ -333,7 +333,7 @@ require([
         // when user clicks on a feature on the map, the corresponding 
         // record will be selected in the table.   
         layer.on("click", function (evt) {
-            var idProperty = myFeatureLayer.objectIdField,
+            var idProperty = layer.objectIdField,
                 feature,
                 featureId,
                 query;
@@ -383,6 +383,11 @@ require([
                 label: "Tìm kiếm",
                 callback: function () {
                     layer.frmSearchDlg.show();
+                }
+            }, {
+                label: "Biểu đồ",
+                callback: function () {
+                    frmBieudoDoanhnghiep.show();
                 }
             }]
         }, div);

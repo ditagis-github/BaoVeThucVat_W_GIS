@@ -257,7 +257,7 @@
                 <div id="layerList"></div>
                 <div id="LocateButton">
                 </div>
-                <div id="tableControl" class="dropdown map-control">
+                <div id="tableControl" class="dropdown map-control" title="Hiển thị bảng thống kê Doanh nghiệp - Sâu bệnh - Trồng Trọt">
                     <button type="button" data-toggle="dropdown">
                         <span class="glyphicon glyphicon-tasks"></span>
                     </button>
@@ -267,14 +267,18 @@
                         <li><a onclick="loadTableTrongTrot();" href="javascript:void(0)">Trồng trọt</a></li>
                     </ul>
                 </div>
-                <div id="addFeatureControl" class="dropdown map-control">
+                <div id="addFeatureControl" class="dropdown map-control " title="Thêm doanh nghiệp hoặc sâu bệnh">
                     <button type="button" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon glyphicon-plus"></span>
+                        <span class="glyphicon glyphicon glyphicon-plus-sign"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li><a id="addDNFL" href="javascript:void(0)">Doanh nghiệp</a></li>
                         <li><a  id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
                     </ul>
+                </div>
+                <div id="heatmap" class="map-control" title="Hiển thị">
+                    <input type="checkbox" />
+                    
                 </div>
             </div>
             <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true">
@@ -357,6 +361,26 @@
 
                 </tr>
             </table>
+        </div>
+        <div class="dijitDialogPaneActionBar">
+            <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
+                OK
+            </button>
+            <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
+                Cancel
+            </button>
+        </div>
+    </div>
+    @section scripts{
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+        <script src="~/Scripts/chartjs/draw-chart.js"></script>
+        @RenderSection("scripts", required: false)
+    }
+    <div data-dojo-type="dijit/Dialog" data-dojo-id="frmBieudoDoanhnghiep" title="Tìm kiếm sâu bệnh"
+         execute="findRecordsDN(dojo.toJson(arguments[0], true),'SB')">
+        <div class="dijitDialogPaneContentArea">
+            @RenderBody()
         </div>
         <div class="dijitDialogPaneActionBar">
             <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">

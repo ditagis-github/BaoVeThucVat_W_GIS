@@ -62,11 +62,16 @@ div#home {
 
 #layerList {
     position: absolute;
-    top: 165px;
-    left: 20px;
+    top: 210px;
+    left: 22px;
     z-index: 50;
 }
-
+#heatmap{
+    position: absolute;
+    z-index: 50;
+    top: 260px;
+    left: 22px;
+}
 #editorDiv {
     font-size: 14px;
 }
@@ -96,8 +101,8 @@ div#home {
     position: absolute;
     z-index: 50;
     border-radius: 5px;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border: 1px solid #57585A;
     background-color: #FFF;
     color: #4C4C4C;
@@ -202,4 +207,8 @@ resultFormSearch table tr th:first-child {
 
 div#dojox_grid_DataGrid_0 {
     width: 100%;
+}
+div#addFeatureControl{
+        margin-top: 165px;
+    margin-left: 20px;
 }
