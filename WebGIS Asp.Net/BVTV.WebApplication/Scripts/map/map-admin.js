@@ -110,10 +110,107 @@ function getDefinition() {
     return result;
 }
 //khai bao bien
-var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMapLayer;
+var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMapLayer, sbMode,ftUI;
 
 //khai bao bien su kien
-var loadTableTrongTrot, loadTableSauBenh, loadTableDoanhNghiep, findRecordsFeatureLayer,changeModeSauBenh;
+var loadTableTrongTrot, loadTableSauBenh, loadTableDoanhNghiep, findRecordsFeatureLayer;
+//khai bao class
+var SauBenhMode, FeatureTableUI;
+SauBenhMode = class SauBenhMode {
+
+    constructor(options, domElement) {
+        this.options = {
+            normalCSS: 'glyphicon glyphicon-eye-open',
+            heatmapCSS: 'glyphicon glyphicon-eye-close',
+            defaultMode: 'normal'
+        };
+        for (var i in options) {
+            this.options[i] = options[i] || this.options[i];
+        }
+        this.options.defaultMode = this.options.defaultMode == 'normal' ? 'heatmap' : 'normal';
+        this.normalLayer = this.options.normalLayer,
+        this.heatmapLayer = this.options.heatmapLayer;
+        this.mode = this.options.defaultMode;
+        this.div = $('<button/>');
+        $('#' + domElement).append(this.div);
+        let that = this,
+        _change = this.change;
+        this.div.click(function () {
+            _change(that);
+        });
+    }
+
+    change(that) {
+        that = that || this;
+        if (that.mode === 'heatmap') {
+            that.heatmapLayer.hide();
+            that.normalLayer.show();
+            that.div.attr('data-type', 'normal');
+            that.mode = 'normal';
+            that.div.attr('class', that.options.normalCSS);
+        } else {
+            that.heatmapLayer.show();
+            that.normalLayer.hide();
+            that.div.attr('data-type', 'heatmap');
+            that.mode = 'heatmap';
+            that.div.attr('class', that.options.heatmapCSS);
+        }
+    }
+}
+FeatureTableUI = class FeatureTableUI {
+    constructor(options, controlDiv, tableDiv) {
+        this.options = {
+            layers: [],
+            icon: 'glyphicon glyphicon-tasks'
+        };
+        for (var i in options) {
+            this.options[i] = options[i] || this.options[i];
+        }
+        this.tableDiv = $("#" + tableDiv) || $('#contentPane');
+        this.childTableDivs = [];
+        this.controlDiv = $("#" + controlDiv) || $('#tableControl');
+        this.controlDiv.addClass('dropdown map-control');
+        this.button = $('<button/>');
+        this.button.attr('data-toggle', 'dropdown');
+        this.button.attr('type', 'button');
+        let span = $('<span/>');
+        span.addClass(this.options.icon);
+        this.button.append(span);
+        this.ul = $('<ul/>');
+        let that = this, _clickEvent = this.clickEvent;
+        for (var i in this.options.layers) {
+            let layer = this.options.layers[i];
+            if (typeof layer == 'FeatureLayer') {
+                let li = $('<li/>'),
+                    a = $('<a/>');
+                a.attr('href', '#');
+                a.attr('id', layer.id);
+                a.text(layer.name);
+                a.click(function () {
+                    _clickEvent(that);
+                })
+                li.append(a);
+                this.ul.append(li);
+                let childTableDiv = $('<div/>');
+                childTableDiv.attr('id', layer.id);
+                this.tableDiv.append(childTableDiv);
+                this.childTableDivs.push(childTableDiv);
+            }
+        }
+
+
+
+    }
+
+    clickEvent(that) {
+        for (var i in that.childTableDivs) {
+            let childTableDiv = that.childTableDivs[i];
+            childTableDiv.css('display', childTableDiv.attr('id') == this.attr('id') ? '' : 'none');
+        }
+    }
+
+
+}
 require([
     "esri/config",
     "esri/map",
@@ -165,6 +262,13 @@ require([
     var definition = getDefinition();
     initBasemap();
     initFeatureLayer();
+    sbMode = new SauBenhMode({
+        defaultMode: 'normal',
+        normalLayer: sauBenhLayer,
+        heatmapLayer: sauBenhHeatMapLayer
+    }, 'dtg-control-saubenh-mode');
+    sbMode.change();
+    ftUI = new FeatureTableUI();
     initWidget();
     initEvents();
 
@@ -175,22 +279,11 @@ require([
 
         if (definition != undefined && definition != '') {
             var layerDefinitions = [];
-            layerDefinitions[0] = definition;
-            layerDefinitions[1] = definition;
-            layerDefinitions[2] = definition;
-            layerDefinitions[3] = definition;
-            layerDefinitions[4] = definition;
-            layerDefinitions[5] = definition;
-            layerDefinitions[6] = definition;
-            layerDefinitions[7] = definition;
-            layerDefinitions[8] = definition;
-            layerDefinitions[9] = definition;
+            for (var i in basemap.layerInfos) {
+                layerDefinitions.push(definition);
+            }
             basemap.setLayerDefinitions(layerDefinitions);
         }
-
-
-
-
         map.addLayer(basemap);
     }
 
@@ -208,12 +301,14 @@ require([
         };
         doanhNghiepLayer = new FeatureLayer(mapconfigs.doanhNghiepUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
-            outFields: ["*"]
+            outFields: ["*"],
+            id:'doanhnghiep'
         });
-        
+
         sauBenhLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
-            outFields: ["*"]
+            outFields: ["*"],
+            id:'saubenh'
             //,minScale: 22000
         });
         //on(sauBenhLayer, "edits-complete", function () {
@@ -223,7 +318,8 @@ require([
         //});
         trongTrotLayer = new FeatureLayer(mapconfigs.trongTrotUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
-            outFields: ["*"]
+            outFields: ["*"],
+            id:'trongtrot'
         });
         sauBenhHeatMapLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
             mode: FeatureLayer.MODE_SNAPSHOT,
@@ -239,7 +335,10 @@ require([
         }
         var heatmapRenderer = new HeatmapRenderer();
         sauBenhHeatMapLayer.setRenderer(heatmapRenderer);
-        map.addLayers([trongTrotLayer, sauBenhHeatMapLayer, doanhNghiepLayer]);
+
+
+
+        map.addLayers([trongTrotLayer, doanhNghiepLayer]);
     };
 
     function initEditing(event) {
@@ -402,9 +501,9 @@ require([
                     for (let i in selecteds) {
                         let select = selecteds[i];
                         graphics.push(new Graphic(null, null, { OBJECTID: select }));
-                        
+
                     }
-                    layer.applyEdits(null, null, graphics );
+                    layer.applyEdits(null, null, graphics);
                     myFeatureTable.refresh();
                     layer.refresh();
                 }
@@ -425,7 +524,7 @@ require([
         trongTrot: false,
         doanhNghiep: false
     }
-    function iniEvents() {
+    function initEvents() {
         loadTableSauBenh = function () {
             if (!isLoadTable.sauBenh) {
                 sauBenhLayer.frmSearchDlg = frmSauBenh;
@@ -476,14 +575,12 @@ require([
             let objectid = [];
             featureLayer.selectFeatures(query);
         }
-        changeModeSauBenh = function (mode) {
-            if (mode === 'heatmap') {
-                sauBenhLayer.hide();
-                sauBenhHeatMapLayer.show();
-            } else if (mode == 'normal') {
-                sauBenhLayer.show();
-                sauBenhHeatMapLayer.hide();
-            }
-        }
+        //$('#changeSBMode').click(function () {
+        //    //kiem tra xem dang o che do nao
+        //    let that = $(this);
+        //    let type = that.attr('data-type');
+        //    changeModeSauBenh(type);
+        //});
+        //changeModeSauBenh();
     }
 });
