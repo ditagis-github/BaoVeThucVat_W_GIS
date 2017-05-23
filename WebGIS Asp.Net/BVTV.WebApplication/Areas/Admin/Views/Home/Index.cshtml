@@ -69,7 +69,7 @@
     </div><!--/.row-->
 }
 
-@if (User.IsInRole("admin") || User.IsInRole("updater") || User.IsInRole("testerandupdater"))
+@if (User.IsInRole("admin") || User.IsInRole("updater"))
 {
     @section headtag{
         <link rel="stylesheet" href="~/Content/claro.css">
@@ -81,191 +81,12 @@
     }
 
     <div id="tabMapControl">
-        @*<div class="col-xs-12 col-md-3 col-lg-3 tab-search">
-                <ul class="nav nav-green">
-                    <li class="active"><a data-toggle="pill" href="#menu1">Chỉnh sửa</a></li>
-                    <li><a data-toggle="pill" href="#home">Tìm kiếm</a></li>
-                    <li><a data-toggle="pill" href="#thongke">Thống kê</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <div id="thongke" class="tab-pane fade">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="panel panel-blue panel-widget ">
-                                    <div class="row no-padding">
-                                        <div class="col-sm-3 col-lg-5 widget-left">
-                                            <i class="fa fa-address-card " aria-hidden="true"></i>
-                                        </div>
-                                        <div class="col-sm-9 col-lg-7 widget-right">
-                                            <div class="large">@Html.DisplayFor(a => a.DoanhNghiepCount)</div>
-                                            <div class="text-muted">@Html.DisplayNameFor(a => a.DoanhNghiepCount)</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="panel panel-orange panel-widget">
-                                    <div class="row no-padding">
-                                        <div class="col-sm-3 col-lg-5 widget-left">
-                                            <i class="fa fa-bug" aria-hidden="true"></i>
-                                        </div>
-                                        <div class="col-sm-9 col-lg-7 widget-right">
-                                            <div class="large">@Html.DisplayFor(a => a.SauBenhCount)</div>
-                                            <div class="text-muted">@Html.DisplayNameFor(a => a.SauBenhCount)</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <div class="panel panel-red panel-widget">
-                                    <div class="row no-padding">
-                                        <div class="col-sm-3 col-lg-5 widget-left">
-                                            <i class="fa fa-tree" aria-hidden="true"></i>
-                                        </div>
-                                        <div class="col-sm-9 col-lg-7 widget-right">
-                                            <div class="large">@Html.DisplayFor(a => a.DatTrongCount)</div>
-                                            <div class="text-muted">@Html.DisplayNameFor(a => a.DatTrongCount)</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <div class="panel panel-teal panel-widget">
-                                    <div class="row no-padding">
-                                        <div class="col-sm-3 col-lg-5 widget-left">
-                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                                        </div>
-                                        <div class="col-sm-9 col-lg-7 widget-right">
-                                            <div class="large">@Html.DisplayFor(a => a.MemberCount)</div>
-                                            <div class="text-muted">@Html.DisplayNameFor(a => a.MemberCount)</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>/.row
-                    </div>
-                    <div id="menu1" class="tab-pane fade in active">
-                        <div id="templatePickerPane">
-                            <div id="editorDiv"></div>
-                        </div>
-                    </div>
-                    <div id="home" class="tab-pane fade">
-                        <ul class="nav nav-tabs nav-green nav-justified responsive" id="myTab">
-                            <li class="active"><a data-toggle="pill" href="#tab-doanhnghiep">Doanh nghiệp</a></li>
-                            <li><a id="a-tab-saubenh" data-toggle="pill" href="#tab-saubenh">Sâu bệnh</a></li>
-                            <li><a id="a-tab-trongtrot" data-toggle="pill" href="#tab-trongtrot">Trồng trọt</a></li>
-                        </ul>
-
-                        <div class="tab-content responsive">
-                            <div class="tab-pane active" id="tab-doanhnghiep">
-                                <h5>Tìm thông tin Doanh nghiệp</h5>
-                                <div class="formSearch">
-                                    <input type="text" id="txtMaDN" placeholder="Mã doanh nghiệp" />
-                                    <input type="text" id="txtTen" placeholder="Tên doanh nghiệp" />
-                                    @Html.DropDownList("cbQuanHuyen", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện")
-                                    <input type="button" id="btnFind" value="Tìm kiếm" class="button">
-                                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
-                                </div>
-                                <div class="resultFormSearch">
-                                    <table data-toggle="table" class="table" data-row-style="rowStyle">
-                                        <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Mã</th>
-                                                <th>Tên doanh nghiệp <span class="label label-danger pull-right" id="counter">0</span></th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody id="result"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="tab-saubenh">
-
-                                <h5>Tìm thông tin Sâu bệnh</h5>
-                                <div class="formSearch">
-                                    <select id="cbNhomCayTrong">
-                                        <option value="" selected>Nhóm cây trồng</option>
-                                    </select>
-                                    <select id="cbLoaiCayTrong">
-                                        <option value="" selected>Loại cây trồng</option>
-                                    </select>
-                                    <select id="cbCapDoGayHai">
-                                        <option value="" selected>Cấp độ gây hại</option>
-                                    </select>
-                                    <input type="number" id="nbPhamViAnhHuong" placeholder="Phạm vi ảnh hưởng" />
-                                    <input type="number" id="nbDienTich" placeholder="Diện tích" />
-                                    <input type="button" id="btnFind" value="Tìm kiếm" />
-                                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
-                                </div>
-                                <div class="resultFormSearch">
-                                    <table data-toggle="table" class="table" data-row-style="rowStyle">
-                                        <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Mã</th>
-                                                <th>Tên sâu bệnh  <span class="label label-danger  pull-right" id="counter">0</span></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="result"></tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                            <div class="tab-pane" id="tab-trongtrot">
-
-                                <h5>Tìm thông tin Cây trồng</h5>
-                                <div class="formSearch">
-                                    <select id="cbNhomCayTrong">
-                                        <option value="" selected>Nhóm cây trồng</option>
-                                    </select>
-                                    <select id="cbLoaiCayTrong">
-                                        <option value="" selected>Loại cây trồng</option>
-                                    </select>
-                                    <select id="cbPhuongThucTrong">
-                                        <option value="" selected>Phương thức trồng</option>
-                                    </select>
-                                    <input type="number" id="nbDienTich" placeholder="Diện tích" />
-                                    <input type="button" id="btnFind" value="Tìm kiếm" />
-                                    <img src="~/Content/img/default.gif" class="loading" style="display: none;" />
-                                </div>
-                                <div class="resultFormSearch">
-                                    <table data-toggle="table" class="table" data-row-style="rowStyle">
-                                        <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Mã</th>
-                                                <th>Huyện/TP  <span class="label label-danger  pull-right" id="counter">0</span></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="result"></tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>*@
-
-
         <div id="mainContainer" class="col-lg-12" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false">
             <div id="map" dir="ltr" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
                 <div id="layerList"></div>
                 <div id="LocateButton">
                 </div>
-                <div id="tableControl" class="dropdown map-control" title="Hiển thị bảng thống kê Doanh nghiệp - Sâu bệnh - Trồng Trọt">
-                    <button type="button" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-tasks"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a onclick="loadTableDoanhNghiep();" href="javascript:void(0)">Doanh nghiệp</a></li>
-                        <li><a onclick="loadTableSauBenh();" href="javascript:void(0)">Sâu bệnh</a></li>
-                        <li><a onclick="loadTableTrongTrot();" href="javascript:void(0)">Trồng trọt</a></li>
-                    </ul>
+                <div id="tableControl">
                 </div>
                 <div id="addFeatureControl" class="dropdown map-control " title="Thêm doanh nghiệp hoặc sâu bệnh">
                     <button type="button" data-toggle="dropdown">
@@ -273,27 +94,23 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a id="addDNFL" href="javascript:void(0)">Doanh nghiệp</a></li>
-                        <li><a  id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
+                        <li><a id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
                     </ul>
                 </div>
-                <div id="heatmap" class="map-control" title="Hiển thị">
-                    <input type="checkbox" />
-                    
+                <div id="dtg-control-saubenh-mode" class="map-control">
+                   
                 </div>
             </div>
             <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true">
-                <div id="tableLayerSauBenh"></div>
-                <div id="tableDoanhNghiep"></div>
-                <div id="tableTrongTrot"></div>
             </div>
         </div>
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmDoanhNghiep" title="Tìm kiếm doanh nghiệp"
-         execute="findRecordsDN(dojo.toJson(arguments[0], true),'DN')">
+         execute="findRecordsFeatureLayer(dojo.toJson(arguments[0], true),'DN')">
         <div class="dijitDialogPaneContentArea">
             <table>
                 <tr>
-                    <td><label for="name">Mã doanh nghiệp: </label></td>
+                    <td><label for="MaDoanhNghiep">Mã doanh nghiệp: </label></td>
                     <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaDoanhNghiep" id="MaDoanhNghiep"></td>
                 </tr>
                 <tr>
@@ -301,26 +118,35 @@
                     <td><input data-dojo-type="dijit/form/TextBox" type="text" name="Ten" id="Ten"></td>
                 </tr>
                 <tr>
-                    <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện")</td>
+                    <td><label for="MaHuyenTP">Quận/Huyện: </label></td>
+                    <td>
+                        <select name="MaHuyenTP" data-dojo-type="dijit/form/Select">
+                            @{
+                                foreach (var slt in ViewBag.QuanHuyen as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@slt.Value">@slt.Text</option>
+                                }
+                            }
+                        </select>
+                    </td>
                 </tr>
             </table>
         </div>
         <div class="dijitDialogPaneActionBar">
             <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmDoanhNghiep.isValid();">
-                OK
+                Đồng ý
             </button>
             <button data-dojo-type="dijit/form/Button" type="button" onClick="frmDoanhNghiep.hide()">
-                Cancel
+                Hủy
             </button>
         </div>
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmSauBenh" title="Tìm kiếm sâu bệnh"
-         execute="findRecordsDN(dojo.toJson(arguments[0], true),'SB')">
+         execute="findRecordsFeatureLayer(dojo.toJson(arguments[0], true),'SB')">
         <div class="dijitDialogPaneContentArea">
             <table>
                 <tr>
-                    <td><label for="name">Mã sâu bệnh: </label></td>
+                    <td><label for="MaSauBenh">Mã sâu bệnh: </label></td>
                     <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
                 </tr>
                 <tr>
@@ -329,58 +155,65 @@
                 </tr>
                 <tr>
                     <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện")</td>
+                    <td>
+                        <select name="MaHuyenTP" data-dojo-type="dijit/form/Select">
+                            @{
+                                foreach (var slt in ViewBag.QuanHuyen as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@slt.Value">@slt.Text</option>
+                                }
+                            }
+                        </select>
+                    </td>
                 </tr>
             </table>
         </div>
         <div class="dijitDialogPaneActionBar">
             <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
-                OK
+                Đồng ý
             </button>
             <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
-                Cancel
+                Hủy
             </button>
         </div>
     </div>
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmTrongTrot" title="Tìm kiếm trồng trọt"
-         execute="findRecordsDN(dojo.toJson(arguments[0], true),'TT')">
-        @*sau benh*@
+         execute="findRecordsFeatureLayer(dojo.toJson(arguments[0], true),'TT')">
         <div class="dijitDialogPaneContentArea">
             <table>
                 <tr>
-                    <td><label for="name">Mã trồng trọt: </label></td>
-                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaSauBenh" id="MaSauBenh"></td>
+                    <td><label for="MaTrongTrot">Mã trồng trọt: </label></td>
+                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="MaTrongTrot" id="MaTrongTrot"></td>
                 </tr>
                 <tr>
-                    <td><label for="tensaubenh">Tên sâu bệnh: </label></td>
-                    <td><input data-dojo-type="dijit/form/TextBox" type="text" name="TenSauBenhGayHai" id="TenSauBenhGayHai"></td>
-                </tr>
-                <tr>
-                    <td><label for="cbQuanHuyen">Quận/Huyện: </label></td>
-                    <td>@Html.DropDownList("MaHuyenTP", ViewBag.QuanHuyen as IEnumerable<SelectListItem>, "Quận/Huyện", new { @name = "MaHuyenTP" })</td>
+                    <td><label for="MaHuyenTP">Quận/Huyện: </label></td>
+                    <td>
+                        <select name="MaHuyenTP" data-dojo-type="dijit/form/Select">
+                            @{
+                                foreach (var slt in ViewBag.QuanHuyen as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@slt.Value">@slt.Text</option>
+                                }
+                            }
+                        </select>
 
                 </tr>
             </table>
         </div>
         <div class="dijitDialogPaneActionBar">
             <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
-                OK
+                Đồng ý
             </button>
             <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
-                Cancel
+                Hủy
             </button>
         </div>
     </div>
-    @section scripts{
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-        <script src="~/Scripts/chartjs/draw-chart.js"></script>
-        @RenderSection("scripts", required: false)
-    }
+  
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmBieudoDoanhnghiep" title="Tìm kiếm sâu bệnh"
          execute="findRecordsDN(dojo.toJson(arguments[0], true),'SB')">
         <div class="dijitDialogPaneContentArea">
-            @RenderBody()
+            
         </div>
         <div class="dijitDialogPaneActionBar">
             <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
@@ -406,4 +239,4 @@
 
         </script>
     }
-}
+                                }
