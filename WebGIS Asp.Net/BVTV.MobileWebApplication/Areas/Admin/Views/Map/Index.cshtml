@@ -19,6 +19,7 @@
     </style>
     <link rel="stylesheet" href="https://js.arcgis.com/4.3/esri/css/main.css">
     <script src="https://js.arcgis.com/4.3/"></script>
+    @Scripts.Render("~/bundles/jquery");
     <script>
         var mapconfigs = {
             basemapUrl: "http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer",
@@ -26,6 +27,24 @@
             sauBenhUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1",
             trongTrotUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2"
         };
+        var roles = [];
+        $.getJSON('@Url.Action("GetRoles")', function (response) {
+            for (var i in response) {
+                roles.push(response[i]);
+            }
+        });
+        function getDefinition() {
+            var result = [];
+            for (let i in roles) {
+                let rl = roles[i].toString();
+                //kiem tra ma role co bat dau bang chu MH hay khong
+                if (rl.startsWith('MH')) {
+                    result.push('MaHuyenTP = ' + rl.slice(2, rl.length));
+                }
+            }
+            result = result.join(' or ');
+            return result;
+        }
         require([
           "esri/Map",
           "esri/views/MapView",
@@ -44,10 +63,23 @@
                 zoom: 10,  // Sets the zoom level based on level of detail (LOD)
                 center: [106.688166, 11.172618]
             });
+            var sublayers = [];
+            var definition = getDefinition() || '';
+            for (let i = 0; i < 10; i++) {
+                sublayers.push({
+                    definitionExpression: definition
+                })
+            }
+           
             var baseMap = new MapImageLayer({
                 url: mapconfigs.basemapUrl,
-                title: "Dữ liệu nền Bình Dương"
+                title: "Dữ liệu nền Bình Dương",
+                sublayers:sublayers
             });
+            baseMap.on('layerview-create', function () {
+              
+            })
+            
             map.add(baseMap);
             initFeatureLayers();
 
@@ -67,7 +99,8 @@
                             "<tr><td>Email: </td><td>{Email}</td></tr>" +
                             "<tr><td>Danh mục sản phẩm: </td><td>{DanhMucSanPham}</td></tr>" +
                             "</table>"
-                    }
+                    },
+                    definitionExpression: definition
                 }),
                 sauBenhLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
                     mode: FeatureLayer.MODE_ONDEMAND,
@@ -91,7 +124,8 @@
                             "<tr><td>Huyện/TP: </td><td>{MaHuyenTP}</td></tr>" +
                             "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td></tr>" +
                             "</table>"
-                    }
+                    },
+                    definitionExpression: definition
                 }),
                 trongTrotLayer = new FeatureLayer(mapconfigs.trongTrotUrl, {
                     mode: FeatureLayer.MODE_ONDEMAND,
@@ -111,7 +145,7 @@
                             "<tr><td>Giai đoạn sinh trưởng: </td><td>{GiaiDoanSinhTruong}</td></tr>" +
                             "<tr><td>Ghi chú: </td><td>{GhiChu}</td></tr>" +
                             "</table>"
-                    }
+                    }, definitionExpression: definition
                 });
                 //map.add(sauBenhLayer);
                 map.addMany([trongTrotLayer, sauBenhLayer, doanhNghiepLayer]);

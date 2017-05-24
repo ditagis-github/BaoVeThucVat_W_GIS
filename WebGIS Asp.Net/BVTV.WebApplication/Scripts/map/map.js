@@ -36,7 +36,7 @@ require(["esri/layers/FeatureLayer", "esri/tasks/support/Query", "esri/geometry/
                     where.push(value.property + " LIKE N'%" + domValue + "%'");
                 }
             });
-            
+
             query.where = where.join(' AND ');
             return query;
         }
@@ -45,8 +45,10 @@ require(["esri/layers/FeatureLayer", "esri/tasks/support/Query", "esri/geometry/
                 counterDom = this.counterDom,
                 selectProperties = this.options.selectProperties,
                 feature = this.options.feature;
+            resultDom.html('');
             feature.queryFeatures(query).then(function (results) {
                 let features = results.features;
+                let counter = 1;
                 if (features.length > 0) {
                     for (let i in features) {
                         let currentFeature = features[i],
@@ -58,12 +60,12 @@ require(["esri/layers/FeatureLayer", "esri/tasks/support/Query", "esri/geometry/
                             let id = $(this).attr('data-id');
                             searchWidget.search(id);
                         });
-                        tr.append($('<td/>').text((i + 1) + ". "));
+                        tr.append($('<td/>').text(counter + ". "));
                         tr.append($('<td/>').text(attrs[selectProperties[2]]));
                         tr.append($('<td/>').append(attrs[selectProperties[1]]));
 
                         $(resultDom).append(tr);
-
+                        counter++;
                     }
                     $(counterDom).html(features.length);
                 }
@@ -212,8 +214,6 @@ require([
         });
         view.ui.add(layerListExpand, "top-left");
 
-
-
         // Widget Search Features //
         searchWidget = new Search({
             view: view,
@@ -331,7 +331,7 @@ require([
         ],
         selectProperties: ['LoaiCayTrong', 'TenSauBenhGayHai', 'MaSauBenh']
     }),
- trongTrotSearch  = new SearchEvent({
+ trongTrotSearch = new SearchEvent({
      domId: '#tab-trongtrot',
      feature: trongTrotLayer,
      attributes: [{
