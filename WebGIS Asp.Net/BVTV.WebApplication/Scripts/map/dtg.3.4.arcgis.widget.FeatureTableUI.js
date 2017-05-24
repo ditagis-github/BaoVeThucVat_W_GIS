@@ -1,11 +1,17 @@
-﻿var FeatureTableUI;
+﻿var stringConfigs = {
+    xoaluachon: 'Xóa',
+    lamtuoi:'Làm mới dữ liệu'
+}
+var FeatureTableUI;
 require([
     "esri/dijit/FeatureTable",
     "dojo/dom-style",
+     "esri/graphic",
     "dijit/registry"
 ], function (
         FeatureTable,
         domstyle,
+        Graphic,
         registry) {
     FeatureTableUI = class FeatureTableUI {
         constructor(options, controlDiv, tableDiv, mainContainer) {
@@ -122,6 +128,11 @@ require([
                     datePattern: "d/M/y"
                 },
                 menuFunctions: [{
+                    label: stringConfigs.lamtuoi,
+                    callback: function () {
+                        myFeatureTable.refresh();
+                    }
+                },{
                     label: "Phóng đến",
                     callback: function () {
                         map.setZoom(15);
@@ -136,7 +147,7 @@ require([
                         }
                     }
                 }, {
-                    label: "Xóa lựa chọn",
+                    label: stringConfigs.xoaluachon,
                     callback: function () {
                         let selecteds = myFeatureTable.selectedRowIds;
                         let graphics = [];
@@ -170,6 +181,7 @@ require([
             //on(myFeatureTable, 'row-select', function () {
             //    map.setZoom(15);
             //});
+            layer.featureTable = myFeatureTable;
             document.getElementById(div).style.display = 'hidden';
             return myFeatureTable;
         }

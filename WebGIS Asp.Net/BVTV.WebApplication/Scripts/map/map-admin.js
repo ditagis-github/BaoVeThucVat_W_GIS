@@ -53,7 +53,7 @@ require([
     "esri/Color",
     "esri/arcgis/utils",
     "esri/symbols/SimpleFillSymbol",
-    "esri/graphic",
+     "esri/graphic",
     "esri/geometry/geometryEngine",
     "esri/InfoTemplate",
     "esri/renderers/HeatmapRenderer",
