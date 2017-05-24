@@ -3,7 +3,9 @@ var mapconfigs = {
     basemapUrl: "http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer",
     doanhNghiepUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/0",
     sauBenhUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1",
-    trongTrotUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2"
+    trongTrotUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2",
+    hanhChinhHuyenUrl:"http://112.78.4.175:6080/arcgis/rest/services/Basemap_BaoVeThucVat/MapServer/9",
+    hanhChinhHuyenId:9
 };
 function getDefinition() {
     var result = [];
@@ -143,6 +145,11 @@ require([
             //,maxScale: 22000
         });
 
+        var hanhChinhHuyenLayer = new FeatureLayer(mapconfigs.hanhChinhHuyenUrl, {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"]
+        });
+
         if (definition != undefined && definition != '') {
             doanhNghiepLayer.setDefinitionExpression(definition);
             trongTrotLayer.setDefinitionExpression(definition);
@@ -191,6 +198,7 @@ require([
             drawToolbar.activate(Draw.POINT);
             let event = drawToolbar.on("draw-end", function (evt) {
                 drawToolbar.deactivate();
+                findHuyenId(evt.geometry);
                 var newGraphic = new Graphic(evt.geometry, null, {});
                 doanhNghiepLayer.applyEdits([newGraphic], null, null);
                 event.remove();
@@ -200,11 +208,20 @@ require([
             drawToolbar.activate(Draw.POINT);
             let event = drawToolbar.on("draw-end", function (evt) {
                 drawToolbar.deactivate();
+                findHuyenId(evt.geometry);
                 var newGraphic = new Graphic(evt.geometry, null, { CapDoGayHai: 1 });
                 sauBenhLayer.applyEdits([newGraphic], null, null);
                 event.remove();
             });
         });
+
+        function findHuyenId(geometry) {
+            let query = new Query();
+            query.geometry = geometry;
+            hanhChinhHuyenLayer.selectFeatures(query, function (response) {
+                console.log(response);
+            })
+        }
 
     }
 
