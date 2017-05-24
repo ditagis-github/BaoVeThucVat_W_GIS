@@ -5,98 +5,6 @@ var mapconfigs = {
     sauBenhUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/1",
     trongTrotUrl: "http://112.78.4.175:6080/arcgis/rest/services/BaoVeThucVat_ChuyenDe/FeatureServer/2"
 };
-require(["esri/tasks/query",
-    "esri/geometry/Point",
-    "esri/geometry/Extent"
-], function (Query, Point, Extent) {
-    var SearchEvent = {
-        options: {
-            domId: undefined,
-            feature: undefined,
-            arrAttribute: undefined,
-            selectProperty: undefined
-        },
-        init: function (options) {
-            for (var i in options) {
-                this.options[i] = options[i];
-            }
-        },
-        _findClick: function () {
-
-        },
-        _getQuery: function () {
-            var query = new Query();
-
-            arrAttribute.forEach(function (value, index) {
-                var domValue = $("#" + value.dom).val();
-                var where = ['1=1'];
-                if (domValue.length > 0) {
-                    where.push(value.property + " LIKE N'%" + domValue + "%'");
-                }
-            });
-            where.join(' AND');
-            query.where = where;
-            return query;
-        },
-        _selectFeatures: function () {
-            var viewPoint = this._viewPoint;
-            this.options.feature.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (features) {
-                var html = "";
-                for (var i = 0 ; i < features.length ; i++) {
-                    var attr = features[i].attributes;
-                    var span = $('<span/>').text(attr[selectProperty[1]]).attr('alt', attr[selectProperty[0]]).click(function () {
-                        var where = [selectProperty[0], "='", this.attributes['alt'].nodeValue, "'"].join('');
-                        console.log(where);
-                        viewPoint(where, feature)
-                    });;
-                    var tr = $('<tr/>');
-                    tr.append($('<td/>').text((i + 1) + ". "));
-                    tr.append($('<td/>').text(attr[selectProperty[2]]));
-                    tr.append($('<td/>').append(span));
-
-                    $(resultDom).append(tr);
-
-                }
-                $(counterDom).html(features.length);
-                $(".loading").css("display", "none");
-
-            });
-        },
-        _viewPoint: function (value, layer) {
-            query.where = value;
-            query.returnGeometry = true;
-            query.outFields = ["*"];
-            layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
-                if (results.length > 0) {
-                    var feat = results[0];
-                    var point = feat.geometry;
-                    // var graphic1 = new esri.Graphic(point, ptSymbol1);
-
-                    var pt = new Point(point.x, point.y, map.spatialReference);
-                    if (pt) {
-                        var extent = new Extent((point.x + 40), (point.y + 40), (point.x - 40), (point.y - 40), map.spatialReference);
-                        var stateExtent = extent.expand(5.0);
-                        map.setExtent(stateExtent);
-                    }
-                }
-            });
-        }, _viewPolygon: function (value, layer) {
-            var query = new Query();
-            query.returnGeometry = true;
-            query.outFields = ["*"];
-            query.where = value;
-            layer.selectFeatures(query, FeatureLayer.SELECTION_NEW, function (results) {
-                if (results.length > 0) {
-                    var feat = results[0];
-                    var point = feat.geometry;
-                    // var graphic1 = new esri.Graphic(point, ptSymbol1);
-                    var stateExtent = point.getExtent().expand(8.0);
-                    map.setExtent(stateExtent);
-                }
-            });
-        }
-    }
-});
 function getDefinition() {
     var result = [];
     for (let i in roles) {
@@ -115,221 +23,7 @@ var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMap
 //khai bao bien su kien
 var loadTableTrongTrot, loadTableSauBenh, loadTableDoanhNghiep, findRecordsFeatureLayer;
 //khai bao class
-var SauBenhMode, FeatureTableUI;
-SauBenhMode = class SauBenhMode {
 
-    constructor(options, domElement) {
-        this.options = {
-            normalCSS: 'glyphicon glyphicon-eye-open',
-            heatmapCSS: 'glyphicon glyphicon-eye-close',
-            defaultMode: 'normal'
-        };
-        for (var i in options) {
-            this.options[i] = options[i] || this.options[i];
-        }
-        this.options.defaultMode = this.options.defaultMode == 'normal' ? 'heatmap' : 'normal';
-        this.normalLayer = this.options.normalLayer,
-        this.heatmapLayer = this.options.heatmapLayer;
-        this.mode = this.options.defaultMode;
-        this.div = $('<button/>');
-        $('#' + domElement).append(this.div);
-        let that = this,
-        _change = this.change;
-        this.div.click(function () {
-            _change(that);
-        });
-    }
-    change(that) {
-        that = that || this;
-        if (that.mode === 'heatmap') {
-            that.heatmapLayer.hide();
-            that.normalLayer.show();
-            that.mode = 'normal';
-            that.div.attr('class', that.options.normalCSS);
-        } else {
-            that.heatmapLayer.show();
-            that.normalLayer.hide();
-            that.mode = 'heatmap';
-            that.div.attr('class', that.options.heatmapCSS);
-        }
-    }
-}
-require([
-    "esri/dijit/FeatureTable",
-    "dojo/dom-style",
-    "dijit/registry"
-], function (
-        FeatureTable,
-        domstyle,
-        registry) {
-    FeatureTableUI = class FeatureTableUI {
-        constructor(options, controlDiv, tableDiv, mainContainer) {
-            this.options = {
-                layers: [],
-                icon: 'glyphicon glyphicon-tasks'
-            };
-            for (var i in options) {
-                this.options[i] = options[i] || this.options[i];
-            }
-            this.mainContainer = mainContainer;
-            this.tableDiv = $("#" + (tableDiv || 'contentPane'));
-            this.childTableDivs = [];
-            this.controlDiv = $("#" + (controlDiv || 'tableControl'));
-            this.controlDiv.addClass('dropdown map-control');
-            this.button = $('<button/>');
-            this.button.attr('data-toggle', 'dropdown');
-            this.button.attr('type', 'button');
-
-            let span = $('<span/>');
-            span.addClass(this.options.icon);
-            this.button.append(span);
-            this.controlDiv.append(this.button);
-            this.ul = $('<ul/>');
-            this.ul.addClass("dropdown-menu");
-            let that = this, _clickEvent = this._clickEvent;
-            this.isLoadTable = {
-                firstClick: true
-            }
-            for (var i in this.options.layers) {
-                let layer = this.options.layers[i];
-
-                this.isLoadTable[layer.id] = false;
-
-                let li = $('<li/>'),
-                    a = $('<a/>');
-                a.attr('href', '#');
-                a.attr('id', layer.id);
-                a.text(layer._params.name);
-                a.click(function () {
-                    _clickEvent(that);
-                })
-                li.append(a);
-                this.ul.append(li);
-                let childTableDiv = $('<div/>');
-                childTableDiv.attr('id', layer.id);
-                this.tableDiv.append(childTableDiv);
-                this.childTableDivs.push(childTableDiv);
-                this._loadTable(layer, childTableDiv);
-
-            }
-
-            this.controlDiv.append(this.ul);
-
-
-
-        }
-
-        _clickEvent(that) {
-            if (that.isLoadTable.firstClick) {
-                that._resizeSplitter('115px',that);
-                that.isLoadTable.firstClick = false;
-            }
-            for (var i in that.childTableDivs) {
-                let childTableDiv = that.childTableDivs[i];
-                if (childTableDiv.attr('id') == $(this).attr('id')) {
-                    childTableDiv.css('display', 'block');
-                    let layer = that.options.layers[i];
-                    if (!that.isLoadTable[layer.id]) {
-                        layer.featureTable.startup();
-                        that.isLoadTable[layer.id] = true;
-                    }
-                } else {
-                    childTableDiv.css('display', 'none');
-                }
-
-
-            }
-
-        }
-        _loadTable(layer, div) {
-            // listen to featurelayer click event to handle selection 
-            // from layer to the table. 
-            // when user clicks on a feature on the map, the corresponding 
-            // record will be selected in the table.   
-            //layer.on("click", function (evt) {
-            //    var idProperty = layer.objectIdField,
-            //        feature,
-            //        featureId,
-            //        query;
-
-            //    if (evt.graphic && evt.graphic.attributes && evt.graphic.attributes[idProperty]) {
-            //        feature = evt.graphic,
-            //            featureId = feature.attributes[idProperty];
-
-            //        query = new Query();
-            //        query.returnGeometry = false;
-            //        query.objectIds = [featureId];
-            //        query.where = "1=1";
-
-            //        layer.selectFeatures(query, FeatureLayer.SELECTION_NEW);
-            //    }
-            //});
-
-            //create new FeatureTable and set its properties 
-            // create new FeatureTable and set its properties 
-            var myFeatureTable = new FeatureTable({
-                featureLayer: layer,
-                map: map,
-                // only allows selection from the table to the map 
-                syncSelection: true,
-                zoomToSelection: true,
-                editable: true,
-                gridOptions: {
-                    allowSelectAll: true,
-                    allowTextSelection: true,
-                },
-                dateOptions: {
-                    // set date options at the feature table level 
-                    // all date fields will adhere this 
-                    datePattern: "d/M/y"
-                },
-                menuFunctions: [{
-                    label: "Ẩn bảng",
-                    callback: function (evt) {
-                        resizeSplitter(0);
-                    }
-                }, {
-                    label: "Phóng đến",
-                    callback: function () {
-                        map.setZoom(15);
-                    }
-                }, {
-                    label: "Tìm kiếm",
-                    callback: function () {
-                        layer.frmSearchDlg.show();
-                    }
-                }, {
-                    label: "Xóa lựa chọn",
-                    callback: function () {
-                        let selecteds = myFeatureTable.selectedRowIds;
-                        let graphics = [];
-                        for (let i in selecteds) {
-                            let select = selecteds[i];
-                            graphics.push(new Graphic(null, null, {
-                                OBJECTID: select
-                            }));
-
-                        }
-                        layer.applyEdits(null, null, graphics);
-                        myFeatureTable.refresh();
-                        layer.refresh();
-                    }
-                }]
-            }, div);
-            //on(myFeatureTable, 'row-select', function () {
-            //    map.setZoom(15);
-            //});
-            layer.featureTable = myFeatureTable;
-        }
-        _resizeSplitter(height, that) {
-            if (that.mainContainer) {
-                that = that || this;
-                that.tableDiv.css('height',height);
-                registry.byId(that.mainContainer).resize();
-            }
-        }
-    }
-});
 require([
     "esri/config",
     "esri/map",
@@ -352,6 +46,7 @@ require([
     "esri/symbols/PictureMarkerSymbol",
     "dojo/dom",
     "dojo/dom-style",
+    "dojo/dom-class",
     "dijit/registry",
     "dojo/ready",
     "dojo/on",
@@ -367,7 +62,7 @@ require([
 ], function (
     esriConfig, Map, LocateButton, ArcGISDynamicMapServiceLayer, Editor, FeatureLayer, Query, Point, Extent, GeometryService,
     Draw, TemplatePicker, parser, arrayUtils, BorderContainer, ContentPane, FeatureTable, graphicsUtils, PictureMarkerSymbol,
-    dom, domstyle, registry, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
+    dom, domstyle, domClass, registry, ready, on, Color, arcgisUtils, SimpleFillSymbol, Graphic, geometryEngine, InfoTemplate, HeatmapRenderer, LayerList
 ) {
 
     parser.parse();
@@ -389,7 +84,7 @@ require([
     sbMode.change();
     ftUI = new FeatureTableUI({
         layers: [doanhNghiepLayer, sauBenhLayer, trongTrotLayer]
-    },null,null,'mainContainer');
+    }, null, null, 'mainContainer');
     initWidget();
     initEvents();
 
@@ -451,7 +146,17 @@ require([
             sauBenhLayer.setDefinitionExpression(definition);
             sauBenhHeatMapLayer.setDefinitionExpression(definition);
         }
-        var heatmapRenderer = new HeatmapRenderer();
+        var heatmapRenderer = new HeatmapRenderer({
+            colorStops: [
+                          { ratio: 0, color: "rgba(250, 0, 0, 0)" },
+                          { ratio: 0.6, color: "rgb(250, 0, 0)" },
+                          { ratio: 0.85, color: "rgb(250, 150, 0)" },
+                          { ratio: 0.95, color: "rgb(255, 255, 0)" }
+            ],
+            blurRadius: 17,
+            maxPixelIntensity: 550,
+            minPixelIntensity: 10
+        });
         sauBenhHeatMapLayer.setRenderer(heatmapRenderer);
 
 
@@ -512,7 +217,9 @@ require([
             }],
         }, "layerList");
 
+        $("#LocateButton").addClass("dtg-widget-control");
         geoLocate.startup();
+        $("#layerList").addClass("dtg-widget-control");
         layerList.startup();
     }
 

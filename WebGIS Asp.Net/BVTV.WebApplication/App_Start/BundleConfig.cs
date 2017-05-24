@@ -28,10 +28,12 @@ namespace BVTV.WebApplication
                       "~/Scripts/hifugreen/plugins.js",
                       "~/Scripts/hifugreen/main.js"
                       ));
-            bundles.Add(new ScriptBundle("~/bundles/map").Include(
-                "~/Scripts/Map/search-feature.js",
-                      "~/Scripts/map/map.js"
-                      ));
+            bundles.Add(new ScriptBundle("~/js/map").Include(
+               "~/Scripts/map/map.js"));
+            bundles.Add(new ScriptBundle("~/js/map/admin").Include(
+                "~/Scripts/map/dtg.3.4.arcgis.widget.SauBenhMode.js",
+                "~/Scripts/map/dtg.3.4.arcgis.widget.FeatureTableUI.js",
+                "~/Scripts/map/admin-map.js"));
 
             bundles.Add(new ScriptBundle("~/js/lumino").Include(
                 "~/Scripts/jquery-{version}.js",

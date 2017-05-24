@@ -23,7 +23,7 @@ div#home {
 
 #templatePickerPane {
     overflow: hidden;
-    width:300px;
+    width: 300px;
 }
 
 #panelHeader {
@@ -53,33 +53,55 @@ div#home {
     position: relative;
 }
 
-#LocateButton {
-    position: absolute;
-    top: 128px;
-    left: 20px;
-    z-index: 50;
+.dtg-widget-container {
 }
 
-#layerList {
-    position: absolute;
-    top: 210px;
-    left: 22px;
-    z-index: 50;
-}
-#heatmap{
-    position: absolute;
-    z-index: 50;
-    top: 260px;
-    left: 22px;
-}
+    .dtg-widget-container .dtg-widget-control {
+        left: 20px;
+        margin-top: 10px;
+        position: absolute;
+        z-index: 50;
+        border-radius: 5px;
+        border: 1px solid #57585A;
+        background-color: #FFF;
+        color: #4C4C4C;
+    }
+
+    .dtg-widget-container .square{
+        width:32px;
+        height:32px;
+    }
+
+    .dtg-widget-container #tableControl {
+        top: 81px;
+    }
+
+    .dtg-widget-container #LocateButton {
+        top: 121px;
+    }
+    .dtg-widget-container #addFeatureControl {
+        top: 161px;
+    }
+     .dtg-widget-container #dtg-control-saubenh-mode {
+        top: 201px;
+    }
+    .dtg-widget-container #layerList {
+        top: 241px;
+    }
+    
+    .dtg-widget-container .dtg-widget-control .glyphicon {
+        top: 3px;
+        font-size: 15px;
+    }
+
+    .dtg-widget-container .dtg-widget-control button {
+        background-color: transparent;
+        border-color: transparent;
+    }
+
 #editorDiv {
     font-size: 14px;
 }
-#dtg-control-saubenh-mode{
-     top: 220px;
-    left: 19px;
-}
-   
 
 .tab-search {
     border: #c5c3c3 1px solid;
@@ -102,31 +124,8 @@ div#home {
     padding: 0;
 }
 
-.map-control {
-    position: absolute;
-    z-index: 50;
-    border-radius: 5px;
-    width: 32px;
-    height: 32px;
-    border: 1px solid #57585A;
-    background-color: #FFF;
-    color: #4C4C4C;
-}
 
-#map #tableControl {
-    top: 90px;
-    left: 20px;
-}
 
-.map-control .glyphicon {
-    top: 3px;
-    font-size: 15px;
-}
-
-.map-control button {
-    background-color: transparent;
-    border-color: transparent;
-}
 
 .logo {
     bottom: 30px;
@@ -212,8 +211,4 @@ resultFormSearch table tr th:first-child {
 
 div#dojox_grid_DataGrid_0 {
     width: 100%;
-}
-div#addFeatureControl{
-        margin-top: 165px;
-    margin-left: 20px;
 }

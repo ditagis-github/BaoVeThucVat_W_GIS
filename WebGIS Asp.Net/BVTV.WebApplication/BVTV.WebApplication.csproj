@@ -785,6 +785,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\map\dtg.3.4.arcgis.widget.SauBenhMode.js" />
+    <Content Include="Scripts\map\dtg.3.4.arcgis.widget.FeatureTableUI.js" />
     <Content Include="Scripts\map\map-admin.js" />
     <Content Include="Scripts\xlsx.core.min.js" />
     <Content Include="Scripts\jspdf.min.js" />
@@ -875,11 +877,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56910</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56910/</IISUrl>
+          <IISUrl>http://localhost:6060/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
