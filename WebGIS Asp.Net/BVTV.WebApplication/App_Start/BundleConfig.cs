@@ -33,7 +33,7 @@ namespace BVTV.WebApplication
             bundles.Add(new ScriptBundle("~/js/map/admin").Include(
                 "~/Scripts/map/dtg.3.4.arcgis.widget.SauBenhMode.js",
                 "~/Scripts/map/dtg.3.4.arcgis.widget.FeatureTableUI.js",
-                "~/Scripts/map/admin-map.js"));
+                "~/Scripts/map/map-admin.js"));
 
             bundles.Add(new ScriptBundle("~/js/lumino").Include(
                 "~/Scripts/jquery-{version}.js",

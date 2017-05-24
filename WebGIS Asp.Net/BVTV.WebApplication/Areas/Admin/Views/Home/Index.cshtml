@@ -83,22 +83,24 @@
     <div id="tabMapControl">
         <div id="mainContainer" class="col-lg-12" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false">
             <div id="map" dir="ltr" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-                <div id="layerList"></div>
-                <div id="LocateButton">
-                </div>
-                <div id="tableControl">
-                </div>
-                <div id="addFeatureControl" class="dropdown map-control " title="Thêm doanh nghiệp hoặc sâu bệnh">
-                    <button type="button" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon glyphicon-plus-sign"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a id="addDNFL" href="javascript:void(0)">Doanh nghiệp</a></li>
-                        <li><a id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
-                    </ul>
-                </div>
-                <div id="dtg-control-saubenh-mode" class="map-control">
-                   
+                <div class="dtg-widget-container">
+                    <div id="layerList"></div>
+                    <div id="LocateButton">
+                    </div>
+                    <div id="tableControl" class="dtg-widget-control">
+                    </div>
+                    <div id="addFeatureControl" class="dropdown dtg-widget-control " title="Thêm doanh nghiệp hoặc sâu bệnh">
+                        <button type="button" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon glyphicon-plus-sign"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a id="addDNFL" href="javascript:void(0)">Doanh nghiệp</a></li>
+                            <li><a id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
+                        </ul>
+                    </div>
+                    <div id="dtg-control-saubenh-mode" class="dtg-widget-control">
+
+                    </div>
                 </div>
             </div>
             <div id="contentPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom',splitter:true">
@@ -201,26 +203,30 @@
             </table>
         </div>
         <div class="dijitDialogPaneActionBar">
-            <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
+            <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmTrongTrot.isValid();">
                 Đồng ý
             </button>
-            <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
+            <button data-dojo-type="dijit/form/Button" type="button" onClick="frmTrongTrot.hide()">
                 Hủy
             </button>
         </div>
     </div>
-  
-    <div data-dojo-type="dijit/Dialog" data-dojo-id="frmBieudoDoanhnghiep" title="Tìm kiếm sâu bệnh"
-         execute="findRecordsDN(dojo.toJson(arguments[0], true),'SB')">
+
+    <div data-dojo-type="dijit/Dialog" data-dojo-id="frmBieudoTT" title="Thống kê trồng trọt">
         <div class="dijitDialogPaneContentArea">
+                <select class="form-control" id="chart-tt-nam">
+                    <option>Chọn năm</option>
+                </select>
+                <select class="form-control" id="chart-tt-thang"></select>
+                
+                <canvas id="chartDienTichGieoTrong" width="350" height="350"></canvas>
             
+           
         </div>
         <div class="dijitDialogPaneActionBar">
-            <button data-dojo-type="dijit/form/Button" type="submit" onClick="return frmSauBenh.isValid();">
-                OK
-            </button>
-            <button data-dojo-type="dijit/form/Button" type="button" onClick="frmSauBenh.hide()">
-                Cancel
+            <input class="btn btn-default" type="button" onclick="thongke();" value="Thống kê" />
+            <button class="btn btn-default" type="button" onClick="frmBieudoTT.hide()">
+                Tắt
             </button>
         </div>
     </div>
@@ -234,6 +240,54 @@
                 }
             });
         </script>
-        @Scripts.Render("/js/map/admin");
+        <script src="~/Scripts/map/dtg.3.4.arcgis.widget.SauBenhMode.js"></script>
+        <script src="~/Scripts/map/dtg.3.4.arcgis.widget.FeatureTableUI.js"></script>
+        <script src="~/Scripts/map/map-admin.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+<script src="~/Scripts/chartjs/draw-chart.js"></script>
+<script>
+                var thang,nam;
+                $(function () {
+                    thang = $('#chart-tt-thang');
+                    nam = $('#chart-tt-nam');
+
+                    nam.change(function () {
+                        thang.find('option').remove();
+                        $.getJSON('@Url.Action("GetMonth","TrongTrot")?year=' + nam.val(), function (datas) {
+                            if (datas.length > 0) {
+                                let option = $("<option/>");
+                                option.text('Chọn tháng');
+                                thang.append(option);
+                            for (let i in datas) {
+                                let data = datas[i];
+                                let option = $("<option/>");
+                                option.text(data.Text);
+                                option.attr('value', data.Value);
+                                thang.append(option);
+                            }
+                        }
+                        });
+                    });
+
+                    $.getJSON('@Url.Action("GetYear","TrongTrot")', function (datas) {
+                        if (datas.length > 0) {
+                            for (let i in datas) {
+                                let data = datas[i];
+                                let option = $("<option/>");
+                                option.text(data.Text);
+                                option.attr('value', data.Value);
+                                nam.append(option);
+                            }
+                        }
+                    });
+
+
+                });
+                function thongke() {
+
+                    var url = '@Url.Action("GetAll","TrongTrot")' + '?thang=' + thang.val() + '&nam=' + nam.val();
+                    drawPie($('#chartDienTichGieoTrong'), url, { label: 'Diện tích gieo trồng' })
+                }
+</script>
     }
                                 }

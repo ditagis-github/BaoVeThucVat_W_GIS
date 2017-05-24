@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.WebApplication.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.Services", "BVTV.Services\BVTV.Services.csproj", "{816C91E3-65D4-41F9-A7B1-95106D5C6C11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BVTV.MobileWebApplication", "BVTV.MobileWebApplication\BVTV.MobileWebApplication.csproj", "{272D4F41-524E-49ED-B3C0-F0A18BDEF4EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{816C91E3-65D4-41F9-A7B1-95106D5C6C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{816C91E3-65D4-41F9-A7B1-95106D5C6C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{816C91E3-65D4-41F9-A7B1-95106D5C6C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{272D4F41-524E-49ED-B3C0-F0A18BDEF4EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{272D4F41-524E-49ED-B3C0-F0A18BDEF4EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{272D4F41-524E-49ED-B3C0-F0A18BDEF4EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{272D4F41-524E-49ED-B3C0-F0A18BDEF4EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

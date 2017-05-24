@@ -200,5 +200,25 @@ namespace BVTV.WebApplication.Areas.Admin.Controllers
             return View();
 
         }
+        public ActionResult GetYear()
+        {
+            var query = from qh in db.THOIGIANSANXUATTRONGTROTs.Select(o => o.Nam.Value).Distinct().OrderByDescending(p => p)
+                        select new
+                        {
+                            Text = qh.ToString(),
+                            Value = qh.ToString()
+                        };
+            return Json(query.ToList(), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetMonth(short year)
+        {
+            var query = from qh in db.THOIGIANSANXUATTRONGTROTs.Where(w=>w.Thang.HasValue && w.Nam.HasValue && w.Nam.Value.Equals(year)).Select(o => o.Thang.Value).Distinct().OrderBy(p => p)
+                        select new
+                        {
+                            Text = qh.ToString(),
+                            Value = qh.ToString()
+                        };
+            return Json(query.ToList(), JsonRequestBehavior.AllowGet);
+        }
     }
 }

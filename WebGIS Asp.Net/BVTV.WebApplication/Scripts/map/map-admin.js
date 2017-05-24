@@ -115,7 +115,7 @@ require([
             id: 'doanhnghiep',
             name: 'Doanh nghiệp'
         });
-
+        doanhNghiepLayer.frmSearchDlg = frmDoanhNghiep;
         sauBenhLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"],
@@ -123,6 +123,7 @@ require([
             name: 'Sâu bệnh'
             //,minScale: 22000
         });
+        sauBenhLayer.frmSearchDlg = frmSauBenh;
         //on(sauBenhLayer, "edits-complete", function () {
         //    if (sauBenhLayer.featureTable) {
         //        sauBenhLayer.featureTable.refresh();
@@ -134,6 +135,8 @@ require([
             id: 'trongtrot',
             name: 'Trồng trọt'
         });
+        trongTrotLayer.frmSearchDlg = frmTrongTrot;
+        trongTrotLayer.frmChart = frmBieudoTT;
         sauBenhHeatMapLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"]
@@ -249,143 +252,7 @@ require([
     //     loadData('#tab-trongtrot #cbLoaiCayTrong', 'LoaiCayTrong', trongTrotLayer),
     //     loadData('#tab-trongtrot #cbPhuongThucTrong', 'PhuongThucTrong', trongTrotLayer);
     //});
-
-    //Table Feature
-    function resizeSplitter(height) {
-        domstyle.set('contentPane', {
-            height: height
-        });
-        registry.byId('mainContainer').resize();
-    }
-    function loadTable(layer, div) {
-        if (isLoadTable.firstClick) {
-            resizeSplitter('115px');
-            isLoadTable.firstClick = false;
-        }
-        // listen to featurelayer click event to handle selection 
-        // from layer to the table. 
-        // when user clicks on a feature on the map, the corresponding 
-        // record will be selected in the table.   
-        layer.on("click", function (evt) {
-            var idProperty = layer.objectIdField,
-                feature,
-                featureId,
-                query;
-
-            if (evt.graphic && evt.graphic.attributes && evt.graphic.attributes[idProperty]) {
-                feature = evt.graphic,
-                    featureId = feature.attributes[idProperty];
-
-                query = new Query();
-                query.returnGeometry = false;
-                query.objectIds = [featureId];
-                query.where = "1=1";
-
-                layer.selectFeatures(query, FeatureLayer.SELECTION_NEW);
-            }
-        });
-
-        //create new FeatureTable and set its properties 
-        // create new FeatureTable and set its properties 
-        var myFeatureTable = new FeatureTable({
-            featureLayer: layer,
-            map: map,
-            // only allows selection from the table to the map 
-            syncSelection: true,
-            zoomToSelection: true,
-            editable: true,
-            gridOptions: {
-                allowSelectAll: true,
-                allowTextSelection: true,
-            },
-            dateOptions: {
-                // set date options at the feature table level 
-                // all date fields will adhere this 
-                datePattern: "d/M/y"
-            },
-            menuFunctions: [{
-                label: "Ẩn bảng",
-                callback: function (evt) {
-                    resizeSplitter(0);
-                }
-            }, {
-                label: "Phóng đến",
-                callback: function () {
-                    map.setZoom(15);
-                }
-            }, {
-                label: "Tìm kiếm",
-                callback: function () {
-                    layer.frmSearchDlg.show();
-                }
-            }, {
-                label: "Xóa lựa chọn",
-                callback: function () {
-                    let selecteds = myFeatureTable.selectedRowIds;
-                    let graphics = [];
-                    for (let i in selecteds) {
-                        let select = selecteds[i];
-                        graphics.push(new Graphic(null, null, { OBJECTID: select }));
-
-                    }
-                    layer.applyEdits(null, null, graphics);
-                    myFeatureTable.refresh();
-                    layer.refresh();
-                }
-            }]
-        }, div);
-        //on(myFeatureTable, 'row-select', function () {
-        //    map.setZoom(15);
-        //});
-        layer.featureTable = myFeatureTable;
-        myFeatureTable.startup();
-
-    }
-
-
-    var isLoadTable = {
-        firstClick: true,
-        sauBenh: false,
-        trongTrot: false,
-        doanhNghiep: false
-    }
     function initEvents() {
-        loadTableSauBenh = function () {
-            if (!isLoadTable.sauBenh) {
-                sauBenhLayer.frmSearchDlg = frmSauBenh;
-                loadTable(sauBenhLayer, 'tableLayerSauBenh');
-                isLoadTable.sauBenh = true;
-            }
-            document.getElementById('tableDoanhNghiep').style.display = 'none';
-            document.getElementById('tableTrongTrot').style.display = 'none';
-            document.getElementById('tableLayerSauBenh').style.display = 'block';
-            resizeSplitter($("#contentPane").height());
-        }
-
-        loadTableDoanhNghiep = function () {
-            if (!isLoadTable.doanhNghiep) {
-                doanhNghiepLayer.frmSearchDlg = frmDoanhNghiep;
-                loadTable(doanhNghiepLayer, 'tableDoanhNghiep');
-                isLoadTable.doanhNghiep = true;
-            }
-
-            document.getElementById('tableLayerSauBenh').style.display = 'none';
-            document.getElementById('tableTrongTrot').style.display = 'none';
-            document.getElementById('tableDoanhNghiep').style.display = 'block';
-            resizeSplitter($("#contentPane").height());
-        }
-
-        loadTableTrongTrot = function () {
-            if (!isLoadTable.trongTrot) {
-                loadTable(trongTrotLayer, 'tableTrongTrot');
-                isLoadTable.trongTrot = true;
-            }
-
-            document.getElementById('tableDoanhNghiep').style.display = 'none';
-            document.getElementById('tableLayerSauBenh').style.display = 'none';
-            document.getElementById('tableTrongTrot').style.display = 'block';
-            resizeSplitter($("#contentPane").height());
-        }
         findRecordsFeatureLayer = function (arguments, type) {
             arguments = JSON.parse(arguments);
             let featureLayer = type == "DN" ? doanhNghiepLayer : type == "SB" ? sauBenhLayer : trongTrotLayer;
@@ -400,12 +267,6 @@ require([
             let objectid = [];
             featureLayer.selectFeatures(query);
         }
-        //$('#changeSBMode').click(function () {
-        //    //kiem tra xem dang o che do nao
-        //    let that = $(this);
-        //    let type = that.attr('data-type');
-        //    changeModeSauBenh(type);
-        //});
-        //changeModeSauBenh();
     }
+
 });

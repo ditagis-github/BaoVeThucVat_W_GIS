@@ -16,11 +16,16 @@ require([
             for (var i in options) {
                 this.options[i] = options[i] || this.options[i];
             }
+
+            this.datas = [];
+
             this.mainContainer = mainContainer;
-            this.tableDiv = $("#" + (tableDiv || 'contentPane'));
+            this.tableDiv = tableDiv || 'contentPane';
+            this.tableDivElement = $('#' + this.tableDiv);
             this.childTableDivs = [];
-            this.controlDiv = $("#" + (controlDiv || 'tableControl'));
-            this.controlDiv.addClass('dropdown map-control');
+            this.controlDiv = controlDiv || 'tableControl';
+            this.controlDivElement = $('#' + this.controlDiv);
+            this.controlDivElement.addClass('dropdown map-control');
             this.button = $('<button/>');
             this.button.attr('data-toggle', 'dropdown');
             this.button.attr('type', 'button');
@@ -28,7 +33,7 @@ require([
             let span = $('<span/>');
             span.addClass(this.options.icon);
             this.button.append(span);
-            this.controlDiv.append(this.button);
+            this.controlDivElement.append(this.button);
             this.ul = $('<ul/>');
             this.ul.addClass("dropdown-menu");
             let that = this, _clickEvent = this._clickEvent;
@@ -43,25 +48,33 @@ require([
                 let li = $('<li/>'),
                     a = $('<a/>');
                 a.attr('href', '#');
-                a.attr('id', layer.id);
+                a.attr('id', "dtg-ft-link-"+layer.id);
                 a.text(layer._params.name);
                 a.click(function (evt) {
                     _clickEvent(that, evt.target);
-                })
+                });
+                
                 li.append(a);
                 this.ul.append(li);
                 let childTableDiv = $('<div/>');
-                childTableDiv.attr('id', layer.id);
+                childTableDiv.attr('id',"dtg-ft-div-"+ layer.id);
 
-                this.tableDiv.append(childTableDiv);
+                this.tableDivElement.append(childTableDiv);
                 this.childTableDivs.push(childTableDiv);
-                this._loadTable(layer, childTableDiv.attr('id'));
-                childTableDiv.addClass('hidden');
-                console.log(childTableDiv.attr('class'));
+                let featureTable = this._loadTable(layer, childTableDiv.attr('id'),that);
+
+                let data = {
+                    layer: layer,
+                    a: a.attr('id'),
+                    div: childTableDiv.attr('id'),
+                    featureTable: featureTable,
+                    loadedTable:false
+                }
+                this.datas.push(data);
 
             }
 
-            this.controlDiv.append(this.ul);
+            this.controlDivElement.append(this.ul);
 
 
 
@@ -72,24 +85,24 @@ require([
                 that._resizeSplitter('115px', that);
                 that.isLoadTable.firstClick = false;
             }
-            for (var i in that.childTableDivs) {
-                let childTableDiv = that.childTableDivs[parseInt(i)];
-                if (childTableDiv.attr('id') == $(target).attr('id')) {
-                    childTableDiv.css('display', 'block');
-                    let layer = that.options.layers[i];
-                    if (!that.isLoadTable[layer.id]) {
-                        layer.featureTable.startup();
-                        that.isLoadTable[layer.id] = true;
+            let datas = that.datas;
+            for (var i in datas) {
+                let data = datas[i];
+                if (data.a == target.id) {
+                    if (!data.loadedTable) {
+                        data.featureTable.startup();
+                        data.loadTable = true;
                     }
-                } else {
-                    childTableDiv.css('display', 'none');
+                    document.getElementById(data.div).style.display = 'block';
                 }
-
-
+                else {
+                    document.getElementById(data.div).style.display = 'none';
+                }
             }
 
         }
-        _loadTable(layer, div) {
+        _loadTable(layer, div, that) {
+            that = that || this;
             //create new FeatureTable and set its properties 
             // create new FeatureTable and set its properties 
             var myFeatureTable = new FeatureTable({
@@ -109,11 +122,6 @@ require([
                     datePattern: "d/M/y"
                 },
                 menuFunctions: [{
-                    label: "Ẩn bảng",
-                    callback: function (evt) {
-                        resizeSplitter(0);
-                    }
-                }, {
                     label: "Phóng đến",
                     callback: function () {
                         map.setZoom(15);
@@ -121,7 +129,11 @@ require([
                 }, {
                     label: "Tìm kiếm",
                     callback: function () {
-                        layer.frmSearchDlg.show();
+                        if (layer.frmSearchDlg) {
+                            layer.frmSearchDlg.show();
+                        } else {
+                            alert('Không có chức năng tìm kiếm trong mục này, liên hệ với DITAGIS để được hỗ trợ');
+                        }
                     }
                 }, {
                     label: "Xóa lựa chọn",
@@ -139,17 +151,32 @@ require([
                         myFeatureTable.refresh();
                         layer.refresh();
                     }
+                },{
+                    label: "Biểu đồ",
+                    callback: function (evt) {
+                        if (layer.frmChart) {
+                            layer.frmChart.show();
+                        } else {
+                            alert('Không có chức năng biểu đồ trong mục này, liên hệ với DITAGIS để được hỗ trợ');
+                        }
+                    }
+                },{
+                    label: "Ẩn bảng",
+                    callback: function (evt) {
+                        that._resizeSplitter(0, that);
+                    }
                 }]
             }, div);
             //on(myFeatureTable, 'row-select', function () {
             //    map.setZoom(15);
             //});
-            layer.featureTable = myFeatureTable;
+            document.getElementById(div).style.display = 'hidden';
+            return myFeatureTable;
         }
         _resizeSplitter(height, that) {
             if (that.mainContainer) {
                 that = that || this;
-                that.tableDiv.css('height', height);
+                that.tableDivElement.css('height', height);
                 registry.byId(that.mainContainer).resize();
             }
         }
