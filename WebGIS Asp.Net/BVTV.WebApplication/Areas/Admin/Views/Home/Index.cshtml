@@ -69,8 +69,7 @@
     </div><!--/.row-->
 }
 
-@if (User.IsInRole("admin") || User.IsInRole("updater"))
-{
+
     @section headtag{
         <link rel="stylesheet" href="~/Content/claro.css">
         <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
@@ -87,8 +86,11 @@
                     <div id="layerList"></div>
                     <div id="LocateButton">
                     </div>
+@if (User.IsInRole("admin") || User.IsInRole("updater"))
+{
                     <div id="tableControl" class="dtg-widget-control">
                     </div>
+                    
                     <div id="addFeatureControl" class="dropdown dtg-widget-control " title="Thêm doanh nghiệp hoặc sâu bệnh">
                         <button type="button" data-toggle="dropdown">
                             <span class="glyphicon glyphicon glyphicon-plus-sign"></span>
@@ -98,6 +100,7 @@
                             <li><a id="addSBFL" href="javascript:void(0)">Sâu bệnh</a></li>
                         </ul>
                     </div>
+                    }
                     <div id="dtg-control-saubenh-mode" class="dtg-widget-control">
 
                     </div>
@@ -107,6 +110,7 @@
             </div>
         </div>
     </div>
+
     <div data-dojo-type="dijit/Dialog" data-dojo-id="frmDoanhNghiep" title="Tìm kiếm doanh nghiệp"
          execute="findRecordsFeatureLayer(dojo.toJson(arguments[0], true),'DN')">
         <div class="dijitDialogPaneContentArea">
@@ -288,4 +292,4 @@
                 }
 </script>
     }
-                                }
+

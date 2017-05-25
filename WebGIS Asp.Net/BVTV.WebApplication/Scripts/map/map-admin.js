@@ -20,7 +20,7 @@ function getDefinition() {
     return result;
 }
 //khai bao bien
-var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMapLayer, sbMode, ftUI;
+var map, basemap, doanhNghiepLayer, sauBenhLayer, trongTrotLayer, sauBenhHeatMapLayer,hanhChinhHuyenLayer, sbMode, ftUI;
 
 //khai bao bien su kien
 var loadTableTrongTrot, loadTableSauBenh, loadTableDoanhNghiep, findRecordsFeatureLayer;
@@ -106,16 +106,16 @@ require([
     }
 
     function initFeatureLayer() {
-        FeatureLayer.prototype.EditsComplete = function () {
-            if (this.featureTable) {
-                this.featureTable.refresh();
-            }
-        };
         doanhNghiepLayer = new FeatureLayer(mapconfigs.doanhNghiepUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"],
             id: 'doanhnghiep',
             name: 'Doanh nghiệp'
+        });
+        doanhNghiepLayer.on('edits-complete', function () {
+            if (doanhNghiepLayer.featureTable) {
+                doanhNghiepLayer.featureTable.refresh();
+            }
         });
         doanhNghiepLayer.frmSearchDlg = frmDoanhNghiep;
         sauBenhLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
@@ -124,6 +124,11 @@ require([
             id: 'saubenh',
             name: 'Sâu bệnh'
             //,minScale: 22000
+        });
+        sauBenhLayer.on('edits-complete', function () {
+            if (sauBenhLayer.featureTable) {
+                sauBenhLayer.featureTable.refresh();
+            }
         });
         sauBenhLayer.frmSearchDlg = frmSauBenh;
         //on(sauBenhLayer, "edits-complete", function () {
@@ -137,6 +142,11 @@ require([
             id: 'trongtrot',
             name: 'Trồng trọt'
         });
+        trongTrotLayer.on('edits-complete', function () {
+            if (trongTrotLayer.featureTable) {
+                trongTrotLayer.featureTable.refresh();
+            }
+        });
         trongTrotLayer.frmSearchDlg = frmTrongTrot;
         trongTrotLayer.frmChart = frmBieudoTT;
         sauBenhHeatMapLayer = new FeatureLayer(mapconfigs.sauBenhUrl, {
@@ -145,7 +155,7 @@ require([
             //,maxScale: 22000
         });
 
-        var hanhChinhHuyenLayer = new FeatureLayer(mapconfigs.hanhChinhHuyenUrl, {
+        hanhChinhHuyenLayer = new FeatureLayer(mapconfigs.hanhChinhHuyenUrl, {
             mode: FeatureLayer.MODE_ONDEMAND,
             outFields: ["*"]
         });
