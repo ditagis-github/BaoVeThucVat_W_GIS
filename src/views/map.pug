@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  script.
+    //hiển thị loader
+    Loader.show();
+    var username =  '#{user.username}';
+    var role = #{user.role};
+  #map
+  script(src='javascripts/config.js')
+  script(src='https://js.arcgis.com/4.4/')
+  script(src='javascripts/ditagis/main.js')

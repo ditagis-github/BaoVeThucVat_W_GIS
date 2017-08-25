@@ -1,0 +1,26 @@
+doctype html
+html
+	head
+		title Node.js Login
+		link(rel='stylesheet', href='../stylesheets/bootstrap.min.css')
+		link(rel='stylesheet', href='../stylesheets/style.css')
+		link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css')
+	body
+		nav.navbar.navbar-default.navbar-fixed-top
+			.container
+				.navbar-header
+					.navbar-brand DITAGIS
+				ul.nav.navbar-nav.navbar-right
+					li
+						.navbar-btn#btn-logout.btn.btn-default
+							| Đăng xuất
+
+		include account
+		include ../modals/alert
+		include ../modals/confirm
+		script(src='../javascripts/lib/jquery-2.2.3.min.js')
+		script(src='../javascripts/lib/jquery.form.min.js')
+		script(src='../javascripts/lib/bootstrap.min.js')
+		script(src='../javascripts/account/views/home.js')
+		script(src='../javascripts/account/controllers/homeController.js')
+		script(src='../javascripts/account/form-validators/accountValidator.js')
