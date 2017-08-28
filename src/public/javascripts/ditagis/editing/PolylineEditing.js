@@ -25,22 +25,19 @@ define([
                 this._layer = value;
             }
 
-            draw(drawLayer = this.layer, geometry) {
+            draw(drawLayer = this.layer, graphic) {
                 return new Promise((resolve, reject) => {
-                    let attributes = {};
+                    graphic.attributes = {};
                     var plAttrs = new PolylineAttributes(this.view, drawLayer);
-                    plAttrs.getAttributes(geometry).then(attributes => {
-                        for (var i in drawLayer.drawingAttributes) {
-                            attributes[i] = drawLayer.drawingAttributes[i];
-                        }
-                        for (var i in plAttrs.attributes) {
-                            attributes[i] = attributes[i];
+                    plAttrs.getAttributes(graphic.geometry).then(attributes => {
+                        var attributes = plAttrs.attributes;
+                        if (drawLayer.drawingAttributes)
+                            graphic.attributes = drawLayer.drawingAttributes;
+                        for (var i in attributes) {
+                            graphic.attributes[i] = attributes[i];
                         }
                         let edits = {
-                            addFeatures: [{
-                                geometry:geometry,
-                                attributes:attributes
-                            }]
+                            addFeatures: [graphic]
                         };
                         drawLayer.applyEdits(edits).then((result) => {
                             if (result.addFeatureResults.length > 0) {

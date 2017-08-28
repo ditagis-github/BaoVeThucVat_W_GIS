@@ -1,6 +1,6 @@
 define([
     "dojo/on",
-    "ditagis/classes/EventListener",
+"ditagis/classes/EventListener",
     "esri/Graphic",
     "esri/geometry/Polyline",
     "esri/geometry/Point",
@@ -11,12 +11,11 @@ define([
 
     "esri/geometry/geometryEngine",
     "esri/geometry/support/webMercatorUtils",
-    "ditagis/toolview/Tooltip",
-
-], function (on, EventListener,
+    
+], function (on,EventListener,
     Graphic,
     Polyline, Point, Circle, SimpleLineSymbol, SimpleMarkerSymbol, SimpleFillSymbol,
-    geometryEngine, webMercatorUtils, Tooltip) {
+    geometryEngine, webMercatorUtils, ) {
         'use strict';
         return class {
             constructor(view) {
@@ -25,21 +24,13 @@ define([
                 this.eventListener = new EventListener(this);
             }
             draw(layer) {
-                this.options = {
-                    tooltip: {
-                        move: 'Nhấn vào màn hình để chọn tâm vòng tròn thứ nhất'
-                    }
-                }
-                this.tooltipMoveEvent = on(this.view, 'pointer-move', evt => {
-                    Tooltip.instance().show([evt.x, evt.y], this.options.tooltip.move);
-                });
                 this.points = [];
                 this.clickBufferEvent = on(view, 'click', (evt) => {
                     this.clickBufferFunc(evt);
                 });
-                this.doubleClickEvent = on(this.view, 'double-click', (evt) => {
+                this.doubleClickEvent = on(this.view, 'double-click',(evt) => {
                     this.doubleClickFunc(evt);
-                });
+                } );
 
             }
             doubleClickFunc(evt) {
@@ -62,11 +53,6 @@ define([
                     this.clickSelectPointEvent.remove();
                     this.clickSelectPointEvent = null;
                 }
-                if (this.tooltipMoveEvent) {
-                    Tooltip.instance().hide();
-                    this.tooltipMoveEvent.remove();
-                    this.tooltipMoveEvent = null;
-                }
             }
             clickBufferFunc(evt) {
                 let pointcenter = view.toMap({
@@ -83,7 +69,6 @@ define([
                     });
                 view.graphics.add(centerCircle);
                 let dis = prompt("Nhập bán kính của đường tròn:");
-                this.options.tooltip.move = "Nhấn vào màn hình để chọn tâm thứ 2";
                 let circleGeometry = new Circle({
                     center: pointcenter,
                     radius: dis,
@@ -155,8 +140,6 @@ define([
                                 this.view.graphics.add(pointConjunctionGraphic);
                                 // Để lưu giữ hai điểm tọa độ giao
                                 this.points.push(pointConjunctionGraphic);
-                                this.options.tooltip.move = "Chọn một trong hai điểm giao hội ở trên bản đồ để hoàn thành";
-
                             }
                         }
                         if (this.clickBufferEvent) {
@@ -165,11 +148,6 @@ define([
                         }
                         this.clickSelectPointEvent = on(this.view, 'click', (evt) => {
                             this.clickSelectPointFunc(evt);
-                            if (this.tooltipMoveEvent) {
-                                Tooltip.instance().hide();
-                                this.tooltipMoveEvent.remove();
-                                this.tooltipMoveEvent = null;
-                            }
                         })
                         for (var i = 0; i < 4; i++)
                             this.view.graphics.remove(this.points[i]);
@@ -196,7 +174,7 @@ define([
                             geometry: pointcenter,
                             symbol: new SimpleMarkerSymbol()
                         });
-                        this.eventListener.fire('draw-finish', pointAdd);
+                        this.eventListener.fire('draw-finish',pointAdd);
                         this.clickSelectPointEvent.remove();
 
                         for (let point of this.points) {

@@ -31,26 +31,26 @@ EventListener) {
             this.pointEditing.draw(this.drawLayer,graphic);
         }
         registerEvent() {
-            this.bufferDrawPoint.on('draw-finish', (geometry) => {
+            this.bufferDrawPoint.on('draw-finish', (graphic) => {
                 this.eventListener.fire('draw-finish', {
-                    graphic: geometry,
+                    graphic: graphic,
                     method: 'simple'
                 });
-                this.addFeature(geometry);
+                this.addFeature(graphic);
             })
-            this.conjunctionDrawPoint.on('draw-finish', (geometry) => {
+            this.conjunctionDrawPoint.on('draw-finish', (graphic) => {
                 this.eventListener.fire('draw-finish', {
-                    graphic: geometry,
+                    graphic: graphic,
                     method: 'arcsegment'
                 });
-                this.addFeature(geometry);
+                this.addFeature(graphic);
             })
-            this.simpleDrawPoint.on('draw-finish', (geometry) => {
+            this.simpleDrawPoint.on('draw-finish', (graphic) => {
                 this.eventListener.fire('draw-finish', {
-                    graphic: geometry,
+                    graphic: graphic,
                     method: 'arcsegment'
                 });
-                this.addFeature(geometry);
+                this.addFeature(graphic);
             })
         }
         set drawLayer(val){

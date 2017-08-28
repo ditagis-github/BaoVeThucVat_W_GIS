@@ -12,14 +12,12 @@ define([
     "esri/geometry/geometryEngine",
     "esri/geometry/support/webMercatorUtils",
     "ditagis/classes/EventListener",
-    "ditagis/toolview/Tooltip",
 ], function (on,
     Graphic, Circle, Polyline, Point,
     SimpleLineSymbol, SimpleMarkerSymbol, SimpleFillSymbol,
     geometryEngine, webMercatorUtils,
-    EventListener,
-    Tooltip
-) {
+    EventListener
+    ) {
         'use strict';
         return class {
             constructor(view) {
@@ -32,14 +30,6 @@ define([
                 this.eventListener = new EventListener(this);
             }
             draw(layer) {
-                this.options = {
-                    tooltip: {
-                        move: 'Nhấn vào màn hình để chọn tâm vòng tròn'
-                    }
-                }
-                this.tooltipMoveEvent = on(this.view, 'pointer-move', evt => {
-                    Tooltip.instance().show([evt.x, evt.y], this.options.tooltip.move);
-                });
                 this.clickEventBuffer = on(this.view, 'click', (evt) => {
                     this.clickBufferFunc(evt)
                 });
@@ -51,11 +41,6 @@ define([
                 this.clearEvents();
             }
             clearEvents() {
-                if (this.tooltipMoveEvent) {
-                    Tooltip.instance().hide();
-                    this.tooltipMoveEvent.remove();
-                    this.tooltipMoveEvent = null;
-                }
                 if (this.clickEventBuffer) {
                     this.clickEventBuffer.remove();
                     this.clickEventBuffer = null;
@@ -103,7 +88,6 @@ define([
                 this.view.graphics.add(this.bufferGeometry.polygonGraphic);
 
                 this.pointerMoveBufferEvent = on(this.view, 'pointer-move', (evt) => {
-                    this.options.tooltip.move = "Nhấn để chọn điểm trên vòng tròn";
                     this.pointerMoveBufferFunc(evt)
                 });
             }
@@ -116,6 +100,7 @@ define([
                     this.clickPointEvent.remove();
                     this.clickPointEvent = null;
                 }
+                evt.stopPropagation();
                 var point = this.view.toMap({
                     x: evt.x,
                     y: evt.y
@@ -159,13 +144,11 @@ define([
                 });
             }
             clickPointFunc(evt) {
-                this.options.tooltip.move = 'Nhấn vào màn hình để chọn tâm vòng tròn';
                 if (this.pointerMoveBufferEvent) {
                     this.pointerMoveBufferEvent.remove();
                     this.pointerMoveBufferEvent = null;
                 }
-                this.eventListener.fire('draw-finish', this.bufferGeometry.centerPoint);
-                this.view.graphics.remove(this.bufferGeometry.centerPoint);
+                this.eventListener.fire('draw-finish',this.bufferGeometry.centerPoint);
                 this.view.graphics.remove(this.bufferGeometry.polygonGraphic);
                 this.view.graphics.remove(this.bufferGeometry.moveLine);
                 if (this.clickPointEvent) {

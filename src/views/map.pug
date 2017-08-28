@@ -1,5 +1,8 @@
 extends layout
-
+block javascript
+  script(src='javascripts/config.js')
+  script(src='https://js.arcgis.com/4.4/')
+  script(src='javascripts/ditagis/main.js')
 block content
   script.
     //hiển thị loader
@@ -7,6 +10,4 @@ block content
     var username =  '#{user.username}';
     var role = #{user.role};
   #map
-  script(src='javascripts/config.js')
-  script(src='https://js.arcgis.com/4.4/')
-  script(src='javascripts/ditagis/main.js')
+  

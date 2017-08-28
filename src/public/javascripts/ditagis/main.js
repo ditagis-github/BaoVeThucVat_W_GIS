@@ -4,64 +4,43 @@
  * Phần này quan trọng không được xóa
  */
 const constName = {
-    TramBTS: 'TramBTS',
-    DoanhNghiep: 'DoanhNghiep',
-    HeThongPhatThanhTruyenHinh: 'HeThongPhatThanhTruyenHinh',
-    HETHONGTRUYENDANVIENTHONG: 'HeThongTruyenDanVienThong',
-    DiemCungCapDichVuVienThong: 'DiemCungCapDichVuVienThong',
-    CotAngTen: 'CotAngTen',
-    CotTreoCap: 'CotTreoCap',
-    TuyenCapTreo: 'TuyenCapTreo',
-    HaTangKyThuatNgam: 'HaTangKyThuatNgam',
-    TuyenCapNgam: 'TuyenCapNgam',
-    THIETBITRUYENDAN: 'ThietBiTruyenDan'
+    SAUBENH: 'trambts',
+    DOANHNGHIEP: 'doanhnghiep',
+    TRONGTROT: 'trongtrot',
 }
+//  var socket = io();
 require([
     "ditagis/config",
     "esri/Map",
     "esri/views/MapView",
     "esri/layers/MapImageLayer",
     "esri/layers/FeatureLayer",
-    "esri/tasks/QueryTask",
-    "esri/tasks/support/Query",
     "esri/widgets/Expand",
     "esri/widgets/Locate",
     "esri/widgets/LayerList",
     "esri/widgets/Legend",
+    "esri/widgets/Search",
 
     "ditagis/classes/SystemStatusObject",
 
     "ditagis/widgets/LayerEditor",
-    "ditagis/widgets/CalculateDistance",
-    "ditagis/widgets/BufferingObjects",
     "ditagis/widgets/Popup",
-    "ditagis/support/HightlightGraphic",
-    "ditagis/support/QueryDistance",
-
-
     "dojo/on",
-    "dojo/dom",
     "dojo/dom-construct",
-    'dojo/window',
-    "dijit/registry",
-    "css!ditagis/styling/blue-map.css"
+    "css!ditagis/styling/dtg-map.css"
 
 
 ], function (mapconfigs, Map, MapView, MapImageLayer, FeatureLayer,
-    QueryTask, Query, Expand, Locate, LayerList, Legend,
+    Expand, Locate, LayerList, Legend,Search,
     SystemStatusObject,
-    LayerEditor, CalculateDistance,BufferingObjects, Popup,
-    HightlightGraphic, QueryDistance,
-    on, dom, domConstruct, win, registry,
+    LayerEditor, Popup,
+    on, domConstruct,
     ) {
+        
         var systemVariable = new SystemStatusObject();
-        var map = new Map({
-            basemap: 'osm'
-        });
+        var map = new Map();
         Map.prototype.getLayer = function (name) {
-            return map.layers.items.filter(layer => {
-                return layer.name === name;
-            })[0];
+            return map.layers.items.find(layer =>layer.name === name);
         }
 
         if (window.username && window.role) {
@@ -76,8 +55,6 @@ require([
         view = new MapView({
             container: "map", // Reference to the scene div created in step 5
             map: map, // Reference to the map object created before the scene
-            zoom: mapconfigs.zoom, // Sets the zoom level based on level of detail (LOD)
-            center: mapconfigs.center, // Sets the center point of view in lon/lat
         });
         view.systemVariable = systemVariable;
         view.snapping = {
@@ -92,18 +69,7 @@ require([
         view.layers = [];
         view.basemap = [];
 
-        
 
-        on(view, "click", (evt) => {
-            var queryDistance = new QueryDistance(view.layers);
-            evt.stopPropagation();
-            const screenCoors = {
-                x: evt.x,
-                y: evt.y
-            };
-            const point = view.toMap(screenCoors);
-            queryDistance.execute(point);
-        })
         const initBaseMap = () => {
             for (let bm of mapconfigs.baseMaps) {
                 let basemap = new MapImageLayer(bm)
@@ -121,24 +87,7 @@ require([
                         return it.role === role
                     })
                 }
-            },
-                FeatureLayer.prototype.getHideFields = function (attributes) {
-                    let hideFields = [];
-                    if (this.popupConstraint) {
-                        for (let field of this.fields) {
-                            const itemConstraint = this.popupConstraint.getItem(field.name);
-                            if (itemConstraint) {
-                                if (attributes[itemConstraint.field] === itemConstraint.value) {
-                                    for (let hideField of itemConstraint.hideSubFields) {
-                                        hideFields.push(hideField);
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                    return hideFields;
-                }
+            };
             for (var i in mapconfigs.layers) {
                 let element = mapconfigs.layers[i];
                 let fl = new FeatureLayer(element);
@@ -147,18 +96,8 @@ require([
             }
         }
         const initWidgets = () => {
-            new CalculateDistance(view, {
-                icon: 'esri-icon-map-pin',
-                position: 'top-left'
-            });
-            new BufferingObjects(view,{
-                icon: 'esri-icon-hollow-eye',
-                position: 'top-left'
-            })
-            var layereditor = new LayerEditor(view);
-            layereditor.startup();
             var layerListExpand = new Expand({
-                expandIconClass: "esri-icon-layer-list", // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
+                expandIconClass: "esri-icon-layer-list",
                 view: view,
                 content: new LayerList({
                     container: document.createElement("div"),
@@ -178,13 +117,50 @@ require([
                 style: "background-color:transparent"
             });
             view.ui.add(logo, "bottom-left");
-            var legendExpand = new Expand({
+            var legendtExpand = new Expand({
                 expandIconClass: "esri-icon-collection",
                 content: new Legend({
                     view: view,
                 })
             });
-            view.ui.add(legendExpand, "bottom-right");
+            view.ui.add(legendtExpand, "bottom-right");
+
+            // Widget Search Features //
+            var searchWidget = new Search({
+                view: view,
+                allPlaceholder: "Nhập nội dung tìm kiếm",
+                sources: [{
+                    featureLayer: map.getLayer(constName.SAUBENH),
+                    searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
+                    displayField: "MaSauBenh",
+                    exactMatch: false,
+                    outFields: ["*"],
+                    name: "Sâu hại",
+                    placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
+                }
+                    , {
+                    featureLayer: map.getLayer(constName.DOANHNGHIEP),
+                    searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
+                    displayField: "NguoiDaiDienDoanhNghiep",
+
+                    exactMatch: false,
+                    outFields: ["*"],
+                    name: "Doanh Nghiệp",
+                    placeholder: "Nhập tên hoặc mã Doanh nghiệp",
+                }
+                ]
+            });
+            // Add the search widget to the top left corner of the view
+            view.ui.add(searchWidget, {
+                position: "top-right"
+            });
+
+            /**
+             * Layer Editor
+             */
+            var layerEditor = new LayerEditor(view);
+            layerEditor.startup();
+
             var popup = new Popup(view);
             popup.startup();
         }
@@ -195,24 +171,6 @@ require([
         initBaseMap();
         initFeatureLayers();
         initWidgets();
-
-        // //Chức năng hightlight Graphic khi nhấn {view.snapping.key}
-        // var hightlightGraphic = new HightlightGraphic(this.view);
-        // view.on('pointer-move', (evt) => {
-        //     const key = view.snapping.key,
-        //         pressKey = evt.native[key];
-        //     view.keyPress[key] = pressKey;
-
-        //     if (pressKey) {
-        //         hightlightGraphic.hightlight({
-        //             x: evt.x,
-        //             y: evt.y
-        //         });
-        //     } else {
-        //         hightlightGraphic.clearHightlight();
-        //     }
-
-        // })
 
         Loader.hide();
     });

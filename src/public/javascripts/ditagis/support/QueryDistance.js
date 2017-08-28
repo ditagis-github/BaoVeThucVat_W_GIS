@@ -10,28 +10,29 @@ define([
                 if (!layers) {
                     console.debug("Chưa có featurelayer để kiểm tra");
                 }
-                this.layers = layers;
                 this.units = options.units || "meters";
-                this.distance = options.distance || 100;
+                this.distance = options.distance || 50;
 
                 this.queryTasks = [];
 
                 this.query = new Query();
                 this.query.outFields = ["*"];
                 this.query.returnGeometry = true;
-                this.query.distance = this.distance;
+                this.query.distance = 50;
                 this.query.units = "meters";
                 // this.query.spatialRelationship = "intersects";
             }
 
+            get layers() {
+                return this.view.layers;
+            }
 
-            async execute(geometry) {
+            execute(geometry) {
                 this.query.geometry = geometry;
                 let proms = [],
                     results = [];
                 for (let layer of this.layers) {
-                    var queryFeatures = await layer.queryFeatures(this.query);   
-                    var features = queryFeatures.features; 
+                    var features = await layer.queryFeatures(this.query);
                     for (let ft of features) {
                         results.push(ft);
                     }

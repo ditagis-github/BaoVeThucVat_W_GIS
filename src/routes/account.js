@@ -1,6 +1,5 @@
-
-var CT = require('../modules/country-list');
 var AM = require('../modules/account-manager');
+var TTM = require('../modules/trongtrot-manager');
 // var EM = require('../modules/email-dispatcher');
 const router = require('express').Router();
 
@@ -11,29 +10,35 @@ router.get('/', function (req, res) {
 		res.render('login', { title: 'Đăng nhập' });
 	} else {
 		// attempt automatic login //
-		AM.autoLogin(req.cookies.user, req.cookies.pass, function (o) {
+		AM.autoLogin(req.cookies.user, req.cookies.pass).then(o => {
 			if (o != null) {
 				req.session.user = o;
 				res.redirect('/map');
 			} else {
 				res.render('login', { title: 'Đăng nhập' });
 			}
-		});
+		})
+
 	}
 });
 
 router.post('/', function (req, res) {
-	const account = AM.manualLogin(req.body['user'], req.body['pass']);
-	if (!account) {
-		res.status(400).send('Cannot find account');
-	} else {
-		req.session.user = account;
-		if (req.body['remember-me'] == true) {
-			res.cookie('user', o.user, { maxAge: 900000 });
-			res.cookie('pass', o.pass, { maxAge: 900000 });
+	AM.manualLogin(req.body['user'], req.body['pass']).then(account => {
+		if (account) {
+			req.session.user = account;
+			if (req.body['remember-me'] == true) {
+				res.cookie('user', account.username, { maxAge: 900000 });
+				res.cookie('pass', account.password, { maxAge: 900000 });
+			}
+			res.status(200).send(account);
 		}
-		res.status(200).send(account);
-	}
+		else {
+			res.status(400).send('Không tìm thấy tài khoản');
+		}
+	}).catch(err => {
+		console.log(err);
+		res.status(400).send('Không tìm thấy tài khoản');
+	})
 });
 
 // logged-in user homepage //
@@ -44,11 +49,47 @@ router.get('/map', function (req, res) {
 		res.redirect('/');
 	} else {
 		res.render('map', {
-			title: 'Hệ thống viễn thông thụ động tỉnh Bình Dương',
+			title: 'Bảo vệ thực vật - Bình Dương',
 			user: req.session.user
 		});
 	}
 });
+
+router.post('/map/trongtrot/thoigian', function (req, res) {
+	TTM.timer(req.body.id, req.body.month, req.body.year).then(result => {
+		console.log(result);
+		res.status(200).send(result);
+	}).catch(err => {
+		res.status(400).send(err);
+	})
+})
+
+router.post('/map/trongtrot/thoigian/add', function (req, res) {
+	const attributes = {
+		MaDoiTuong: req.body.MaDoiTuong,
+		Thang: req.body.Thang,
+		Nam: req.body.Nam,
+		NhomCayTrong: req.body.NhomCayTrong,
+		LoaiCayTrong: req.body.LoaiCayTrong || null
+	}
+	TTM.add(attributes).then(result => {
+		res.status(200).send('Successfully');
+	}).catch(err => {
+		res.status(400).send(err);
+	})
+})
+router.post('/map/trongtrot/thoigian/getbymadoituong', function (req, res) {
+	const maDoiTuong = req.body.MaDoiTuong;
+	if (maDoiTuong) {
+		TTM.getByMaDoiTuong(maDoiTuong).then(result => {
+			res.status(200).send(result);
+		}).catch(err => {
+			res.status(400).send(err);
+		})
+	} else {
+		res.status(400).send('Parameters is null');
+	}
+})
 
 router.get('/account', function (req, res) {
 	if (req.session.user == null) {
@@ -72,7 +113,6 @@ router.post('/account', function (req, res) {
 			name: req.body['name'],
 			email: req.body['email'],
 			pass: req.body['pass'],
-			country: req.body['country']
 		}, function (e, o) {
 			if (e) {
 				res.status(400).send('error-updating-account');
@@ -107,7 +147,6 @@ router.post('/account/signup', function (req, res) {
 		email: req.body['email'],
 		user: req.body['user'],
 		pass: req.body['pass'],
-		country: req.body['country']
 	}, function (e) {
 		if (e) {
 			res.status(400).send(e);

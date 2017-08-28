@@ -8,31 +8,24 @@ define([
     "esri/geometry/SpatialReference",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleMarkerSymbol",
-    "ditagis/toolview/Tooltip",
 
 ], function (on,
     DrawingPolylineAbstract,
     Polyline, Circle,
     geometryEngine,
     equation,
-    Graphic, spatialReference, SimpleLineSymbol, SimpleMarkerSymbol,
-    Tooltip
+    Graphic, spatialReference, SimpleLineSymbol, SimpleMarkerSymbol
 ) {
         'use strict';
         return class extends DrawingPolylineAbstract {
             constructor(view, fixedLayers, drawLayer, systemVariable) {
                 super(view, fixedLayers, drawLayer, systemVariable)
+                this.mainGraphic = null;
+                this.tmpPoints = [];
+                this.isAddTmpLine = null;
             }
             draw() {
                 this.startup();
-                this.options = {
-                    tooltip: {
-                        move: 'Bấm để bắt đầu vẽ \r\n Nhấn CTRL để bắt dính đối tượng trên bản đồ'
-                    }
-                }
-                this.tooltipMoveEvent = on(this.view, 'pointer-move', evt => {
-                    Tooltip.instance().show([evt.x, evt.y], this.options.tooltip.move);
-                })
             }
             /**
              * Sự kiện lấy 2 trụ để vẽ đường cung
@@ -41,7 +34,7 @@ define([
                 this.selectLineSegmentEvent = on(this.view, 'pointer-move', (evt) => {
                     this.pointerMoveHandler(evt);
                 });
-                this.clickGetLineSegmentEvent = on(view, 'click', async evt => {
+                this.clickGetLineSegmentEvent = on(view, 'click', (evt) => {
                     this.clickGetLineSegmentFunc(evt);
                 });
                 this.dblClickHandler = on(view, 'double-click', (evt) => {
@@ -66,7 +59,6 @@ define([
             }
             clickGetLineSegmentFunc(evt) {
                 evt.stopPropagation();
-                this.options.tooltip.move = "Chọn điểm thứ hai để vẽ vòng cung";
                 const screenCoors = {
                     x: evt.x,
                     y: evt.y
@@ -82,6 +74,7 @@ define([
                     else {
                         this.resultsPoint(this.view.toMap(screenCoors));
                     }
+
                 } else {
                     this.resultsPoint(this.view.toMap(screenCoors));
                 }
@@ -97,6 +90,7 @@ define([
                     ]);
                     this.finishChoosePoint();
                 }
+
             }
 
             /**
@@ -119,15 +113,18 @@ define([
                                     this.firstPoint = point;
                                 } else {
                                     this.secondPoint = point;
-                                    this.refreshMainGraphic([
-                                        [this.firstPoint.x, this.firstPoint.y],
-                                        [point.x, point.y]
-                                    ]);
+                                    this.refreshMainGraphic({
+                                        paths: [
+                                            [this.firstPoint.x, this.firstPoint.y],
+                                            [point.x, point.y]
+                                        ],
+                                    });
                                     this.finishChoosePoint();
                                 }
 
                                 valid = true;
                             }
+                            //}
                         }
                     }
                 }
@@ -237,60 +234,64 @@ define([
 
                 return paths;
             }
+            removeCircleGraphic() {
+                this.view.graphics.remove(this.mainGraphic);
+                this.mainGraphic = null;
+            }
             getCirlePaths(screenCoors) {
                 try {
+                    
+                var point = view.toMap(screenCoors);
 
-                    var point = view.toMap(screenCoors);
 
 
+                // point 1 of line
+                var p1 = this.firstPoint;
+                // point 2 of line
+                var p2 = this.secondPoint;
+                var mid = equation.cal([
+                    [p1.x, p1.y],
+                    [p2.x, p2.y],
+                    [point.x, point.y]
+                ]);
+                var midPoint = p1.clone();
+                midPoint.x = mid[0];
+                midPoint.y = mid[1];
+                var r = geometryEngine.distance(midPoint, p1, 'meters');
 
-                    // point 1 of line
-                    var p1 = this.firstPoint;
-                    // point 2 of line
-                    var p2 = this.secondPoint;
-                    var mid = equation.cal([
-                        [p1.x, p1.y],
-                        [p2.x, p2.y],
-                        [point.x, point.y]
-                    ]);
-                    var midPoint = p1.clone();
-                    midPoint.x = mid[0];
-                    midPoint.y = mid[1];
-                    var r = geometryEngine.distance(midPoint, p1, 'meters');
+                var circle = new Circle({
+                    center: midPoint,
+                    radius: r,
+                    radiusUnit: 'meters'
+                })
+                var lineCutGeo = [
+                    [p1.x, p1.y],
+                    [p2.x, p2.y]
+                ];
 
-                    var circle = new Circle({
-                        center: midPoint,
-                        radius: r,
-                        radiusUnit: 'meters'
-                    })
-                    var lineCutGeo = [
-                        [p1.x, p1.y],
-                        [p2.x, p2.y]
-                    ];
-
-                    var cutGeo = geometryEngine.cut(circle, new Polyline({
-                        paths: lineCutGeo
+                var cutGeo = geometryEngine.cut(circle, new Polyline({
+                    paths: lineCutGeo
+                }));
+                if (cutGeo.length > 0) {
+                    var firstRing = cutGeo[0].rings[0],
+                        secondRing = cutGeo[1].rings[0];
+                    var intersectPath = this.intersectTwoCircle(firstRing, secondRing, lineCutGeo);
+                    var pointSegment = this.getSegment(cutGeo, new Polyline({
+                        paths: [
+                            [p1.x, p1.y],
+                            [point.x, point.y]
+                        ]
                     }));
-                    if (cutGeo.length > 0) {
-                        var firstRing = cutGeo[0].rings[0],
-                            secondRing = cutGeo[1].rings[0];
-                        var intersectPath = this.intersectTwoCircle(firstRing, secondRing, lineCutGeo);
-                        var pointSegment = this.getSegment(cutGeo, new Polyline({
-                            paths: [
-                                [p1.x, p1.y],
-                                [point.x, point.y]
-                            ]
-                        }));
-                        if (pointSegment) {
-                            var cirPaths = this.removeLine(pointSegment, intersectPath, lineCutGeo);
-                            return cirPaths;
-                        } else {
-                            console.log(`Không xác định được polyline để vẽ đường tròn, kiểm tra lại this.circleGraphic`);
-                        }
+                    if (pointSegment) {
+                        var cirPaths = this.removeLine(pointSegment, intersectPath, lineCutGeo);
+                        return cirPaths;
+                    } else {
+                        console.log(`Không xác định được polyline để vẽ đường tròn, kiểm tra lại this.circleGraphic`);
                     }
+                }
 
                 } catch (error) {
-                    console.log(error);
+                 console.log(error);   
                 }
                 return null;
             }
@@ -299,7 +300,6 @@ define([
              * @param {event handle} evt 
              */
             pointerMoveArcSegmentFunc(evt) {
-                this.options.tooltip.move = "Bấm để chọn vòng cung thích hợp"
                 var cirPaths = this.getCirlePaths({
                     x: evt.x,
                     y: evt.y
@@ -307,25 +307,26 @@ define([
                 this.addTmpGraphic(cirPaths);
             }
             clickPointFunc() {
-                this.options.tooltip.move = "Chọn cách vẽ để tiếp tục \r\n Bấm đúp để hoàn thành"
                 try {
-                    this.refreshMainGraphic(this.tmpGraphic.geometry.paths[0]);
-                    this.clearTmpGraphic();
-                    if (this.pointerMoveArcSegmentEvent) {
-                        this.pointerMoveArcSegmentEvent.remove();
-                        this.pointerMoveArcSegmentEvent = null;
-                    }
-                    if (this.clickGetLineSegmentEvent) {
-                        this.clickGetLineSegmentEvent.remove();
-                        this.clickGetLineSegmentEvent = null;
-                    }
+                this.refreshMainGraphic({
+                    paths: this.tmpGraphic.geometry.paths[0]
+                });
+                this.clearTmpGraphic();
+                if (this.pointerMoveArcSegmentEvent) {
+                    this.pointerMoveArcSegmentEvent.remove();
+                    this.pointerMoveArcSegmentEvent = null;
+                }
+                if (this.clickGetLineSegmentEvent) {
+                    this.clickGetLineSegmentEvent.remove();
+                    this.clickGetLineSegmentEvent = null;
+                }
 
-                    if (this.clickPointEvent) {
-                        this.clickPointEvent.remove();
-                        this.clickPointEvent = null;
-                    }
+                if (this.clickPointEvent) {
+                    this.clickPointEvent.remove();
+                    this.clickPointEvent = null;
+                }
                 } catch (error) {
-                    console.log(error);
+                 console.log(error);   
                 }
             }
             /**
@@ -401,14 +402,9 @@ define([
                     this.dblClickHandler.remove();
                     this.dblClickHandler = null;
                 }
-                if (this.tooltipMoveEvent) {
-                    Tooltip.instance().hide();
-                    this.tooltipMoveEvent.remove();
-                    this.tooltipMoveEvent = null;
-                }
             }
             finish() {
-                this.eventListener.fire('draw-finish', this.geometry);
+                this.eventListener.fire('draw-finish', this.mainGraphic);
                 this.cancel();
             }
             cancel() {

@@ -1,40 +1,5 @@
-
-// // var crypto 		= require('crypto');
-// // var MongoDB 	= require('mongodb').Db;
-// // var Server 		= require('mongodb').Server;
-// // var moment 		= require('moment');
-
-// // /*
-// // 	ESTABLISH DATABASE CONNECTION
-// // */
-
-// // var dbName = process.env.DB_NAME || 'node-login';
-// // var dbHost = process.env.DB_HOST || 'localhost'
-// // var dbPort = process.env.DB_PORT || 27017;
-
-// var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1});
-// db.open(function(e, d){
-// 	if (e) {
-// 		console.log(e);
-// 	} else {
-// 		if (process.env.NODE_ENV == 'live') {
-// 			db.authenticate(process.env.DB_USER, process.env.DB_PASS, function(e, res) {
-// 				if (e) {
-// 					console.log('mongo :: error: not authenticated', e);
-// 				}
-// 				else {
-// 					console.log('mongo :: authenticated and connected to database :: "'+dbName+'"');
-// 				}
-// 			});
-// 		}	else{
-// 			console.log('mongo :: connected to database :: "'+dbName+'"');
-// 		}
-// 	}
-// });
-
-// var accounts = db.collection('accounts');
 const sql = require('mssql')
-var config = {
+const config = {
 
 	user: 'sa',
 
@@ -53,45 +18,58 @@ var config = {
 	}
 
 }
-var accounts;
-sql.connect(config).then(() => {
-	return sql.query`select * from account`
-}).then(result => {
-	accounts = result.recordset;
-}).catch(err => {
-	// ... error checks
-})
-
-sql.on('error', err => {
-	// ... error handler
-})
-
-// var accounts = [
-// 	{
-// 		user: 'admin',
-// 		pass: 'admin',
-// 		role: 1
-// 	},
-// 	{
-// 		user: 'doanhnghiep',
-// 		pass: 'doanhnghiep',
-// 		role: 2
-// 	},
-// ]
+let pool = new sql.ConnectionPool(config);
 
 /* login validation methods */
 
-exports.autoLogin = function (user, pass) {
-	return accounts.find((ac) => {
-		return ac.user === user && ac.pass === pass;
-	})
+let autoLogin = function (user, pass) {
+	return new Promise((resolve, reject) => {
+		pool.connect().then(() => {
+			new sql.Request(pool).query(`SELECT * FROM USR WHERE USERNAME = ${user} AND PASSWORD = ${pass} `).then(result => {
+				if (result.recordset.length > 0)
+					resolve(result.recordset[0]);
+				else
+					resolve(null)
+				pool.close();
+			}).catch(err => {
+				reject(err);
+				pool.close();
+			})
+		}).catch(err => {
+			reject(err);
+			pool.close();
+		})
+	});
 }
 
-exports.manualLogin = function (user, pass) {
-	return accounts.find((ac) => {
-		return ac.username === user && ac.password === pass;
-	})
+let manualLogin = function (user, pass) {
+	console.log(user);
+	return new Promise((resolve, reject) => {
+		resolve({
+			username:'ditagis',
+			password:'ditagis',
+			role:1
+		})
+		// pool.connect().then(() => {
+		// 	new sql.Request(pool).query(`SELECT * FROM ACCOUNT WHERE USERNAME = ${user} AND PASSWORD = ${pass}`).then(result => {
+		// 		console.log(result);
+		// 		if (result.recordset.length > 0)
+		// 			resolve(result.recordset[0]);
+		// 		else
+		// 			resolve(null)
+		// 		pool.close();
+		// 	}).catch(err => {
+		// 		reject(err);
+		// 		pool.close();
+		// 	})
+		// }).catch(err => {
+		// 	reject(err);
+		// 	pool.close();
+		// })
+	});
 }
+
+exports.manualLogin = exports.autoLogin = manualLogin;
 
 /* record insertion, update & deletion methods */
 

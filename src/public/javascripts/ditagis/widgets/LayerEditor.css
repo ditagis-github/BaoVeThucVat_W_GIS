@@ -46,7 +46,7 @@
     padding-right: 5px;
     line-height: 1.3em;
     word-break: break-all;
-    border: 0px;
+    border: none;
     background-color: transparent
 }
 
@@ -56,7 +56,8 @@
     display: table-row;
     justify-content: flex-start;
     padding: 9px 15px 9px 20px;
-    background-color: #fff;
+    color: #fff;
+    background-color: #6ab43e;
     border-bottom: 1px solid rgba(50, 50, 50, 0.25);
     transition: padding 250ms ease-in-out 0ms;
 }

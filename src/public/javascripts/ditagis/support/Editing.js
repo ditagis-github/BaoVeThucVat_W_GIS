@@ -6,61 +6,43 @@ define([
     return class {
         static getCreatedInfo(view) {
             return {
-                created_user: view.systemVariable.user.username,
-                created_date: new Date().getTime(),
+                NguoiCapNhat: view.systemVariable.user.username,
+                NgayCapNhat: new Date().getTime(),
             }
         }
         static getUpdatedInfo(view) {
             return {
-                last_edited_user: view.systemVariable.user.username,
-                last_edited_date: new Date().getTime(),
+                NguoiCapNhat: view.systemVariable.user.username,
+                NgayCapNhat: new Date().getTime(),
             }
         }
-        
-        static async getLocationInfo(geometry) {
-            this.queryXa = new QueryTask({
-                url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/3'
-            });
-            this.queryHuyen = new QueryTask({
-                url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/4'
-            });
 
+        static getLocationInfo(geometry) {
+            return new Promise((resolve, reject) => {
 
-            let huyen = await this.queryHuyen.execute({
-                outFields:['TenHuyen'],
-                geometry:geometry
-            }).then(
-                async res => {
-                    if (res) {
-                        let ft =  res.features[0];
-                        if(ft && ft.attributes){
-                            return await ft.attributes.TenHuyen;
+                try {
+                    this.queryLocation = new QueryTask({
+                        url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DLN/MapServer/4'
+                    });
+                    this.queryLocation.execute({
+                        outFields: ['MaPhuongXa', 'MaHuyenTP'],
+                        geometry: geometry
+                    }).then(res => {
+                        if (res) {
+                            let ft = res.features[0];
+                            if (ft && ft.attributes) {
+                                resolve(ft.attributes);
+                            }
+                        } else {
+                            resolve(null);
                         }
-                    } else {
-                        return await null;
-                    }
+                    });
+                } catch (error) {
+                    console.log(error)
+                    reject(error);
                 }
-            );
-            let xa = await this.queryXa.execute({
-                outFields:['TenXa'],
-                geometry:geometry
-            }).then(
-                async res => {
-                    if (res) {
-                        let ft =  res.features[0];
-                        if(ft && ft.attributes){
-                            return await ft.attributes.TenXa;
-                        }
-                    } else {
-                        return await null;
-                    }
-                }
-            );
 
-            return {
-                HuyenTP: huyen,
-                XaPhuong: xa,
-            }
+            });
         }
     }
 });

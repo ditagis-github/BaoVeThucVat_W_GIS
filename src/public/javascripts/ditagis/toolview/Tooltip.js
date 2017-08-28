@@ -9,7 +9,7 @@ define([
             domStyle.set(this.container, {
                 position: 'fixed'
             });
-            
+            document.body.appendChild(this.container);
         }
         static instance() {
             if (!this._instance)
@@ -17,7 +17,6 @@ define([
             return this._instance;
         }
         show(screencoor, string) {
-            document.body.appendChild(this.container);
             domStyle.set(this.container, {
                 left: `${screencoor[0]+30}px`,
                 top: `${screencoor[1]}px`

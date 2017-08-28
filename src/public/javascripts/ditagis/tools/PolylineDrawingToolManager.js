@@ -20,21 +20,41 @@ define([
                 this.view = view;
                 this.systemVariable = view.systemVariable;
                 this._drawLayer = null;
-
+                this.mainGraphic = new Graphic({
+                    geometry: new Polyline({
+                        spatialReference: new SpatialReference(102100)
+                    }),
+                    symbol: new SimpleLineSymbol({
+                        color: [255, 0, 0],
+                        size: 2,
+                    })
+                });
                 this.simpleDrawPolyline = new SimpleDrawPolyline(view);
                 //segment
                 this.arcSegmentDraw = new ArcSegment(view);
-
-                this.polylineEditing = new PolylineEditing(this.view, )
+                this.simpleDrawPolyline.mainGraphic = this.arcSegmentDraw.mainGraphic = this.mainGraphic;
+                this.polylineEditing = new PolylineEditing(this.view,)
                 this.eventListener = new EventListener(this);
                 this.registerEvent();
 
             }
-            setGeometryForTool(geometry) {
-                geometry = geometry || new Polyline({
-                    spatialReference: new SpatialReference(102100)
-                });
-                this.simpleDrawPolyline.geometry = this.arcSegmentDraw.geometry = geometry;
+            /**
+             * Xoa graphic ra khoi map
+             */
+            removeGraphic() {
+                if (this.isAdd) {
+                    this.view.graphics.remove(this.mainGraphic);
+                    this.isAdd = false;
+                }
+            }
+            /**
+             * Them graphic vao map
+             */
+            addGraphic() {
+                if (!this.isAdd) {
+                    this.view.graphics.add(this.mainGraphic);
+                    this.isAdd = true;
+                }
             }
             set drawLayer(val) {
                 this._drawLayer = val;
@@ -42,47 +62,38 @@ define([
             get drawLayer() {
                 return this._drawLayer;
             }
-            drawFinish(geometry, method) {
+            drawFinish(graphic, method) {
                 //kich hoat su kien
                 this.eventListener.fire('draw-finish', {
-                    geometry: geometry,
+                    graphic: graphic,
                     method: method
                 });
                 //applyEdit
-                this.addFeature(geometry);
+                this.addFeature(graphic);
+                //xoa graphic 
+                this.removeGraphic();
             }
-            addFeature(geometry) {
-                this.polylineEditing.draw(this.drawLayer, geometry, this.view).then((res) => {
-                    this.arcSegmentDraw.clearGraphic();
-                    this.simpleDrawPolyline.clearGraphic();
+            addFeature(graphic) {
+                this.polylineEditing.draw(this.drawLayer, graphic, this.view).then((res) => {
+                    this.mainGraphic.geometry.paths=[];
                 })
             }
             registerEvent() {
-                this.simpleDrawPolyline.on('draw-finish', (geometry) => {
-                    this.drawFinish(geometry, 'simple')
+                this.simpleDrawPolyline.on('draw-finish', (graphic) => {
+                    this.drawFinish(graphic, 'simple')
                 })
-                this.arcSegmentDraw.on('draw-finish', (geometry) => {
-                    this.drawFinish(geometry, 'arcsegment')
-                })
-
-
-                this.simpleDrawPolyline.on('geometry-change', (geometry) => {
-                    // this.setGeometryForTool(geometry);
-                    this.arcSegmentDraw.geometry = geometry;
-                })
-                this.arcSegmentDraw.on('geometry-change', (geometry) => {
-                    // this.setGeometryForTool(geometry);
-                    this.simpleDrawPolyline.geometry = geometry;
+                this.arcSegmentDraw.on('draw-finish', (graphic) => {
+                    this.drawFinish(graphic, 'arcsegment')
                 })
             }
             drawSimple() {
-                this.setGeometryForTool();
+                this.addGraphic();
                 this.cancel();
                 this.simpleDrawPolyline.draw(this._drawLayer);
 
             }
             dragArcSegment() {
-                this.setGeometryForTool();
+                this.addGraphic();
                 this.cancel();
                 this.arcSegmentDraw.draw(this._drawLayer);
             }
