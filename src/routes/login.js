@@ -1,29 +1,42 @@
-const router = require('express').Router();
-// var AM = require('../controllers/account-manager');
-router.get('/', (req, res, next) => {
-    // check if the user's credentials are saved in a cookie //
-    if (req.session.user ||( req.cookies.username &&  req.cookies.password)) {
-        res.redirect('/map')
-    } else {
-        res.render('login', { title: 'Hello - Please Login To Your Account' });
-    }
-})
-router.post('/', (req, res, next) => {
-    const username = req.body.uname,
-        password = req.body.pwd;
-    if (username === 'admin' && password === 'admin') {
-        console.log(req.session);
-        req.session.user = {
-            username: username,
-            password: password
-        }
-        if (req.body['remember-me'] == 'on') {
-            res.cookie('username', username, { maxAge: 90000 })
-            res.cookie('password', password, { maxAge: 90000 })
-        }
-        res.redirect('/map');
-    } else {
-        res.render('login', { title: 'Hello - Please Login To Your Account' });
-    }
-})
-module.exports = router;
+'use strict'
+var AccountManager = require('../modules/account-manager');
+let Router = require('./router');
+class LoginRouter extends Router {
+	constructor(params) {
+		super(params);
+		this.accountManager = new AccountManager();
+		this.router.get('/', function (req, res) {
+			res.redirect('/login')
+		});
+		this.router.get('/login', (req, res) => {
+			if (this.session && this.session.user) {
+				res.redirect('/map');
+			} else {
+				res.render('login', { title: 'Đăng nhập' });
+			}
+		});
+		this.router.post('/login', (req, res) => {
+			this.accountManager.manualLogin(req.body['user'], req.body['pass']).then(user => {
+				if (user) {
+					this.session = req.session;
+					this.session.user = user;
+
+					if (req.body['remember-me'] == true) {
+						res.cookie('user', user.username, { maxAge: 900000 });
+						res.cookie('pass', user.password, { maxAge: 900000 });
+					}
+					// res.status(200).send(user);
+					res.redirect('/map');
+					res.end();
+				}
+				else {
+					res.status(400).send('Không tìm thấy tài khoản');
+				}
+			}).catch(err => {
+				console.log(err);
+				res.status(400).send('Không tìm thấy tài khoản');
+			})
+		});
+	}
+}
+module.exports = LoginRouter;

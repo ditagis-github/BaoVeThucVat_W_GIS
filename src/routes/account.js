@@ -1,4 +1,5 @@
 var AM = require('../modules/account-manager');
+var accountManager = new AM();
 var TTM = require('../modules/trongtrot-manager');
 // var EM = require('../modules/email-dispatcher');
 const router = require('express').Router();
@@ -10,7 +11,7 @@ router.get('/', function (req, res) {
 		res.render('login', { title: 'Đăng nhập' });
 	} else {
 		// attempt automatic login //
-		AM.autoLogin(req.cookies.user, req.cookies.pass).then(o => {
+		accountManager.autoLogin(req.cookies.user, req.cookies.pass).then(o => {
 			if (o != null) {
 				req.session.user = o;
 				res.redirect('/map');
@@ -23,7 +24,7 @@ router.get('/', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-	AM.manualLogin(req.body['user'], req.body['pass']).then(account => {
+	accountManager.manualLogin(req.body['user'], req.body['pass']).then(account => {
 		if (account) {
 			req.session.user = account;
 			if (req.body['remember-me'] == true) {
@@ -108,7 +109,7 @@ router.post('/account', function (req, res) {
 	if (req.session.user == null) {
 		res.redirect('/');
 	} else {
-		AM.updateAccount({
+		accountManager.updateAccount({
 			id: req.session.user._id,
 			name: req.body['name'],
 			email: req.body['email'],
@@ -142,7 +143,7 @@ router.get('/account/signup', function (req, res) {
 });
 
 router.post('/account/signup', function (req, res) {
-	AM.addNewAccount({
+	accountManager.addNewAccount({
 		name: req.body['name'],
 		email: req.body['email'],
 		user: req.body['user'],
@@ -160,7 +161,7 @@ router.post('/account/signup', function (req, res) {
 
 router.post('/account/lost-password', function (req, res) {
 	// look up the user's account via their email //
-	AM.getAccountByEmail(req.body['email'], function (o) {
+	accountManager.getAccountByEmail(req.body['email'], function (o) {
 		if (o) {
 			EM.dispatchResetPasswordLink(o, function (e, m) {
 				// this callback takes a moment to return //
@@ -181,7 +182,7 @@ router.post('/account/lost-password', function (req, res) {
 router.get('/account/reset-password', function (req, res) {
 	var email = req.query["e"];
 	var passH = req.query["p"];
-	AM.validateResetLink(email, passH, function (e) {
+	accountManager.validateResetLink(email, passH, function (e) {
 		if (e != 'ok') {
 			res.redirect('/');
 		} else {
@@ -198,7 +199,7 @@ router.post('/account/reset-password', function (req, res) {
 	var email = req.session.reset.email;
 	// destory the session immediately after retrieving the stored email //
 	req.session.destroy();
-	AM.updatePassword(email, nPass, function (e, o) {
+	accountManager.updatePassword(email, nPass, function (e, o) {
 		if (o) {
 			res.status(200).send('ok');
 		} else {
@@ -210,13 +211,13 @@ router.post('/account/reset-password', function (req, res) {
 // view & delete accounts //
 
 router.get('/account/print', function (req, res) {
-	AM.getAllRecords(function (e, accounts) {
+	accountManager.getAllRecords(function (e, accounts) {
 		res.render('account/print', { title: 'Account List', accts: accounts });
 	})
 });
 
 router.post('/account/delete', function (req, res) {
-	AM.deleteAccount(req.body.id, function (e, obj) {
+	accountManager.deleteAccount(req.body.id, function (e, obj) {
 		if (!e) {
 			res.clearCookie('user');
 			res.clearCookie('pass');
@@ -228,7 +229,7 @@ router.post('/account/delete', function (req, res) {
 });
 
 router.get('/account/reset', function (req, res) {
-	AM.delAllRecords(function () {
+	accountManager.delAllRecords(function () {
 		res.redirect('account/print');
 	});
 });

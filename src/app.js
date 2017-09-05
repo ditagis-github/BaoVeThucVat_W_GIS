@@ -5,9 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session')
-var map = require('./routes/map');
-var login = require('./routes/login');
-var rtAccount = require('./routes/account');
+
 
 var app = express();
 
@@ -18,7 +16,6 @@ app.set('view engine', 'pug');
 
 app.use(session({
 	secret: 'faeb4453e5d14fe6f6d04637f78077c76c73d1b4',
-	proxy: true,
 	resave: true,
   saveUninitialized: true,
 	})
@@ -31,22 +28,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/',rtAccount)
 
-// app.use(/^(.+)$/, (req, res, next) => {
-//   if (req.session.user) {
-//     if (req.session.user.username === 'admin' && req.session.user.password === 'admin') {
-//       next();
-//     }
-//   }
-//   else if (req.cookies.username && req.cookies.password) {
-//     if (req.cookies.username === 'admin' && req.cookies.password === 'admin') {
-//       next();
-//     }
-//   }
-//   res.redirect('/')
-// })
-// app.use('/map', map)
+/* ROUTER */
+// var rtAccount = require('./routes/account');
+// app.use('/',rtAccount)
+const LoginRouter = require('./routes/login');
+const MapRouter = require('./routes/map');
+var routerParams = {
+  session:null
+}
+app.use('/',new LoginRouter(routerParams).router)
+app.use('/map',new MapRouter(routerParams).router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

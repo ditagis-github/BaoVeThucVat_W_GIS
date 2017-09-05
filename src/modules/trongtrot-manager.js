@@ -47,7 +47,7 @@ let getByMaDoiTuong = function (maDoiTuong) {
 }
 let add = function (attributes) {
 	return new Promise((resolve, reject) => {
-		console.log(attributes);
+		console.log('Them du lieu thoi gian trong trot' + attributes);
 		let
 			MaDoiTuong = attributes.MaDoiTuong,
 			Thang = attributes.Thang,
@@ -58,11 +58,10 @@ let add = function (attributes) {
 			pool.connect().then(() => {
 				new sql.Request(pool).query(`SELECT TOP 1 OBJECTID FROM THOIGIANSANXUATTRONGTROT ORDER BY OBJECTID DESC `)
 					.then(result => {
-						console.log(result);
 						let ObjectId = result.recordset[0].OBJECTID + 1;
 						new sql.Request(pool).query(`INSERT INTO THOIGIANSANXUATTRONGTROT (OBJECTID,MADOITUONG,THANG,NAM,NHOMCAYTRONG,LOAICAYTRONG) VALUES(${ObjectId},${MaDoiTuong},${Thang},${Nam},${NhomCayTrong},'${LoaiCayTrong}')`)
 							.then(result => {
-								console.log(result);
+								console.log('Them thanh cong du lieu '+attributes.MaDoiTuong);
 								resolve(result);
 								pool.close();
 							})
