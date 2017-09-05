@@ -13,6 +13,8 @@ require([
     "ditagis/config",
     "esri/Map",
     "esri/views/MapView",
+    "esri/layers/TileLayer",
+    "esri/layers/OpenStreetMapLayer",
     "esri/layers/MapImageLayer",
     "esri/layers/FeatureLayer",
     "esri/widgets/Expand",
@@ -20,7 +22,8 @@ require([
     "esri/widgets/LayerList",
     "esri/widgets/Legend",
     "esri/widgets/Search",
-
+    "esri/tasks/QueryTask",
+    "esri/tasks/support/Query",
     "ditagis/classes/SystemStatusObject",
 
     "ditagis/widgets/LayerEditor",
@@ -30,147 +33,168 @@ require([
     "css!ditagis/styling/dtg-map.css"
 
 
-], function (mapconfigs, Map, MapView, MapImageLayer, FeatureLayer,
-    Expand, Locate, LayerList, Legend,Search,
+], function (mapconfigs, Map, MapView, TileLayer, OpenStreetMapLayer, MapImageLayer, FeatureLayer,
+    Expand, Locate, LayerList, Legend, Search,
+    QueryTask, Query,
     SystemStatusObject,
     LayerEditor, Popup,
     on, domConstruct,
     ) {
-        
-        var systemVariable = new SystemStatusObject();
-        var map = new Map();
-        Map.prototype.getLayer = function (name) {
-            return map.layers.items.find(layer =>layer.name === name);
-        }
+        try {
 
-        if (window.username && window.role) {
-            systemVariable.user = {
-                username: username,
-                role: role
+            var systemVariable = new SystemStatusObject();
+            var map = new Map({
+                basemap:'osm'
+            });
+
+            if (window.username && window.role) {
+                systemVariable.user = {
+                    username: username,
+                    role: role
+                }
+            } else {
+                throw "Chương trình không chạy được do không xác định được định danh"
             }
-        } else {
-            throw "Chương trình không chạy được do không xác định được định danh"
-        }
+            window.role = 725;
 
-        view = new MapView({
-            container: "map", // Reference to the scene div created in step 5
-            map: map, // Reference to the map object created before the scene
-        });
-        view.systemVariable = systemVariable;
-        view.snapping = {
-            key: 'ctrlKey',
-            isKeyPress: function () {
-                return view.keyPress[this.key]
+            view = new MapView({
+                container: "map", // Reference to the scene div created in step 5
+                map: map, // Reference to the map object created before the scene
+                center: mapconfigs.center,
+                zoom: mapconfigs.zoom
+            });
+            view.systemVariable = systemVariable;
+            view.snapping = {
+                key: 'ctrlKey',
+                isKeyPress: function () {
+                    return view.keyPress[this.key]
+                }
             }
-        }
-        view.keyPress = {
-            ctrlKey: false
-        }
-        view.layers = [];
-        view.basemap = [];
+            view.keyPress = {
+                ctrlKey: false
+            }
+            view.layers = [];
+            view.basemap = [];
 
 
-        const initBaseMap = () => {
-            for (let bm of mapconfigs.baseMaps) {
-                let basemap = new MapImageLayer(bm)
-                view.basemap.push(basemap);
+            const initBaseMap = () => {
+                let bmCfg = mapconfigs.basemap;//basemap config
+                if (Math.floor(role / 100) === 7) {//role bat dau tu so 7
+                    let definitionExpression = `MaHuyenTP = '${role}'`;//vi du role = 725, => MaHuyenTP = 725
+                    for (let sublayer of bmCfg.sublayers) {
+                        sublayer.definitionExpression = definitionExpression;
+                    }
+                }
+                let basemap = new MapImageLayer(bmCfg);
                 map.add(basemap);
+                // basemap.then(()=>{
+                //     view.goTo(basemap.fullExtent);
+                // })
             }
-        }
 
 
-        const initFeatureLayers = () => {
-            FeatureLayer.prototype.getPermission = function (role) {
-                role = role || systemVariable.user.role;
-                if (this.permissions) {
-                    return this.permissions.find((it) => {
-                        return it.role === role
-                    })
+            const initFeatureLayers = () => {
+                FeatureLayer.prototype.getPermission = function (role) {
+                    role = role || systemVariable.user.role;
+                    if (this.permissions) {
+                        return this.permissions.find((it) => {
+                            return it.role === role
+                        })
+                    }
+                };
+                let definitionExpression;
+                if (Math.floor(role / 100) === 7) {//role bat dau tu so 7
+                    definitionExpression = `MaHuyenTP = '${role}'`;//vi du role = 725, => MaHuyenTP = 725
                 }
-            };
-            for (var i in mapconfigs.layers) {
-                let element = mapconfigs.layers[i];
-                let fl = new FeatureLayer(element);
-                view.layers.push(fl);
-                map.add(fl);
+                for (var i in mapconfigs.layers) {
+                    let element = mapconfigs.layers[i];
+                    if (definitionExpression)
+                        element.definitionExpression = definitionExpression;
+                    let fl = new FeatureLayer(element);
+                    view.layers.push(fl);
+                    map.add(fl);
+                }
             }
-        }
-        const initWidgets = () => {
-            var layerListExpand = new Expand({
-                expandIconClass: "esri-icon-layer-list",
-                view: view,
-                content: new LayerList({
-                    container: document.createElement("div"),
-                    view: view
-                })
-            });
-            view.ui.add(layerListExpand, "top-left");
-            var locateWidget = new Locate({
-                view: view
-            });
-            view.ui.add(locateWidget, "top-left");
-
-            //Add Logo DATAGIS to the bottom left of the view
-            var logo = domConstruct.create("img", {
-                src: "images/logo-ditagis.png",
-                id: "logo",
-                style: "background-color:transparent"
-            });
-            view.ui.add(logo, "bottom-left");
-            var legendtExpand = new Expand({
-                expandIconClass: "esri-icon-collection",
-                content: new Legend({
+            const initWidgets = () => {
+                var layerListExpand = new Expand({
+                    expandIconClass: "esri-icon-layer-list",
                     view: view,
-                })
-            });
-            view.ui.add(legendtExpand, "bottom-right");
+                    content: new LayerList({
+                        container: document.createElement("div"),
+                        view: view
+                    })
+                });
+                view.ui.add(layerListExpand, "top-left");
+                var locateWidget = new Locate({
+                    view: view
+                });
+                view.ui.add(locateWidget, "top-left");
 
-            // Widget Search Features //
-            var searchWidget = new Search({
-                view: view,
-                allPlaceholder: "Nhập nội dung tìm kiếm",
-                sources: [{
-                    featureLayer: map.getLayer(constName.SAUBENH),
-                    searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
-                    displayField: "MaSauBenh",
-                    exactMatch: false,
-                    outFields: ["*"],
-                    name: "Sâu hại",
-                    placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
-                }
-                    , {
-                    featureLayer: map.getLayer(constName.DOANHNGHIEP),
-                    searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
-                    displayField: "NguoiDaiDienDoanhNghiep",
+                //Add Logo DATAGIS to the bottom left of the view
+                var logo = domConstruct.create("img", {
+                    src: "images/logo-ditagis.png",
+                    id: "logo",
+                    style: "background-color:transparent"
+                });
+                view.ui.add(logo, "bottom-left");
+                var legendtExpand = new Expand({
+                    expandIconClass: "esri-icon-collection",
+                    content: new Legend({
+                        view: view,
+                    })
+                });
+                view.ui.add(legendtExpand, "bottom-right");
 
-                    exactMatch: false,
-                    outFields: ["*"],
-                    name: "Doanh Nghiệp",
-                    placeholder: "Nhập tên hoặc mã Doanh nghiệp",
-                }
-                ]
-            });
-            // Add the search widget to the top left corner of the view
-            view.ui.add(searchWidget, {
-                position: "top-right"
-            });
+                // Widget Search Features //
+                var searchWidget = new Search({
+                    view: view,
+                    allPlaceholder: "Nhập nội dung tìm kiếm",
+                    sources: [{
+                        featureLayer: map.findLayerById(constName.SAUBENH),
+                        searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
+                        displayField: "MaSauBenh",
+                        exactMatch: false,
+                        outFields: ["*"],
+                        name: "Sâu hại",
+                        placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
+                    }
+                        , {
+                        featureLayer: map.findLayerById(constName.DOANHNGHIEP),
+                        searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
+                        displayField: "NguoiDaiDienDoanhNghiep",
 
-            /**
-             * Layer Editor
-             */
-            var layerEditor = new LayerEditor(view);
-            layerEditor.startup();
+                        exactMatch: false,
+                        outFields: ["*"],
+                        name: "Doanh Nghiệp",
+                        placeholder: "Nhập tên hoặc mã Doanh nghiệp",
+                    }
+                    ]
+                });
+                // Add the search widget to the top left corner of the view
+                view.ui.add(searchWidget, {
+                    position: "top-right"
+                });
 
-            var popup = new Popup(view);
-            popup.startup();
+                /**
+                 * Layer Editor
+                 */
+                var layerEditor = new LayerEditor(view);
+                layerEditor.startup();
+
+                var popup = new Popup(view);
+                popup.startup();
+            }
+
+
+
+
+            initBaseMap();
+            initFeatureLayers();
+            initWidgets();
+
+            Loader.hide();
+
+        } catch (error) {
+            console.log(error);
         }
-
-
-
-
-        initBaseMap();
-        initFeatureLayers();
-        initWidgets();
-
-        Loader.hide();
     });
