@@ -57,8 +57,8 @@ define([
             this.drawLayer.layer = layer;
             // Lưu lại sự kiện hủy vẽ để xóa sau nếu không dùng sự kiện này bây giờ
             // Sự kiện vẽ điểm
-            this.dragEventBufferFinal = on(this.view, 'click', (evt) => {
-                this.dragFuncBufferFinal(evt)
+            this.clickEvent = on(this.view, 'click', (evt) => {
+                this.clickHandler(evt)
             });
             // Lưu lại sự kiện hủy vẽ để xóa sau nếu không dùng sự kiện này bây giờ
             this.pointerMoveEvent = on(this.view,'pointer-move',evt=>{
@@ -70,9 +70,9 @@ define([
          * Sau khi kết thúc quá trình vẽ nếu sự kiện nào còn tồn tại thì hủy nó đi
          */
         clearEvents() {
-            if (this.dragEventBufferFinal) {
-                this.dragEventBufferFinal.remove();
-                this.dragEventBufferFinal = null;
+            if (this.clickEvent) {
+                this.clickEvent.remove();
+                this.clickEvent = null;
             }
             if (this.pointerMoveEvent) {
                 Tooltip.instance().hide();
