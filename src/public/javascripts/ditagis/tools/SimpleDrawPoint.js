@@ -84,7 +84,7 @@ define([
          * Sự kiện vẽ Point
          * @param {Event handle} evt
          */
-        dragFuncBufferFinal(evt) {
+        clickHandler(evt) {
             evt.stopPropagation();
             let point;
             point = new Graphic({
