@@ -49,13 +49,6 @@ define([
                 });
             layer.renderer = renderer;
         }
-        containsLayer(arr, layer) {
-            for (let index in arr) {
-                if (index === layer.name)
-                    return true;
-            }
-            return false;
-        }
         /**
          * Làm sáng các graphic được tìm thấy xung quanh screenCoor
          * @param {ScreenCoor{x,y}} screenCoors 
