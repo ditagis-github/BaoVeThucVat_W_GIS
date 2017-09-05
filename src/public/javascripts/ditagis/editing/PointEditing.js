@@ -34,11 +34,8 @@ define([
                 }
             }
 
-            //lấy thông tin xã huyện
-            const locationInfo = await editingSupport.getLocationInfo(point.geometry);
-            for (let i in locationInfo) {
-                attributes[i] = locationInfo[i];
-            }
+
+
             //lấy thông tin cập nhật gồm người tạo và thời gian tạo
             const createdInfo = await editingSupport.getCreatedInfo(this.view);
             for (let i in createdInfo) {
@@ -50,24 +47,56 @@ define([
                 addFeatures: [point]
             };
             layer.applyEdits(edits).then((result) => {
-                //khi applyEdits, nếu phát hiện lỗi
-                let valid = false;
-                for (let item of res.updateFeatureResults) {
-                    if (item.error) {
-                        valid = true;
-                        break;
+                if (result.addFeatureResults.length > 0) {
+                    for (let item of result.addFeatureResults) {
+                        layer.queryExtent({
+                            where: 'OBJECTID = ' + item.objectId
+                        }).then(function (results) {
+                            this.view.goTo(results.extent);  // go to the extent of the results satisfying the query
+                        });
+                        //lấy thông tin xã huyện
+                        // var queryParams = layer.createQuery();
+                        // queryParams.returnGeometry=true;
+                        // queryParams.where=
+                        layer.queryFeatures({
+                            returnGeometry: true,
+                            spatialReference: this.view.spatialReference,
+                            where: 'OBJECTID = ' + item.objectId,
+                            outFields:['OBJECTID']
+                        }).then(res => {
+                            //neu tim duoc
+                            if (res.features[0]) {
+                                let ft = res.features[0];
+                                editingSupport.getLocationInfo(ft.geometry).then(locationInfo => {
+                                    for (let i in locationInfo) {
+                                        ft.attributes[i] = locationInfo[i];
+                                    }
+                                    layer.applyEdits({
+                                        updateFeatures: [{
+                                            attributes: ft.attributes
+                                        }]
+                                    }).then((result) => {
+                                        console.log(result);
+                                    });
+                                })
+                            }
+                        })
+
+                    }
+                    //khi applyEdits, nếu phát hiện lỗi
+                    let valid = false;
+                    for (let item of res.addFeatureResults) {
+                        if (item.error) {
+                            valid = true;
+                            break;
+                        }
+                    }
+                    //không phát hiện lỗi nên tắt popup
+                    if (valid) {
+                        $.notify('Có lỗi xảy ra trong quá trình thực hiện');
                     }
                 }
-                //không phát hiện lỗi nên tắt popup
-                if (!valid) {
-                    $.notify('Chỉnh sửa dữ liệu thành công');
-                    this.view.goTo({
-                        target:point.geometry,
-                        zoom:18
-                    })
-                }
             })
-
         }
 
     }

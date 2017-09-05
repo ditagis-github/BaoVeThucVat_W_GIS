@@ -55,7 +55,7 @@ require([
             } else {
                 throw "Chương trình không chạy được do không xác định được định danh"
             }
-            window.role = 725;
+            // window.role = 725;
 
             view = new MapView({
                 container: "map", // Reference to the scene div created in step 5
