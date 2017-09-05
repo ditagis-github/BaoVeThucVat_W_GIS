@@ -52,7 +52,10 @@ define([
                         layer.queryExtent({
                             where: 'OBJECTID = ' + item.objectId
                         }).then(function (results) {
-                            this.view.goTo(results.extent);  // go to the extent of the results satisfying the query
+                            this.view.goTo({
+                                target: results.extent,
+                                zoom: 18
+                            });
                         });
                         //lấy thông tin xã huyện
                         // var queryParams = layer.createQuery();
@@ -62,7 +65,7 @@ define([
                             returnGeometry: true,
                             spatialReference: this.view.spatialReference,
                             where: 'OBJECTID = ' + item.objectId,
-                            outFields:['OBJECTID']
+                            outFields: ['OBJECTID']
                         }).then(res => {
                             //neu tim duoc
                             if (res.features[0]) {
