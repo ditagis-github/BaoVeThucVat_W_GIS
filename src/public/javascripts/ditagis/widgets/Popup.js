@@ -33,24 +33,26 @@ define([
         startup() {
             this.view.on('layerview-create', (evt) => {
                 let layer = evt.layer;
-                layer.popupTemplate = {
-                    content: (target) => {
-                        return this.contentPopup(target);
-                    },
-                    title: layer.title,
-                    actions: [{
-                        id: "update",
-                        title: "Cập nhật",
-                        layerID: layer.name,
-                        className: "esri-icon-edit"
-                    },
-                    {
-                        id: "delete",
-                        title: "Xóa",
-                        layerID: layer.name,
-                        className: "esri-icon-erase"
+                if (layer.type == 'feature') {
+                    layer.popupTemplate = {
+                        content: (target) => {
+                            return this.contentPopup(target);
+                        },
+                        title: layer.title,
+                        actions: [{
+                            id: "update",
+                            title: "Cập nhật",
+                            className: "esri-icon-edit",
+                            layerID:layer.id,
+                        },
+                        {
+                            id: "delete",
+                            title: "Xóa",
+                            className: "esri-icon-erase",
+                            layerID:layer.id,
+                        }
+                        ]
                     }
-                    ]
                 }
             })
             this.view.popup.on("trigger-action", (evt) => {
@@ -69,7 +71,7 @@ define([
         }
         triggerActionHandler(event) {
             let id = event.action.layerID,
-                layer = this.view.map.getLayer(id);
+                layer = this.view.map.findLayerById(id);
             if (layer) {
 
                 let actionId = event.action.id,
@@ -120,7 +122,7 @@ define([
             this.resetInputElement();
             let div = domConstruct.create('div');
             let table = domConstruct.create('table', {}, div);
-            if (layer.name === constName.TRONGTROT) {
+            if (layer.id === constName.TRONGTROT) {
                 //duyệt thông tin đối tượng
                 for (let field of layer.fields) {
                     const alias = field.alias,
@@ -149,7 +151,7 @@ define([
                          * @param {*} input Nhóm cây trồng
                          */
                         var timeChangeHandle = () => {
-                            attributes.LoaiCayTrongs=[];
+                            attributes.LoaiCayTrongs = [];
                             let input = this.inputElement['NhomCayTrong'];
                             if (input) {
                                 $.post('map/trongtrot/thoigian', {
@@ -195,6 +197,7 @@ define([
                         //     }
                         // }
                         var inputNhomCayTrongChangeHandler = (value) => {
+                            value = value || 1;
                             let subtype = this.getSubtype(layer, 'NhomCayTrong', value);
                             let domain = subtype.domains.LoaiCayTrong || layer.getFieldDomain('LoaiCayTrong');
                             updateLoaiCayTrong(domain.codedValues);
@@ -327,6 +330,7 @@ define([
                             timeChangeHandle();
                             attributes['Nam'] = parseInt(inputYear.value);
                         })
+                        this.inputElement[name] = input;
                         timeChangeHandle();
                     } else {
                         if (domain && domain.type === "codedValue") {
@@ -386,8 +390,6 @@ define([
                             }
                         }
                     }
-
-                    input['data-attributes'] = attributes;
 
                     this.inputElement[name] = input;
                     //thêm vào html
@@ -476,7 +478,6 @@ define([
                         }
                     }
 
-                    input['data-attributes'] = attributes;
                     domConstruct.place(input, tdValue);
                     domConstruct.place(tdName, row);
                     domConstruct.place(tdValue, row);
@@ -611,7 +612,7 @@ define([
             let ttModal = document.getElementById('ttModal');//trongtrotModal
             if (ttModal)
                 document.body.removeChild(ttModal);
-            if (layer.name === constName.TRONGTROT) {
+            if (layer.id === constName.TRONGTROT) {
                 let button = domConstruct.toDom(`<button type="button" class='btn-popup-submit' data-toggle="modal" data-target="#ttModal" title='Chi tiết'><span class='esri-icon-table'></span></button>`);
                 domConstruct.place(button, div);
                 $.post('map/trongtrot/thoigian/getbymadoituong', {
@@ -769,7 +770,7 @@ define([
                         }
                         //không phát hiện lỗi nên tắt popup
                         if (!valid) {
-                            view.popup.visible = false;
+                            $.notify('Chỉnh sửa dữ liệu thành công');
                         }
                     })
                 }
