@@ -9,7 +9,6 @@ define([
             domStyle.set(this.container, {
                 position: 'fixed'
             });
-            document.body.appendChild(this.container);
         }
         static instance() {
             if (!this._instance)
@@ -22,6 +21,8 @@ define([
                 top: `${screencoor[1]}px`
             })
             this.container.innerHTML = string;
+            if (!document.body.contains(this.container))
+                document.body.appendChild(this.container);
         }
         hide() {
             if (document.body.contains(this.container))
