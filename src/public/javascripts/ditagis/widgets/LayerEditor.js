@@ -5,14 +5,14 @@ define([
     "dojo/dom",
     "esri/widgets/Expand",
 
-    "ditagis/widgets/subwidgets/PointDrawingTools",
-    "ditagis/widgets/subwidgets/PolylineDrawingTools",
+    "ditagis/tools/PointDrawingToolManager",
     'css!ditagis/widgets/LayerEditor.css'
 
 ], function (on,
     domConstruct, domClass, dom,
     Expand,
-    PointDrawingTools, PolylineDrawingTools) {
+    PointDrawingToolManager
+) {
         'use strict';
         return class {
             constructor(view, options = {}) {
@@ -29,9 +29,7 @@ define([
                 this.isStartup = false;
 
                 this.initView();
-                this.polylineDragwingTools = new PolylineDrawingTools(view);
-                this.pointDrawingTools = new PointDrawingTools(view);
-
+                this.drawManager = new PointDrawingToolManager(this.view);
 
             }
             get layers() {
@@ -41,6 +39,7 @@ define([
                 return this.systemVariable.selectedFeature;
             }
             set selectedFeature(value) {
+                this.drawManager.drawLayer = value;
                 this.systemVariable.selectedFeature = value;
             }
             startup() {
@@ -51,8 +50,7 @@ define([
             }
             destroy() {
                 if (this.isStartup) {
-                    this.pointDrawingTools.destroy();
-                    this.polylineDragwingTools.destroy();
+                    this.drawManager.clearEvents();
                     this.view.ui.remove(this.layerfeatureExpand);
                     this.isStartup = false;
                 }
@@ -76,7 +74,7 @@ define([
                                 innerHTML: layer.title,
                                 class: 'title'
                             }, ul)
-                            if (layer.name) {
+                            if (layer) {
 
                                 //nếu như layer không hiển thị theo domain
                                 if (layer.renderer.symbol) {
@@ -187,6 +185,9 @@ define([
                 }
             }
             layerItemClickHandler(layer, value) {
+                try {
+                    
+                
                 const typeIdField = layer.typeIdField;
                 if (value) {
                     layer.drawingAttributes = {};
@@ -195,18 +196,17 @@ define([
                 this.selectedFeature = layer;
                 switch (layer.geometryType) {
                     case 'point':
-                        this.pointDrawingTools.startup();
-                        this.polylineDragwingTools.destroy();
-                        break;
-                    case 'polyline':
-                        this.polylineDragwingTools.startup();
-                        this.pointDrawingTools.destroy();
+                        // this.pointDrawingTools.startup();
+                        this.drawManager.drawSimple();
                         break;
                     default:
                         console.log("Chưa được liệt kê")
                         break;
                 }
                 this.layerfeatureExpand.expanded = false;
+                } catch (error) {
+                    console.log(error);
+                }
             }
         }
     });

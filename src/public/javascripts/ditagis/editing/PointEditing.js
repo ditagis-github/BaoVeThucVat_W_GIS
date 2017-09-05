@@ -36,7 +36,7 @@ define([
 
             //lấy thông tin xã huyện
             const locationInfo = await editingSupport.getLocationInfo(point.geometry);
-            for(let i in locationInfo) {
+            for (let i in locationInfo) {
                 attributes[i] = locationInfo[i];
             }
             //lấy thông tin cập nhật gồm người tạo và thời gian tạo
@@ -50,10 +50,21 @@ define([
                 addFeatures: [point]
             };
             layer.applyEdits(edits).then((result) => {
-                if (result.addFeatureResults.length > 0) {
-                    console.log(`Thêm thành công đối tượng ${drawLayer.title}`);
-                } else {
-                    console.log(`Thêm không thành công đối tượng ${drawLayer.title}`);
+                //khi applyEdits, nếu phát hiện lỗi
+                let valid = false;
+                for (let item of res.updateFeatureResults) {
+                    if (item.error) {
+                        valid = true;
+                        break;
+                    }
+                }
+                //không phát hiện lỗi nên tắt popup
+                if (!valid) {
+                    $.notify('Chỉnh sửa dữ liệu thành công');
+                    this.view.goTo({
+                        target:point.geometry,
+                        zoom:18
+                    })
                 }
             })
 

@@ -55,10 +55,6 @@ define([
          */
         draw(layer) {
             this.drawLayer.layer = layer;
-            // Sự kiện hủy vẽ
-            this.doubleClickEvent = on(this.view, 'double-click', (evt) => {
-                this.doubleClickFunc(evt);
-            });
             // Lưu lại sự kiện hủy vẽ để xóa sau nếu không dùng sự kiện này bây giờ
             // Sự kiện vẽ điểm
             this.dragEventBufferFinal = on(this.view, 'click', (evt) => {
@@ -78,25 +74,11 @@ define([
                 this.dragEventBufferFinal.remove();
                 this.dragEventBufferFinal = null;
             }
-            if (this.doubleClickEvent) {
-                this.doubleClickEvent.remove();
-                this.doubleClickEvent = null;
-            }
             if (this.pointerMoveEvent) {
                 Tooltip.instance().hide();
                 this.pointerMoveEvent.remove();
                 this.pointerMoveEvent = null;
             }
-        }
-        /**
-         * Sự kiện hủy vẽ
-         * @param {event handle} evt 
-         */
-        doubleClickFunc(evt) {
-            evt.stopPropagation();
-            // Xóa sự kiện này khi hoàn tất vẽ Point
-            
-            this.clearEvents();
         }
         /**
          * Sự kiện vẽ Point
@@ -113,11 +95,7 @@ define([
                 symbol: new SimpleMarkerSymbol()
             });
             this.eventListener.fire('draw-finish', point);
-            //nếu như chưa đăng ký
-            if (!this.doubleClickEvent)
-                this.doubleClickEvent = on(this.view, 'double-click', (evt) => {
-                    this.doubleClickFunc(evt);
-                });
+            this.clearEvents();
         }
 
     };
