@@ -18,13 +18,14 @@ define([
         }
         show(screencoor, string) {
             domStyle.set(this.container, {
-                left: `${screencoor[0]+30}px`,
+                left: `${screencoor[0] + 30}px`,
                 top: `${screencoor[1]}px`
             })
             this.container.innerHTML = string;
         }
         hide() {
-            document.body.removeChild(this.container);
+            if (document.body.contains(this.container))
+                document.body.removeChild(this.container);
         }
     }
 });
