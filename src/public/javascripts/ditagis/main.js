@@ -4,7 +4,7 @@
  * Phần này quan trọng không được xóa
  */
 const constName = {
-    SAUBENH: 'trambts',
+    SAUBENH: 'saubenh',
     DOANHNGHIEP: 'doanhnghiep',
     TRONGTROT: 'trongtrot',
 }
@@ -30,6 +30,7 @@ require([
     "ditagis/widgets/Popup",
     "dojo/on",
     "dojo/dom-construct",
+    "dojo/sniff",
     "css!ditagis/styling/dtg-map.css"
 
 
@@ -38,13 +39,13 @@ require([
     QueryTask, Query,
     SystemStatusObject,
     LayerEditor, Popup,
-    on, domConstruct,
+    on, domConstruct,has
     ) {
         try {
 
             var systemVariable = new SystemStatusObject();
             var map = new Map({
-                basemap:'osm'
+                basemap: 'osm'
             });
 
             if (window.username && window.role) {
@@ -129,14 +130,16 @@ require([
                     view: view
                 });
                 view.ui.add(locateWidget, "top-left");
-
-                //Add Logo DATAGIS to the bottom left of the view
-                var logo = domConstruct.create("img", {
-                    src: "images/logo-ditagis.png",
-                    id: "logo",
-                    style: "background-color:transparent"
-                });
-                view.ui.add(logo, "bottom-left");
+                //neu khong phai la thiet bi di dong
+                if (!has('android') && !has('ios') && !has('bb')) {
+                    //Add Logo DATAGIS to the bottom left of the view
+                    var logo = domConstruct.create("img", {
+                        src: "images/logo-ditagis.png",
+                        id: "logo",
+                        style: "background-color:transparent"
+                    });
+                    view.ui.add(logo, "bottom-left");
+                }
                 var legendtExpand = new Expand({
                     expandIconClass: "esri-icon-collection",
                     content: new Legend({

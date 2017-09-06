@@ -1,9 +1,10 @@
 'use strict'
 let Router = require('./router');
-var TTM = require('../modules/trongtrot-manager');
+var TTM = require('../modules/trongtrotdb');
 class MapRouter extends Router {
 	constructor(params) {
 		super(params);
+		this.trongtrotDB = new TTM();
 		this.router.get('/', (req, res) => {
 			if (this.session && this.session.user) {
 				res.render('map', {
@@ -17,7 +18,7 @@ class MapRouter extends Router {
 		});
 
 		this.router.post('/trongtrot/thoigian', (req, res) => {
-			TTM.timer(req.body.id, req.body.month, req.body.year).then(result => {
+			this.trongtrotDB.timer(req.body.id, req.body.month, req.body.year).then(result => {
 				res.status(200).send(result);
 			}).catch(err => {
 				res.status(400).send(err);
@@ -32,16 +33,17 @@ class MapRouter extends Router {
 				NhomCayTrong: req.body.NhomCayTrong,
 				LoaiCayTrong: req.body.LoaiCayTrong || null
 			}
-			TTM.add(attributes).then(result => {
+			this.trongtrotDB.add(attributes).then(result => {
 				res.status(200).send('Successfully');
 			}).catch(err => {
 				res.status(400).send(err);
 			})
 		})
 		this.router.post('/trongtrot/thoigian/getbymadoituong', (req, res) => {
+			console.log(req.body);
 			const maDoiTuong = req.body.MaDoiTuong;
 			if (maDoiTuong) {
-				TTM.getByMaDoiTuong(maDoiTuong).then(result => {
+				this.trongtrotDB.getByMaDoiTuong(maDoiTuong).then(result => {
 					res.status(200).send(result);
 				}).catch(err => {
 					res.status(400).send(err);

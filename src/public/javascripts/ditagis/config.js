@@ -7,23 +7,23 @@ define([
             title: 'Dữ liệu nền',
             id: 'dulieunen',
             url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer',
-            sublayers:[
+            sublayers: [
                 {
                     id: 4,
-                    title:'Hành chính huyện'
+                    title: 'Hành chính huyện'
                 },
                 {
                     id: 3,
-                    title:'Hành chính xã'
+                    title: 'Hành chính xã'
                 }, {
                     id: 2,
-                    title:'Mặt giao thông'
+                    title: 'Mặt giao thông'
                 }, {
                     id: 1,
-                    title:'Sông hồ'
+                    title: 'Sông hồ'
                 }, {
                     id: 0,
-                    title:'Tim đường'
+                    title: 'Tim đường'
                 }
             ]
         },
@@ -59,6 +59,11 @@ define([
                 edit: false,
                 create: false,
                 delete: false
+            }, {
+                role: 725,//doanh nghiệp
+                edit: true,
+                create: true,
+                delete: true
             }
             ]
         },

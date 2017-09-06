@@ -1,97 +1,5 @@
-var AM = require('../modules/account-manager');
-var accountManager = new AM();
-var TTM = require('../modules/trongtrot-manager');
-// var EM = require('../modules/email-dispatcher');
-const router = require('express').Router();
-
-// main login page //
-router.get('/', function (req, res) {
-	// check if the user's credentials are saved in a cookie //
-	if (!req.cookies.user || !req.cookies.pass) {
-		res.render('login', { title: 'Đăng nhập' });
-	} else {
-		// attempt automatic login //
-		accountManager.autoLogin(req.cookies.user, req.cookies.pass).then(o => {
-			if (o != null) {
-				req.session.user = o;
-				res.redirect('/map');
-			} else {
-				res.render('login', { title: 'Đăng nhập' });
-			}
-		})
-
-	}
-});
-
-router.post('/', function (req, res) {
-	accountManager.manualLogin(req.body['user'], req.body['pass']).then(account => {
-		if (account) {
-			req.session.user = account;
-			if (req.body['remember-me'] == true) {
-				res.cookie('user', account.username, { maxAge: 900000 });
-				res.cookie('pass', account.password, { maxAge: 900000 });
-			}
-			res.status(200).send(account);
-		}
-		else {
-			res.status(400).send('Không tìm thấy tài khoản');
-		}
-	}).catch(err => {
-		console.log(err);
-		res.status(400).send('Không tìm thấy tài khoản');
-	})
-});
-
-// logged-in user homepage //
-
-router.get('/map', function (req, res) {
-	if (req.session.user == null) {
-		// if user is not logged-in redirect back to login page //
-		res.redirect('/');
-	} else {
-		res.render('map', {
-			title: 'Bảo vệ thực vật - Bình Dương',
-			user: req.session.user
-		});
-	}
-});
-
-router.post('/map/trongtrot/thoigian', function (req, res) {
-	TTM.timer(req.body.id, req.body.month, req.body.year).then(result => {
-		console.log(result);
-		res.status(200).send(result);
-	}).catch(err => {
-		res.status(400).send(err);
-	})
-})
-
-router.post('/map/trongtrot/thoigian/add', function (req, res) {
-	const attributes = {
-		MaDoiTuong: req.body.MaDoiTuong,
-		Thang: req.body.Thang,
-		Nam: req.body.Nam,
-		NhomCayTrong: req.body.NhomCayTrong,
-		LoaiCayTrong: req.body.LoaiCayTrong || null
-	}
-	TTM.add(attributes).then(result => {
-		res.status(200).send('Successfully');
-	}).catch(err => {
-		res.status(400).send(err);
-	})
-})
-router.post('/map/trongtrot/thoigian/getbymadoituong', function (req, res) {
-	const maDoiTuong = req.body.MaDoiTuong;
-	if (maDoiTuong) {
-		TTM.getByMaDoiTuong(maDoiTuong).then(result => {
-			res.status(200).send(result);
-		}).catch(err => {
-			res.status(400).send(err);
-		})
-	} else {
-		res.status(400).send('Parameters is null');
-	}
-})
-
+var AM = require('../modules/accountdb');
+var accountDB = new AM();
 router.get('/account', function (req, res) {
 	if (req.session.user == null) {
 		// if user is not logged-in redirect back to login page //
@@ -109,7 +17,7 @@ router.post('/account', function (req, res) {
 	if (req.session.user == null) {
 		res.redirect('/');
 	} else {
-		accountManager.updateAccount({
+		accountDB.updateAccount({
 			id: req.session.user._id,
 			name: req.body['name'],
 			email: req.body['email'],
@@ -143,7 +51,7 @@ router.get('/account/signup', function (req, res) {
 });
 
 router.post('/account/signup', function (req, res) {
-	accountManager.addNewAccount({
+	accountDB.addNewAccount({
 		name: req.body['name'],
 		email: req.body['email'],
 		user: req.body['user'],
@@ -161,7 +69,7 @@ router.post('/account/signup', function (req, res) {
 
 router.post('/account/lost-password', function (req, res) {
 	// look up the user's account via their email //
-	accountManager.getAccountByEmail(req.body['email'], function (o) {
+	accountDB.getAccountByEmail(req.body['email'], function (o) {
 		if (o) {
 			EM.dispatchResetPasswordLink(o, function (e, m) {
 				// this callback takes a moment to return //
@@ -182,7 +90,7 @@ router.post('/account/lost-password', function (req, res) {
 router.get('/account/reset-password', function (req, res) {
 	var email = req.query["e"];
 	var passH = req.query["p"];
-	accountManager.validateResetLink(email, passH, function (e) {
+	accountDB.validateResetLink(email, passH, function (e) {
 		if (e != 'ok') {
 			res.redirect('/');
 		} else {
@@ -199,7 +107,7 @@ router.post('/account/reset-password', function (req, res) {
 	var email = req.session.reset.email;
 	// destory the session immediately after retrieving the stored email //
 	req.session.destroy();
-	accountManager.updatePassword(email, nPass, function (e, o) {
+	accountDB.updatePassword(email, nPass, function (e, o) {
 		if (o) {
 			res.status(200).send('ok');
 		} else {
@@ -211,13 +119,13 @@ router.post('/account/reset-password', function (req, res) {
 // view & delete accounts //
 
 router.get('/account/print', function (req, res) {
-	accountManager.getAllRecords(function (e, accounts) {
+	accountDB.getAllRecords(function (e, accounts) {
 		res.render('account/print', { title: 'Account List', accts: accounts });
 	})
 });
 
 router.post('/account/delete', function (req, res) {
-	accountManager.deleteAccount(req.body.id, function (e, obj) {
+	accountDB.deleteAccount(req.body.id, function (e, obj) {
 		if (!e) {
 			res.clearCookie('user');
 			res.clearCookie('pass');
@@ -229,7 +137,7 @@ router.post('/account/delete', function (req, res) {
 });
 
 router.get('/account/reset', function (req, res) {
-	accountManager.delAllRecords(function () {
+	accountDB.delAllRecords(function () {
 		res.redirect('account/print');
 	});
 });

@@ -1,15 +1,15 @@
 define([
     "esri/Graphic",
-    "esri/renderers/UniqueValueRenderer",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
-], function (Graphic, UniqueValueRenderer, SimpleMarkerSymbol, SimpleLineSymbol) {
+    "esri/symbols/SimpleFillSymbol"
+], function (Graphic, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol) {
 
     return class {
         constructor(view, options) {
             options = options || {};
             this.view = view;
-            this.symbolMarker = options.symbol || new SimpleMarkerSymbol({
+            this.symbolMarker = options.symbolMarker || new SimpleMarkerSymbol({
                 color: [255, 0, 0],
                 size: 3,
                 width: 4,
@@ -19,7 +19,16 @@ define([
                 }
             })
 
-            this.symbolLine = options.symbol || new SimpleLineSymbol({
+            this.symbolLine = options.symbolLine || new SimpleLineSymbol({
+                color: [255, 0, 0],
+                size: 3,
+                width: 4,
+                outline: { // autocasts as new SimpleLineSymbol()
+                    color: [255, 64, 0, 0.4], // autocasts as new Color()
+                    width: 7
+                }
+            })
+            this.symbolFill = options.symbolFill || new SimpleFillSymbol({
                 color: [255, 0, 0],
                 size: 3,
                 width: 4,
@@ -32,22 +41,6 @@ define([
         }
         get layers() {
             return this.view.layers;
-        }
-        /**
-         * gán UniqueValuaRenderer vào {layer} để làm sáng layer đó lên
-         * teo giá trị uniqueValueInfos được truyền vào
-         * @param {"esri/layers/FeatureLayer"} layer 
-         * @param {Object[]} uniqueValueInfos 
-         */
-        renderer(layer, uniqueValueInfos) {
-            // console.log(layer.renderer);
-            var renderer =
-                new UniqueValueRenderer({
-                    field: 'OBJECTID',
-                    defaultSymbol: layer.renderer ? layer.renderer.symbol || layer.renderer.defaultSymbol : null,
-                    uniqueValueInfos: uniqueValueInfos
-                });
-            layer.renderer = renderer;
         }
         /**
          * Làm sáng các graphic được tìm thấy xung quanh screenCoor
@@ -79,25 +72,18 @@ define([
         clearHightlight() {
             this.removeAll();
         }
-        rendererGraphic(type,geometry) {
-            let symbol;
-            
-            if (type === 'point') {
-                symbol = this.symbolMarker;
-            } else if (type === 'polyline') {
-                symbol = this.symbolLine;
-            } else {
+        rendererGraphic(type, geometry) {
+            let symbol = type === 'point' ? this.symbolMarker : type === 'polyline' ? this.symbolLine : this.symbolFill;
 
-            }
             let graphic = new Graphic({
                 geometry: geometry,
-                symbol:symbol
+                symbol: symbol
             });
             return graphic;
         }
         add(graphic) {
             const type = graphic.layer.geometryType;
-            let renderergraphic = this.rendererGraphic(type,graphic.geometry);
+            let renderergraphic = this.rendererGraphic(type, graphic.geometry);
             this.tmpGraphics.push(renderergraphic);
             this.view.graphics.add(renderergraphic);
         }

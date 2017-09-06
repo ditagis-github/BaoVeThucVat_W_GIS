@@ -63,19 +63,27 @@
       border-radius: 4px;
     }
     .btn-popup-submit {
-      position: absolute;
       background-color: #6ab43e;
       border: none;
       color: white;
-      padding: 5px 10px;
+      padding: 9px 5px;
       text-align: center;
-      display: inline-block;
       font-size: 16px;
-      margin: 5px auto;
+      margin: 5px 5px 5px 5px;
       cursor: pointer;
-      bottom: 50%;
-      opacity: 0.5
+      width: 98%;
     }
-    .btn-popup-submit:hover {
-      opacity: 1
+    .modal-header, .modal-footer{
+      background-color: #6ab43e;
+      color: #fff;
     }
+    .modal-body{
+      background-color: #fff;
+      color: #6ab43e;
+    }
+    .esri-view-width-xsmall .esri-popup--is-docked-top-right .esri-popup__main-container{
+      max-height: 80%;
+    }
+    .btn-default {
+      color: #6ab43e;
+  }

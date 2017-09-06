@@ -2,10 +2,14 @@ define([
     "dojo/on",
     "dojo/dom",
     "dojo/dom-construct",
-    "dijit/Dialog",
-    "ditagis/support/Editing"
+    'dojo/window',
+    "dojo/sniff",
+    "ditagis/support/Editing",
+    "ditagis/support/HightlightGraphic",
 
-], function (on, dom, domConstruct, Dialog, editingSupport) {
+    "esri/symbols/SimpleMarkerSymbol",
+
+], function (on, dom, domConstruct, win, has, editingSupport, HightlightGraphic, SimpleMarkerSymbol) {
     'use strict';
     return class {
         constructor(view) {
@@ -13,10 +17,21 @@ define([
             this.options = {
                 hightLength: 100
             }
-            this.fireFields = ['NgayCapNhat', 'NguoiCapNhat'];
-            this.updateIndexAction = 1;
+            this.fireFields = ['NgayCapNhat', 'NguoiCapNhat', 'MaPhuongXa', 'MaHuyenTP'];
 
             this.inputElement = {};
+            this.hightlightGraphic = new HightlightGraphic(view, {
+                symbolMarker: new SimpleMarkerSymbol({
+                    color: [255, 0, 0],
+                    size: 4,
+                    width: 4,
+                    style: 'cross',
+                    outline: { // autocasts as new SimpleLineSymbol()
+                        color: '#7EABCD', // autocasts as new Color()
+                        width: 2
+                    }
+                })
+            });
         }
         /**
          * Khởi tạo lại inputElement
@@ -34,31 +49,44 @@ define([
             this.view.on('layerview-create', (evt) => {
                 let layer = evt.layer;
                 if (layer.type == 'feature') {
+                    let actions = [{
+                        id: "update",
+                        title: "Cập nhật",
+                        className: "esri-icon-edit",
+                        layerID: layer.id,
+                    },
+                    {
+                        id: "delete",
+                        title: "Xóa",
+                        className: "esri-icon-erase",
+                        layerID: layer.id,
+                    }
+                    ]
+                    if (layer.id === constName.TRONGTROT) {
+                        actions.push({
+                            id: "view-detail",
+                            title: "Chi tiết thời gian trồng trọt",
+                            className: "esri-icon-table",
+                            layerID: layer.id,
+                        })
+                    }
                     layer.popupTemplate = {
                         content: (target) => {
                             return this.contentPopup(target);
                         },
                         title: layer.title,
-                        actions: [{
-                            id: "update",
-                            title: "Cập nhật",
-                            className: "esri-icon-edit",
-                            layerID:layer.id,
-                        },
-                        {
-                            id: "delete",
-                            title: "Xóa",
-                            className: "esri-icon-erase",
-                            layerID:layer.id,
-                        }
-                        ]
+                        actions: actions
                     }
                 }
+            })
+
+            on(this.view.popup._closeNode, 'click', () => {
+                this.hightlightGraphic.clearHightlight();
             })
             this.view.popup.on("trigger-action", (evt) => {
                 this.triggerActionHandler(evt);
             }); //đăng ký sự kiện khi click vào action
-            view.popup.dockOptions = {
+            this.view.popup.dockOptions = {
                 // Disable the dock button so users cannot undock the popup
                 buttonEnabled: false,
                 // Dock the popup when the size of the view is less than or equal to 600x1000 pixels
@@ -90,6 +118,16 @@ define([
                             this.deleteFeature(layer, objectid);
                         }
                         break;
+                    case "view-detail":
+                        if (attributes['MaDoiTuong'])
+                            this.triggerActionViewDetailTrongtrot(attributes['MaDoiTuong']);
+                        else
+                            $.notify({
+                                message: 'Không xác được định danh'
+                            }, {
+                                    type: 'danger'
+                                })
+                        break;
                     default:
                         break;
                 }
@@ -119,19 +157,84 @@ define([
          * @param {object} attributes - thông tin của layer được chọn
          */
         showEdit(layer, attributes) {
+            var pass = (row, tdName, tdValue, input, field) => {
+                //kiểm tra domain
+                if (field.domain && field.domain.type === "codedValue") {
+                    input = domConstruct.create('select', {
+                        name: field.name,
+                        id: field.name
+                    })
+                    for (let codedValue of field.domain.codedValues) {
+                        let dmCode = codedValue.code,
+                            dmName = codedValue.name;
+                        let option = domConstruct.create('option', {
+                            value: dmCode,
+                        });
+                        if (attributes[field.name] === dmCode) {
+                            option.selected = 'selected'
+                        }
+                        option.innerHTML = dmName;
+                        domConstruct.place(option, input);
+                    }
+                } else {
+                    let inputType, value;
+                    if (field.type === "small-integer" ||
+                        (field.type === "integer") ||
+                        (field.type === "double"))
+                        inputType = 'number';
+                    else if (field.type === 'date') {
+                        inputType = 'date';
+                        var d = new Date(attributes[field.name]),
+                            date = d.getDate(),
+                            month = d.getMonth() + 1,
+                            year = d.getFullYear();
+                        if (date / 10 < 1)
+                            date = '0' + date;
+                        if (month / 10 < 1)
+                            month = '0' + month;
+                        value = `${year}-${month}-${date}`;
+                    } else {
+                        inputType = 'text';
+                    }
+                    //neu du lieu qua lon thi hien thi textarea
+                    if (length >= this.options.hightLength) {
+                        input = domConstruct.create('textarea', {
+                            rows: 5,
+                            cols: 25,
+                            id: field.name,
+                            name: field.name,
+                            innerHTML: value || attributes[field.name],
+                        }, tdValue);
+                    } else {
+                        input = domConstruct.create('input', {
+                            type: inputType,
+                            id: field.name,
+                            name: field.name,
+                            value: value || attributes[field.name],
+                        });
+
+                    }
+                }
+                input.readOnly = this.isFireField(field.name)
+                domConstruct.place(input, tdValue);
+                domConstruct.place(tdName, row);
+                domConstruct.place(tdValue, row);
+                domConstruct.place(row, table);
+
+                this.inputElement[field.name] = input;
+                //thêm vào html
+                on(input, 'change', (evt) => {
+                    this.inputChangeHandler(layer, evt.target, attributes);
+                })
+            }
             this.resetInputElement();
             let div = domConstruct.create('div');
             let table = domConstruct.create('table', {}, div);
             if (layer.id === constName.TRONGTROT) {
                 //duyệt thông tin đối tượng
                 for (let field of layer.fields) {
-                    const alias = field.alias,
-                        name = field.name,
-                        type = field.type,
-                        length = field.length,
-                        domain = field.domain;
                     //nếu như field thuộc field cấm thì không hiển thị
-                    if (this.isFireField(name) || type === 'oid' || name === 'MaDoiTuong' || name === 'LoaiCayTrong') {
+                    if (field.type === 'oid' || field.name === 'MaDoiTuong' || field.name === 'LoaiCayTrong') {
                         continue;
                     }
                     //tạo <tr>
@@ -139,12 +242,12 @@ define([
                     //tạo <td>
                     let
                         tdName = domConstruct.create('td', {
-                            innerHTML: alias
+                            innerHTML: field.alias
                         }, row),
                         tdValue = domConstruct.create('td', {}, row),
                         input;
                     //kiểm tra domain
-                    if (name === 'NhomCayTrong') {
+                    if (field.name === 'NhomCayTrong') {
 
                         /**
                          * 
@@ -199,7 +302,8 @@ define([
                         var inputNhomCayTrongChangeHandler = (value) => {
                             value = value || 1;
                             let subtype = this.getSubtype(layer, 'NhomCayTrong', value);
-                            let domain = subtype.domains.LoaiCayTrong || layer.getFieldDomain('LoaiCayTrong');
+                            let domain =
+                                (subtype.domains.LoaiCayTrong && subtype.domains.LoaiCayTrong.type === "codedValues") ? subtype.domains.LoaiCayTrong : layer.getFieldDomain('LoaiCayTrong');
                             updateLoaiCayTrong(domain.codedValues);
                         }
                         function checkedLoaiCayTrong(values) {
@@ -250,16 +354,16 @@ define([
                             }
                         }
                         input = domConstruct.create('select', {
-                            name: name,
-                            id: name,
+                            name: field.name,
+                            id: field.name,
                         }, tdValue)
-                        for (let codedValue of domain.codedValues) {
+                        for (let codedValue of field.domain.codedValues) {
                             let dmCode = codedValue.code,
                                 dmName = codedValue.name;
                             let option = domConstruct.create('option', {
                                 value: dmCode,
                             });
-                            if (attributes[name] === dmCode) {
+                            if (attributes[field.name] === dmCode) {
                                 option.selected = 'selected'
                             }
                             option.innerHTML = dmName;
@@ -277,7 +381,7 @@ define([
                             inputNhomCayTrongChangeHandler(evt.target.value);
                         })
 
-                        inputNhomCayTrongChangeHandler(attributes[name]);
+                        inputNhomCayTrongChangeHandler(attributes[field.name]);
 
                         ///TIMER//
                         let currentTime = new Date();
@@ -330,165 +434,29 @@ define([
                             timeChangeHandle();
                             attributes['Nam'] = parseInt(inputYear.value);
                         })
-                        this.inputElement[name] = input;
+                        this.inputElement[field.name] = input;
                         timeChangeHandle();
                     } else {
-                        if (domain && domain.type === "codedValue") {
-                            input = domConstruct.create('select', {
-                                name: name,
-                                id: name,
-                            }, tdValue)
-                            for (let codedValue of domain.codedValues) {
-                                let dmCode = codedValue.code,
-                                    dmName = codedValue.name;
-                                let option = domConstruct.create('option', {
-                                    value: dmCode,
-                                });
-                                if (attributes[name] === dmCode) {
-                                    option.selected = 'selected'
-                                }
-                                option.innerHTML = dmName;
-                                domConstruct.place(option, input);
-                            }
-                        } else {
-                            let inputType, value;
-                            if (type === "small-integer" ||
-                                (type === "integer") ||
-                                (type === "double"))
-                                inputType = 'number';
-                            else if (type === 'date') {
-                                inputType = 'date';
-                                var d = new Date(attributes[name]),
-                                    date = d.getDate(),
-                                    month = d.getMonth() + 1,
-                                    year = d.getFullYear();
-                                if (date / 10 < 1)
-                                    date = '0' + date;
-                                if (month / 10 < 1)
-                                    month = '0' + month;
-                                value = `${year}-${month}-${date}`;
-                            } else {
-                                inputType = 'text';
-                            }
-                            //neu du lieu qua lon thi hien thi textarea
-                            if (length >= this.options.hightLength) {
-                                input = domConstruct.create('textarea', {
-                                    rows: 5,
-                                    cols: 25,
-                                    id: name,
-                                    name: name,
-                                    innerHTML: value || attributes[name],
-                                }, tdValue);
-                            } else {
-                                input = domConstruct.create('input', {
-                                    type: inputType,
-                                    id: name,
-                                    name: name,
-                                    value: value || attributes[name],
-                                }, tdValue);
-
-                            }
-                        }
+                        pass(row, tdName, tdValue, input, field);
                     }
-
-                    this.inputElement[name] = input;
-                    //thêm vào html
-                    on(input, 'change', (evt) => {
-                        this.inputChangeHandler(layer, evt.target, attributes);
-                    })
                 }
             } else {
                 //duyệt thông tin đối tượng
                 for (let field of layer.fields) {
-                    const alias = field.alias,
-                        name = field.name,
-                        type = field.type,
-                        length = field.length,
-                        domain = field.domain;
-                    //nếu như field thuộc field cấm thì không hiển thị
-                    if (this.isFireField(name)) {
-                        continue;
-                    }
 
-                    if (type === 'oid')
+                    if (field.type === 'oid')
                         continue;
                     //tạo <tr>
                     let row = domConstruct.create('tr');
                     //tạo <td>
                     let tdName = domConstruct.create('td', {
-                        innerHTML: alias
+                        innerHTML: field.alias
                     }),
                         input,
                         tdValue = domConstruct.create('td');
-                    //kiểm tra domain
-                    if (domain && domain.type === "codedValue") {
-                        input = domConstruct.create('select', {
-                            name: name,
-                            id: name,
-                        })
-                        for (let codedValue of domain.codedValues) {
-                            let dmCode = codedValue.code,
-                                dmName = codedValue.name;
-                            let option = domConstruct.create('option', {
-                                value: dmCode,
-                            });
-                            if (attributes[name] === dmCode) {
-                                option.selected = 'selected'
-                            }
-                            option.innerHTML = dmName;
-                            domConstruct.place(option, input);
-                        }
-                    } else {
-                        let inputType, value;
-                        if (type === "small-integer" ||
-                            (type === "integer") ||
-                            (type === "double"))
-                            inputType = 'number';
-                        else if (type === 'date') {
-                            inputType = 'date';
-                            var d = new Date(attributes[name]),
-                                date = d.getDate(),
-                                month = d.getMonth() + 1,
-                                year = d.getFullYear();
-                            if (date / 10 < 1)
-                                date = '0' + date;
-                            if (month / 10 < 1)
-                                month = '0' + month;
-                            value = `${year}-${month}-${date}`;
-                        } else {
-                            inputType = 'text';
-                        }
-                        //neu du lieu qua lon thi hien thi textarea
-                        if (length >= this.options.hightLength) {
-                            input = domConstruct.create('textarea', {
-                                rows: 5,
-                                cols: 25,
-                                id: name,
-                                name: name,
-                                innerHTML: value || attributes[name],
-                            }, tdValue);
-                        } else {
-                            input = domConstruct.create('input', {
-                                type: inputType,
-                                id: name,
-                                name: name,
-                                value: value || attributes[name],
-                            });
-
-                        }
-                    }
-
-                    domConstruct.place(input, tdValue);
-                    domConstruct.place(tdName, row);
-                    domConstruct.place(tdValue, row);
-                    domConstruct.place(row, table);
-
-                    this.inputElement[name] = input;
-                    //thêm vào html
-                    on(input, 'change', (evt) => {
-                        this.inputChangeHandler(layer, evt.target, attributes);
-                    })
+                    pass(row, tdName, tdValue, input, field);
                 }
+
             }
             let btnSubmit = domConstruct.create('button', {
                 type: 'button',
@@ -540,6 +508,9 @@ define([
                 layer = graphic.layer,
                 attributes = graphic.attributes;
 
+            //hightlight graphic
+            this.hightlightGraphic.clearHightlight();
+            this.hightlightGraphic.add(graphic);
             let
                 div = domConstruct.create('div'),
                 table = domConstruct.create('table', {}, div);
@@ -608,72 +579,6 @@ define([
                 domConstruct.place(tdName, row);
                 domConstruct.place(tdValue, row);
                 domConstruct.place(row, table);
-            }
-            let ttModal = document.getElementById('ttModal');//trongtrotModal
-            if (ttModal)
-                document.body.removeChild(ttModal);
-            if (layer.id === constName.TRONGTROT) {
-                let button = domConstruct.toDom(`<button type="button" class='btn-popup-submit' data-toggle="modal" data-target="#ttModal" title='Chi tiết'><span class='esri-icon-table'></span></button>`);
-                domConstruct.place(button, div);
-                $.post('map/trongtrot/thoigian/getbymadoituong', {
-                    MaDoiTuong: attributes['MaDoiTuong']
-                }).done(results => {
-                    if (results && results.length > 0) {
-
-                        let table = domConstruct.create('table', {
-                            class: 'table table-hover'
-                        }, div);
-                        let thead = domConstruct.toDom(`<thead>
-                            <tr>
-                                <th>Thời gian</th>
-                                <th>Nhóm cây trồng</th>
-                                <th>Loại cây trồng</th>
-                            </tr>
-                            </thead>`)
-                        domConstruct.place(thead, table);
-                        let tbody = domConstruct.create('tbody', {}, table);
-                        for (let item of results) {
-                            //tạo <tr>
-                            let row = domConstruct.create('tr', {}, tbody);
-                            //thoi gian
-                            domConstruct.create('td', {
-                                innerHTML: `${item.Thang}/${item.Nam}`
-                            }, row);
-                            //nhom cay trong
-                            domConstruct.create('td', {
-                                innerHTML: `${item.NhomCayTrong}`
-                            }, row);
-                            //loai cay trong
-                            domConstruct.create('td', {
-                                innerHTML: `${item.LoaiCayTrong}`
-                            }, row);
-                        }
-                        let dlg = domConstruct.toDom(`
-                                <!-- Modal -->
-                                <div id="ttModal" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
-
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Thời gian trồng trọt</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        ${table.outerHTML}
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                                    </div>
-                                    </div>
-
-                                </div>
-                                </div>`);
-                        document.body.appendChild(dlg);
-
-                    }
-                })
-
             }
             return div.outerHTML;
         }
@@ -750,8 +655,10 @@ define([
                     }
                     for (let data of datas) {
                         $.post('map/trongtrot/thoigian/add', data).done(res => {
-                            if (res === 'Successfully')
+                            if (res === 'Successfully') {
                                 $.notify('Thêm thành công dữ liệu: ' + JSON.stringify(data));
+
+                            }
                         })
                     }
 
@@ -785,15 +692,96 @@ define([
          * @param {string} objectid 
          */
         deleteFeature(layer, objectid) {
+            let notify = $.notify({
+                title: `<strong>Xóa <i>${layer.title}</i></strong>`,
+                message: 'Đang xóa...'
+            }, {
+                    showProgressbar: true
+                })
             layer.applyEdits({
                 deleteFeatures: [{
                     objectId: objectid
                 }] //xoa objectID truyen vao
             }).then((res) => {
-                if (res.deleteFeatureResults.length > 0) {
+                if (res.deleteFeatureResults.length > 0 && !res.deleteFeatureResults[0].error) {
                     view.popup.visible = false;
+                    notify.update({ 'type': 'success', 'message': 'Xóa thành công!', 'progress': 100 });
+                    this.hightlightGraphic.clearHightlight();
                 }
             });
+        }
+        /**
+         * Xem thông tin thời gian trồng trọt
+         * @param {*} maDoiTuong Mã đối tượng trồng trọt
+         */
+        triggerActionViewDetailTrongtrot(maDoiTuong) {
+            $.post('map/trongtrot/thoigian/getbymadoituong', {
+                MaDoiTuong: maDoiTuong
+            }).done(results => {
+                if (results && results.length > 0) {
+                    let table = domConstruct.create('table', {
+                        class: 'table table-hover'
+                    });
+                    let thead = domConstruct.toDom(`<thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Nhóm cây trồng</th>
+                            <th>Loại cây trồng</th>
+                        </tr>
+                        </thead>`)
+                    domConstruct.place(thead, table);
+                    let tbody = domConstruct.create('tbody', {}, table);
+                    for (let item of results) {
+                        //tạo <tr>
+                        let row = domConstruct.create('tr', {}, tbody);
+                        //thoi gian
+                        domConstruct.create('td', {
+                            innerHTML: `${item.Thang}/${item.Nam}`
+                        }, row);
+                        //nhom cay trong
+                        domConstruct.create('td', {
+                            innerHTML: `${item.NhomCayTrong}`
+                        }, row);
+                        //loai cay trong
+                        domConstruct.create('td', {
+                            innerHTML: `${item.LoaiCayTrong}`
+                        }, row);
+                    }
+                    let dlg = domConstruct.toDom(`
+                            <div id="ttModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog" style="width:fit-content">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Thời gian trồng trọt</h4>
+                                </div>
+                                <div class="modal-body" id="ttModal-body">
+                                    ${table.outerHTML}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                </div>
+                                </div>
+
+                            </div>
+                            </div>`);
+                    document.body.appendChild(dlg);
+                    $('#ttModal').on('hidden.bs.modal', function () {
+                        let ttModal = document.getElementById('ttModal');//trongtrotModal
+                        if (ttModal)
+                            document.body.removeChild(ttModal);
+                    })
+                    $('#ttModal').modal();
+                }
+            }).fail(err => {
+                $.notify({
+                    message: 'Không có thông tin thời gian của thửa đất: ' + attributes['MaDoiTuong']
+                }, {
+                        type: 'warning'
+                    })
+            })
         }
     }
 });

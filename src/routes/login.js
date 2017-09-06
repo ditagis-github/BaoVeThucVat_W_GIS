@@ -1,5 +1,5 @@
 'use strict'
-var AccountManager = require('../modules/account-manager');
+var AccountManager = require('../modules/accountdb');
 let Router = require('./router');
 class LoginRouter extends Router {
 	constructor(params) {

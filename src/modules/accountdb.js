@@ -1,71 +1,40 @@
-const sql = require('mssql')
 const config = {
-
 	user: 'sa',
-
-	password: 'Ditagis123',
-
-	server: 'ditagis.com',
-
-	database: 'BinhDuong_HeThongVienThong',
-
-
-
-	options: {
-
-		encrypt: false // Use this if you're on Windows Azure 
-
-	}
-
+	password: '268@lTk',
+	server: '112.78.4.175',
+	database: 'BaoVeThucVat',
 }
 class AccountManager {
 	constructor(params) {
-		this.pool = new sql.ConnectionPool(config);
+		this.sql = require('mssql')
+	}
+	abc(){
+		return new Promise((resolve, reject) => {
+			this.sql.connect(config).then(()=>resolve()).catch(err=>reject(err));
+		});
+		
+	}
+	close(){
+		this.sql.close();
 	}
 	autoLogin(user, pass) {
 		return new Promise((resolve, reject) => {
-			this.pool.connect().then(() => {
-				new sql.Request(this.pool).query(`SELECT * FROM USR WHERE USERNAME = ${user} AND PASSWORD = ${pass} `).then(result => {
-					if (result.recordset.length > 0)
-						resolve(result.recordset[0]);
-					else
-						resolve(null)
-					this.pool.close();
-				}).catch(err => {
-					reject(err);
-					this.pool.close();
-				})
+			this.sql.connect(config).then(() => {
+				return this.sql.query`SELECT * FROM ACCOUNT WHERE USERNAME = ${user} AND PASSWORD = ${pass}`;
+			}).then(result => {
+				if (result.recordset.length > 0)
+					resolve(result.recordset[0])
+				else resolve(null);
+				this.sql.close();
 			}).catch(err => {
-				reject(err);
-				this.pool.close();
+				console.log(err);
+				this.sql.close();
 			})
 		});
 	}
 
 	manualLogin(user, pass) {
-		return new Promise((resolve, reject) => {
-			resolve({
-				username: 'ditagis',
-				password: 'ditagis',
-				role: 1
-			})
-			// this.pool.connect().then(() => {
-			// 	new sql.Request(this.pool).query(`SELECT * FROM ACCOUNT WHERE USERNAME = ${user} AND PASSWORD = ${pass}`).then(result => {
-			// 		console.log(result);
-			// 		if (result.recordset.length > 0)
-			// 			resolve(result.recordset[0]);
-			// 		else
-			// 			resolve(null)
-			// 		this.pool.close();
-			// 	}).catch(err => {
-			// 		reject(err);
-			// 		this.pool.close();
-			// 	})
-			// }).catch(err => {
-			// 	reject(err);
-			// 	this.pool.close();
-			// })
-		});
+		return this.autoLogin(user, pass);
 	}
 
 

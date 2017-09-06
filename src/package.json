@@ -17,6 +17,10 @@
     "mssql": "^4.0.4",
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2",
-    "socketio": "^1.0.0"
+    "socketio": "^1.0.0",
+    "grunt": "~0.4.5"
+  },
+  "devDependencies": {
+    "grunt-contrib-uglify": "^3.0.1"
   }
 }
