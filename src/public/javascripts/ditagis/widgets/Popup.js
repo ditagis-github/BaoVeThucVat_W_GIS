@@ -42,9 +42,6 @@ define([
         isFireField(fieldName) {
             return this.fireFields.indexOf(fieldName) !== -1;
         }
-        get layers() {
-            return this.view.layers;
-        }
         startup() {
             this.view.on('layerview-create', (evt) => {
                 let layer = evt.layer;
@@ -704,7 +701,7 @@ define([
                 }] //xoa objectID truyen vao
             }).then((res) => {
                 if (res.deleteFeatureResults.length > 0 && !res.deleteFeatureResults[0].error) {
-                    view.popup.visible = false;
+                    this.view.popup.visible = false;
                     notify.update({ 'type': 'success', 'message': 'Xóa thành công!', 'progress': 100 });
                     this.hightlightGraphic.clearHightlight();
                 }

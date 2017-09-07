@@ -32,9 +32,6 @@ define([
                 this.drawManager = new PointDrawingToolManager(this.view);
 
             }
-            get layers() {
-                return this.view.layers;
-            }
             get selectedFeature() {
                 return this.systemVariable.selectedFeature;
             }

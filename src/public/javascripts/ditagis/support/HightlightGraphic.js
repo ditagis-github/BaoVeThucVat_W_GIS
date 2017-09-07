@@ -39,9 +39,6 @@ define([
             })
             this.tmpGraphics = [];
         }
-        get layers() {
-            return this.view.layers;
-        }
         /**
          * Làm sáng các graphic được tìm thấy xung quanh screenCoor
          * @param {ScreenCoor{x,y}} screenCoors 
