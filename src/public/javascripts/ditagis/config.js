@@ -105,8 +105,7 @@ define([
             //     }]
             // }
         ],
-        zoom: 11, // Sets the zoom level based on level of detail (LOD)
-        // center: [106.5872641, 11.0254935] // Sets the center point of view in lon/lat
-        center: [106.6843694, 11.0576851]
+        zoom: 10,
+        center: [106.6843694, 11.158752270428375]
     }
 });
