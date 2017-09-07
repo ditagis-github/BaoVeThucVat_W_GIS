@@ -41,6 +41,7 @@ require([
     LayerEditor, Popup,
     on, domConstruct,has
     ) {
+        'use strict';
         try {
 
             var systemVariable = new SystemStatusObject();
@@ -58,7 +59,7 @@ require([
             }
             // window.role = 725;
 
-            view = new MapView({
+            var view = new MapView({
                 container: "map", // Reference to the scene div created in step 5
                 map: map, // Reference to the map object created before the scene
                 center: mapconfigs.center,
@@ -86,11 +87,12 @@ require([
                         sublayer.definitionExpression = definitionExpression;
                     }
                 }
+                var osmLayer = new OpenStreetMapLayer({
+                    title:'OpenstreetMap'
+                });
+                map.add(osmLayer);
                 let basemap = new MapImageLayer(bmCfg);
                 map.add(basemap);
-                // basemap.then(()=>{
-                //     view.goTo(basemap.fullExtent);
-                // })
             }
 
 

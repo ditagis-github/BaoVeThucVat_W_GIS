@@ -7,6 +7,8 @@ define([
             title: 'Dữ liệu nền',
             id: 'dulieunen',
             url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer',
+            visible: false,
+            copyright:'Bản đồ biên tập bởi Trung tâm DITAGIS',
             sublayers: [
                 {
                     id: 4,
