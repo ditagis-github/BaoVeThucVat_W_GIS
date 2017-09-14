@@ -41,14 +41,22 @@ define([
             }
             startup() {
                 if (!this.isStartup) {
-                    this.view.ui.add(this.layerfeatureExpand, this.options.position);
+                    this.keydownEvent = this.view.on('key-down',evt=>{
+                        const key = evt.key;
+                        if(key === 'p'){
+                            this.expand.toggle();
+                        }
+                    })
+                    this.view.ui.add(this.expand, this.options.position);
                     this.isStartup = true;
                 }
             }
             destroy() {
                 if (this.isStartup) {
+                    if(this.keydownEvent)
+                        this.keydownEvent.remove();
                     this.drawManager.clearEvents();
-                    this.view.ui.remove(this.layerfeatureExpand);
+                    this.view.ui.remove(this.expand);
                     this.isStartup = false;
                 }
             }
@@ -171,7 +179,7 @@ define([
                         }
                     });
 
-                    this.layerfeatureExpand = new Expand({
+                    this.expand = new Expand({
                         expandIconClass: this.options.icon,
                         expandTooltip: this.options.title,
                         view: this.view,
@@ -200,7 +208,7 @@ define([
                         console.log("Chưa được liệt kê")
                         break;
                 }
-                this.layerfeatureExpand.expanded = false;
+                this.expand.expanded = false;
                 } catch (error) {
                     console.log(error);
                 }

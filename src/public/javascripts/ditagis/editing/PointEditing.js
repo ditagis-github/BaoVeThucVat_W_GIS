@@ -26,8 +26,8 @@ define([
                     title: '<strong>Cập nhật đối tượng</strong>',
                     message: 'Đang cập nhật...'
                 }, {
-                        allow_dismiss: false,
-                        showProgressbar: true
+                        showProgressbar: true,
+                        delay:20000
                     });
                 //tạo attributes để giữ giá trị cho graphic attribute khi sử dụng phương thức applyEdits
                 let attributes = {};

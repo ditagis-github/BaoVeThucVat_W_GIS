@@ -126,24 +126,4 @@ class TrongTrotDB {
 		})
 	}
 }
-let tt = new TrongTrotDB();
-tt.adds([{
-	MaDoiTuong: '0444',
-	Thang: 12,
-	Nam: 2019,
-	NhomCayTrong: 4,
-	LoaiCayTrong: 'A'
-}, {
-	MaDoiTuong: '0444',
-	Thang: 12,
-	Nam: 2019,
-	NhomCayTrong: 4,
-	LoaiCayTrong: 'B'
-}, {
-	MaDoiTuong: '0444',
-	Thang: 12,
-	Nam: 2019,
-	NhomCayTrong: 4,
-	LoaiCayTrong: 'C'
-}])
 module.exports = TrongTrotDB;

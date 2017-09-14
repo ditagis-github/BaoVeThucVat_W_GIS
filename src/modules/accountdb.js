@@ -8,12 +8,6 @@ class AccountManager {
 	constructor(params) {
 		this.sql = require('mssql')
 	}
-	abc(){
-		return new Promise((resolve, reject) => {
-			this.sql.connect(config).then(()=>resolve()).catch(err=>reject(err));
-		});
-		
-	}
 	close(){
 		this.sql.close();
 	}

@@ -22,8 +22,8 @@ class LoginRouter extends Router {
 					this.session.user = user;
 
 					if (req.body['remember-me'] == true) {
-						res.cookie('user', user.username, { maxAge: 900000 });
-						res.cookie('pass', user.password, { maxAge: 900000 });
+						res.cookie('username', user.Username, { maxAge: 900000 });
+						res.cookie('password', user.Password, { maxAge: 900000 });
 					}
 					// res.status(200).send(user);
 					res.redirect('/map');

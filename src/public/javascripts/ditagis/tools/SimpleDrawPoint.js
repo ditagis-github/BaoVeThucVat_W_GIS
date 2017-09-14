@@ -88,7 +88,7 @@ define([
             evt.stopPropagation();
             let point;
             point = new Graphic({
-                geometry: view.toMap({
+                geometry: this.view.toMap({
                     x: evt.x,
                     y: evt.y
                 }),

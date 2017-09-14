@@ -104,15 +104,20 @@ define([
                     attributes = selectedFeature.attributes,
                     objectid = attributes.OBJECTID;
                 const per = layer.getPermission();
+                let fail = false;
                 switch (actionId) {
                     case "update":
                         if (per && per.edit) {
                             this.showEdit(layer, attributes);
+                        } else {
+                            fail = true;
                         }
                         break;
                     case "delete":
                         if (per && per.delete) {
                             this.deleteFeature(layer, objectid);
+                        } else {
+                            fail = true;
                         }
                         break;
                     case "view-detail":
@@ -127,6 +132,13 @@ define([
                         break;
                     default:
                         break;
+                }
+                if (fail) {
+                    $.notify({
+                        message: 'Không có quyền thực hiện tác vụ'
+                    }, {
+                            type: 'danger'
+                        })
                 }
             }
         }
@@ -566,7 +578,8 @@ define([
                         rows: 5,
                         cols: 25,
                         readonly: true,
-                        innerHTML: content
+                        innerHTML: content,
+                        style: 'background: transparent;border:none'
                     }, tdValue);
                 }
                 //neu khong thi co content vao trong td. <td>{content}</td>
@@ -588,6 +601,17 @@ define([
          * Sự kiện chỉnh sửa thông tin đối tượng
          */
         editFeature(layer, attributes) {
+            let notify = $.notify({
+                title: `<strong>Cập nhật<i>${layer.title}</i></strong>`,
+                message: 'Cập nhật...'
+            }, {
+                    showProgressbar: true,
+                    delay: 20000,
+                    placement: {
+                        from: 'top',
+                        alias: 'left'
+                    }
+                })
             try {
                 if (attributes) {
                     for (let field of layer.fields) {
@@ -651,12 +675,15 @@ define([
                         });
                     }
                     for (let data of datas) {
-                        $.post('map/trongtrot/thoigian/add', data).done(res => {
-                            if (res === 'Successfully') {
-                                $.notify('Thêm thành công dữ liệu: ' + JSON.stringify(data));
+                        setTimeout(() => {
+                            $.post('map/trongtrot/thoigian/add', data)
+                        }, 3000);
+                        // .done(res => {
+                        //     if (res === 'Successfully') {
+                        //         $.notify('Thêm thành công dữ liệu: ' + JSON.stringify(data));
 
-                            }
-                        })
+                        //     }
+                        // })
                     }
 
                     layer.applyEdits({
@@ -674,13 +701,13 @@ define([
                         }
                         //không phát hiện lỗi nên tắt popup
                         if (!valid) {
-                            $.notify('Chỉnh sửa dữ liệu thành công');
+                            notify.update({ 'type': 'success', 'message': 'Cập nhật thành công!', 'progress': 90 });
                         }
                     })
                 }
 
             } catch (error) {
-                throw error;
+                notify.update({ 'type': 'danger', 'message': 'Có lỗi xảy ra trong quá trình cập nhật!', 'progress': 90 });
             }
         }
         /**
@@ -693,7 +720,8 @@ define([
                 title: `<strong>Xóa <i>${layer.title}</i></strong>`,
                 message: 'Đang xóa...'
             }, {
-                    showProgressbar: true
+                    showProgressbar: true,
+                    delay: 20000
                 })
             layer.applyEdits({
                 deleteFeatures: [{
@@ -712,10 +740,24 @@ define([
          * @param {*} maDoiTuong Mã đối tượng trồng trọt
          */
         triggerActionViewDetailTrongtrot(maDoiTuong) {
+            let notify = $.notify({
+                title: 'Thời gian trồng trọt thửa đất: ' + maDoiTuong,
+                message: 'Đang truy vấn...'
+            }, {
+                    delay: 20000,
+                    showProgressbar: true
+                })
             $.post('map/trongtrot/thoigian/getbymadoituong', {
                 MaDoiTuong: maDoiTuong
             }).done(results => {
                 if (results && results.length > 0) {
+                    notify.update({
+                        message: `Tìm thấy ${results.length} dữ liệu`,
+                        progress: 100
+                    }, {
+                            type: 'success'
+                        })
+
                     let table = domConstruct.create('table', {
                         class: 'table table-hover'
                     });
@@ -771,13 +813,19 @@ define([
                             document.body.removeChild(ttModal);
                     })
                     $('#ttModal').modal();
+                } else {
+                    notify.update({
+                        type: 'danger',
+                        message: 'Không tìm thấy dữ liệu',
+                        progress: 100
+                    })
                 }
             }).fail(err => {
-                $.notify({
-                    message: 'Không có thông tin thời gian của thửa đất: ' + attributes['MaDoiTuong']
-                }, {
-                        type: 'warning'
-                    })
+                notify.update({
+                    type: 'danger',
+                    message: 'Không tìm thấy dữ liệu',
+                    progress: 100
+                })
             })
         }
     }
