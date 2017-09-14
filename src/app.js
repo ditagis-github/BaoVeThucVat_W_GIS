@@ -22,7 +22,7 @@ app.use(session({
 );
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,11 +34,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/',rtAccount)
 const LoginRouter = require('./routes/login');
 const MapRouter = require('./routes/map');
+const AccountRouter = require('./routes/account');
 var routerParams = {
   session:null
 }
 app.use('/',new LoginRouter(routerParams).router)
 app.use('/map',new MapRouter(routerParams).router)
+app.use('/account',new AccountRouter(routerParams).router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

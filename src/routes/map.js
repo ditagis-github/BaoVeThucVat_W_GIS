@@ -8,12 +8,22 @@ class MapRouter extends Router {
 		this.router.get('/', (req, res) => {
 			if (this.session && this.session.user) {
 				res.render('map', {
-					title: 'Bảo vệ thực vật - Bình Dương',
-					user: this.session.user
+					title: 'Bảo vệ thực vật - Bình Dương'
 				});
 
 			} else {
 				res.redirect('/login');
+			}
+		});
+		this.router.post('/', (req, res) => {
+			if (this.session && this.session.user) {
+				res.status(200).send({
+					userName:this.session.user.Username,
+					displayName:this.session.user.DisplayName,
+					role:this.session.user.Role
+				});
+			} else {
+				res.status(400).send('fail');
 			}
 		});
 

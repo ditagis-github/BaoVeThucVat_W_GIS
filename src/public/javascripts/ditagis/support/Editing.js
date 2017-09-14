@@ -21,9 +21,10 @@ define([
             return new Promise((resolve, reject) => {
 
                 try {
-                    this.queryLocation = new QueryTask({
-                        url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DLN/MapServer/4'
-                    });
+                    if (!this.queryLocation)
+                        this.queryLocation = new QueryTask({
+                            url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DLN/MapServer/4'
+                        });
                     this.queryLocation.execute({
                         outFields: ['MaPhuongXa', 'MaHuyenTP'],
                         geometry: geometry
