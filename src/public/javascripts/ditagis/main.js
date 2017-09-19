@@ -221,7 +221,9 @@ require([
                             position: "top-right"
                         });
                         //TIME SLIDER
-                        var timeSlider = new TimeSlider(view);
+                        var timeSlider = new TimeSlider(view,{
+                            position:'bottom-right'
+                        });
                         timeSlider.startup();
                         /**
                          * Layer Editor
