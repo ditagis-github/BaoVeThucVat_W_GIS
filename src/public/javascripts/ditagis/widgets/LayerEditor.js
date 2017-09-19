@@ -41,9 +41,9 @@ define([
             }
             startup() {
                 if (!this.isStartup) {
-                    this.keydownEvent = this.view.on('key-down',evt=>{
+                    this.keydownEvent = this.view.on('key-down', evt => {
                         const key = evt.key;
-                        if(key === 'p'){
+                        if (key === 'p') {
                             this.expand.toggle();
                         }
                     })
@@ -53,7 +53,7 @@ define([
             }
             destroy() {
                 if (this.isStartup) {
-                    if(this.keydownEvent)
+                    if (this.keydownEvent)
                         this.keydownEvent.remove();
                     this.drawManager.clearEvents();
                     this.view.ui.remove(this.expand);
@@ -67,28 +67,27 @@ define([
                     });
                     let ul = domConstruct.create('ul', null, this.container);
 
-                    this.view.on('layerview-create', (evt) => {
-                        const layer = evt.layer;
-                        const permission = layer.getPermission();
-                        if (permission && permission.create) {
-                            const symbol = layer.renderer.symbol || layer.renderer.uniqueValueInfos[0].symbol;
-                            let layerSymbols = [];
+                    this.view.map.layers.map(layer => {
+                        layer.then(() => {
+                            if (layer.type == 'feature') {
+                                const permission = layer.permission;
+                                if (permission && permission.create) {
+                                    const symbol = layer.renderer.symbol || layer.renderer.uniqueValueInfos[0].symbol;
+                                    let layerSymbols = [];
 
-                            //tạo tiêu đề
-                            domConstruct.create('li', {
-                                innerHTML: layer.title,
-                                class: 'title'
-                            }, ul)
-                            if (layer) {
-
-                                //nếu như layer không hiển thị theo domain
-                                if (layer.renderer.symbol) {
-                                    const img = symbol.url;
-                                    let contentSymbol;
-                                    if (img) {
-                                        contentSymbol = `<img src='${img}'></img>`;
-                                    } else {
-                                        contentSymbol = `<svg overflow="hidden" width="30" height="30" style="touch-action: none;">
+                                    //tạo tiêu đề
+                                    domConstruct.create('li', {
+                                        innerHTML: layer.title,
+                                        class: 'title'
+                                    }, ul)
+                                    //nếu như layer không hiển thị theo domain
+                                    if (layer.renderer.symbol) {
+                                        const img = symbol.url;
+                                        let contentSymbol;
+                                        if (img) {
+                                            contentSymbol = `<img src='${img}'></img>`;
+                                        } else {
+                                            contentSymbol = `<svg overflow="hidden" width="30" height="30" style="touch-action: none;">
                                     <path 
                                     fill="none" 
                                     fill-opacity="0" 
@@ -99,20 +98,20 @@ define([
                                    transform="matrix(1.00000000,0.00000000,0.00000000,1.00000000,15.00000000,15.00000000)">
                                    </path>
                                    </svg>`
+                                        }
+                                        layerSymbols.push({
+                                            symbol: contentSymbol
+                                        })
                                     }
-                                    layerSymbols.push({
-                                        symbol: contentSymbol
-                                    })
-                                }
-                                //hiển thị theo symbol
-                                else {
-                                    let contentSymbol;
-                                    for (let icon of layer.renderer.uniqueValueInfos) {
-                                        let symbol = icon.symbol;
-                                        //nếu là điểm
-                                        if (symbol.type === "simple-marker-symbol") {
-                                            // console.log(icon);
-                                            contentSymbol = `<svg overflow="hidden" width="30" height="30" style="touch-action: none;">
+                                    //hiển thị theo symbol
+                                    else {
+                                        let contentSymbol;
+                                        for (let icon of layer.renderer.uniqueValueInfos) {
+                                            let symbol = icon.symbol;
+                                            //nếu là điểm
+                                            if (symbol.type === "simple-marker-symbol") {
+                                                // console.log(icon);
+                                                contentSymbol = `<svg overflow="hidden" width="30" height="30" style="touch-action: none;">
                                     <circle fill="rgb(${symbol.color.r}, ${symbol.color.g},${symbol.color.b})" 
                                     fill-opacity="1" 
                                     stroke="rgb(0, 0, 0)" 
@@ -122,10 +121,10 @@ define([
                                     transform="matrix(1.00000000,0.00000000,0.00000000,1.00000000,15.00000000,15.00000000)">
                                     </circle>
                                     </svg>`
-                                        }
-                                        //nếu là đường 
-                                        else if (symbol.type === "simple-line-symbol") {
-                                            contentSymbol = `<svg overflow="hidden" width="30" height="30" style="touch-action: none;">
+                                            }
+                                            //nếu là đường 
+                                            else if (symbol.type === "simple-line-symbol") {
+                                                contentSymbol = `<svg overflow="hidden" width="30" height="30" style="touch-action: none;">
                                     <path 
                                     fill="none" 
                                     fill-opacity="0" 
@@ -136,47 +135,48 @@ define([
                                    transform="matrix(1.00000000,0.00000000,0.00000000,1.00000000,15.00000000,15.00000000)">
                                    </path>
                                    </svg>`
+                                            }
+                                            //nếu như có hình ảnh thì hiển thị hình ảnh
+                                            else {
+                                                const img = symbol.url;
+                                                contentSymbol = `<img src='${img}'></img>`;
+                                            }
+                                            layerSymbols.push({
+                                                symbol: contentSymbol,
+                                                label: icon.label,
+                                                value: icon.value
+                                            })
                                         }
-                                        //nếu như có hình ảnh thì hiển thị hình ảnh
-                                        else {
-                                            const img = symbol.url;
-                                            contentSymbol = `<img src='${img}'></img>`;
+                                    }
+                                    for (let symbolItem of layerSymbols) {
+                                        const symbol = symbolItem.symbol,
+                                            label = symbolItem.label,
+                                            value = symbolItem.value;
+                                        let li = domConstruct.create('li', {
+                                            class: 'list-item'
+                                        }, ul);
+                                        let div = domConstruct.create('div', {
+                                            class: 'item-container'
+                                        }, li);
+                                        let symbolContainer = domConstruct.create('div', {
+                                            innerHTML: symbol
+                                        }, div);
+                                        //nếu có label
+                                        if (label) {
+                                            domConstruct.create('div', {
+                                                innerHTML: label,
+                                                class: 'icon-label'
+                                            }, div);
+
                                         }
-                                        layerSymbols.push({
-                                            symbol: contentSymbol,
-                                            label: icon.label,
-                                            value: icon.value
-                                        })
+                                        on(li, "click", (evt) => {
+                                            this.layerItemClickHandler(layer, value);
+                                        });
+
                                     }
                                 }
                             }
-                            for (let symbolItem of layerSymbols) {
-                                const symbol = symbolItem.symbol,
-                                    label = symbolItem.label,
-                                    value = symbolItem.value;
-                                let li = domConstruct.create('li', {
-                                    class: 'list-item'
-                                }, ul);
-                                let div = domConstruct.create('div', {
-                                    class: 'item-container'
-                                }, li);
-                                let symbolContainer = domConstruct.create('div', {
-                                    innerHTML: symbol
-                                }, div);
-                                //nếu có label
-                                if (label) {
-                                    domConstruct.create('div', {
-                                        innerHTML: label,
-                                        class: 'icon-label'
-                                    }, div);
-
-                                }
-                                on(li, "click", (evt) => {
-                                    this.layerItemClickHandler(layer, value);
-                                });
-
-                            }
-                        }
+                        });
                     });
 
                     this.expand = new Expand({
@@ -186,29 +186,29 @@ define([
                         content: this.container
                     });
                 } catch (error) {
-                    console.log(error);
+                    throw error;
                 }
             }
             layerItemClickHandler(layer, value) {
                 try {
-                    
-                
-                const typeIdField = layer.typeIdField;
-                if (value) {
-                    layer.drawingAttributes = {};
-                    layer.drawingAttributes[typeIdField] = value;
-                }
-                this.selectedFeature = layer;
-                switch (layer.geometryType) {
-                    case 'point':
-                        // this.pointDrawingTools.startup();
-                        this.drawManager.drawSimple();
-                        break;
-                    default:
-                        console.log("Chưa được liệt kê")
-                        break;
-                }
-                this.expand.expanded = false;
+
+
+                    const typeIdField = layer.typeIdField;
+                    if (value) {
+                        layer.drawingAttributes = {};
+                        layer.drawingAttributes[typeIdField] = value;
+                    }
+                    this.selectedFeature = layer;
+                    switch (layer.geometryType) {
+                        case 'point':
+                            // this.pointDrawingTools.startup();
+                            this.drawManager.drawSimple();
+                            break;
+                        default:
+                            console.log("Chưa được liệt kê")
+                            break;
+                    }
+                    this.expand.expanded = false;
                 } catch (error) {
                     console.log(error);
                 }

@@ -1,44 +1,11 @@
-const config = {
-
-	user: 'sa',
-
-	password: '268@lTk',
-
-	server: '112.78.4.175',
-
-	database: 'BaoVeThucVat',
-	options: {
-		encrypt: false // Use this if you're on Windows Azure 
-	}
-
-}
-let sql = require('mssql')
-class TrongTrotDB {
+const Database = require('./Database');
+class TrongTrotDB extends Database {
 	constructor(params) {
-		this.pool = new sql.ConnectionPool(config);
-	}
-	connect() {
-		return sql.connect(config);
-	}
-	close() {
-		sql.close();
-	}
-	select(sql) {
-		return new Promise((resolve, reject) => {
-			sql.connect(config).then(() => {
-				return sql.query`${sql}`
-			}).then(result => {
-				resolve(result.recordset);
-				this.close();
-			}).catch(err => {
-				reject(err);
-				this.close();
-			})
-		})
+		super(params)
 	}
 	timer(id, month, year) {
 		return new Promise((resolve, reject) => {
-			sql.connect(config).then(() => {
+			this.connect().then(() => {
 				return sql.query`SELECT * FROM THOIGIANSANXUATTRONGTROT WHERE MADOITUONG = ${id} AND THANG = ${month} AND NAM = ${year}`
 			}).then(result => {
 				resolve(result.recordset);
@@ -51,7 +18,7 @@ class TrongTrotDB {
 	}
 	getByMaDoiTuong(maDoiTuong) {
 		return new Promise((resolve, reject) => {
-			sql.connect(config).then(() => {
+			this.connect().then(() => {
 				return sql.query`SELECT * FROM THOIGIANSANXUATTRONGTROT WHERE MADOITUONG = ${maDoiTuong}`
 			}).then(result => {
 				resolve(result.recordset);
@@ -73,7 +40,7 @@ class TrongTrotDB {
 				NhomCayTrong = attributes.NhomCayTrong,
 				LoaiCayTrong = attributes.LoaiCayTrong || null;
 			if (MaDoiTuong && Thang && Nam && NhomCayTrong) {
-				sql.connect(config).then(() => {
+				this.connect().then(() => {
 					return sql.query`SELECT TOP 1 OBJECTID FROM THOIGIANSANXUATTRONGTROT ORDER BY OBJECTID DESC `
 				})
 					.then(result => {
@@ -92,38 +59,13 @@ class TrongTrotDB {
 		});
 	}
 	adds(arr) {
-
-
-		sql.connect(config).then(() => {
-			return sql.query`SELECT TOP 1 OBJECTID FROM THOIGIANSANXUATTRONGTROT ORDER BY OBJECTID DESC `
-		}).then(result => {
-			let ObjectId = result.recordset[0].OBJECTID;
-			console.log(ObjectId);
-			const transaction = new sql.Transaction();
-			transaction.begin(err => {
-				if (!err) {
-					const request = new sql.Request(transaction)
-					for (let item of arr) {
-						console.log(item);
-						let flag = false;
-						request.query(`INSERT INTO THOIGIANSANXUATTRONGTROT (OBJECTID,MADOITUONG,THANG,NAM,NHOMCAYTRONG,LOAICAYTRONG) VALUES(${++ObjectId},'${item.MaDoiTuong}',${item.Thang},${item.Nam},${item.NhomCayTrong},'${item.LoaiCayTrong}')`, (err, result) => {
-							transaction.commit(err => {
-								if (!err)
-									flag=true;
-							})
-						})
-						let interval = setInterval(function () {
-							console.log(flag);
-							if(flag)
-								clearInterval(interval);
-						}, 1000);
-					}
-				} else {
-					console.log(err);
-				}
-			});
-
-		})
+		return new Promise((resolve, reject) => {
+			this.connect().then((request) => {
+				return request.query('SELECT TOP 1 OBJECTID FROM THOIGIANSANXUATTRONGTROT ORDER BY OBJECTID DESC',function(err,ls){
+					console.log(ls);
+				})
+			})
+		});
 	}
 }
 module.exports = TrongTrotDB;

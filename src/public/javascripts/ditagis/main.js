@@ -4,9 +4,9 @@
  * Phần này quan trọng không được xóa
  */
 const constName = {
-    SAUBENH: 'saubenh',
-    DOANHNGHIEP: 'doanhnghiep',
-    TRONGTROT: 'trongtrot',
+    SAUBENH: 'SauBenh',
+    DOANHNGHIEP: 'DoanhNghiep',
+    TRONGTROT: 'TrongTrot',
 }
 //  var socket = io();
 require([
@@ -31,6 +31,7 @@ require([
     "ditagis/widgets/LayerEditor",
     "ditagis/widgets/User",
     "ditagis/widgets/Popup",
+    "ditagis/widgets/TimeSlider",
     "dojo/on",
     "dojo/dom-construct",
     "dojo/sniff",
@@ -41,11 +42,10 @@ require([
     Expand, Locate, LayerList, Legend, Search, BasemapToggle,
     QueryTask, Query, esriRequest,
     SystemStatusObject,
-    LayerEditor, UserWidget, Popup,
+    LayerEditor, UserWidget, Popup, TimeSlider,
     on, domConstruct, has
 ) {
         'use strict';
-
         esriRequest('/map', {
             method: 'post'
         }).then(res => {
@@ -61,7 +61,6 @@ require([
                     if (Math.floor(systemVariable.user.role / 100) === 7) {//role bat dau tu so 7
                         definitionExpression = `MaHuyenTP = '${systemVariable.user.role.trim()}'`;//vi du role = 725, => MaHuyenTP = 725
                     }
-                    // window.role = 725;
 
                     var view = new MapView({
                         container: "map", // Reference to the scene div created in step 5
@@ -69,6 +68,7 @@ require([
                         center: mapconfigs.center,
                         zoom: mapconfigs.zoom
                     });
+                  
 
                     view.systemVariable = systemVariable;
                     view.snapping = {
@@ -113,28 +113,44 @@ require([
                         })
                         map.add(basemap);
                     }
-
-
                     const initFeatureLayers = () => {
-                        FeatureLayer.prototype.getPermission = function (role) {
-                            role = role || systemVariable.user.role;
-                            if (this.permissions) {
-                                return this.permissions.find((it) => {
-                                    return it.role === role
-                                })
-                            }
-                        };
-                        for (var i in mapconfigs.layers) {
-                            let element = mapconfigs.layers[i];
-                            if (definitionExpression)
-                                element.definitionExpression = definitionExpression;
-                            let fl = new FeatureLayer(element);
-                            map.add(fl);
-                        }
+                        return new Promise((resolve, reject) => {
+
+                            esriRequest('/map/layerrole', {
+                                method: 'post'
+                            }).then(res => {
+                                if (res.data) {
+                                    for (let lr of res.data) {
+                                        let layer = mapconfigs.layers.find(f => f.id === lr.layer);
+                                        layer.permission = {
+                                            create: lr.isCreate,
+                                            view: lr.isView,
+                                            delete: lr.isDelete,
+                                            edit: lr.isEdit
+                                        }
+
+                                    }
+                                    for (var i in mapconfigs.layers) {
+                                        let element = mapconfigs.layers[i];
+                                        if (element.permission.view) {
+                                            if (definitionExpression)
+                                                element.definitionExpression = definitionExpression;
+                                            let fl = new FeatureLayer(element);
+                                            map.add(fl);
+                                        }
+                                    }
+                                    resolve();
+                                } else {
+                                    throw 'cannot request permission';
+                                }
+                            })
+
+                        });
                     }
                     const initWidgets = () => {
                         var userWidget = new UserWidget(view);
                         userWidget.startup();
+                        view.ui.move(["zoom"], "top-left");
                         //LAYER LIST
                         view.ui.add(new Expand({
                             expandIconClass: "esri-icon-layer-list",
@@ -144,6 +160,7 @@ require([
                                 view: view
                             })
                         }), "top-left");
+
 
                         //LOCATE
                         view.ui.add(new Locate({
@@ -203,7 +220,9 @@ require([
                         view.ui.add(searchWidget, {
                             position: "top-right"
                         });
-
+                        //TIME SLIDER
+                        var timeSlider = new TimeSlider(view);
+                        timeSlider.startup();
                         /**
                          * Layer Editor
                          */
@@ -214,11 +233,15 @@ require([
 
                         var popup = new Popup(view);
                         popup.startup();
+
+
                     }
 
                     initBaseMap();
-                    initFeatureLayers();
-                    initWidgets();
+                    initFeatureLayers().then(() => {
+                        initWidgets();
+                    })
+
 
                     Loader.hide();
                 }

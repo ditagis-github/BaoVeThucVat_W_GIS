@@ -6,10 +6,15 @@ define([
     "dojo/sniff",
     "ditagis/support/Editing",
     "ditagis/support/HightlightGraphic",
+    "ditagis/toolview/bootstrap",
 
     "esri/symbols/SimpleMarkerSymbol",
+    "esri/symbols/SimpleFillSymbol",
+    "esri/tasks/QueryTask",
+    "esri/core/watchUtils",
+    "esri/request"
 
-], function (on, dom, domConstruct, win, has, editingSupport, HightlightGraphic, SimpleMarkerSymbol) {
+], function (on, dom, domConstruct, win, has, editingSupport, HightlightGraphic, bootstrap,SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, watchUtils, esriRequest) {
     'use strict';
     return class {
         constructor(view) {
@@ -22,11 +27,13 @@ define([
             this.inputElement = {};
             this.hightlightGraphic = new HightlightGraphic(view, {
                 symbolMarker: new SimpleMarkerSymbol({
-                    color: [255, 0, 0],
-                    size: 4,
-                    width: 4,
-                    style: 'cross',
                     outline: { // autocasts as new SimpleLineSymbol()
+                        color: '#7EABCD', // autocasts as new Color()
+                        width: 2
+                    }
+                }),
+                symbolFill: new SimpleFillSymbol({
+                    outline: {
                         color: '#7EABCD', // autocasts as new Color()
                         width: 2
                     }
@@ -43,49 +50,53 @@ define([
             return this.fireFields.indexOf(fieldName) !== -1;
         }
         startup() {
-            this.view.on('layerview-create', (evt) => {
-                let layer = evt.layer;
-                if (layer.type == 'feature') {
-                    let actions = [{
-                        id: "update",
-                        title: "Cập nhật",
-                        className: "esri-icon-edit",
-                        layerID: layer.id,
-                    },
-                    {
-                        id: "delete",
-                        title: "Xóa",
-                        className: "esri-icon-erase",
-                        layerID: layer.id,
+            // this.view.on('layerview-create', (evt) => {
+            this.view.map.layers.map(layer => {
+                layer.then(() => {
+                    // let layer = evt.layer;
+                    if (layer.type == 'feature') {
+                        let actions = [];
+                        if (layer.permission.edit)
+                            actions.push({
+                                id: "update",
+                                title: "Cập nhật",
+                                className: "esri-icon-edit",
+                            });
+                        if (layer.permission.delete)
+                            actions.push({
+                                id: "delete",
+                                title: "Xóa",
+                                className: "esri-icon-erase",
+                            })
+                        if (layer.id === constName.TRONGTROT) {
+                            actions.push({
+                                id: "view-detail",
+                                title: "Chi tiết thời gian trồng trọt",
+                                className: "esri-icon-table",
+                            })
+                        }
+                        layer.popupTemplate = {
+                            content: (target) => {
+                                return this.contentPopup(target);
+                            },
+                            title: layer.title,
+                            actions: actions
+                        }
                     }
-                    ]
-                    if (layer.id === constName.TRONGTROT) {
-                        actions.push({
-                            id: "view-detail",
-                            title: "Chi tiết thời gian trồng trọt",
-                            className: "esri-icon-table",
-                            layerID: layer.id,
-                        })
-                    }
-                    layer.popupTemplate = {
-                        content: (target) => {
-                            return this.contentPopup(target);
-                        },
-                        title: layer.title,
-                        actions: actions
-                    }
-                }
+
+                });
             })
 
-            on(this.view.popup._closeNode, 'click', () => {
-                this.hightlightGraphic.clearHightlight();
+            this.view.popup.watch('visible', (newValue) => {
+                if (!newValue)//unvisible
+                    this.hightlightGraphic.clear();
             })
             this.view.popup.on("trigger-action", (evt) => {
                 this.triggerActionHandler(evt);
             }); //đăng ký sự kiện khi click vào action
             this.view.popup.dockOptions = {
                 // Disable the dock button so users cannot undock the popup
-                buttonEnabled: false,
+                buttonEnabled: true,
                 // Dock the popup when the size of the view is less than or equal to 600x1000 pixels
                 breakpoint: {
                     width: 600,
@@ -95,51 +106,50 @@ define([
             };
         }
         triggerActionHandler(event) {
-            let id = event.action.layerID,
-                layer = this.view.map.findLayerById(id);
-            if (layer) {
-
-                let actionId = event.action.id,
-                    selectedFeature = this.view.popup.viewModel.selectedFeature,
-                    attributes = selectedFeature.attributes,
-                    objectid = attributes.OBJECTID;
-                const per = layer.getPermission();
-                let fail = false;
-                switch (actionId) {
-                    case "update":
-                        if (per && per.edit) {
+            let actionId = event.action.id,
+                selectedFeature = this.view.popup.viewModel.selectedFeature,
+                layer = selectedFeature.layer,
+                attributes = selectedFeature.attributes,
+                objectid = attributes.OBJECTID;
+            let fail = false;
+            switch (actionId) {
+                case "update":
+                    if (layer.permission && layer.permission.edit) {
+                        if (event.action.className === 'esri-icon-check-mark') {
+                            this.editFeature(layer, attributes);
+                        } else {
                             this.showEdit(layer, attributes);
-                        } else {
-                            fail = true;
                         }
-                        break;
-                    case "delete":
-                        if (per && per.delete) {
-                            this.deleteFeature(layer, objectid);
-                        } else {
-                            fail = true;
-                        }
-                        break;
-                    case "view-detail":
-                        if (attributes['MaDoiTuong'])
-                            this.triggerActionViewDetailTrongtrot(attributes['MaDoiTuong']);
-                        else
-                            $.notify({
-                                message: 'Không xác được định danh'
-                            }, {
-                                    type: 'danger'
-                                })
-                        break;
-                    default:
-                        break;
-                }
-                if (fail) {
-                    $.notify({
-                        message: 'Không có quyền thực hiện tác vụ'
-                    }, {
-                            type: 'danger'
-                        })
-                }
+                    } else {
+                        fail = true;
+                    }
+                    break;
+                case "delete":
+                    if (layer.permission && layer.permission.delete) {
+                        this.deleteFeature(layer, objectid);
+                    } else {
+                        fail = true;
+                    }
+                    break;
+                case "view-detail":
+                    if (attributes['MaDoiTuong'])
+                        this.triggerActionViewDetailTrongtrot(attributes['MaDoiTuong']);
+                    else
+                        $.notify({
+                            message: 'Không xác được định danh'
+                        }, {
+                                type: 'danger'
+                            })
+                    break;
+                default:
+                    break;
+            }
+            if (fail) {
+                $.notify({
+                    message: 'Không có quyền thực hiện tác vụ'
+                }, {
+                        type: 'danger'
+                    })
             }
         }
         /**
@@ -237,9 +247,113 @@ define([
                 })
             }
             this.resetInputElement();
-            let div = domConstruct.create('div');
+            let div = domConstruct.create('div', {
+                id: 'show-edit-container',
+                class: 'popup-content'
+            });
             let table = domConstruct.create('table', {}, div);
             if (layer.id === constName.TRONGTROT) {
+                if (!timeChangeHandle)
+                    var timeChangeHandle = () => {
+                        attributes.LoaiCayTrongs = [];
+                        let input = this.inputElement['NhomCayTrong'];
+                        if (input) {
+                            $.post('map/trongtrot/thoigian', {
+                                id: attributes.MaDoiTuong, month: inputMonth.value, year: inputYear.value
+                            }).done(results => {
+                                if (results && results.length > 0) {
+                                    let loaiCayTrong = [];
+                                    for (let result of results) {
+                                        //neu co nhom cay trong
+                                        if (result.NhomCayTrong) {
+                                            input.value = result.NhomCayTrong;
+                                            inputNhomCayTrongChangeHandler(result.NhomCayTrong)
+                                        }
+                                        //neu co loai cay trong
+                                        if (result.LoaiCayTrong)
+                                            loaiCayTrong.push(result.LoaiCayTrong);
+                                    }
+                                    // updateLoaiCayTrong(loaiCayTrong);
+                                    if (loaiCayTrong.length > 0)
+                                        checkedLoaiCayTrong(loaiCayTrong);
+                                }
+                            });
+                        }
+                    }
+                // var updateTrongTrongTimer = ()=>{
+                //     //neu chua co thi tao
+                //     if(!attributes['ThoiGianTrongTrot']){
+                //         attributes['ThoiGianTrongTrot'] = [];
+                //     }
+
+                //     let items = attributes['ThoiGianTrongTrot'];
+                //     let item = items.find(f=>f.Thang === thang && f.Nam === nam);
+                //     //neu ton tai thoi gian
+                //     if(item){
+                //         //neu chua co loai cay trong thi tao
+                //         if(!item['LoaiCayTrongs']){
+                //             item['LoaiCayTrongs'] = [];
+                //         }
+                //     }
+                //     //neu chua ton tai thoi gian
+                //     else{
+
+                //     }
+                // }
+                var inputNhomCayTrongChangeHandler = (value) => {
+                    value = value || 1;
+                    let subtype = this.getSubtype(layer, 'NhomCayTrong', value);
+                    let domain =
+                        (subtype.domains.LoaiCayTrong && subtype.domains.LoaiCayTrong.type === "codedValues") ? subtype.domains.LoaiCayTrong : layer.getFieldDomain('LoaiCayTrong');
+                    updateLoaiCayTrong(domain.codedValues);
+                }
+                var checkedLoaiCayTrong = (values) => {
+                    if (values && values.length > 0) {
+                        let childNodes = tdValueLCT.childNodes;
+                        if (childNodes && childNodes.length > 0) {
+                            for (let value of values) {
+                                for (let child of childNodes) {
+                                    if (child.type === 'checkbox' && child.value == value)
+                                        child.checked = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                var updateLoaiCayTrong = (values) => {
+                    if (values && values.length > 0) {
+                        tdValueLCT.innerHTML = '';
+                        for (let codedValue of values) {
+                            if (codedValue) {
+                                let input = domConstruct.create('input', {
+                                    type: 'checkbox',
+                                    name: 'LoaiCayTrong',
+                                    value: codedValue.code
+                                }, tdValueLCT);
+                                domConstruct.create('text', {
+                                    innerHTML: codedValue.name + '<br>'
+                                }, tdValueLCT);
+                                on(input, 'change', evt => {
+                                    //neu chua co 
+                                    if (!attributes['LoaiCayTrongs']) {
+                                        attributes['LoaiCayTrongs'] = [];
+                                    }
+                                    //neu loai cay trong duoc chon thi them vao
+                                    if (evt.target.checked) {
+                                        attributes['LoaiCayTrongs'].push(evt.target.value);
+                                    }
+                                    //neu khong chon thi kiem tra trong mang da co chua, neu co thi xoa
+                                    else {
+                                        let index = attributes['LoaiCayTrongs'].indexOf(evt.target.value);
+                                        if (index !== -1) {
+                                            attributes['LoaiCayTrongs'].splice(index, 1);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
                 //duyệt thông tin đối tượng
                 for (let field of layer.fields) {
                     //nếu như field thuộc field cấm thì không hiển thị
@@ -262,106 +376,7 @@ define([
                          * 
                          * @param {*} input Nhóm cây trồng
                          */
-                        var timeChangeHandle = () => {
-                            attributes.LoaiCayTrongs = [];
-                            let input = this.inputElement['NhomCayTrong'];
-                            if (input) {
-                                $.post('map/trongtrot/thoigian', {
-                                    id: attributes.MaDoiTuong, month: inputMonth.value, year: inputYear.value
-                                }).done(results => {
-                                    if (results && results.length > 0) {
-                                        let loaiCayTrong = [];
-                                        for (let result of results) {
-                                            //neu co nhom cay trong
-                                            if (result.NhomCayTrong) {
-                                                input.value = result.NhomCayTrong;
-                                                inputNhomCayTrongChangeHandler(result.NhomCayTrong)
-                                            }
-                                            //neu co loai cay trong
-                                            if (result.LoaiCayTrong)
-                                                loaiCayTrong.push(result.LoaiCayTrong);
-                                        }
-                                        // updateLoaiCayTrong(loaiCayTrong);
-                                        if (loaiCayTrong.length > 0)
-                                            checkedLoaiCayTrong(loaiCayTrong);
-                                    }
-                                });
-                            }
-                        }
-                        // var updateTrongTrongTimer = ()=>{
-                        //     //neu chua co thi tao
-                        //     if(!attributes['ThoiGianTrongTrot']){
-                        //         attributes['ThoiGianTrongTrot'] = [];
-                        //     }
 
-                        //     let items = attributes['ThoiGianTrongTrot'];
-                        //     let item = items.find(f=>f.Thang === thang && f.Nam === nam);
-                        //     //neu ton tai thoi gian
-                        //     if(item){
-                        //         //neu chua co loai cay trong thi tao
-                        //         if(!item['LoaiCayTrongs']){
-                        //             item['LoaiCayTrongs'] = [];
-                        //         }
-                        //     }
-                        //     //neu chua ton tai thoi gian
-                        //     else{
-
-                        //     }
-                        // }
-                        var inputNhomCayTrongChangeHandler = (value) => {
-                            value = value || 1;
-                            let subtype = this.getSubtype(layer, 'NhomCayTrong', value);
-                            let domain =
-                                (subtype.domains.LoaiCayTrong && subtype.domains.LoaiCayTrong.type === "codedValues") ? subtype.domains.LoaiCayTrong : layer.getFieldDomain('LoaiCayTrong');
-                            updateLoaiCayTrong(domain.codedValues);
-                        }
-                        function checkedLoaiCayTrong(values) {
-                            if (values && values.length > 0) {
-                                let childNodes = tdValueLCT.childNodes;
-                                if (childNodes && childNodes.length > 0) {
-                                    for (let value of values) {
-                                        for (let child of childNodes) {
-                                            if (child.type === 'checkbox' && child.value == value)
-                                                child.checked = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        function updateLoaiCayTrong(values) {
-                            if (values && values.length > 0) {
-                                tdValueLCT.innerHTML = '';
-                                for (let codedValue of values) {
-                                    if (codedValue) {
-                                        let input = domConstruct.create('input', {
-                                            type: 'checkbox',
-                                            name: 'LoaiCayTrong',
-                                            value: codedValue.code
-                                        }, tdValueLCT);
-                                        domConstruct.create('text', {
-                                            innerHTML: codedValue.name + '<br>'
-                                        }, tdValueLCT);
-                                        on(input, 'change', evt => {
-                                            //neu chua co 
-                                            if (!attributes['LoaiCayTrongs']) {
-                                                attributes['LoaiCayTrongs'] = [];
-                                            }
-                                            //neu loai cay trong duoc chon thi them vao
-                                            if (evt.target.checked) {
-                                                attributes['LoaiCayTrongs'].push(evt.target.value);
-                                            }
-                                            //neu khong chon thi kiem tra trong mang da co chua, neu co thi xoa
-                                            else {
-                                                let index = attributes['LoaiCayTrongs'].indexOf(evt.target.value);
-                                                if (index !== -1) {
-                                                    attributes['LoaiCayTrongs'].splice(index, 1);
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        }
                         input = domConstruct.create('select', {
                             name: field.name,
                             id: field.name,
@@ -415,7 +430,7 @@ define([
                         inputMonth.value = currentTime.getMonth() + 1;
                         attributes['Thang'] = parseInt(inputMonth.value);
                         on(inputMonth, 'change', (evt) => {
-                            timeChangeHandle();
+                            this.timeChangeHandle();
                             attributes['Thang'] = parseInt(inputMonth.value);
                         })
 
@@ -467,19 +482,86 @@ define([
                 }
 
             }
-            let btnSubmit = domConstruct.create('button', {
-                type: 'button',
-                class: 'btn-popup-submit',
-                title: 'Cập nhật'
-            }, div);
-            domConstruct.create('span', {
-                class: 'esri-icon-check-mark'
-            }, btnSubmit);
-            on(btnSubmit, 'click', () => {
-                this.editFeature(layer, attributes);
-            })
+            if (layer.hasAttachments) {
+
+
+                this.getAttachments(layer, attributes['OBJECTID']).then(res => {
+                    let div = domConstruct.create('div', {
+                        class: 'attachment-header',
+                        id: `attachment-${layer.id}-${attributes['OBJECTID']}`
+                    }, document.getElementById('show-edit-container'));
+                    div.innerText = "Hình ảnh";
+                    let form = document.createElement('form');
+                    form.id = 'attachment-data';
+                    form.enctype = 'multipart/form-data';
+                    form.method = 'post';
+                    let file = document.createElement('input');
+                    file.type = 'file';
+                    file.name = 'attachment';
+                    form.appendChild(file);
+                    let hideField = document.createElement('input');
+                    hideField.hidden = 'hidden';
+                    hideField.name = 'f';
+                    hideField.value = 'json';
+                    form.appendChild(hideField);
+                    div.appendChild(form);
+                    on(file, 'change', () => {
+                        this.inputChangeHandler(layer, file, attributes);
+                    });
+
+                    if (res && res.attachmentInfos && res.attachmentInfos.length > 0) {
+
+
+                        for (let item of res.attachmentInfos) {
+                            this.renderAttachmentEditPopup(item, {
+                                container: div,
+                                layer: layer,
+                                attributes: attributes
+                            })
+                        }
+                    }
+                })
+            }
             this.view.popup.content = div;
             this.view.popup.title = layer.title;
+            let updateAction = this.view.popup.actions.find(function (action) {
+                return action.id === 'update';
+            })
+            updateAction.className = 'esri-icon-check-mark';
+            watchUtils.once(this.view.popup, 'selectedFeature').then(result => {
+                updateAction.className = 'esri-icon-edit';
+            })
+            watchUtils.once(this.view.popup, 'visible').then(result => {
+                updateAction.className = 'esri-icon-edit';
+            })
+        }
+        renderAttachmentEditPopup(item, props) {
+            const
+                layer = props.layer || this.view.poup.selectedFeature.layer,
+                attributes = props.attributes || this.view.poup.selectedFeature.attributes,
+                container = props.container || document.getElementById(`attachment-${layer.id}-${attributes['OBJECTID']}`);
+
+            let url = `${layer.url}/${layer.layerId}/${attributes['OBJECTID']}`;
+            let itemDiv = domConstruct.create('div', {
+                class: 'attachment-item'
+            }, container);
+            let itemName = domConstruct.create('div', {
+                class: 'attachment-name'
+            }, itemDiv);
+            let aItemName = domConstruct.create('a', {
+                href: `${url}/attachments/${item.id}`,
+                target: '_blank'
+            }, itemName)
+            aItemName.innerText = item.name;
+            let itemDelete = domConstruct.create('div', {
+                class: 'delete-attachment esri-icon-trash'
+            }, itemDiv);
+            on(itemDelete, 'click', () => {
+                if (!attributes.deleteAttachment)
+                    attributes.deleteAttachment = [];
+                attributes.deleteAttachment.push(`${url}/deleteAttachments?f=json&attachmentIds=${item.id}`);
+                container.removeChild(itemDiv);
+            });
         }
         /**
          * Khi ô nhập dữ liệu trong popup có sự thay đổi giá trị
@@ -489,23 +571,26 @@ define([
         inputChangeHandler(layer, input, attributes) {
             const name = input.name,
                 value = input.value;
-            const field = layer.fields.find(f => f.name === name);
-            if (field) {
-                let fieldType = field.type;
-                if (fieldType) {
-                    let convertValue;
-                    if (fieldType === "small-integer" || fieldType === "integer")
-                        convertValue = parseInt(value);
-                    else if (fieldType === "double") {
-                        convertValue = parseFloat(value);
+            if (name === 'attachment') {
+                attributes[name] = value;
+            } else {
+                const field = layer.fields.find(f => f.name === name);
+                if (field) {
+                    let fieldType = field.type;
+                    if (fieldType) {
+                        let convertValue;
+                        if (fieldType === "small-integer" || fieldType === "integer")
+                            convertValue = parseInt(value);
+                        else if (fieldType === "double") {
+                            convertValue = parseFloat(value);
+                        }
+                        else {
+                            convertValue = value;
+                        }
+                        attributes[name] = convertValue;
                     }
-                    else {
-                        convertValue = value;
-                    }
-                    attributes[name] = convertValue;
                 }
             }
-
         }
         /**
          * Hiển thị popup
@@ -518,10 +603,13 @@ define([
                 attributes = graphic.attributes;
 
             //hightlight graphic
-            this.hightlightGraphic.clearHightlight();
+            this.hightlightGraphic.clear();
             this.hightlightGraphic.add(graphic);
             let
-                div = domConstruct.create('div'),
+                div = domConstruct.create('div', {
+                    class: 'popup-content',
+                    id: 'popup-content'
+                }),
                 table = domConstruct.create('table', {}, div);
             //duyệt thông tin đối tượng
             for (let field of layer.fields) {
@@ -590,9 +678,102 @@ define([
                 domConstruct.place(tdValue, row);
                 domConstruct.place(row, table);
             }
+            if (layer.hasAttachments) {
+
+                this.getAttachments(layer, attributes['OBJECTID']).then(res => {
+                    if (res && res.attachmentInfos && res.attachmentInfos.length > 0) {
+                        let div = domConstruct.create('div', {
+                            class: 'attachment-container'
+                        }, document.getElementById('popup-content'));
+                        // div.innerText = "Hình ảnh";
+                        domConstruct.create('legend', {
+                            innerHTML: 'Hình ảnh'
+                        }, div)
+                        let url = `${layer.url}/${layer.layerId}/${attributes['OBJECTID']}`;
+                        for (let item of res.attachmentInfos) {
+                            let itemDiv = domConstruct.create('div', {
+                                class: 'col-lg-3 col-md-4 col-xs-6 thumb'
+                            }, div);
+                            let itemA = domConstruct.create('a', {
+                                class: "thumbnail", href: "#",
+                                // 'data-image-id':"",
+                                //  'data-toggle':"modal",
+                                //   'data-title':`data.name`,
+                                //     'data-image':`${url}/attachments/${item.id}`,
+                                //      'data-target':"#image-gallery"
+                            }, itemDiv)
+
+                            let img = domConstruct.create('img', {
+                                class: 'img-responsive',
+                                id: `${url}/attachments/${item.id}`, src: `${url}/attachments/${item.id}`, alt: `${url}/attachments/${item.name}`,
+                            }, itemA)
+                            on(itemA, 'click', () => {
+                                let body = img.outerHTML;
+                                let modal = bootstrap.modal(`attachments-${item.id}`, item.name, body);
+                                if (modal) modal.modal();
+                            })
+                        }
+
+                    }
+                })
+            }
             return div.outerHTML;
         }
+        /**
+         * ATTACHMENT
+         */
+        uploadFile() {
+            let url = this.view.popup.selectedFeature.layer.url + "/" + this.view.popup.selectedFeature.layer.layerId + "/" + this.view.popup.selectedFeature.attributes.OBJECTID + "/addAttachment";
+            let attachmentForm = document.getElementById('attachment-data');
+            if (attachmentForm) {
+                esriRequest(url, {
+                    responseType: 'json',
+                    body: attachmentForm
+                }).then(res => {
+                    if (res.data && res.data.addAttachmentResult && res.data.addAttachmentResult.success) {
+                        // let file = attachmentForm.getElementsByTagName('input')[0];
+                        // let item = {
+                        //     id:res.data.addAttachmentResult.objectId,
+                        //     name: file.value.replace(/^.*[\\\/]/, '')
+                        // }
+                        // this.renderAttachmentEditPopup(item);
+                        // //xoa duong dan da chon
+                        // file.value = '';
+                        $.notify('Thêm hình ảnh thành công', {
+                            type: 'success',
+                            placement: {
+                                from: 'top',
+                                align: 'left'
+                            }
+                        });
+                    } else {
+                        $.notify('Thêm hình ảnh không thành công', {
+                            type: 'danger',
+                            placement: {
+                                from: 'top',
+                                align: 'left'
+                            }
+                        });
+                    }
+                })
+            }
+        }
+        /**
+         * Lấy attachments của feature layer
+         * @param {*} feature 
+         */
+        getAttachments(layer, id) {
+            return new Promise((resolve, reject) => {
+                var url = layer.url + "/" + layer.layerId + "/" + id;
+                esriRequest(url + "/attachments?f=json", {
+                    responseType: 'json',
+                    method: 'get'
+                }).then(result => {
+                    resolve(result.data || null);
+                });
+            });
 
+        }
         /**
          * * * * * * * * * * XÓA - SỬA * * * * * * * * * *
          */
@@ -602,7 +783,7 @@ define([
          */
         editFeature(layer, attributes) {
             let notify = $.notify({
-                title: `<strong>Cập nhật<i>${layer.title}</i></strong>`,
+                title: `<strong>Cập nhật <i>${layer.title}</i></strong>`,
                 message: 'Cập nhật...'
             }, {
                     showProgressbar: true,
@@ -614,6 +795,15 @@ define([
                 })
             try {
                 if (attributes) {
+                    if (attributes['attachment']) {
+                        this.uploadFile();
+                    }
+                    if (attributes.deleteAttachment) {
+                        for (let url of attributes.deleteAttachment) {
+                            esriRequest(url);
+                        }
+                        attributes.deleteAttachment = [];
+                    }
                     for (let field of layer.fields) {
                         const type = field.type,
                             name = field.name;
@@ -642,50 +832,82 @@ define([
                     }
                     //nếu là Trồng trọt thì xét đến trường hợp Loại cây trồng và thời gian
                     //lấy danh sách loại cây trồng dã tick
-                    const
-                        nhomCayTrong = attributes['NhomCayTrong'],
-                        loaiCayTrongs = attributes['LoaiCayTrongs'],
-                        thang = attributes['Thang'],
-                        nam = attributes['Nam'];
-                    //thêm vào dữ liệu
-                    //neu co loai cay trong
-                    let datas = [];
-                    if (loaiCayTrongs && loaiCayTrongs.length > 0) {
-                        for (let loaiCayTrong of loaiCayTrongs) {
+                    if (layer.id === constName.TRONGTROT) {
+                        const
+                            nhomCayTrong = attributes['NhomCayTrong'],
+                            loaiCayTrongs = attributes['LoaiCayTrongs'],
+                            thang = attributes['Thang'],
+                            nam = attributes['Nam'];
+                        //thêm vào dữ liệu
+                        //neu co loai cay trong
+                        let datas = [];
+                        if (loaiCayTrongs && loaiCayTrongs.length > 0) {
+                            for (let loaiCayTrong of loaiCayTrongs) {
+                                datas.push({
+                                    MaDoiTuong: attributes['MaDoiTuong'],
+                                    Thang: thang,
+                                    Nam: nam,
+                                    NhomCayTrong: nhomCayTrong,
+                                    LoaiCayTrong: loaiCayTrong
+                                });
+
+                            }
+                            //xoa het du lieu
+                            attributes.LoaiCayTrongs = [];
+                        }
+                        //neu khong thi khong them loai cay trong
+                        else {
                             datas.push({
                                 MaDoiTuong: attributes['MaDoiTuong'],
                                 Thang: thang,
                                 Nam: nam,
                                 NhomCayTrong: nhomCayTrong,
-                                LoaiCayTrong: loaiCayTrong
+                                LoaiCayTrong: null
                             });
-
                         }
-                        //xoa het du lieu
-                        attributes.LoaiCayTrongs = [];
-                    }
-                    //neu khong thi khong them loai cay trong
-                    else {
-                        datas.push({
-                            MaDoiTuong: attributes['MaDoiTuong'],
-                            Thang: thang,
-                            Nam: nam,
-                            NhomCayTrong: nhomCayTrong,
-                            LoaiCayTrong: null
-                        });
-                    }
-                    for (let data of datas) {
-                        setTimeout(() => {
-                            $.post('map/trongtrot/thoigian/add', data)
-                        }, 3000);
-                        // .done(res => {
-                        //     if (res === 'Successfully') {
-                        //         $.notify('Thêm thành công dữ liệu: ' + JSON.stringify(data));
+                        if (datas.length > 0) {
+                            let xnotify = $.notify({
+                                title: `<strong>Cập nhật thời gian sản xuất trồng trọt</strong>`,
+                                message: 'Đang Cập nhật...'
+                            }, {
+                                    showProgressbar: true,
+                                    delay: 20000,
+                                    placement: {
+                                        from: 'top',
+                                        alias: 'left'
+                                    }
+                                })
+                            let dataSent = [];
+                            for (let item of datas) {
+                                dataSent.push({
+                                    attributes: item
+                                });
+                            }
+                            let form = document.createElement('form');
+                            form.method = 'post';
+                            let ft = document.createElement('input');
+                            ft.name = 'features'
+                            ft.type = 'text';
+                            ft.value = JSON.stringify(dataSent)
+                            form.appendChild(ft);
+                            let format = document.createElement('input');
+                            format.name = 'f';
+                            format.type = 'text';
+                            format.value = 'json';
+                            form.appendChild(format);
+                            esriRequest('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/4/addFeatures?f=json', {
+                                method: 'post',
+                                body: form
+                            }).then(res => {
+                                if (res.data.addResults[0].success) {
+                                    xnotify.update({ 'type': 'success', 'message': 'Cập nhật thời gian sản xuất trồng trọt thành công!', 'progress': 90 });
+                                } else {
+                                    xnotify.update({ 'type': 'danger', 'message': 'Cập nhật thời gian sản xuất trồng trọt không thành công!', 'progress': 90 });
+                                }
 
-                        //     }
-                        // })
+                            })
+                        }
                     }
-
                     layer.applyEdits({
                         updateFeatures: [{
                             attributes: attributes
@@ -708,6 +930,7 @@ define([
 
             } catch (error) {
                 notify.update({ 'type': 'danger', 'message': 'Có lỗi xảy ra trong quá trình cập nhật!', 'progress': 90 });
+                throw error;
             }
         }
         /**
@@ -731,7 +954,7 @@ define([
                 if (res.deleteFeatureResults.length > 0 && !res.deleteFeatureResults[0].error) {
                     this.view.popup.visible = false;
                     notify.update({ 'type': 'success', 'message': 'Xóa thành công!', 'progress': 100 });
-                    this.hightlightGraphic.clearHightlight();
+                    this.hightlightGraphic.clear();
                 }
             });
         }
@@ -747,12 +970,17 @@ define([
                     delay: 20000,
                     showProgressbar: true
                 })
-            $.post('map/trongtrot/thoigian/getbymadoituong', {
-                MaDoiTuong: maDoiTuong
-            }).done(results => {
-                if (results && results.length > 0) {
+            // $.post('map/trongtrot/thoigian/getbymadoituong', {
+            //     MaDoiTuong: maDoiTuong
+            // }).done(results => {
+            let queryTask = new QueryTask('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/4');
+            queryTask.execute({
+                outFields: ['*'],
+                where: `MaDoiTuong = '${maDoiTuong}'`
+            }).then(results => {
+                if (results.features.length > 0) {
                     notify.update({
-                        message: `Tìm thấy ${results.length} dữ liệu`,
+                        message: `Tìm thấy ${results.features.length} dữ liệu`,
                         progress: 100
                     }, {
                             type: 'success'
@@ -770,7 +998,8 @@ define([
                         </thead>`)
                     domConstruct.place(thead, table);
                     let tbody = domConstruct.create('tbody', {}, table);
-                    for (let item of results) {
+                    for (let feature of results.features) {
+                        const item = feature.attributes;
                         //tạo <tr>
                         let row = domConstruct.create('tr', {}, tbody);
                         //thoi gian
@@ -820,12 +1049,6 @@ define([
                         progress: 100
                     })
                 }
-            }).fail(err => {
-                notify.update({
-                    type: 'danger',
-                    message: 'Không tìm thấy dữ liệu',
-                    progress: 100
-                })
             })
         }
     }

@@ -41,6 +41,9 @@ define([
                         attributes[i] = layer.drawingAttributes[i];
                     }
                 }
+                if(layer.id === constName.SAUBENH){
+                    attributes['NgayXayRa'] = new Date().getTime();
+                }
 
 
 

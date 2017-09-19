@@ -31,66 +31,25 @@ define([
         },
         layers: [{
             title: 'Trồng trọt',
-            id: "trongtrot",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/2",
+            id: "TrongTrot",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/2",
             outFields: ['*'],
-            permissions: [{
-                role: 1,//sở thông tin truyền thông
-                edit: true,
-                create: false,
-                delete: true
-            }, {
-                role: 2,//doanh nghiệp
-                edit: true,
-                create: false,
-                delete: true
-            }
-            ]
         }, {
             title: 'Doanh nghiệp',
-            id: "doanhnghiep",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/0",
+            id: "DoanhNghiep",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/0",
             outFields: ['*'],
-            permissions: [{
-                role: 1,//sở thông tin truyền thông
-                edit: true,
-                create: true,
-                delete: true
-            }, {
-                role: 2,//doanh nghiệp
-                edit: false,
-                create: false,
-                delete: false
-            }, {
-                role: 725,//doanh nghiệp
-                edit: true,
-                create: true,
-                delete: true
-            }
-            ]
         },
         {
             title: 'Sâu bệnh',
-            id: "saubenh",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/1",
+            id: "SauBenh",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/1",
             outFields: ['*'],
-            permissions: [{
-                role: 1,//sở thông tin truyền thông
-                edit: true,
-                create: true,
-                delete: true
-            }, {
-                role: 2,//doanh nghiệp
-                edit: true,
-                create: true,
-                delete: true
-            }
-            ]
         },
             // {
             //     title: 'Quy hoạch sử dụng đất',
             //     id: "QuyHoachSuDungDat",
-            //     url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/3",
+            //     url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/3",
             //     outFields: ['*'],
             //     permissions: [{
             //         role: 1,//sở thông tin truyền thông

@@ -1,28 +1,20 @@
-const config = {
-	user: 'sa',
-	password: '268@lTk',
-	server: '112.78.4.175',
-	database: 'BaoVeThucVat',
-}
-class AccountManager {
+const Database = require('./Database');
+class AccountManager extends Database {
 	constructor(params) {
-		this.sql = require('mssql')
-	}
-	close(){
-		this.sql.close();
+		super(params);
 	}
 	autoLogin(user, pass) {
 		return new Promise((resolve, reject) => {
-			this.sql.connect(config).then(() => {
+			this.connect().then(() => {
 				return this.sql.query`SELECT * FROM ACCOUNT WHERE USERNAME = ${user} AND PASSWORD = ${pass}`;
 			}).then(result => {
 				if (result.recordset.length > 0)
 					resolve(result.recordset[0])
 				else resolve(null);
-				this.sql.close();
+				this.close();
 			}).catch(err => {
 				console.log(err);
-				this.sql.close();
+				this.close();
 			})
 		});
 	}

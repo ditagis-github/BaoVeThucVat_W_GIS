@@ -44,7 +44,7 @@ define([
          * @param {ScreenCoor{x,y}} screenCoors 
          */
         hightlight(screenCoors) {
-            this.clearHightlight(); //xóa cái hightlight hiện có
+            this.clear(); //xóa cái hightlight hiện có
             //tìm những graphic có ở tọa độ screenCoors
             this.view.hitTest(screenCoors).then((res) => {
                 //duyệt kết quả
@@ -64,9 +64,9 @@ define([
          * cần phải có phương thức này để xóa các hightlight của những layer khác
          * vì giải thuật này hightlight theo UniqueValuaRenderer 
          * nên sẽ có tình trạng những layer khác nhau được hightligt thì sẽ không bị ẩn đi
-         * có thể xóa dùng this.clearHightlight() ở phương thức hightlight để nhìn nhận rõ ràng hơn
+         * có thể xóa dùng this.clear() ở phương thức hightlight để nhìn nhận rõ ràng hơn
          */
-        clearHightlight() {
+        clear() {
             this.removeAll();
         }
         rendererGraphic(type, geometry) {

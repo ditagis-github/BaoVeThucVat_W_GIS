@@ -96,3 +96,46 @@
     .btn-default {
       color: #6ab43e;
   }
+  .popup-content{
+    color:#6ab43e;
+    margin: 5px;
+  }
+  .popup-content legend{
+    color:#6ab43e;
+  }
+	.popup-content .attachment-item {
+		font-weight: normal;
+		margin-bottom: 0px;
+		font-size: 14px;
+		margin-top: 0px;
+  }
+  .popup-content .attachment-header {
+		font-weight: bold;
+		margin-top: 10px;
+		font-size: 15px;
+		margin-bottom: 5px;
+	}
+	.popup-content .attachment-img {
+    width: 50px;
+    height: 50px;
+	}
+	.popup-content .attachment-name {
+		display:inline-block;
+		margin-left:10px;
+	}
+	.popup-content .delete-attachment {
+		display:inline-block;
+		margin-left:5px;
+		width: 16px;
+		height: 16px;
+		cursor: pointer;
+		font-size: 16px;
+	}
+	.popup-content .view-attachment {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		margin-left: 5px;
+		cursor: pointer;
+		font-size: 16px;
+	}
