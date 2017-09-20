@@ -6,21 +6,13 @@ class AccountRouter extends Router {
 		super(params);
 		this.accountManager = new AccountManager();
 		this.router.get('/', (req, res) => {
-			if (req.session.user == null) {
-				// if user is not logged-in redirect back to login page //
-				res.redirect('/');
-			} else {
 				res.render('account/home', {
 					title: 'Quản lý tài khoản',
 					udata: req.session.user
 				});
-			}
 		});
 
 		this.router.post('/', (req, res) => {
-			if (this.session.user == null) {
-				res.redirect('/');
-			} else {
 				this.accountManager.updateAccount({
 					id: this.session.user.Id,
 					displayName: req.body['displayName'],
@@ -34,7 +26,6 @@ class AccountRouter extends Router {
 					}
 					res.status(200).send('ok');
 				}).catch(o => res.status(400).send('error-updating-account')));
-			}
 		});
 
 		this.router.get('/logout', (req, res) => {

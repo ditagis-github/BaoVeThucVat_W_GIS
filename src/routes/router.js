@@ -5,11 +5,8 @@ class Router {
         this.params = params;
         this.router = router;
     }
-    get session() {
-        return this.params.session;
-    }
-    set session(val) {
-        this.params.session = val;
+    get passport(){
+        return this.params.passport;
     }
 };
 module.exports = Router;

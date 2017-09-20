@@ -2,40 +2,48 @@
 let Router = require('./router');
 var TTM = require('../modules/TrongTrotDB');
 var LayerRole = require('../modules/Layer');
+var AccountManager = require('../modules/AccountDB');
 class MapRouter extends Router {
 	constructor(params) {
 		super(params);
 		this.trongtrotDB = new TTM();
 		this.layerRole = new LayerRole();
+		this.accountManager = new AccountManager();
+		// });
 		this.router.get('/', (req, res) => {
-			if (this.session && this.session.user) {
+			if (req.isAuthenticated()) {
 				res.render('map', {
 					title: 'Bảo vệ thực vật - Bình Dương'
 				});
-
 			} else {
 				res.redirect('/login');
 			}
 		});
 		this.router.post('/', (req, res) => {
-			if (this.session && this.session.user) {
-				res.status(200).send({
-					userName:this.session.user.Username,
-					displayName:this.session.user.DisplayName,
-					role:this.session.user.Role
-				});
+			if (req.isAuthenticated()) {
+				this.accountManager.getByUsername(req.session.passport.user).then(user => {
+					res.status(200).send({
+						userName: user.Username,
+						displayName: user.DisplayName,
+						role: user.Role
+					});
+				})
+
 			} else {
 				res.status(400).send('fail');
 			}
 		});
 		this.router.post('/layerrole', (req, res) => {
-			if (this.session && this.session.user) {
-				this.layerRole.getByRole(this.session.user.Role).then(result=>{
-					res.status(200).send(result);
-				}).catch(err=>{
-					res.status(400).send(null);
-					console.log(err);
+			if (req.isAuthenticated()) {
+				this.accountManager.getByUsername(req.session.passport.user).then(user => {
+					this.layerRole.getByRole(user.Role).then(result => {
+						res.status(200).send(result);
+					}).catch(err => {
+						res.status(400).send(null);
+						console.log(err);
+					})
 				})
+				
 			} else {
 				res.status(400).send('fail');
 			}
@@ -50,7 +58,6 @@ class MapRouter extends Router {
 		})
 
 		this.router.post('/trongtrot/thoigian/add', (req, res) => {
-			console.log(req.body);
 			const attributes = {
 				MaDoiTuong: req.body.MaDoiTuong,
 				Thang: req.body.Thang,
@@ -65,7 +72,6 @@ class MapRouter extends Router {
 			// })
 		})
 		this.router.post('/trongtrot/thoigian/getbymadoituong', (req, res) => {
-			console.log(req.body);
 			const maDoiTuong = req.body.MaDoiTuong;
 			if (maDoiTuong) {
 				this.trongtrotDB.getByMaDoiTuong(maDoiTuong).then(result => {

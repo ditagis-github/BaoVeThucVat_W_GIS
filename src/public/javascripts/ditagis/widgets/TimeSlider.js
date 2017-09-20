@@ -54,8 +54,6 @@ define([
             }
             initView() {
                 try {
-
-
                     this.DOM = {};
                     this.DOM.container = domConstruct.create('div', {
                         id: "dtg-wget-timeslider",
@@ -99,7 +97,7 @@ define([
                         this.layerView = layerView;
                         this.watch = layerView.watch('updating', val => {
                             if (!val && !this.graphics) {  // wait for the layer view to finish updating
-                                layerView.queryFeatures().then(results=> {
+                                layerView.queryFeatures().then(results => {
                                     this.graphics = results;
                                     this.watch.remove();
                                     delete this.watch;
@@ -117,7 +115,7 @@ define([
                         this.graphics.map((item, i) => {
                             const attributes = item.attributes,
                                 value = attributes['NgayXayRa'];
-                            
+
                             if (value && value >= min && value <= max) {
                                 this.layerView.featuresView.graphics.add(item);
                             }

@@ -3,6 +3,28 @@ class AccountManager extends Database {
 	constructor(params) {
 		super(params);
 	}
+	getRoleByUsername(username) {
+		return new Promise((resolve, reject) => {
+			this.getByUsername(username).then(res => {
+				if (res)
+					resolve(res.Role)
+				else
+					resolve(null);
+			}).catch(err => reject(err));
+		});
+	}
+	getByUsername(username) {
+		return new Promise((resolve, reject) => {
+			this.connect().then(() => {
+				return this.sql.query`SELECT * FROM ACCOUNT WHERE USERNAME = ${username}`;
+			}).then(result => {
+				if (result.recordset.length > 0)
+					resolve(result.recordset[0])
+				else resolve(null);
+				this.close();
+			}).catch(err => { reject(err); this.close(); })
+		});
+	}
 	autoLogin(user, pass) {
 		return new Promise((resolve, reject) => {
 			this.connect().then(() => {
