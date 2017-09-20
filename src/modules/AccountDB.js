@@ -25,10 +25,10 @@ class AccountManager extends Database {
 			}).catch(err => { reject(err); this.close(); })
 		});
 	}
-	autoLogin(user, pass) {
+	isUser(username, password) {
 		return new Promise((resolve, reject) => {
 			this.connect().then(() => {
-				return this.sql.query`SELECT * FROM ACCOUNT WHERE USERNAME = ${user} AND PASSWORD = ${pass}`;
+				return this.sql.query`SELECT * FROM ACCOUNT WHERE USERNAME = ${username} AND PASSWORD = ${password}`;
 			}).then(result => {
 				if (result.recordset.length > 0)
 					resolve(result.recordset[0])

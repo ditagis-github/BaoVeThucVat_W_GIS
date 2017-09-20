@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session')
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 var AccountManager = require('./modules/AccountDB');
 var accountManager = new AccountManager();
 
@@ -50,15 +50,14 @@ passport.deserializeUser((username, done) => {
 })
 passport.use(new LocalStrategy(
   function (username, password, done) {
-    accountManager.getByUsername(username)
+    accountManager.isUser(username,password)
       .then(function (user) {
-        bcrypt.compare(password, user.Password, function (err, result) {
-          if (err) { return done(err); }
-          if (!result) {
+        // bcrypt.compare(password, user.Password, function (err, result) {
+          if (!user) {
             return done(null, false, { message: 'Incorrect username and password' });
           }
           return done(null, user);
-        })
+        // })
       }).catch(function (err) {
         return done(err);
       })
