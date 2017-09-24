@@ -8,13 +8,15 @@ define([
     "ditagis/support/HightlightGraphic",
     "ditagis/toolview/bootstrap",
 
+    "esri/geometry/Point",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleFillSymbol",
     "esri/tasks/QueryTask",
     "esri/core/watchUtils",
+    "esri/widgets/Locate/LocateViewModel",
     "esri/request"
 
-], function (on, dom, domConstruct, win, has, editingSupport, HightlightGraphic, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, watchUtils, esriRequest) {
+], function (on, dom, domConstruct, win, has, editingSupport, HightlightGraphic, bootstrap, Point, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, watchUtils, LocateViewModel, esriRequest) {
     'use strict';
     return class {
         constructor(view) {
@@ -25,6 +27,10 @@ define([
             this.fireFields = ['NgayCapNhat', 'NguoiCapNhat', 'MaPhuongXa', 'MaHuyenTP'];
 
             this.inputElement = {};
+            this.locateViewModel = new LocateViewModel({
+                view: view,
+                graphic: null
+            })
             this.hightlightGraphic = new HightlightGraphic(view, {
                 symbolMarker: new SimpleMarkerSymbol({
                     outline: { // autocasts as new SimpleLineSymbol()
@@ -110,7 +116,7 @@ define([
                 selectedFeature = this.view.popup.viewModel.selectedFeature,
                 layer = selectedFeature.layer,
                 attributes = selectedFeature.attributes,
-                objectid = attributes.OBJECTID;
+                objectId = attributes.OBJECTID;
             let fail = false;
             switch (actionId) {
                 case "update":
@@ -126,7 +132,7 @@ define([
                     break;
                 case "delete":
                     if (layer.permission && layer.permission.delete) {
-                        this.deleteFeature(layer, objectid);
+                        this.deleteFeature(layer, objectId);
                     } else {
                         fail = true;
                     }
@@ -140,6 +146,41 @@ define([
                         }, {
                                 type: 'danger'
                             })
+                    break;
+                case "update-geometry":
+                    let notify = $.notify({
+                        title: `<strong>Cập nhật vị trí</strong>`,
+                        message: 'Cập nhật...'
+                    }, {
+                            showProgressbar: true,
+                            delay: 20000,
+                            placement: {
+                                from: 'top',
+                                alias: 'left'
+                            }
+                        })
+                    this.locateViewModel.locate().then(res => {
+                        const coords = res.coords,
+                            latitude = coords.latitude,
+                            longitude = coords.longitude;
+                        const geometry = new Point({
+                            latitude: latitude,
+                            longitude: longitude,
+                            spatialReference: this.view.spatialReference
+                        })
+                        layer.applyEdits({
+                            updateFeatures: [{
+                                attributes: { objectId: objectId },
+                                geometry: geometry
+                            }]
+                        }).then(res => {
+                            if (res.updateFeatureResults[0].error) {
+                                notify.update({ 'type': 'danger', 'message': 'Cập nhật không thành công!', 'progress': 90 });
+                            } else {
+                                notify.update({ 'type': 'success', 'message': 'Cập nhật thành công!', 'progress': 90 });
+                            }
+                        })
+                    })
                     break;
                 default:
                     break;
@@ -523,16 +564,28 @@ define([
             }
             this.view.popup.content = div;
             this.view.popup.title = layer.title;
+            //CHANGE ICON FROM UPDATE TO EDIT
             let updateAction = this.view.popup.actions.find(function (action) {
                 return action.id === 'update';
             })
             updateAction.className = 'esri-icon-check-mark';
-            watchUtils.once(this.view.popup, 'selectedFeature').then(result => {
-                updateAction.className = 'esri-icon-edit';
+            //ADD ACTON UPDATE GEOMETRY WITH GPS
+            this.view.popup.actions.add({
+                id: 'update-geometry',
+                title: 'Cập nhật vị trí đối tượng',
+                className: 'esri-icon-locate'
             })
-            watchUtils.once(this.view.popup, 'visible').then(result => {
+            //RESTORE WHEN OUT EDIT MODE
+            var watchFunc = () => {
                 updateAction.className = 'esri-icon-edit';
-            })
+                let action = this.view.popup.actions.find(f => { return f.id === 'update-geometry' });
+                if (action) this.view.popup.actions.remove(action);
+            }
+            watchUtils.once(this.view.popup, 'selectedFeature').then(watchFunc)
+            watchUtils.once(this.view.popup, 'visible').then(watchFunc)
+
+
+
         }
         renderAttachmentEditPopup(item, props) {
             const
