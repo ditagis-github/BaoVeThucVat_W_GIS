@@ -8,7 +8,8 @@ const constName = {
     SAUBENH: 'SauBenh',
     DOANHNGHIEP: 'DoanhNghiep',
     TRONGTROT: 'TrongTrot',
-    INDEX_HANHCHINHXA: 4
+    INDEX_HANHCHINHXA: 4,
+    INDEX_HANHCHINHHUYEN: 5,
 }
 //  var socket = io();
 require([
@@ -96,7 +97,7 @@ require([
                         });
                         basemap.then(() => {
                             if (definitionExpression) {
-                                let layer = basemap.findSublayerById(4);
+                                let layer = basemap.findSublayerById(constName.INDEX_HANHCHINHHUYEN);
                                 let query = layer.createQuery();
                                 query.where = definitionExpression;
                                 query.returnGeometry = true;
