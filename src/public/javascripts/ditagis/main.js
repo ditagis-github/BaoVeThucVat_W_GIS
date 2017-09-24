@@ -4,9 +4,11 @@
  * Phần này quan trọng không được xóa
  */
 const constName = {
+    BASEMAP: 'dulieunen',
     SAUBENH: 'SauBenh',
     DOANHNGHIEP: 'DoanhNghiep',
     TRONGTROT: 'TrongTrot',
+    INDEX_HANHCHINHXA: 4
 }
 //  var socket = io();
 require([
@@ -22,7 +24,6 @@ require([
     "esri/widgets/LayerList",
     "esri/widgets/Legend",
     "esri/widgets/Search",
-    "esri/widgets/BasemapToggle",
     "esri/tasks/QueryTask",
     "esri/tasks/support/Query",
     "esri/request",
@@ -39,7 +40,7 @@ require([
 
 
 ], function (mapconfigs, Map, MapView, TileLayer, OpenStreetMapLayer, MapImageLayer, FeatureLayer,
-    Expand, Locate, LayerList, Legend, Search, BasemapToggle,
+    Expand, Locate, LayerList, Legend, Search,
     QueryTask, Query, esriRequest,
     SystemStatusObject,
     LayerEditor, UserWidget, Popup, TimeSlider,
@@ -53,7 +54,7 @@ require([
                 if (res.data) {
                     var systemVariable = new SystemStatusObject();
                     var map = new Map({
-                        basemap: 'osm'
+                        // basemap: 'osm'
                     });
 
                     systemVariable.user = res.data
@@ -68,7 +69,7 @@ require([
                         center: mapconfigs.center,
                         zoom: mapconfigs.zoom
                     });
-                  
+
 
                     view.systemVariable = systemVariable;
                     view.snapping = {
@@ -106,12 +107,26 @@ require([
                                         target: ft.geometry
                                     })
                                 })
-                                basemap.visible = true;
+                                // basemap.visible = true;
                             }
 
 
                         })
-                        map.add(basemap);
+                        let worldImage = new MapImageLayer({ url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/', title: 'Ảnh vệ tinh', id: 'worldimagery', visible: false });
+                        let osm = new OpenStreetMapLayer({ title: 'Open Street Map', id: 'osm', visible: false })
+                        map.addMany([osm, worldImage, basemap])
+                        function watchVisible(newValue, oldValue, property, target) {
+                            if (newValue) {
+                                switch (target) {
+                                    case osm: basemap.visible = worldImage.visible = !newValue; break;
+                                    case basemap: osm.visible = worldImage.visible = !newValue; break;
+                                    case worldImage: osm.visible = basemap.visible = !newValue; break;
+                                }
+                            }
+                        }
+                        osm.watch('visible', watchVisible)
+                        worldImage.watch('visible', watchVisible)
+                        basemap.watch('visible', watchVisible)
                     }
                     const initFeatureLayers = () => {
                         return new Promise((resolve, reject) => {
@@ -171,18 +186,17 @@ require([
                             //Add Logo DATAGIS to the bottom left of the view
                             var logo = domConstruct.create("img", {
                                 src: "images/logo-ditagis.png",
-                                id: "logo",
-                                style: "background-color:transparent"
+                                id: "dtg-widget-logo",
                             });
-                            view.ui.add(logo, "bottom-left");
+                            on(logo, 'mouseover, mouseleave', function (evt) {
+                                if (evt.type === 'mouseover')
+                                    logo.style.display = 'none';
+                                if (evt.type === 'mouseleave')
+                                    logo.style.display = 'unset';
+
+                            })
+                            view.ui.add(logo, "bottom-right");
                         }
-                        //BasemapToggle
-                        view.ui.add(new BasemapToggle({
-                            view: view,
-                            nextBasemap: "satellite"
-                        }), {
-                                position: "bottom-right"
-                            });
                         //LEGEND
                         view.ui.add(new Expand({
                             expandIconClass: "esri-icon-collection",
@@ -221,8 +235,8 @@ require([
                             position: "top-right"
                         });
                         //TIME SLIDER
-                        var timeSlider = new TimeSlider(view,{
-                            position:'bottom-right'
+                        var timeSlider = new TimeSlider(view, {
+                            position: 'bottom-left'
                         });
                         timeSlider.startup();
                         /**

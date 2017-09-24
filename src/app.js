@@ -68,7 +68,6 @@ const LoginRouter = require('./routes/login');
 const MapRouter = require('./routes/map');
 const AccountRouter = require('./routes/account');
 var routerParams = {
-  session: null,
   passport: passport
 }
 app.use('/', new LoginRouter(routerParams).router)

@@ -14,7 +14,7 @@ define([
     "esri/core/watchUtils",
     "esri/request"
 
-], function (on, dom, domConstruct, win, has, editingSupport, HightlightGraphic, bootstrap,SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, watchUtils, esriRequest) {
+], function (on, dom, domConstruct, win, has, editingSupport, HightlightGraphic, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, watchUtils, esriRequest) {
     'use strict';
     return class {
         constructor(view) {
@@ -253,33 +253,32 @@ define([
             });
             let table = domConstruct.create('table', {}, div);
             if (layer.id === constName.TRONGTROT) {
-                if (!timeChangeHandle)
-                    var timeChangeHandle = () => {
-                        attributes.LoaiCayTrongs = [];
-                        let input = this.inputElement['NhomCayTrong'];
-                        if (input) {
-                            $.post('map/trongtrot/thoigian', {
-                                id: attributes.MaDoiTuong, month: inputMonth.value, year: inputYear.value
-                            }).done(results => {
-                                if (results && results.length > 0) {
-                                    let loaiCayTrong = [];
-                                    for (let result of results) {
-                                        //neu co nhom cay trong
-                                        if (result.NhomCayTrong) {
-                                            input.value = result.NhomCayTrong;
-                                            inputNhomCayTrongChangeHandler(result.NhomCayTrong)
-                                        }
-                                        //neu co loai cay trong
-                                        if (result.LoaiCayTrong)
-                                            loaiCayTrong.push(result.LoaiCayTrong);
+                var timeChangeHandle = () => {
+                    attributes.LoaiCayTrongs = [];
+                    let input = this.inputElement['NhomCayTrong'];
+                    if (input) {
+                        $.post('map/trongtrot/thoigian', {
+                            id: attributes.MaDoiTuong, month: inputMonth.value, year: inputYear.value
+                        }).done(results => {
+                            if (results && results.length > 0) {
+                                let loaiCayTrong = [];
+                                for (let result of results) {
+                                    //neu co nhom cay trong
+                                    if (result.NhomCayTrong) {
+                                        input.value = result.NhomCayTrong;
+                                        inputNhomCayTrongChangeHandler(result.NhomCayTrong)
                                     }
-                                    // updateLoaiCayTrong(loaiCayTrong);
-                                    if (loaiCayTrong.length > 0)
-                                        checkedLoaiCayTrong(loaiCayTrong);
+                                    //neu co loai cay trong
+                                    if (result.LoaiCayTrong)
+                                        loaiCayTrong.push(result.LoaiCayTrong);
                                 }
-                            });
-                        }
+                                // updateLoaiCayTrong(loaiCayTrong);
+                                if (loaiCayTrong.length > 0)
+                                    checkedLoaiCayTrong(loaiCayTrong);
+                            }
+                        });
                     }
+                }
                 // var updateTrongTrongTimer = ()=>{
                 //     //neu chua co thi tao
                 //     if(!attributes['ThoiGianTrongTrot']){
@@ -399,7 +398,7 @@ define([
                         let tdNameLCT = domConstruct.create('td', {
                             innerHTML: 'Loại cây trồng'
                         }, trLCT);
-                        let tdValueLCT = domConstruct.create('td', {}, trLCT);
+                        var tdValueLCT = domConstruct.create('td', {}, trLCT);
                         this.inputElement['LoaiCayTrong'] = tdValueLCT;
                         on(input, 'change', (evt) => {
                             inputNhomCayTrongChangeHandler(evt.target.value);
@@ -408,16 +407,16 @@ define([
                         inputNhomCayTrongChangeHandler(attributes[field.name]);
 
                         ///TIMER//
-                        let currentTime = new Date();
+                        var currentTime = new Date();
                         //Month
                         //tạo <tr>
-                        let trMonth = domConstruct.create('tr', {}, table);
+                        var trMonth = domConstruct.create('tr', {}, table);
                         //tạo <td>
-                        let tdNameMonth = domConstruct.create('td', {
+                        var tdNameMonth = domConstruct.create('td', {
                             innerHTML: 'Tháng'
                         }, trMonth);
-                        let tdValueMonth = domConstruct.create('td', {}, trMonth);
-                        let inputMonth = domConstruct.create('select', {
+                        var tdValueMonth = domConstruct.create('td', {}, trMonth);
+                        var inputMonth = domConstruct.create('select', {
                         }, tdValueMonth)
                         for (var i = 0; i < 12; i++) {
                             let option = domConstruct.create('option', {
@@ -430,19 +429,19 @@ define([
                         inputMonth.value = currentTime.getMonth() + 1;
                         attributes['Thang'] = parseInt(inputMonth.value);
                         on(inputMonth, 'change', (evt) => {
-                            this.timeChangeHandle();
+                            timeChangeHandle();
                             attributes['Thang'] = parseInt(inputMonth.value);
                         })
 
                         //Year
                         //tạo <tr>
-                        let trYear = domConstruct.create('tr', {}, table);
+                        var trYear = domConstruct.create('tr', {}, table);
                         //tạo <td>
-                        let tdNameYear = domConstruct.create('td', {
+                        var tdNameYear = domConstruct.create('td', {
                             innerHTML: 'Năm'
                         }, trYear);
-                        let tdValueYear = domConstruct.create('td', {}, trYear);
-                        let inputYear = domConstruct.create('select', {}, tdValueYear);
+                        var tdValueYear = domConstruct.create('td', {}, trYear);
+                        var inputYear = domConstruct.create('select', {}, tdValueYear);
                         for (var i = 2015; i <= currentTime.getFullYear() + 1; i++) {
                             let option = domConstruct.create('option', {
                                 value: i,

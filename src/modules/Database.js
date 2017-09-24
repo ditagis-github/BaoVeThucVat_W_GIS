@@ -6,7 +6,7 @@ const config = {
 
     server: 'ditagis.com',
 
-    database: 'BinhDuong_BaoVeThucVat',
+    database: 'BinhDuong_BVTV',
     options: {
         encrypt: false // Use this if you're on Windows Azure 
     }

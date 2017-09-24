@@ -23,7 +23,9 @@ define([
                     title: 'Thời gian sâu bệnh',
                     step: 1//MONTH
                 };
-
+this.DOM = {
+    container:null
+}
                 if (options && typeof options === 'object') {
                     for (let index in options) {
                         this.options[index] = options[index] || this.options[index];
@@ -32,11 +34,32 @@ define([
 
             }
             startup() {
-                if (!this.isStartup) {
-                    this.initView();
-                    this.view.ui.add(this.expand, this.options.position);
-                    this.isStartup = true;
+                try {
+                    if (!this.isStartup) {
+                        this.view.map.findLayerById(constName.SAUBENH).then((layer) => {
+                            this.view.whenLayerView(layer).then(layerView => {
+                                this.layerView = layerView;
+                                this.watch = layerView.watch('updating', val => {
+                                    if (!val && !this.graphics) {  // wait for the layer view to finish updating
+                                        if (!this.DOM.container) {
+                                            this.initView();
+                                            this.view.ui.add(this.expand, this.options.position);
+                                        }
+                                        layerView.queryFeatures().then(results => {
+                                            this.graphics = results;
+                                            this.watch.remove();
+                                            delete this.watch;
+                                        });
+                                    }
+                                })
+                            })
+                        })
+                        this.isStartup = true;
+                    }
+                } catch (error) {
+                    throw error;
                 }
+
             }
             destroy() {
                 if (this.isStartup) {
@@ -79,32 +102,11 @@ define([
                         formatter: function (value) {
                             var days = value.getDate(),
                                 month = value.getMonth() + 1,
-                                year = value.getFullYear(),
-                                hours = value.getHours(),
-                                minutes = value.getMinutes();
-                            return twoDigits(hours) + ":" + twoDigits(minutes) + " " + days + "/" + month + "/" + year;;
+                                year = value.getFullYear();
+                            return days + "/" + month + "/" + year;;
                         }
                     });
 
-                    function twoDigits(val) {
-                        if (val < 10) {
-                            return "0" + val;
-                        }
-
-                        return val;
-                    }
-                    this.view.whenLayerView(this.view.map.findLayerById(constName.SAUBENH)).then(layerView => {
-                        this.layerView = layerView;
-                        this.watch = layerView.watch('updating', val => {
-                            if (!val && !this.graphics) {  // wait for the layer view to finish updating
-                                layerView.queryFeatures().then(results => {
-                                    this.graphics = results;
-                                    this.watch.remove();
-                                    delete this.watch;
-                                });
-                            }
-                        })
-                    })
 
                     // Preferred method
                     this.timeSlider.on("valuesChanging", (e, data) => {

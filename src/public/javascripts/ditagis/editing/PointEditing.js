@@ -90,7 +90,7 @@ define([
                                 //neu tim duoc
                                 if (res.features[0]) {
                                     let ft = res.features[0];
-                                    editingSupport.getLocationInfo(ft.geometry).then(locationInfo => {
+                                    editingSupport.getLocationInfo(this.view,ft.geometry).then(locationInfo => {
                                         notify.update({ 'type': 'info', 'message': 'Lấy vị trí thành công!', 'progress': 80 });
                                         for (let i in locationInfo) {
                                             ft.attributes[i] = locationInfo[i];

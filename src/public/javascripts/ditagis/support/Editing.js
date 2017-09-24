@@ -17,13 +17,13 @@ define([
             }
         }
 
-        static getLocationInfo(geometry) {
+        static getLocationInfo(view,geometry) {
             return new Promise((resolve, reject) => {
 
                 try {
                     if (!this.queryLocation)
                         this.queryLocation = new QueryTask({
-                            url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DLN/MapServer/4'
+                            url: view.map.findLayerById(constName.BASEMAP).findSublayerById(constName.INDEX_HANHCHINHXA).url
                         });
                     this.queryLocation.execute({
                         outFields: ['MaPhuongXa', 'MaHuyenTP'],

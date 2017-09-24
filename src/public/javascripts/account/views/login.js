@@ -27,8 +27,6 @@ $(document).ready(function(){
 	
 // login retrieval form via email //
 	
-	var ev = new EmailValidator();
-	
 	$('#get-credentials-form').ajaxForm({
 		url: '/lost-password',
 		beforeSubmit : function(formData, jqForm, options){
