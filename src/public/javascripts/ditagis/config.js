@@ -36,21 +36,22 @@ define([
             ]
         },
         layers: [{
-            title: 'Doanh nghiệp',
-            id: "DoanhNghiep",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/0",
-            outFields: ['*'],
-        }, {
-            title: 'Sâu bệnh',
-            id: "SauBenh",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/1",
-            outFields: ['*'],
-        }, {
             title: 'Trồng trọt',
             id: "TrongTrot",
             url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/2",
             outFields: ['*'],
-        },
+        }, {
+            title: 'Sâu bệnh',
+            id: "SauBenh",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong_BaoVeThucVat_ChuyenDe/FeatureServer/0",
+            outFields: ['*']
+            
+        },{
+            title: 'Doanh nghiệp',
+            id: "DoanhNghiep",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/0",
+            outFields: ['*'],
+        } ,
         ],
         zoom: 10,
         center: [106.6843694, 11.158752270428375]

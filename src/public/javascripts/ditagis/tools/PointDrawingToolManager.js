@@ -28,6 +28,8 @@ define([
                 this.registerEvent();
             }
             addFeature(graphic) {
+                let accept = confirm('Chắc chắn muốn thêm?');
+                if (!accept) return;
                 this.pointEditing.draw(this.drawLayer, graphic);
             }
             registerEvent() {

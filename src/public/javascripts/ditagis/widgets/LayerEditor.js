@@ -193,7 +193,7 @@ define([
                 try {
 
 
-                    const typeIdField = layer.typeIdField;
+                    const typeIdField = layer.renderer.field || layer.typeIdField;
                     if (value) {
                         layer.drawingAttributes = {};
                         layer.drawingAttributes[typeIdField] = value;

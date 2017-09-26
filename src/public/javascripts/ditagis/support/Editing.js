@@ -6,13 +6,13 @@ define([
     return class {
         static getCreatedInfo(view) {
             return {
-                NguoiCapNhat: view.systemVariable.user.username,
+                NguoiCapNhat: view.systemVariable.user.userName,
                 NgayCapNhat: new Date().getTime(),
             }
         }
         static getUpdatedInfo(view) {
             return {
-                NguoiCapNhat: view.systemVariable.user.username,
+                NguoiCapNhat: view.systemVariable.user.userName,
                 NgayCapNhat: new Date().getTime(),
             }
         }
