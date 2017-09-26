@@ -298,26 +298,30 @@ define([
                     attributes.LoaiCayTrongs = [];
                     let input = this.inputElement['NhomCayTrong'];
                     if (input) {
-                        $.post('map/trongtrot/thoigian', {
-                            id: attributes.MaDoiTuong, month: inputMonth.value, year: inputYear.value
-                        }).done(results => {
-                            if (results && results.length > 0) {
+                        let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
+                        queryTask.execute({
+                            outFields: ['*'],
+                            where: `MaDoiTuong = '${attributes.MaDoiTuong}' and Thang = ${inputMonth.value} and Nam = ${inputYear.value}`
+                        }).then(results => {
+                            if (results.features.length > 0) {
                                 let loaiCayTrong = [];
-                                for (let result of results) {
+                                for (let feature of results.features) {
+                                    let attributes = feature.attributes;
                                     //neu co nhom cay trong
-                                    if (result.NhomCayTrong) {
-                                        input.value = result.NhomCayTrong;
-                                        inputNhomCayTrongChangeHandler(result.NhomCayTrong)
+                                    if (attributes.NhomCayTrong) {
+                                        input.value = attributes.NhomCayTrong;
+                                        inputNhomCayTrongChangeHandler(attributes.NhomCayTrong)
                                     }
                                     //neu co loai cay trong
-                                    if (result.LoaiCayTrong)
-                                        loaiCayTrong.push(result.LoaiCayTrong);
-                                }
+                                    if (attributes.LoaiCayTrong)
+                                        loaiCayTrong.push(attributes.LoaiCayTrong);
+                                }   
                                 // updateLoaiCayTrong(loaiCayTrong);
                                 if (loaiCayTrong.length > 0)
                                     checkedLoaiCayTrong(loaiCayTrong);
                             }
-                        });
+                        }
+                        );
                     }
                 }
                 // var updateTrongTrongTimer = ()=>{
@@ -947,7 +951,7 @@ define([
                             format.type = 'text';
                             format.value = 'json';
                             form.appendChild(format);
-                            esriRequest('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe_1/FeatureServer/1/addFeatures?f=json', {
+                            esriRequest(constName.TABLE_SXTT_URL + '/addFeatures?f=json', {
                                 method: 'post',
                                 body: form
                             }).then(res => {
@@ -1025,7 +1029,7 @@ define([
             // $.post('map/trongtrot/thoigian/getbymadoituong', {
             //     MaDoiTuong: maDoiTuong
             // }).done(results => {
-            let queryTask = new QueryTask('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe_1/FeatureServer/1');
+            let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
             queryTask.execute({
                 outFields: ['*'],
                 where: `MaDoiTuong = '${maDoiTuong}'`

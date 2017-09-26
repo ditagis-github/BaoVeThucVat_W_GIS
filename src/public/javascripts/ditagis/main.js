@@ -10,6 +10,7 @@ const constName = {
     TRONGTROT: 'TrongTrot',
     INDEX_HANHCHINHXA: 4,
     INDEX_HANHCHINHHUYEN: 5,
+    TABLE_SXTT_URL:"https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/3"
 }
 //  var socket = io();
 require([
