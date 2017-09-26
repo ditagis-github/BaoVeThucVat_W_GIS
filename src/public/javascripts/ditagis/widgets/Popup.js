@@ -980,6 +980,14 @@ define([
                         //không phát hiện lỗi nên tắt popup
                         if (!valid) {
                             notify.update({ 'type': 'success', 'message': 'Cập nhật thành công!', 'progress': 90 });
+                            let query = layer.createQuery();
+                            query.outField = ['*'];
+                            query.where = 'OBJECTID=' + attributes['OBJECTID'];
+                            layer.queryFeatures(query).then(res => {
+                                this.view.popup.open({
+                                    features: res.features
+                                })
+                            })
                         }
                     })
                 }
