@@ -49,13 +49,13 @@ define([
         {
             title: 'Sâu bệnh',
             id: "SauBenh",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/1",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/1",
             outFields: ['*'],
         },
             // {
             //     title: 'Quy hoạch sử dụng đất',
             //     id: "QuyHoachSuDungDat",
-            //     url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/3",
+            //     url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/3",
             //     outFields: ['*'],
             //     permissions: [{
             //         role: 1,//sở thông tin truyền thông

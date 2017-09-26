@@ -344,7 +344,7 @@ define([
                     value = value || 1;
                     let subtype = this.getSubtype(layer, 'NhomCayTrong', value);
                     let domain =
-                        (subtype.domains.LoaiCayTrong && subtype.domains.LoaiCayTrong.type === "codedValues") ? subtype.domains.LoaiCayTrong : layer.getFieldDomain('LoaiCayTrong');
+                        (subtype.domains.LoaiCayTrong && subtype.domains.LoaiCayTrong.type === "codedValue") ? subtype.domains.LoaiCayTrong : layer.getFieldDomain('LoaiCayTrong');
                     updateLoaiCayTrong(domain.codedValues);
                 }
                 var checkedLoaiCayTrong = (values) => {
@@ -947,7 +947,7 @@ define([
                             format.type = 'text';
                             format.value = 'json';
                             form.appendChild(format);
-                            esriRequest('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/4/addFeatures?f=json', {
+                            esriRequest('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe_1/FeatureServer/1/addFeatures?f=json', {
                                 method: 'post',
                                 body: form
                             }).then(res => {
@@ -1025,7 +1025,7 @@ define([
             // $.post('map/trongtrot/thoigian/getbymadoituong', {
             //     MaDoiTuong: maDoiTuong
             // }).done(results => {
-            let queryTask = new QueryTask('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/4');
+            let queryTask = new QueryTask('https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe_1/FeatureServer/1');
             queryTask.execute({
                 outFields: ['*'],
                 where: `MaDoiTuong = '${maDoiTuong}'`
