@@ -40,6 +40,7 @@ define([
           }
         })
       });
+      
     }
 
     startup() {
@@ -135,6 +136,16 @@ define([
         case "view-detail":
           if (this.attributes['MaDoiTuong'])
             this.triggerActionViewDetailTrongtrot(this.attributes['MaDoiTuong']);
+          else
+            $.notify({
+              message: 'Không xác được định danh'
+            }, {
+                type: 'danger'
+              })
+          break;
+        case "view-detail-edit":
+          if (this.attributes['MaDoiTuong'])
+            this.popupEdit.editDetailTrongtrot();
           else
             $.notify({
               message: 'Không xác được định danh'
@@ -267,7 +278,7 @@ define([
         }
         if (layer.hasAttachments) {
 
-          this.getAttachments(layer, attributes['OBJECTID']).then(res => {
+          layer.getAttachments(attributes['OBJECTID']).then(res => {
             if (res && res.attachmentInfos && res.attachmentInfos.length > 0) {
               let div = domConstruct.create('div', {
                 class: 'attachment-container'
@@ -303,23 +314,6 @@ define([
       } catch (err) {
         throw err;
       }
-    }
-
-    /**
-     * Lấy attachments của feature layer
-     * @param {*} feature 
-     */
-    getAttachments(layer, id) {
-      return new Promise((resolve, reject) => {
-        var url = layer.url + "/" + layer.layerId + "/" + id;
-        esriRequest(url + "/attachments?f=json", {
-          responseType: 'json',
-          method: 'get'
-        }).then(result => {
-          resolve(result.data || null);
-        });
-      });
-
     }
 
     /**

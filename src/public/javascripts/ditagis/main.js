@@ -133,6 +133,21 @@ require([
             basemap.watch('visible', watchVisible)
           }
           const initFeatureLayers = () => {
+            /**
+      * Lấy attachments của feature layer
+      */
+            FeatureLayer.prototype.getAttachments = function (id) {
+              return new Promise((resolve, reject) => {
+                var url = this.url + "/" + this.layerId + "/" + id;
+                esriRequest(url + "/attachments?f=json", {
+                  responseType: 'json',
+                  method: 'get'
+                }).then(result => {
+                  resolve(result.data || null);
+                });
+              });
+
+            }
             return new Promise((resolve, reject) => {
 
               esriRequest('/map/layerrole', {
