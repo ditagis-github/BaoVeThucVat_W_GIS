@@ -54,18 +54,21 @@ define([
                 id: "update",
                 title: "Cập nhật",
                 className: "esri-icon-edit",
+                layer: layer
               });
             if (layer.permission.delete)
               actions.push({
                 id: "delete",
                 title: "Xóa",
                 className: "esri-icon-erase",
+                layer: layer
               })
             if (layer.id === constName.TRONGTROT) {
               actions.push({
                 id: "view-detail",
                 title: "Chi tiết thời gian trồng trọt",
                 className: "esri-icon-table",
+                layer: layer
               })
             }
             layer.popupTemplate = {
@@ -112,10 +115,11 @@ define([
     }
     triggerActionHandler(event) {
       let actionId = event.action.id;
+      let layer = this.layer || event.action.layer;
       let fail = false;
       switch (actionId) {
         case "update":
-          if (this.layer.permission && this.layer.permission.edit) {
+          if (layer.permission && layer.permission.edit) {
             if (event.action.className === 'esri-icon-check-mark') {
               this.popupEdit.editFeature();
             } else {
@@ -126,7 +130,7 @@ define([
           }
           break;
         case "delete":
-          if (this.layer.permission && this.layer.permission.delete) {
+          if (layer.permission && layer.permission.delete) {
             this.popupEdit.deleteFeature();
           } else {
             fail = true;
@@ -153,7 +157,7 @@ define([
               })
           break;
         case "update-geometry":
-          if (this.layer.geometryType === 'polygon') {
+          if (layer.geometryType === 'polygon') {
             alert('Không thể thay đổi vị trí vùng...');
             break;
           }

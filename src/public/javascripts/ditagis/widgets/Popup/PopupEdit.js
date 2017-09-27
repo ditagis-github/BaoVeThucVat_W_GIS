@@ -10,7 +10,7 @@ define([
   "esri/layers/FeatureLayer",
   "ditagis/support/Editing",
   "ditagis/toolview/bootstrap",
-], function (on, dom, domConstruct, esriRequest, QueryTask, watchUtils,Point, LocateViewModel, FeatureLayer,
+], function (on, dom, domConstruct, esriRequest, QueryTask, watchUtils, Point, LocateViewModel, FeatureLayer,
   editingSupport, bootstrap) {
     'use strict';
     return class {
@@ -474,8 +474,9 @@ define([
         btnAdd.classList.add('btn', 'btn-primary');
         btnAdd.innerText = "Thêm";
         on(btnAdd, 'click', () => {
+          var length = this.tmpDatasDetailTrongTrong.adds.length;
           let data = {
-            NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value)
+            ID: length + 1, NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value ? inputArea.value : 0)
           }
           this.tmpDatasDetailTrongTrong.adds.push(data);
           this.addDataToDetailTrongtrot(data);
@@ -543,6 +544,7 @@ define([
         try {
           //tạo <tr>
           let row = document.createElement('tr');
+          row.classList.add("Info");
           //nhom cay trong
           let tdNCT = document.createElement('td');
           // tdNCT.innerText = item['NhomCayTrong'] || '';
@@ -584,17 +586,17 @@ define([
           let itemDelete = document.createElement('div');
           itemDelete.classList.add('esri-icon-trash');
           on(itemDelete, 'click', () => {
-            if (item['OBJECTID']) this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
+            if (item['OBJECTID']) {
+              this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
+            }
             this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
             //KIEM TRA CO TRONG ADDS?
             let addItem = this.tmpDatasDetailTrongTrong.adds.find(f => {
-              for (const key in f) {
-                if (f[key] != item[key])
-                  return false;
-              }
-              return true;
+              return f.ID == item.ID;
             });
-            this.tmpDatasDetailTrongTrong.adds.remove(addItem);
+            if (addItem) {
+              this.tmpDatasDetailTrongTrong.adds.splice(this.tmpDatasDetailTrongTrong.adds.indexOf(addItem));
+            }
           });
           tdAction.appendChild(itemDelete);
           row.appendChild(tdNCT);
