@@ -581,7 +581,6 @@ define([
           //XÓA
           let tdAction = document.createElement('td');
           let itemDelete = document.createElement('div');
-          itemDelete.classList.add('esri-icon-trash');
           on(itemDelete, 'click', () => {
             if (item['OBJECTID']) this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
             this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
@@ -614,6 +613,7 @@ define([
       submitDetailTrongtrot(datas) {
         let edits = {};
         let deleteFeatures = '';
+        let proms = [];
         if (datas.deletes.length > 0) {
           deleteFeatures = datas.deletes.join(',');
           let form = document.createElement('form');
@@ -628,17 +628,10 @@ define([
           format.type = 'text';
           format.value = 'json';
           form.appendChild(format);
-          esriRequest(constName.TABLE_SXTT_URL + '/deleteFeatures?f=json', {
+          proms.push(esriRequest(constName.TABLE_SXTT_URL + '/deleteFeatures?f=json', {
             method: 'post',
             body: form
-          }).then(res => {
-            if (res.data && res.data.deleteResults && res.data.deleteResults.length > 0) {
-              for (let item of res.data.deleteResults) {
-                if (!item.success) return;
-              }
-              $('#ttModal').modal('toggle');
-            }
-          })
+          }))
         }
         if (datas.adds.length > 0) {
           let dataSent = [];
@@ -660,18 +653,15 @@ define([
           format.value = 'json';
           form.appendChild(ft);
           form.appendChild(format);
-          esriRequest(constName.TABLE_SXTT_URL + '/addFeatures?f=json', {
+          proms.push(esriRequest(constName.TABLE_SXTT_URL + '/addFeatures?f=json', {
             method: 'post',
             body: form
-          }).then(res => {
-            if (res.data && res.data.addResults && res.data.addResults.length > 0) {
-              for (let item of res.data.addResults) {
-                if (!item.success) return;
-              }
-              $('#ttModal').modal('toggle');
-            }
-          })
+          }));
+
         }
+        Promise.all(proms).then(() => {
+          $('#ttModal').modal('toggle');
+        })
       }
       /**
        * ATTACHMENT
