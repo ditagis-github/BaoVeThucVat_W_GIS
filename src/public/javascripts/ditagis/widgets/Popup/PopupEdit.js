@@ -552,13 +552,154 @@ define([
         }
       }
       editDetailTrongtrot() {
-        let tmpDatas = {
+        let notify = $.notify({
+          message: 'Đang tai dữ liệu...'
+        }, {
+            showProgressbar: true,
+            delay: 20000,
+            placement: {
+              from: 'top',
+              alias: 'left'
+            }
+          })
+        this.tmpDatasDetailTrongTrong = {
           adds: [],
           updates: [],
-          deletes: []
+          deletes: [],
+          tbody: null
         }
         let div = document.createElement('div');
+        let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, btnAdd;
+        divInfo = document.createElement('div');
 
+        //LOAI CAY TRONG
+        formGroupLCT = document.createElement('div');
+        formGroupLCT.classList.add('form-group');
+        let lbLCT, inputLCT;
+        inputLCT = document.createElement('select');
+        inputLCT.id = 'LoaiCayTrong';
+        inputLCT.classList.add('form-control');
+        lbLCT = document.createElement('label');
+        lbLCT.innerText = 'Loại cây trồng';
+        lbLCT.setAttribute('for', inputLCT.id);
+        formGroupLCT.appendChild(lbLCT);
+        formGroupLCT.appendChild(inputLCT)
+
+        //NHOM CAY TRONG
+        formGroupNCT = document.createElement('div');
+        formGroupNCT.classList.add('form-group');
+        let lbNCT, inputNCT;
+        inputNCT = document.createElement('select');
+        inputNCT.id = 'NhomCayTrong';
+        inputNCT.classList.add('form-control');
+        let codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+        for (let codedValue of codedValues) {
+          let dmCode = codedValue.code,
+            dmName = codedValue.name;
+          let option = document.createElement('option');
+          option.setAttribute('value', dmCode);
+          option.innerHTML = dmName;
+          inputNCT.appendChild(option);
+        }
+        var inputNCTChange = () => {
+          inputLCT.innerHTML = '';
+          let subtype = this.getSubtype('NhomCayTrong', inputNCT.value);
+          if (!subtype) return;
+          let domain = subtype.domains['LoaiCayTrong'];
+          if (!domain) return;
+          let codedValues;
+          if (domain.type === "inherited") {
+            let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+            if (fieldDomain) codedValues = fieldDomain.codedValues;
+          } else {//type is codedValue
+            codedValues = domain.codedValues;
+          }
+          if (!codedValues) return;
+          for (let codedValue of codedValues) {
+            let dmCode = codedValue.code,
+              dmName = codedValue.name;
+            let option = document.createElement('option');
+            option.setAttribute('value', dmCode);
+            option.innerHTML = dmName;
+            inputLCT.appendChild(option);
+          }
+        }
+        on(inputNCT, 'change', () => {
+          inputNCTChange();
+        })
+        inputNCTChange();
+        lbNCT = document.createElement('label');
+        lbNCT.innerText = 'Nhóm cây trồng';
+        lbNCT.setAttribute('for', inputNCT.id);
+        formGroupNCT.appendChild(lbNCT);
+        formGroupNCT.appendChild(inputNCT);
+
+        //DIEN TICH
+        formGroupArea = document.createElement('div');
+        formGroupArea.classList.add('form-group');
+        let lbArea, inputArea;
+        inputArea = document.createElement('input');
+        inputArea.type = 'number';
+        inputArea.id = 'DienTich';
+        inputArea.classList.add('form-control');
+        lbArea = document.createElement('label');
+        lbArea.innerText = 'Diện tích';
+        lbArea.setAttribute('for', inputArea.id);
+        formGroupArea.appendChild(lbArea);
+        formGroupArea.appendChild(inputArea)
+        //TIME
+        formGroupTime = document.createElement('div');
+        formGroupTime.classList.add('form-group');
+        let lbMonth, inputMonth, lbYear, inputYear, currentTime = new Date();
+        inputMonth = document.createElement('select');
+        inputMonth.id = 'Month';
+        inputMonth.classList.add('form-control');
+        for (var i = 0; i < 12; i++) {
+          let option = document.createElement('option');
+          option.value = i + 1;
+          option.innerText = i + 1;
+          inputMonth.appendChild(option);
+        }
+        //chon thang hien tai
+        inputMonth.value = currentTime.getMonth() + 1;
+        lbMonth = document.createElement('label');
+        lbMonth.innerText = 'Tháng';
+        lbMonth.setAttribute('for', inputMonth.id);
+        formGroupTime.appendChild(lbMonth);
+        formGroupTime.appendChild(inputMonth)
+        inputYear = document.createElement('select');
+        inputYear.id = 'Year';
+        inputYear.classList.add('form-control');
+        lbYear = document.createElement('label');
+        lbYear.innerText = 'Năm';
+        lbYear.setAttribute('for', inputYear.id);
+        for (var i = 2015; i <= currentTime.getFullYear() + 1; i++) {
+          let option = document.createElement('option');
+          option.value = i;
+          option.innerText = i;
+          inputYear.appendChild(option);
+        }
+        inputYear.value = currentTime.getFullYear();
+        formGroupTime.appendChild(lbYear);
+        formGroupTime.appendChild(inputYear);
+
+        //SUBMIT
+        btnAdd = document.createElement('button');
+        btnAdd.classList.add('btn', 'btn-primary');
+        btnAdd.innerText = "Thêm";
+        on(btnAdd, 'click', () => {
+          let data = {
+            NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value)
+          }
+          this.tmpDatasDetailTrongTrong.adds.push(data);
+          this.addDataToDetailTrongtrot(data);
+        })
+        divInfo.appendChild(formGroupNCT);
+        divInfo.appendChild(formGroupLCT);
+        divInfo.appendChild(formGroupArea);
+        divInfo.appendChild(formGroupTime);
+        divInfo.appendChild(btnAdd);
+        div.appendChild(divInfo);
         let tableResponsive = document.createElement('table-responsive');
         //TABLE ON DIV
         let table = document.createElement('table');
@@ -578,13 +719,14 @@ define([
         //TBODY ON TABLE
         let tbody = document.createElement('tbody');
         table.appendChild(tbody);
+        this.tmpDatasDetailTrongTrong.tbody = tbody;
 
         let footer = document.createElement('div');
         let btnSubmit = document.createElement('button');
         btnSubmit.classList.add('btn', 'btn-primary');
         btnSubmit.innerText = "Chấp nhận";
         on(btnSubmit, 'click', () => {
-          this.submitDetailTrongtrot(tmpDatas);
+          this.submitDetailTrongtrot(this.tmpDatasDetailTrongTrong);
         })
         let btnClose = document.createElement('button');
         btnClose.type = 'button';
@@ -593,6 +735,7 @@ define([
         btnClose.innerText = 'Đóng';
         footer.appendChild(btnSubmit);
         footer.appendChild(btnClose);
+        div.appendChild(tableResponsive);
         let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
         queryTask.execute({
           outFields: ['*'],
@@ -601,69 +744,136 @@ define([
           if (results.features.length > 0) {
             for (let feature of results.features) {
               const item = feature.attributes;
-              //tạo <tr>
-              let row = document.createElement('tr');
+              let row = this.renderDetailTrongtrot(item);
               tbody.appendChild(row);
-              //nhom cay trong
-              let tdNCT = document.createElement('td');
-              tdNCT.innerText = item['NhomCayTrong'] || '';
-              //loai cay trong
-              let tdLCT = document.createElement('td');
-              tdLCT.innerText = item['LoaiCayTrong'] || '';
-              //dien tich
-              let tdArea = document.createElement('td');
-              tdArea.innerText = item['DienTich'] || '0';
-              //thoi gian
-              let tdTime = document.createElement('td');
-              tdTime.innerText = `${item['Thang'] || 0}/${item['Nam'] || 0}`;
-              //XÓA
-              let tdAction = document.createElement('td');
-              let itemDelete = document.createElement('div');
-              itemDelete.classList.add('esri-icon-trash');
-              on(itemDelete, 'click', () => {
-                tmpDatas.deletes.push(item['OBJECTID'])
-                tbody.removeChild(row);
-              });
-              tdAction.appendChild(itemDelete);
-              row.appendChild(tdNCT);
-              row.appendChild(tdLCT);
-              row.appendChild(tdArea);
-              row.appendChild(tdTime);
-              row.appendChild(tdAction);
             }
           }
-          let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', tableResponsive, footer);
+          let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', div, footer);
           modal.modal();
+          notify.update({ 'type': 'success', 'progress': 90 });
         })
+      }
+      renderDetailTrongtrot(item) {
+        try {
+          //tạo <tr>
+          let row = document.createElement('tr');
+          //nhom cay trong
+          let tdNCT = document.createElement('td');
+          // tdNCT.innerText = item['NhomCayTrong'] || '';
+          let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+          if (NCTcodedValues) {
+            let codeValue = NCTcodedValues.find(f => { return f.code == item['NhomCayTrong'] })
+            if (codeValue) tdNCT.innerText = codeValue.name;
+          }
+          if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] || '';
+          //loai cay trong
+          let tdLCT = document.createElement('td');
+
+          let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
+          if (!subtype) return;
+          let domain = subtype.domains['LoaiCayTrong'];
+          if (domain) {
+            let LCTcodedValues;
+            if (domain.type === "inherited") {
+              let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+              if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
+            } else {//type is codedValue
+              LCTcodedValues = domain.codedValues;
+            }
+            if (LCTcodedValues) {
+              let codeValue = LCTcodedValues.find(f => { return f.code == item['LoaiCayTrong'] });
+              if (codeValue) tdLCT.innerText = codeValue.name;
+            }
+          }
+          if (!tdLCT.innerText) tdLCT.innerText = item['LoaiCayTrong'] || '';
+
+          //dien tich
+          let tdArea = document.createElement('td');
+          tdArea.innerText = item['DienTich'] || '0';
+          //thoi gian
+          let tdTime = document.createElement('td');
+          tdTime.innerText = `${item['Thang'] || 0}/${item['Nam'] || 0}`;
+          //XÓA
+          let tdAction = document.createElement('td');
+          let itemDelete = document.createElement('div');
+          itemDelete.classList.add('esri-icon-trash');
+          on(itemDelete, 'click', () => {
+            if (item['OBJECTID']) this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
+            this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
+          });
+          tdAction.appendChild(itemDelete);
+          row.appendChild(tdNCT);
+          row.appendChild(tdLCT);
+          row.appendChild(tdArea);
+          row.appendChild(tdTime);
+          row.appendChild(tdAction);
+          return row;
+
+        } catch (error) {
+          throw error;
+        }
+      }
+      addDataToDetailTrongtrot(data) {
+        let row = this.renderDetailTrongtrot(data);
+        this.tmpDatasDetailTrongTrong.tbody.appendChild(row);
       }
       submitDetailTrongtrot(datas) {
         let edits = {};
         let deleteFeatures = '';
-        if (datas.deletes.length > 0)
+        if (datas.deletes.length > 0) {
           deleteFeatures = datas.deletes.join(',');
-        let form = document.createElement('form');
-        form.method = 'post';
-        let ft = document.createElement('input');
-        ft.name = 'objectIds'
-        ft.type = 'text';
-        ft.value = deleteFeatures
-        form.appendChild(ft);
-        let format = document.createElement('input');
-        format.name = 'f';
-        format.type = 'text';
-        format.value = 'json';
-        form.appendChild(format);
-        esriRequest(constName.TABLE_SXTT_URL + '/deleteFeatures?f=json', {
-          method: 'post',
-          body: form
-        }).then(res => {
-          if (res.data && res.data.deleteResults && res.data.deleteResults.length > 0) {
-            for (let item of res.data.deleteResults) {
-              if (!item.success) return;
+          let form = document.createElement('form');
+          form.method = 'post';
+          let ft = document.createElement('input');
+          ft.name = 'objectIds'
+          ft.type = 'text';
+          ft.value = deleteFeatures
+          form.appendChild(ft);
+          let format = document.createElement('input');
+          format.name = 'f';
+          format.type = 'text';
+          format.value = 'json';
+          form.appendChild(format);
+          esriRequest(constName.TABLE_SXTT_URL + '/deleteFeatures?f=json', {
+            method: 'post',
+            body: form
+          }).then(res => {
+            if (res.data && res.data.deleteResults && res.data.deleteResults.length > 0) {
+              for (let item of res.data.deleteResults) {
+                if (!item.success) return;
+              }
+              $('#ttModal').modal('toggle');
             }
-            $('#ttModal').modal('toggle');
+          })
+        }
+        if (datas.adds.length > 0) {
+          let dataSent = [];
+          for (let item of datas.adds) {
+            item['MaDoiTuong'] = this.attributes['MaDoiTuong'];
+            dataSent.push({
+              attributes: item
+            });
           }
-        })
+          form = document.createElement('form');
+          form.method = 'post';
+          ft = document.createElement('input');
+          ft.name = 'features'
+          ft.type = 'text';
+          ft.value = JSON.stringify(dataSent)
+          form.appendChild(ft);
+          form.appendChild(format);
+          esriRequest(constName.TABLE_SXTT_URL + '/addFeatures?f=json', {
+            method: 'post',
+            body: form
+          }).then(res => {
+            if (res.data && res.data.addResults && res.data.addResults.length > 0) {
+              for (let item of res.data.addResults) {
+                if (!item.success) return;
+              }
+              $('#ttModal').modal('toggle');
+            }
+          })
+        }
       }
       /**
        * ATTACHMENT
@@ -761,84 +971,6 @@ define([
             for (let i in updatedInfo) {
               this.attributes[i] = updatedInfo[i];
             }
-            //nếu là Trồng trọt thì xét đến trường hợp Loại cây trồng và thời gian
-            //lấy danh sách loại cây trồng dã tick
-            if (this.layer.id === constName.TRONGTROT) {
-              const
-                nhomCayTrong = this.attributes['NhomCayTrong'],
-                loaiCayTrongs = this.attributes['LoaiCayTrongs'],
-                thang = this.attributes['Thang'],
-                nam = this.attributes['Nam'];
-              //thêm vào dữ liệu
-              //neu co loai cay trong
-              let datas = [];
-              if (loaiCayTrongs && loaiCayTrongs.length > 0) {
-                for (let loaiCayTrong of loaiCayTrongs) {
-                  datas.push({
-                    MaDoiTuong: this.attributes['MaDoiTuong'],
-                    Thang: thang,
-                    Nam: nam,
-                    NhomCayTrong: nhomCayTrong,
-                    LoaiCayTrong: loaiCayTrong
-                  });
-
-                }
-                //xoa het du lieu
-                this.attributes.LoaiCayTrongs = [];
-              }
-              //neu khong thi khong them loai cay trong
-              else {
-                datas.push({
-                  MaDoiTuong: this.attributes['MaDoiTuong'],
-                  Thang: thang,
-                  Nam: nam,
-                  NhomCayTrong: nhomCayTrong,
-                  LoaiCayTrong: null
-                });
-              }
-              if (datas.length > 0) {
-                let xnotify = $.notify({
-                  title: `<strong>Cập nhật thời gian sản xuất trồng trọt</strong>`,
-                  message: 'Đang Cập nhật...'
-                }, {
-                    showProgressbar: true,
-                    delay: 20000,
-                    placement: {
-                      from: 'top',
-                      alias: 'left'
-                    }
-                  })
-                let dataSent = [];
-                for (let item of datas) {
-                  dataSent.push({
-                    attributes: item
-                  });
-                }
-                let form = document.createElement('form');
-                form.method = 'post';
-                let ft = document.createElement('input');
-                ft.name = 'features'
-                ft.type = 'text';
-                ft.value = JSON.stringify(dataSent)
-                form.appendChild(ft);
-                let format = document.createElement('input');
-                format.name = 'f';
-                format.type = 'text';
-                format.value = 'json';
-                form.appendChild(format);
-                esriRequest(constName.TABLE_SXTT_URL + '/addFeatures?f=json', {
-                  method: 'post',
-                  body: form
-                }).then(res => {
-                  if (res.data.addResults[0].success) {
-                    xnotify.update({ 'type': 'success', 'message': 'Cập nhật thời gian sản xuất trồng trọt thành công!', 'progress': 90 });
-                  } else {
-                    xnotify.update({ 'type': 'danger', 'message': 'Cập nhật thời gian sản xuất trồng trọt không thành công!', 'progress': 90 });
-                  }
-
-                })
-              }
-            }
             this.layer.applyEdits({
               updateFeatures: [{
                 attributes: this.attributes
@@ -898,7 +1030,7 @@ define([
           }
         });
       }
-      updateGemetryGPS() {
+      updateGeometryGPS() {
         let objectId = this.objectId;
         let notify = $.notify({
           title: `<strong>Cập nhật vị trí</strong>`,
