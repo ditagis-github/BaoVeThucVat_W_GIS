@@ -581,6 +581,7 @@ define([
           //XÓA
           let tdAction = document.createElement('td');
           let itemDelete = document.createElement('div');
+          itemDelete.classList.add('esri-icon-trash');
           on(itemDelete, 'click', () => {
             if (item['OBJECTID']) this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
             this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
