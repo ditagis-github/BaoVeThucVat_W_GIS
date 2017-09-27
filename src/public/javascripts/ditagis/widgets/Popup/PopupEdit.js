@@ -100,221 +100,6 @@ define([
           class: 'popup-content'
         });
         let table = domConstruct.create('table', {}, div);
-        // if (this.layer.id === constName.TRONGTROT) {
-        //     var timeChangeHandle = () => {
-        //         this.attributes.LoaiCayTrongs = [];
-        //         let input = this.inputElement['NhomCayTrong'];
-        //         if (input) {
-        //             let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
-        //             queryTask.execute({
-        //                 outFields: ['*'],
-        //                 where: `MaDoiTuong = '${this.attributes.MaDoiTuong}' and Thang = ${inputMonth.value} and Nam = ${inputYear.value}`
-        //             }).then(results => {
-        //                 if (results.features.length > 0) {
-        //                     let loaiCayTrong = [];
-        //                     for (let feature of results.features) {
-        //                         let attributes = feature.attributes;
-        //                         //neu co nhom cay trong
-        //                         if (attributes.NhomCayTrong) {
-        //                             input.value = attributes.NhomCayTrong;
-        //                             inputNhomCayTrongChangeHandler(attributes.NhomCayTrong)
-        //                         }
-        //                         //neu co loai cay trong
-        //                         if (attributes.LoaiCayTrong)
-        //                             loaiCayTrong.push(attributes.LoaiCayTrong);
-        //                     }
-        //                     // updateLoaiCayTrong(loaiCayTrong);
-        //                     if (loaiCayTrong.length > 0)
-        //                         checkedLoaiCayTrong(loaiCayTrong);
-        //                 }
-        //             }
-        //                 );
-        //         }
-        //     }
-        //     // var updateTrongTrongTimer = ()=>{
-        //     //     //neu chua co thi tao
-        //     //     if(!attributes['ThoiGianTrongTrot']){
-        //     //         attributes['ThoiGianTrongTrot'] = [];
-        //     //     }
-
-        //     //     let items = attributes['ThoiGianTrongTrot'];
-        //     //     let item = items.find(f=>f.Thang === thang && f.Nam === nam);
-        //     //     //neu ton tai thoi gian
-        //     //     if(item){
-        //     //         //neu chua co loai cay trong thi tao
-        //     //         if(!item['LoaiCayTrongs']){
-        //     //             item['LoaiCayTrongs'] = [];
-        //     //         }
-        //     //     }
-        //     //     //neu chua ton tai thoi gian
-        //     //     else{
-
-        //     //     }
-        //     // }
-        //     var inputNhomCayTrongChangeHandler = (value) => {
-        //         value = value || 1;
-        //         let subtype = this.getSubtype('NhomCayTrong', value);
-        //         let domain =
-        //             (subtype.domains.LoaiCayTrong && subtype.domains.LoaiCayTrong.type === "codedValue") ? subtype.domains.LoaiCayTrong : this.layer.getFieldDomain('LoaiCayTrong');
-        //         updateLoaiCayTrong(domain.codedValues);
-
-        //     }
-        //     var checkedLoaiCayTrong = (values) => {
-        //         if (values && values.length > 0) {
-        //             let childNodes = tdValueLCT.childNodes;
-        //             if (childNodes && childNodes.length > 0) {
-        //                 for (let value of values) {
-        //                     for (let child of childNodes) {
-        //                         if (child.type === 'checkbox' && child.value == value)
-        //                             child.checked = true;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     var updateLoaiCayTrong = (values) => {
-        //         if (values && values.length > 0) {
-        //             tdValueLCT.innerHTML = '';
-        //             for (let codedValue of values) {
-        //                 if (codedValue) {
-        //                     let input = domConstruct.create('input', {
-        //                         type: 'checkbox',
-        //                         name: 'LoaiCayTrong',
-        //                         value: codedValue.code
-        //                     }, tdValueLCT);
-        //                     domConstruct.create('text', {
-        //                         innerHTML: codedValue.name + '<br>'
-        //                     }, tdValueLCT);
-        //                     on(input, 'change', evt => {
-        //                         //neu chua co 
-        //                         if (!this.attributes['LoaiCayTrongs']) {
-        //                             this.attributes['LoaiCayTrongs'] = [];
-        //                         }
-        //                         //neu loai cay trong duoc chon thi them vao
-        //                         if (evt.target.checked) {
-        //                             this.attributes['LoaiCayTrongs'].push(evt.target.value);
-        //                         }
-        //                         //neu khong chon thi kiem tra trong mang da co chua, neu co thi xoa
-        //                         else {
-        //                             let index = this.attributes['LoaiCayTrongs'].indexOf(evt.target.value);
-        //                             if (index !== -1) {
-        //                                 this.attributes['LoaiCayTrongs'].splice(index, 1);
-        //                             }
-        //                         }
-        //                     });
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     //duyệt thông tin đối tượng
-        //     for (let field of this.layer.fields) {
-        //         //nếu như field thuộc field cấm thì không hiển thị
-        //         if (field.type === 'oid' || field.name === 'MaDoiTuong' || field.name === 'LoaiCayTrong') {
-        //             continue;
-        //         }
-        //         //tạo <tr>
-        //         let row = domConstruct.create('tr', {}, table);
-        //         //tạo <td>
-        //         let
-        //             tdName = domConstruct.create('td', {
-        //                 innerHTML: field.alias
-        //             }, row),
-        //             tdValue = domConstruct.create('td', {}, row),
-        //             input;
-        //         //kiểm tra domain
-        //         if (field.name === 'NhomCayTrong') {
-
-        //             /**
-        //              * 
-        //              * @param {*} input Nhóm cây trồng
-        //              */
-
-        //             input = domConstruct.create('select', null, tdValue)
-        //             for (let codedValue of field.domain.codedValues) {
-        //                 let dmCode = codedValue.code,
-        //                     dmName = codedValue.name;
-        //                 let option = domConstruct.create('option', {
-        //                     value: dmCode,
-        //                 });
-        //                 if (this.attributes[field.name] === dmCode) {
-        //                     option.selected = 'selected'
-        //                 }
-        //                 option.innerHTML = dmName;
-        //                 domConstruct.place(option, input);
-        //             }
-        //             //tạo <tr>
-        //             let trLCT = domConstruct.create('tr', {}, table);
-        //             //tạo <td>
-        //             let tdNameLCT = domConstruct.create('td', {
-        //                 innerHTML: 'Loại cây trồng'
-        //             }, trLCT);
-        //             var tdValueLCT = domConstruct.create('td', {}, trLCT);
-        //             this.inputElement['LoaiCayTrong'] = tdValueLCT;
-        //             on(input, 'change', (evt) => {
-        //                 this.attributes[field.name] = parseInt(evt.target.value);
-        //                 inputNhomCayTrongChangeHandler(evt.target.value);
-        //             })
-
-        //             inputNhomCayTrongChangeHandler(this.attributes[field.name]);
-
-        //             ///TIMER//
-        //             var currentTime = new Date();
-        //             //Month
-        //             //tạo <tr>
-        //             var trMonth = domConstruct.create('tr', {}, table);
-        //             //tạo <td>
-        //             var tdNameMonth = domConstruct.create('td', {
-        //                 innerHTML: 'Tháng'
-        //             }, trMonth);
-        //             var tdValueMonth = domConstruct.create('td', {}, trMonth);
-        //             var inputMonth = domConstruct.create('select', {
-        //             }, tdValueMonth)
-        //             for (var i = 0; i < 12; i++) {
-        //                 let option = domConstruct.create('option', {
-        //                     value: i + 1,
-        //                     innerHTML: i + 1
-        //                 });
-        //                 domConstruct.place(option, inputMonth);
-        //             }
-        //             //chon thang hien tai
-        //             inputMonth.value = currentTime.getMonth() + 1;
-        //             this.attributes['Thang'] = parseInt(inputMonth.value);
-        //             on(inputMonth, 'change', (evt) => {
-        //                 timeChangeHandle();
-        //                 this.attributes['Thang'] = parseInt(inputMonth.value);
-        //             })
-
-        //             //Year
-        //             //tạo <tr>
-        //             var trYear = domConstruct.create('tr', {}, table);
-        //             //tạo <td>
-        //             var tdNameYear = domConstruct.create('td', {
-        //                 innerHTML: 'Năm'
-        //             }, trYear);
-        //             var tdValueYear = domConstruct.create('td', {}, trYear);
-        //             var inputYear = domConstruct.create('select', {}, tdValueYear);
-        //             for (var i = 2015; i <= currentTime.getFullYear() + 1; i++) {
-        //                 let option = domConstruct.create('option', {
-        //                     value: i,
-        //                     innerHTML: i
-        //                 });
-        //                 domConstruct.place(option, inputYear);
-
-        //             }
-        //             //chon nam hien tai
-        //             inputYear.value = currentTime.getFullYear();
-        //             this.attributes['Nam'] = parseInt(inputYear.value);
-        //             on(inputYear, 'change', (evt) => {
-        //                 timeChangeHandle();
-        //                 this.attributes['Nam'] = parseInt(inputYear.value);
-        //             })
-        //             this.inputElement[field.name] = input;
-        //             timeChangeHandle();
-        //         } else {
-        //             pass(row, tdName, tdValue, input, field);
-        //         }
-        //     }
-        // } else {
         //duyệt thông tin đối tượng
         for (let field of this.layer.fields) {
 
@@ -828,7 +613,7 @@ define([
           let ft = document.createElement('input');
           ft.name = 'objectIds'
           ft.type = 'text';
-          ft.value = deleteFeatures
+          ft.value = deleteFeatures;
           form.appendChild(ft);
           let format = document.createElement('input');
           format.name = 'f';
@@ -855,12 +640,16 @@ define([
               attributes: item
             });
           }
-          form = document.createElement('form');
+          let form = document.createElement('form');
           form.method = 'post';
-          ft = document.createElement('input');
+          let ft = document.createElement('input');
           ft.name = 'features'
           ft.type = 'text';
           ft.value = JSON.stringify(dataSent)
+          let format = document.createElement('input');
+          format.name = 'f';
+          format.type = 'text';
+          format.value = 'json';
           form.appendChild(ft);
           form.appendChild(format);
           esriRequest(constName.TABLE_SXTT_URL + '/addFeatures?f=json', {
@@ -888,14 +677,6 @@ define([
             body: attachmentForm
           }).then(res => {
             if (res.data && res.data.addAttachmentResult && res.data.addAttachmentResult.success) {
-              // let file = attachmentForm.getElementsByTagName('input')[0];
-              // let item = {
-              //     id:res.data.addAttachmentResult.objectId,
-              //     name: file.value.replace(/^.*[\\\/]/, '')
-              // }
-              // this.renderAttachmentEditPopup(item);
-              // //xoa duong dan da chon
-              // file.value = '';
               $.notify('Thêm hình ảnh thành công', {
                 type: 'success',
                 placement: {

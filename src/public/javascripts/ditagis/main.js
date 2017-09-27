@@ -10,7 +10,7 @@ const constName = {
   TRONGTROT: 'TrongTrot',
   INDEX_HANHCHINHXA: 4,
   INDEX_HANHCHINHHUYEN: 5,
-  TABLE_SXTT_URL: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/3"
+  TABLE_SXTT_URL: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/3"
 }
 //  var socket = io();
 require([
@@ -256,8 +256,16 @@ require([
                 outFields: ["*"],
                 name: "Sâu hại",
                 placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
-              }
-                , {
+              }, {
+                featureLayer: map.findLayerById(constName.DOANHNGHIEP),
+                searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
+                displayField: "NguoiDaiDienDoanhNghiep",
+
+                exactMatch: false,
+                outFields: ["*"],
+                name: "Doanh Nghiệp",
+                placeholder: "Nhập tên hoặc mã Doanh nghiệp",
+              }, {
                 featureLayer: map.findLayerById(constName.DOANHNGHIEP),
                 searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
                 displayField: "NguoiDaiDienDoanhNghiep",
