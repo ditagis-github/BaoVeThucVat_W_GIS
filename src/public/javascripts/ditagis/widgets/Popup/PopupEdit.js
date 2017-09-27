@@ -854,12 +854,16 @@ define([
               attributes: item
             });
           }
-          form = document.createElement('form');
+          let form = document.createElement('form');
           form.method = 'post';
           ft = document.createElement('input');
           ft.name = 'features'
           ft.type = 'text';
           ft.value = JSON.stringify(dataSent)
+          let format = document.createElement('input');
+          format.name = 'f';
+          format.type = 'text';
+          format.value = 'json';
           form.appendChild(ft);
           form.appendChild(format);
           esriRequest(constName.TABLE_SXTT_URL + '/addFeatures?f=json', {

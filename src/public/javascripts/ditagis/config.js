@@ -38,18 +38,18 @@ define([
         layers: [{
             title: 'Trồng trọt',
             id: "TrongTrot",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/2",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/2",
             outFields: ['*'],
         }, {
             title: 'Sâu bệnh',
             id: "SauBenh",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong_BaoVeThucVat_ChuyenDe/FeatureServer/0",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/1",
             outFields: ['*']
             
         },{
             title: 'Doanh nghiệp',
             id: "DoanhNghiep",
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/0",
+            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/0",
             outFields: ['*'],
         } ,
         ],
