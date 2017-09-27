@@ -308,8 +308,7 @@ define([
                   id: `${url}/attachments/${item.id}`, src: `${url}/attachments/${item.id}`, alt: `${url}/attachments/${item.name}`,
                 }, itemA)
                 on(itemA, 'click', () => {
-                  let body = img.outerHTML;
-                  let modal = bootstrap.modal(`attachments-${item.id}`, item.name, body);
+                  let modal = bootstrap.modal(`attachments-${item.id}`, item.name, img.cloneNode(true));
                   if (modal) modal.modal();
                 })
               }
@@ -356,29 +355,25 @@ define([
           let thead = document.createElement('thead');
           thead.innerHTML =
             `<tr>
-              <th>Thời gian</th>
               <th>Nhóm cây trồng</th>
               <th>Loại cây trồng</th>
+              <th>Diện tích</th>
+              <th>Thời gian</th>
             </tr>
             </thead>`
           domConstruct.place(thead, table);
           table.appendChild(thead);
-          let tbody = domConstruct.create('tbody', {}, table);
+          let tbody = document.createElement('tbody');
+          table.appendChild(tbody);
           for (let feature of results.features) {
             const item = feature.attributes;
             //tạo <tr>
             let row = document.createElement('tr');
-            //thoi gian
-            domConstruct.create('td', {
-              innerHTML: `${item.Thang}/${item.Nam}`
-            }, row);
+            row.classList.add("Info");
+            tbody.appendChild(row);
             //nhom cay trong
-
             let tdNCT = document.createElement('td');
-            //loai cay trong
-            domConstruct.create('td', {
-              innerHTML: `${item.LoaiCayTrong}`
-            }, row);
+            // tdNCT.innerText = item['NhomCayTrong'] || '';
             let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
             if (NCTcodedValues) {
               let codeValue = NCTcodedValues.find(f => { return f.code == item['NhomCayTrong'] })
@@ -405,34 +400,20 @@ define([
               }
             }
             if (!tdLCT.innerText) tdLCT.innerText = item['LoaiCayTrong'] || '';
+
+            //dien tich
+            let tdArea = document.createElement('td');
+            tdArea.innerText = item['DienTich'] || '0';
+            //thoi gian
+            let tdTime = document.createElement('td');
+            tdTime.innerText = `${item['Thang'] || 0}/${item['Nam'] || 0}`;
+            row.appendChild(tdNCT);
+            row.appendChild(tdLCT);
+            row.appendChild(tdArea);
+            row.appendChild(tdTime);
           }
-          let dlg = domConstruct.toDom(`
-                            <div id="ttModal" class="modal fade" role="dialog">
-                            <div class="modal-dialog" style="width:fit-content">
-
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Thời gian trồng trọt</h4>
-                                </div>
-                                <div class="modal-body" id="ttModal-body">
-                                    ${table.outerHTML}
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                                </div>
-                                </div>
-
-                            </div>
-                            </div>`);
-          document.body.appendChild(dlg);
-          $('#ttModal').on('hidden.bs.modal', function () {
-            let ttModal = document.getElementById('ttModal');//trongtrotModal
-            if (ttModal)
-              document.body.removeChild(ttModal);
-          })
-          $('#ttModal').modal();
+          let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', table);
+          modal.modal();
         } else {
           notify.update({
             type: 'danger',
