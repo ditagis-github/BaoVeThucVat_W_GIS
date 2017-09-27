@@ -5,11 +5,12 @@ define([
   "esri/request",
   "esri/tasks/QueryTask",
   "esri/core/watchUtils",
+  "esri/geometry/Point",
   "esri/widgets/Locate/LocateViewModel",
   "esri/layers/FeatureLayer",
   "ditagis/support/Editing",
   "ditagis/toolview/bootstrap",
-], function (on, dom, domConstruct, esriRequest, QueryTask, watchUtils, LocateViewModel, FeatureLayer,
+], function (on, dom, domConstruct, esriRequest, QueryTask, watchUtils,Point, LocateViewModel, FeatureLayer,
   editingSupport, bootstrap) {
     'use strict';
     return class {
