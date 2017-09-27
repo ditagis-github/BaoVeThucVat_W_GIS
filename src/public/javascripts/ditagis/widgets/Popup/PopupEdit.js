@@ -585,6 +585,15 @@ define([
           on(itemDelete, 'click', () => {
             if (item['OBJECTID']) this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
             this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
+            //KIEM TRA CO TRONG ADDS?
+            let addItem = this.tmpDatasDetailTrongTrong.adds.find(f => {
+              for (const key in f) {
+                if (f[key] != item[key])
+                  return false;
+              }
+              return true;
+            });
+            this.tmpDatasDetailTrongTrong.adds.remove(addItem);
           });
           tdAction.appendChild(itemDelete);
           row.appendChild(tdNCT);
