@@ -846,6 +846,7 @@ define([
               notify.update({ 'type': 'danger', 'message': 'Cập nhật không thành công!', 'progress': 90 });
             } else {
               notify.update({ 'type': 'success', 'message': 'Cập nhật thành công!', 'progress': 90 });
+              this.view.popup.close();
             }
           })
         })
