@@ -7,14 +7,13 @@ define([
   "ditagis/support/HightlightGraphic",
   "ditagis/toolview/bootstrap",
 
-  "esri/geometry/Point",
   "esri/symbols/SimpleMarkerSymbol",
   "esri/symbols/SimpleFillSymbol",
   "esri/tasks/QueryTask",
 
   "esri/request"
 
-], function (on, dom, domConstruct, PopupEdit, HightlightGraphic, bootstrap, Point, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, esriRequest) {
+], function (on, dom, domConstruct, PopupEdit, HightlightGraphic, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, esriRequest) {
   'use strict';
   return class {
     constructor(view) {
@@ -40,7 +39,7 @@ define([
           }
         })
       });
-      
+
     }
 
     startup() {
@@ -154,6 +153,10 @@ define([
               })
           break;
         case "update-geometry":
+          if (this.layer.geometryType === 'polygon') {
+            alert('Không thể thay đổi vị trí vùng...');
+            break;
+          }
           this.popupEdit.updateGeometryGPS();
           break;
         default:
@@ -344,34 +347,60 @@ define([
               type: 'success'
             })
 
-          let table = domConstruct.create('table', {
-            class: 'table table-hover'
-          });
-          let thead = domConstruct.toDom(`<thead>
-                        <tr>
-                            <th>Thời gian</th>
-                            <th>Nhóm cây trồng</th>
-                            <th>Loại cây trồng</th>
-                        </tr>
-                        </thead>`)
+          let table = document.createElement('table');
+          table.classList.add('table', 'table-hover');
+          let thead = document.createElement('thead');
+          thead.innerHTML =
+            `<tr>
+              <th>Thời gian</th>
+              <th>Nhóm cây trồng</th>
+              <th>Loại cây trồng</th>
+            </tr>
+            </thead>`
           domConstruct.place(thead, table);
+          table.appendChild(thead);
           let tbody = domConstruct.create('tbody', {}, table);
           for (let feature of results.features) {
             const item = feature.attributes;
             //tạo <tr>
-            let row = domConstruct.create('tr', {}, tbody);
+            let row = document.createElement('tr');
             //thoi gian
             domConstruct.create('td', {
               innerHTML: `${item.Thang}/${item.Nam}`
             }, row);
             //nhom cay trong
-            domConstruct.create('td', {
-              innerHTML: `${item.NhomCayTrong}`
-            }, row);
+
+            let tdNCT = document.createElement('td');
             //loai cay trong
             domConstruct.create('td', {
               innerHTML: `${item.LoaiCayTrong}`
             }, row);
+            let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+            if (NCTcodedValues) {
+              let codeValue = NCTcodedValues.find(f => { return f.code == item['NhomCayTrong'] })
+              if (codeValue) tdNCT.innerText = codeValue.name;
+            }
+            if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] || '';
+            //loai cay trong
+            let tdLCT = document.createElement('td');
+
+            let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
+            if (!subtype) return;
+            let domain = subtype.domains['LoaiCayTrong'];
+            if (domain) {
+              let LCTcodedValues;
+              if (domain.type === "inherited") {
+                let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+                if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
+              } else {//type is codedValue
+                LCTcodedValues = domain.codedValues;
+              }
+              if (LCTcodedValues) {
+                let codeValue = LCTcodedValues.find(f => { return f.code == item['LoaiCayTrong'] });
+                if (codeValue) tdLCT.innerText = codeValue.name;
+              }
+            }
+            if (!tdLCT.innerText) tdLCT.innerText = item['LoaiCayTrong'] || '';
           }
           let dlg = domConstruct.toDom(`
                             <div id="ttModal" class="modal fade" role="dialog">

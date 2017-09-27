@@ -256,8 +256,16 @@ require([
                 outFields: ["*"],
                 name: "Sâu hại",
                 placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
-              }
-                , {
+              }, {
+                featureLayer: map.findLayerById(constName.DOANHNGHIEP),
+                searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
+                displayField: "NguoiDaiDienDoanhNghiep",
+
+                exactMatch: false,
+                outFields: ["*"],
+                name: "Doanh Nghiệp",
+                placeholder: "Nhập tên hoặc mã Doanh nghiệp",
+              }, {
                 featureLayer: map.findLayerById(constName.DOANHNGHIEP),
                 searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
                 displayField: "NguoiDaiDienDoanhNghiep",
