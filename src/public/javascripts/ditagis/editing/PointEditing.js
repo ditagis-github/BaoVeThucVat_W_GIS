@@ -63,11 +63,17 @@ define([
             for (let item of result.addFeatureResults) {
               //lấy thông tin xã huyện
               notify.update({ 'type': 'info', 'message': 'Đang lấy vị trí...!', 'progress': 55 });
-              editingSupport.getLocationInfo(this.view, point.geometry).then(locationInfo => {
+              var proms = [];
+              proms.push(editingSupport.getNhomCayTrong(this.view, point.geometry));
+              proms.push(editingSupport.getLocationInfo(this.view, point.geometry));
+              Promise.all(proms).then((value) => {
                 notify.update({ 'type': 'info', 'message': 'Lấy vị trí thành công!', 'progress': 80 });
-                let attributes = {objectId:item.objectId};
-                for (let i in locationInfo) {
-                  attributes[i] = locationInfo[i];
+                let attributes = { objectId: item.objectId };
+                for (let i in value[0]) {
+                  attributes[i] = value[0][i];
+                }
+                for (let i in value[1]) {
+                  attributes[i] = value[1][i];
                 }
                 layer.applyEdits({
                   updateFeatures: [{
@@ -96,7 +102,11 @@ define([
                   else
                     notify.update({ 'type': 'danger', 'message': 'Cập nhật vị trí không thành công', 'progress': 100 });
                 });
-              })
+
+              });
+
+
+
             }
           }
         })

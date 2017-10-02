@@ -16,7 +16,19 @@ define([
                 NgayCapNhat: new Date().getTime(),
             }
         }
-
+        static getNhomCayTrong(view,geometry){
+            let layer = view.map.findLayerById(constName.TRONGTROT);
+            var query = layer.createQuery();
+            query.geometry = geometry;
+            query.outFields = ["LoaiCayTrong","NhomCayTrong"];
+            return new Promise((resolve, reject) => {
+                layer.queryFeatures(query).then(result =>{
+                    console.log(result.features[0].attributes);
+                    resolve(result.features[0].attributes);
+                });
+                
+            })
+        }
         static getLocationInfo(view,geometry) {
             return new Promise((resolve, reject) => {
 
