@@ -29,7 +29,8 @@ define([
                 closeBtn.innerHTML = '<span aria-hidden="true">×</span><span class="sr-only">Đóng</span>';
                 modalHeader.appendChild(closeBtn);
                 modalHeader.innerHTML += `<h4 class="modal-title">${title}</h4>`;
-                modalBody = document.createElement('modal-body');
+                modalBody = document.createElement('div');
+                modalBody.classList.add('modal-body');
                 modalBody.appendChild(body);
                 if (footer) {
                     modalFooter = document.createElement('div');
