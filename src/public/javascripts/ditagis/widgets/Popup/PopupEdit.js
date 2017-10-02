@@ -80,7 +80,8 @@ define([
         if (!codedValues) return null;
 
         let currentValue = this.attributes[name];
-        let input = document.createElement('select', { class: "form-control" });
+        let input = document.createElement('select');
+        input.classList.add('form-control');
         let defaultComboValue = document.createElement('option');
         defaultComboValue.value = -1;
         defaultComboValue.innerText = 'Chọn giá trị...';
@@ -112,7 +113,9 @@ define([
         //duyệt thông tin đối tượng
         for (let field of this.layer.fields) {
 
-          if (field.type === 'oid')
+          if (field.type === 'oid' || this.isFireField(field.name)
+            // || (this.layer.id == constName.TRONGTROT && (field.name == "NhomCayTrong" || field.name == "LoaiCayTrong"))
+          )
             continue;
           //tạo <tr>
           let row = domConstruct.create('tr');
@@ -167,10 +170,6 @@ define([
 
             }
           }
-          if (this.layer.id == constName.TRONGTROT && (field.name == "NhomCayTrong" || field.name == "LoaiCayTrong")) {
-            input.disabled = true;
-          }
-          input.readOnly = this.isFireField(field.name);
           input.name = field.name;
           domConstruct.place(input, tdValue);
           domConstruct.place(tdName, row);
@@ -286,8 +285,12 @@ define([
       inputChangeHandler(inputDOM) {
         const name = inputDOM.name,
           value = inputDOM.value;
-        if (!value || value == -1) return;
-        if (name === 'attachment') {
+        if (!value) return;
+        if (value == -1) {
+          this.attributes[name] = null;
+          return;
+        }
+        else if (name === 'attachment') {
           this.attributes[name] = value;
         } else {
           const field = this.layer.fields.find(f => f.name === name);
@@ -334,10 +337,10 @@ define([
                   option.setAttribute('selected', 'selected');
                 input.appendChild(option);
               }
-              if (input.value != -1)
-                this.attributes[key] = input.value;
+              this.attributes[key] = input.value == -1 ? null : input.value;
             } else {
               let dom = document.createElement('select');
+              dom.classList.add('form-control');
               dom.setAttribute('name', key);
               let defaultComboValue = document.createElement('option');
               defaultComboValue.value = -1;
@@ -355,7 +358,7 @@ define([
                 input.parentElement.removeChild(parent.firstChild);
                 parent.appendChild(dom);
               }
-              this.attributes[key] = input.value;
+              this.attributes[key] = input.value == -1 ? null : input.value;
               this.inputElement[key] = dom;
             }
           }
@@ -387,7 +390,6 @@ define([
         formGroupLCT.classList.add('form-group');
         let lbLCT, inputLCT;
         inputLCT = document.createElement('select');
-
         inputLCT.id = 'LoaiCayTrong';
         inputLCT.classList.add('form-control');
         lbLCT = document.createElement('label');
@@ -503,7 +505,6 @@ define([
         btnAdd.classList.add('btn', 'btn-primary');
         btnAdd.innerText = "Thêm";
         on(btnAdd, 'click', () => {
-          console.log(this.tmpDatasDetailTrongTrong);
           var length = this.tmpDatasDetailTrongTrong.adds.length;
           let data = {
             ID: length + 1, NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value ? inputArea.value : 0)
@@ -582,7 +583,8 @@ define([
           where: `MaDoiTuong = '${this.attributes['MaDoiTuong']}'`
         }).then(results => {
           if (results.features.length > 0) {
-            for (let feature of results.features) {
+            let features = results.features.sort(function (f1, f2) { let a = f1.attributes, b = f2.attributes; if (a['Nam'] == b['Nam']) return a['Thang'] > b['Thang']; else return a['Nam'] > b['Nam']; })
+            for (let feature of features) {
               const item = feature.attributes;
               let row = this.renderDetailTrongtrot(item);
               tbody.appendChild(row);
@@ -594,11 +596,11 @@ define([
           notify.update({ 'type': 'success', 'progress': 90 });
         })
       }
-      renderDetailTrongtrot(item) {
+      renderDetailTrongtrot(item, isNew = false) {
         try {
           //tạo <tr>
           let row = document.createElement('tr');
-          row.classList.add("Info");
+          if (isNew) row.classList.add("info");
           //nhom cay trong
           let tdNCT = document.createElement('td');
           // tdNCT.innerText = item['NhomCayTrong'] || '';
@@ -665,7 +667,7 @@ define([
         }
       }
       addDataToDetailTrongtrot(data) {
-        let row = this.renderDetailTrongtrot(data);
+        let row = this.renderDetailTrongtrot(data,true);
         this.tmpDatasDetailTrongTrong.tbody.appendChild(row);
       }
       submitDetailTrongtrot(datas) {

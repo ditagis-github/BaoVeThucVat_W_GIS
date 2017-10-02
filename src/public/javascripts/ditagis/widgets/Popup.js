@@ -5,6 +5,7 @@ define([
 
   "ditagis/widgets/Popup/PopupEdit",
   "ditagis/support/HightlightGraphic",
+  "ditagis/support/Editing",
   "ditagis/toolview/bootstrap",
 
   "esri/symbols/SimpleMarkerSymbol",
@@ -13,7 +14,7 @@ define([
 
   "esri/request"
 
-], function (on, dom, domConstruct, PopupEdit, HightlightGraphic, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, esriRequest) {
+], function (on, dom, domConstruct, PopupEdit, HightlightGraphic, editingSupport, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, esriRequest) {
   'use strict';
   return class {
     constructor(view) {
@@ -202,7 +203,7 @@ define([
      * @param {esri/layers/FeatureLayer} layer - layer được chọn (clickEvent)
      * @param {object} attributes - thông tin của layer được chọn
      */
-    contentPopup(target) {
+    async contentPopup(target) {
       try {
         const graphic = target.graphic,
           layer = graphic.layer,
@@ -220,19 +221,14 @@ define([
         //duyệt thông tin đối tượng
         let subtype = this.getSubtype();
         for (let field of layer.fields) {
-          const alias = field.alias,
-            name = field.name,
-            type = field.type,
-            length = field.length,
-            domain = field.domain;
-          let value = attributes[name];
-          if (type === 'oid')
+          let value = attributes[field.name];
+          if (field.type === 'oid')
             continue;
           //tạo <tr>
           let row = domConstruct.create('tr');
           //tạo <td>
           let tdName = domConstruct.create('td', {
-            innerHTML: alias
+            innerHTML: field.alias
           }),
             input, content, formatString;
           let codedValues;
@@ -248,33 +244,36 @@ define([
             //lấy name của code
             let codeValue = codedValues.find(f => { return f.code === value });
             if (codeValue) value = codeValue.name;
+          } else if ((field.name === 'MaPhuongXa' || field.name === 'MaHuyenTP') && attributes[field.name]) {
+            let location = await editingSupport.getLocationName(this.view, { PhuongXa: attributes['MaPhuongXa'], HuyenTP: attributes['MaHuyenTP'] }).then(async res => { return await res });
+            value = field.name == 'MaPhuongXa' ? location['TenPhuong'] : location['TenHuyen'];
           } else {
             //lấy formatString
-            if (type === "small-integer" ||
-              (type === "integer") ||
-              (type === "double")) {
+            if (field.type === "small-integer" ||
+              (field.type === "integer") ||
+              (field.type === "double")) {
               // formatString = 'NumberFormat(places:2)';
-            } else if (type === 'date') {
+            } else if (field.type === 'date') {
               formatString = 'DateFormat';
             }
           }
           //nếu như có formatString
           if (formatString) {
-            content = `{${name}:${formatString}}`;
+            content = `{${field.name}:${formatString}}`;
           } else {
             content = value;
           }
           let tdValue = domConstruct.create('td');
           var txtArea = null;
           //neu co area thi cho area vao trong td. <td><textarea>{content}</textarea></td>
-          if (length >= this.options.hightLength) {
+          if (field.length >= this.options.hightLength) {
             txtArea = domConstruct.create('textarea', {
               rows: 5,
               cols: 25,
               readonly: true,
               innerHTML: content,
               style: 'background: transparent;border:none'
-            }, tdValue);
+            });
           }
           //neu khong thi co content vao trong td. <td>{content}</td>
           else {
@@ -366,7 +365,8 @@ define([
           table.appendChild(thead);
           let tbody = document.createElement('tbody');
           table.appendChild(tbody);
-          for (let feature of results.features) {
+          let features = results.features.sort(function (f1, f2) { let a = f1.attributes, b = f2.attributes; if (a['Nam'] == b['Nam']) return a['Thang'] > b['Thang']; else return a['Nam'] > b['Nam']; })
+          for (let feature of features) {
             const item = feature.attributes;
             //tạo <tr>
             let row = document.createElement('tr');
