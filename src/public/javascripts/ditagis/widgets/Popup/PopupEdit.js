@@ -511,7 +511,8 @@ define([
         divInfo.appendChild(formGroupTime);
         divInfo.appendChild(btnAdd);
         div.appendChild(divInfo);
-        let tableResponsive = document.createElement('table-responsive');
+        let tableResponsive = document.createElement('div');
+        tableResponsive.classList.add('table-responsive');
         //TABLE ON DIV
         let table = document.createElement('table');
         table.classList.add('table');
