@@ -21,7 +21,7 @@ define([
           view: view,
           graphic: null
         })
-        this.fireFields = ['NgayCapNhat', 'NguoiCapNhat', 'MaPhuongXa', 'MaHuyenTP'];
+        this.fireFields = ['NgayCapNhat', 'NguoiCapNhat', 'MaPhuongXa', 'MaHuyenTP', 'MaDoiTuong'];
         this.inputElement = {};
       }
       get selectFeature() {
@@ -30,8 +30,8 @@ define([
       get layer() {
         return this.selectFeature.layer || this._layer;
       }
-      set layer(value){
-        if(this.selectFeature.layer)
+      set layer(value) {
+        if (this.selectFeature.layer)
           return;
         this._layer = value;
       }
@@ -80,7 +80,7 @@ define([
         if (!codedValues) return null;
 
         let currentValue = this.attributes[name];
-        let input = document.createElement('select');
+        let input = document.createElement('select', { class: "form-control" });
         let defaultComboValue = document.createElement('option');
         defaultComboValue.value = -1;
         defaultComboValue.innerText = 'Chọn giá trị...';
@@ -108,7 +108,7 @@ define([
           id: 'show-edit-container',
           class: 'popup-content'
         });
-        let table = domConstruct.create('table', {}, div);
+        let table = domConstruct.create('table', { class: "table" }, div);
         //duyệt thông tin đối tượng
         for (let field of this.layer.fields) {
 
@@ -122,6 +122,7 @@ define([
           }),
             input,
             tdValue = domConstruct.create('td');
+
           if (subtype && subtype.domains[field.name]) {
             input = this.renderDomain(subtype.domains[field.name], field.name);
           }
@@ -153,6 +154,7 @@ define([
               input = domConstruct.create('textarea', {
                 rows: 5,
                 cols: 25,
+                class: "form-control",
                 innerHTML: value || this.attributes[field.name],
                 value: value || this.attributes[field.name]
               });
@@ -160,9 +162,13 @@ define([
               input = domConstruct.create('input', {
                 type: inputType,
                 value: value || this.attributes[field.name],
+                class: "form-control"
               });
 
             }
+          }
+          if (this.layer.id == constName.TRONGTROT && (field.name == "NhomCayTrong" || field.name == "LoaiCayTrong")) {
+            input.disabled = true;
           }
           input.readOnly = this.isFireField(field.name);
           input.name = field.name;
@@ -502,8 +508,30 @@ define([
           let data = {
             ID: length + 1, NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value ? inputArea.value : 0)
           }
+          let validDatas = this.tmpDatasDetailTrongTrong.validData;
+          let addDatas = this.tmpDatasDetailTrongTrong.adds;
+          for (const d of addDatas) {
+            if (data.LoaiCayTrong == d.LoaiCayTrong &&
+              data.NhomCayTrong == d.NhomCayTrong && data.Thang == d.Thang && data.Nam == d.Nam) {
+              alert("Dữ liệu vừa mới thêm - Không được thêm nữa")
+              return;
+            }
+          }
+          for (const d of validDatas) {
+            if (data.LoaiCayTrong == d.LoaiCayTrong &&
+              data.NhomCayTrong == d.NhomCayTrong && data.Thang == d.Thang && data.Nam == d.Nam) {
+              var ok = confirm("Đã có - Tiếp tục thêm");
+              if (ok == true) {
+                this.tmpDatasDetailTrongTrong.adds.push(data);
+                this.addDataToDetailTrongtrot(data);
+
+              }
+              return;
+            }
+          }
           this.tmpDatasDetailTrongTrong.adds.push(data);
           this.addDataToDetailTrongtrot(data);
+
         })
         divInfo.appendChild(formGroupNCT);
         divInfo.appendChild(formGroupLCT);
@@ -559,7 +587,7 @@ define([
               let row = this.renderDetailTrongtrot(item);
               tbody.appendChild(row);
             }
-            this.tmpDatasDetailTrongTrong.validData = results.features.map(f=>{return f.attributes});
+            this.tmpDatasDetailTrongTrong.validData = results.features.map(f => { return f.attributes });
           }
           let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', div, footer);
           modal.modal();

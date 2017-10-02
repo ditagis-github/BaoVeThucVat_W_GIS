@@ -38,9 +38,7 @@
      margin: 0; 
      background-color: #fff;
 }
-    .esri-widget table{
-      color: #6ab43e;
-    }
+
 
     .esri-widget table tr td:first-child{
       font-weight: bold;
@@ -83,26 +81,19 @@
       width: 98%;
     }
     .modal-header, .modal-footer{
-      background-color: #6ab43e;
+      background-color: #53A722;
       color: #fff;
     }
     .modal-body{
       background-color: #fff;
-      color: #6ab43e;
     }
     .esri-view-width-xsmall .esri-popup--is-docked-top-right .esri-popup__main-container{
       max-height: 80%;
     }
-    .btn-default {
-      color: #6ab43e;
-  }
   .popup-content{
-    color:#6ab43e;
     margin: 5px;
   }
-  .popup-content legend{
-    color:#6ab43e;
-  }
+
 	.popup-content .attachment-item {
 		font-weight: normal;
 		margin-bottom: 0px;
