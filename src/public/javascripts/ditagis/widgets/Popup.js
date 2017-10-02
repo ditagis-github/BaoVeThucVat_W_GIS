@@ -116,6 +116,7 @@ define([
     triggerActionHandler(event) {
       let actionId = event.action.id;
       let layer = this.layer || event.action.layer;
+      this.popupEdit.layer = layer;
       let fail = false;
       switch (actionId) {
         case "update":

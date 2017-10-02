@@ -28,7 +28,12 @@ define([
         return this.view.popup.viewModel.selectedFeature;
       }
       get layer() {
-        return this.selectFeature.layer;
+        return this.selectFeature.layer || this._layer;
+      }
+      set layer(value){
+        if(this.selectFeature.layer)
+          return;
+        this._layer = value;
       }
       get attributes() {
         return this.selectFeature.attributes;
@@ -76,6 +81,10 @@ define([
 
         let currentValue = this.attributes[name];
         let input = document.createElement('select');
+        let defaultComboValue = document.createElement('option');
+        defaultComboValue.value = -1;
+        defaultComboValue.innerText = 'Chọn giá trị...';
+        input.appendChild(defaultComboValue);
         for (let codedValue of codedValues) {
           let dmCode = codedValue.code,
             dmName = codedValue.name;
@@ -271,7 +280,7 @@ define([
       inputChangeHandler(inputDOM) {
         const name = inputDOM.name,
           value = inputDOM.value;
-        if (!value) return;
+        if (!value || value == -1) return;
         if (name === 'attachment') {
           this.attributes[name] = value;
         } else {
@@ -307,6 +316,10 @@ define([
             }
             if (input.tagName === 'SELECT') {
               input.innerHTML = '';
+              let defaultComboValue = document.createElement('option');
+              defaultComboValue.value = -1;
+              defaultComboValue.innerText = 'Chọn giá trị...';
+              input.appendChild(defaultComboValue);
               for (let codedValue of codedValues) {
                 let option = document.createElement('option');
                 option.setAttribute('value', codedValue.code);
@@ -315,10 +328,15 @@ define([
                   option.setAttribute('selected', 'selected');
                 input.appendChild(option);
               }
-              this.attributes[key] = input.value;
+              if (input.value != -1)
+                this.attributes[key] = input.value;
             } else {
               let dom = document.createElement('select');
               dom.setAttribute('name', key);
+              let defaultComboValue = document.createElement('option');
+              defaultComboValue.value = -1;
+              defaultComboValue.innerText = 'Chọn giá trị...';
+              dom.appendChild(defaultComboValue);
               this.registerChangeEvent(dom);
               for (let codedValue of codedValues) {
                 let option = document.createElement('option');
@@ -363,6 +381,7 @@ define([
         formGroupLCT.classList.add('form-group');
         let lbLCT, inputLCT;
         inputLCT = document.createElement('select');
+
         inputLCT.id = 'LoaiCayTrong';
         inputLCT.classList.add('form-control');
         lbLCT = document.createElement('label');
@@ -389,6 +408,10 @@ define([
         }
         var inputNCTChange = () => {
           inputLCT.innerHTML = '';
+          let defaultComboValue = document.createElement('option');
+          defaultComboValue.value = -1;
+          defaultComboValue.innerText = 'Chọn giá trị...';
+          inputLCT.appendChild(defaultComboValue);
           let subtype = this.getSubtype('NhomCayTrong', inputNCT.value);
           if (!subtype) return;
           let domain = subtype.domains['LoaiCayTrong'];
@@ -474,9 +497,10 @@ define([
         btnAdd.classList.add('btn', 'btn-primary');
         btnAdd.innerText = "Thêm";
         on(btnAdd, 'click', () => {
+          console.log(this.tmpDatasDetailTrongTrong);
           var length = this.tmpDatasDetailTrongTrong.adds.length;
           let data = {
-            ID: length + 1, NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value ? inputArea.value : 0)
+            ID: length + 1, NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value ? inputArea.value : 0)
           }
           this.tmpDatasDetailTrongTrong.adds.push(data);
           this.addDataToDetailTrongtrot(data);
@@ -534,6 +558,7 @@ define([
               let row = this.renderDetailTrongtrot(item);
               tbody.appendChild(row);
             }
+            this.tmpDatasDetailTrongTrong.validData = results.features.map(f=>{return f.attributes});
           }
           let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', div, footer);
           modal.modal();
