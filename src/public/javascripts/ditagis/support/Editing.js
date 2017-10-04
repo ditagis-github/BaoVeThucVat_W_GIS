@@ -53,7 +53,6 @@ define([
             query.outFields = ["LoaiCayTrong","NhomCayTrong"];
             return new Promise((resolve, reject) => {
                 layer.queryFeatures(query).then(result =>{
-                    console.log(result.features[0].attributes);
                     resolve(result.features[0].attributes);
                 });
                 

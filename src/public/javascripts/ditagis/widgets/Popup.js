@@ -74,7 +74,7 @@ define([
             }
             layer.popupTemplate = {
               content: (target) => {
-                return this.contentPopup(target);
+                return this.contentPopup(target,layer);
               },
               title: layer.title,
               actions: actions
@@ -150,7 +150,7 @@ define([
           break;
         case "view-detail-edit":
           if (this.attributes['MaDoiTuong'])
-            this.popupEdit.editDetailTrongtrot();
+            this.popupEdit.showTableDetailTrongTrot();
           else
             $.notify({
               message: 'Không xác được định danh'
@@ -203,12 +203,13 @@ define([
      * @param {esri/layers/FeatureLayer} layer - layer được chọn (clickEvent)
      * @param {object} attributes - thông tin của layer được chọn
      */
-    async contentPopup(target) {
+    async contentPopup(target,featureLayer) {
       try {
+        
         const graphic = target.graphic,
-          layer = graphic.layer,
+          layer = graphic.layer || featureLayer,
           attributes = graphic.attributes;
-
+        if(!graphic.layer) graphic.layer = layer;
         //hightlight graphic
         this.hightlightGraphic.clear();
         this.hightlightGraphic.add(graphic);

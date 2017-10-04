@@ -10,8 +10,9 @@ define([
   "esri/layers/FeatureLayer",
   "ditagis/support/Editing",
   "ditagis/toolview/bootstrap",
+  "ditagis/toolview/DateTimeDefine"
 ], function (on, dom, domConstruct, esriRequest, QueryTask, watchUtils, Point, LocateViewModel, FeatureLayer,
-  editingSupport, bootstrap) {
+  editingSupport, bootstrap, DateTimeDefine) {
     'use strict';
     return class {
       constructor(view, options) {
@@ -364,25 +365,9 @@ define([
           }
         }
       }
-      editDetailTrongtrot() {
-        let notify = $.notify({
-          message: 'Đang tai dữ liệu...'
-        }, {
-            showProgressbar: true,
-            delay: 20000,
-            placement: {
-              from: 'top',
-              alias: 'left'
-            }
-          })
-        this.tmpDatasDetailTrongTrong = {
-          adds: [],
-          updates: [],
-          deletes: [],
-          tbody: null
-        }
+      addDetailTrongTrot() {
         let div = document.createElement('div');
-        let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, btnAdd;
+        let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGTH, formGroupCTCD, btnAdd;
         divInfo = document.createElement('div');
 
         //LOAI CAY TRONG
@@ -463,7 +448,8 @@ define([
         lbArea.innerText = 'Diện tích';
         lbArea.setAttribute('for', inputArea.id);
         formGroupArea.appendChild(lbArea);
-        formGroupArea.appendChild(inputArea)
+        formGroupArea.appendChild(inputArea);
+
         //TIME
         formGroupTime = document.createElement('div');
         formGroupTime.classList.add('form-group');
@@ -490,6 +476,7 @@ define([
         lbYear = document.createElement('label');
         lbYear.innerText = 'Năm';
         lbYear.setAttribute('for', inputYear.id);
+
         for (var i = 2015; i <= currentTime.getFullYear() + 1; i++) {
           let option = document.createElement('option');
           option.value = i;
@@ -500,16 +487,63 @@ define([
         formGroupTime.appendChild(lbYear);
         formGroupTime.appendChild(inputYear);
 
-        //SUBMIT
+        // Ngay thu hoach
+        formGroupTGTH = document.createElement('div');
+        formGroupTGTH.classList.add('form-group');
+        let inputTime, lbTime;
+        inputTime = document.createElement('input');
+        inputTime.type = 'date';
+        inputTime.id = 'ThoiGianThuHoach';
+        inputTime.classList.add('form-control');
+        lbTime = document.createElement('label');
+        lbTime.innerText = 'Ngày thu hoạch';
+        lbTime.setAttribute('for', inputTime.id);
+        formGroupTGTH.appendChild(lbTime);
+        formGroupTGTH.appendChild(inputTime);
+
+        // Cay trong chu dao
+        formGroupCTCD = document.createElement('div');
+        formGroupCTCD.classList.add('form-group');
+        let lbCTCD, inputCTCD;
+        inputCTCD = document.createElement('select');
+        inputCTCD.id = 'CayTrongChuDao';
+        inputCTCD.classList.add('form-control');
+        lbCTCD = document.createElement('label');
+        lbCTCD.innerText = 'Cây trồng chủ đạo';
+        let option1 = document.createElement('option');
+        let defaultComboValue = document.createElement('option');
+        defaultComboValue.value = -1;
+        defaultComboValue.innerText = 'Chọn giá trị...';
+        inputCTCD.appendChild(defaultComboValue);
+        option1.setAttribute('value', 'Phải');
+        option1.innerHTML = "Phải";
+        inputCTCD.appendChild(option1);
+
+        let option2 = document.createElement('option');
+        option2.setAttribute('value', 'Không phải');
+        option2.innerHTML = "Không Phải";
+        inputCTCD.appendChild(option2);
+
+        formGroupCTCD.appendChild(lbCTCD);
+        formGroupCTCD.appendChild(inputCTCD);
+
+        //Add
         btnAdd = document.createElement('button');
         btnAdd.classList.add('btn', 'btn-primary');
         btnAdd.innerText = "Thêm";
         on(btnAdd, 'click', () => {
           var length = this.tmpDatasDetailTrongTrong.adds.length;
           let data = {
-            ID: length + 1, NhomCayTrong: parseInt(inputNCT.value), LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value, Thang: parseInt(inputMonth.value), Nam: parseInt(inputYear.value), DienTich: parseFloat(inputArea.value ? inputArea.value : 0)
+            ID: length + 1,
+            NhomCayTrong: parseInt(inputNCT.value),
+            LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
+            Thang: parseInt(inputMonth.value),
+            Nam: parseInt(inputYear.value),
+            DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
+            ThoiGianThuHoach: !inputTime.value ? null : inputTime.value,
+            CayTrongChuDao: inputCTCD.value == -1 ? null : inputCTCD.value
           }
-          let validDatas = this.tmpDatasDetailTrongTrong.validData;
+          let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
           let addDatas = this.tmpDatasDetailTrongTrong.adds;
           for (const d of addDatas) {
             if (data.LoaiCayTrong == d.LoaiCayTrong &&
@@ -518,28 +552,260 @@ define([
               return;
             }
           }
-          for (const d of validDatas) {
+          for (const d of tableDatas) {
             if (data.LoaiCayTrong == d.LoaiCayTrong &&
               data.NhomCayTrong == d.NhomCayTrong && data.Thang == d.Thang && data.Nam == d.Nam) {
               var ok = confirm("Đã có - Tiếp tục thêm");
               if (ok == true) {
                 this.tmpDatasDetailTrongTrong.adds.push(data);
+                this.tmpDatasDetailTrongTrong.tableDatas.push(data);
                 this.addDataToDetailTrongtrot(data);
 
               }
               return;
             }
           }
+          this.tmpDatasDetailTrongTrong.tableDatas.push(data);
           this.tmpDatasDetailTrongTrong.adds.push(data);
           this.addDataToDetailTrongtrot(data);
-
+          $('#ModalDetail').modal('toggle');
         })
         divInfo.appendChild(formGroupNCT);
         divInfo.appendChild(formGroupLCT);
         divInfo.appendChild(formGroupArea);
         divInfo.appendChild(formGroupTime);
+        divInfo.appendChild(formGroupTGTH);
+        divInfo.appendChild(formGroupCTCD);
         divInfo.appendChild(btnAdd);
         div.appendChild(divInfo);
+        let footer = document.createElement('div');
+        footer.appendChild(btnAdd);
+        let modalDetail = bootstrap.modal('ModalDetail', 'Thêm dữ liệu', div, footer);
+        modalDetail.modal();
+      }
+      editDetailTrongTrot(item) {
+        let div = document.createElement('div');
+        let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGTH, formGroupCTCD, btnEdit;
+        divInfo = document.createElement('div');
+
+        //LOAI CAY TRONG
+        formGroupLCT = document.createElement('div');
+        formGroupLCT.classList.add('form-group');
+        let lbLCT, inputLCT;
+        inputLCT = document.createElement('select');
+        inputLCT.id = 'LoaiCayTrong';
+        inputLCT.classList.add('form-control');
+        lbLCT = document.createElement('label');
+        lbLCT.innerText = 'Loại cây trồng';
+        lbLCT.setAttribute('for', inputLCT.id);
+        formGroupLCT.appendChild(lbLCT);
+        formGroupLCT.appendChild(inputLCT)
+
+
+        //NHOM CAY TRONG
+        formGroupNCT = document.createElement('div');
+        formGroupNCT.classList.add('form-group');
+        let lbNCT, inputNCT;
+        inputNCT = document.createElement('select');
+        inputNCT.id = 'NhomCayTrong';
+        inputNCT.value = item[inputNCT.id];
+        inputNCT.classList.add('form-control');
+        let codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+        for (let codedValue of codedValues) {
+          let dmCode = codedValue.code,
+            dmName = codedValue.name;
+          let option = document.createElement('option');
+          option.setAttribute('value', dmCode);
+          option.innerHTML = dmName;
+          inputNCT.appendChild(option);
+        }
+        inputNCT.value = item[inputNCT.id];
+        var inputNCTChange = () => {
+          inputLCT.innerHTML = '';
+          let defaultComboValue = document.createElement('option');
+          defaultComboValue.value = -1;
+          defaultComboValue.innerText = 'Chọn giá trị...';
+          inputLCT.appendChild(defaultComboValue);
+          let subtype = this.getSubtype('NhomCayTrong', inputNCT.value);
+          if (!subtype) return;
+          let domain = subtype.domains['LoaiCayTrong'];
+          if (!domain) return;
+          let codedValues;
+          if (domain.type === "inherited") {
+            let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+            if (fieldDomain) codedValues = fieldDomain.codedValues;
+          } else {//type is codedValue
+            codedValues = domain.codedValues;
+          }
+          if (!codedValues) return;
+          for (let codedValue of codedValues) {
+            let dmCode = codedValue.code,
+              dmName = codedValue.name;
+            let option = document.createElement('option');
+            option.setAttribute('value', dmCode);
+            option.innerHTML = dmName;
+            inputLCT.appendChild(option);
+          }
+        }
+        on(inputNCT, 'change', () => {
+          inputNCTChange();
+        })
+        inputNCTChange();
+        inputLCT.value = item[inputLCT.id];
+        lbNCT = document.createElement('label');
+        lbNCT.innerText = 'Nhóm cây trồng';
+        lbNCT.setAttribute('for', inputNCT.id);
+        formGroupNCT.appendChild(lbNCT);
+        formGroupNCT.appendChild(inputNCT);
+
+        //DIEN TICH
+        formGroupArea = document.createElement('div');
+        formGroupArea.classList.add('form-group');
+        let lbArea, inputArea;
+        inputArea = document.createElement('input');
+        inputArea.type = 'number';
+        inputArea.id = 'DienTich';
+        inputArea.value = item[inputArea.id];
+        inputArea.classList.add('form-control');
+        lbArea = document.createElement('label');
+        lbArea.innerText = 'Diện tích';
+        lbArea.setAttribute('for', inputArea.id);
+        formGroupArea.appendChild(lbArea);
+        formGroupArea.appendChild(inputArea);
+
+        //TIME
+        formGroupTime = document.createElement('div');
+        formGroupTime.classList.add('form-group');
+        let lbMonth, inputMonth, lbYear, inputYear, currentTime = new Date();
+        inputMonth = document.createElement('select');
+        inputMonth.id = 'Thang';
+        inputMonth.value = item[inputMonth.id];
+        inputMonth.classList.add('form-control');
+        for (var i = 0; i < 12; i++) {
+          let option = document.createElement('option');
+          option.value = i + 1;
+          option.innerText = i + 1;
+          inputMonth.appendChild(option);
+        }
+        //chon thang hien tai
+        inputMonth.value = currentTime.getMonth() + 1;
+        lbMonth = document.createElement('label');
+        lbMonth.innerText = 'Tháng';
+        lbMonth.setAttribute('for', inputMonth.id);
+        formGroupTime.appendChild(lbMonth);
+        formGroupTime.appendChild(inputMonth)
+        inputYear = document.createElement('select');
+        inputYear.id = 'Nam';
+
+        inputYear.classList.add('form-control');
+        lbYear = document.createElement('label');
+        lbYear.innerText = 'Năm';
+        lbYear.setAttribute('for', inputYear.id);
+
+        for (var i = 2015; i <= currentTime.getFullYear() + 1; i++) {
+          let option = document.createElement('option');
+          option.value = i;
+          option.innerText = i;
+          inputYear.appendChild(option);
+        }
+        inputYear.value = item[inputYear.id];
+        formGroupTime.appendChild(lbYear);
+        formGroupTime.appendChild(inputYear);
+
+        // Ngay thu hoach
+        formGroupTGTH = document.createElement('div');
+        formGroupTGTH.classList.add('form-group');
+        let inputTime, lbTime;
+        inputTime = document.createElement('input');
+        inputTime.type = 'date';
+        inputTime.id = 'ThoiGianThuHoach';
+        inputTime.value = DateTimeDefine.formatDateValue(item[inputTime.id]);
+        inputTime.classList.add('form-control');
+        lbTime = document.createElement('label');
+        lbTime.innerText = 'Ngày thu hoạch';
+        lbTime.setAttribute('for', inputTime.id);
+        formGroupTGTH.appendChild(lbTime);
+        formGroupTGTH.appendChild(inputTime);
+
+        // Cay trong chu dao
+        formGroupCTCD = document.createElement('div');
+        formGroupCTCD.classList.add('form-group');
+        let lbCTCD, inputCTCD;
+        inputCTCD = document.createElement('select');
+        inputCTCD.id = 'CayTrongChuDao';
+
+        inputCTCD.classList.add('form-control');
+        lbCTCD = document.createElement('label');
+        lbCTCD.innerText = 'Cây trồng chủ đạo';
+        let option1 = document.createElement('option');
+        let defaultComboValue = document.createElement('option');
+        defaultComboValue.value = -1;
+        defaultComboValue.innerText = 'Chọn giá trị...';
+        inputCTCD.appendChild(defaultComboValue);
+        option1.setAttribute('value', 'Phải');
+        option1.innerHTML = "Phải";
+        inputCTCD.appendChild(option1);
+
+        let option2 = document.createElement('option');
+        option2.setAttribute('value', 'Không phải');
+        option2.innerHTML = "Không Phải";
+        inputCTCD.appendChild(option2);
+        inputCTCD.value = item[inputCTCD.id];
+        formGroupCTCD.appendChild(lbCTCD);
+        formGroupCTCD.appendChild(inputCTCD);
+
+        //Add
+        btnEdit = document.createElement('button');
+        btnEdit.classList.add('btn', 'btn-primary');
+        btnEdit.innerText = "Chấp nhận";
+        on(btnEdit, 'click', () => {
+          let data = {
+            OBJECTID: item.OBJECTID | item.ID,
+            NhomCayTrong: parseInt(inputNCT.value),
+            LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
+            Thang: parseInt(inputMonth.value),
+            Nam: parseInt(inputYear.value),
+            DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
+            ThoiGianThuHoach: !inputTime.value ? null : inputTime.value,
+            CayTrongChuDao: inputCTCD.value == -1 ? null : inputCTCD.value
+          }
+          this.editRenderDetailTrongTrot(data);
+          $('#ModalDetail').modal('toggle');
+        })
+        divInfo.appendChild(formGroupNCT);
+        divInfo.appendChild(formGroupLCT);
+        divInfo.appendChild(formGroupArea);
+        divInfo.appendChild(formGroupTime);
+        divInfo.appendChild(formGroupTGTH);
+        divInfo.appendChild(formGroupCTCD);
+        divInfo.appendChild(btnEdit);
+        div.appendChild(divInfo);
+        let footer = document.createElement('div');
+        footer.appendChild(btnEdit);
+        let modalDetail = bootstrap.modal('ModalDetail', 'Sửa dữ liệu', div, footer);
+        modalDetail.modal();
+      }
+
+      showTableDetailTrongTrot() {
+        let notify = $.notify({
+          message: 'Đang tai dữ liệu...'
+        }, {
+            showProgressbar: true,
+            delay: 20000,
+            placement: {
+              from: 'top',
+              alias: 'left'
+            }
+          })
+        this.tmpDatasDetailTrongTrong = {
+          adds: [],
+          edits: [],
+          updates: [],
+          deletes: [],
+          tableDatas: [],
+          tbody: null
+        }
+        let div = document.createElement('div');
         let tableResponsive = document.createElement('div');
         tableResponsive.classList.add('table-responsive');
         //TABLE ON DIV
@@ -554,6 +820,8 @@ define([
           <th>Loại cây trồng</th>
           <th>Diện tích</th>
           <th>Thời gian</th>
+          <th>Thời gian thu hoạch</th>
+          <th>Cây trồng chủ đạo</th>
           <th>Tác vụ</th>
         </tr>`
         table.appendChild(thead);
@@ -563,6 +831,13 @@ define([
         this.tmpDatasDetailTrongTrong.tbody = tbody;
 
         let footer = document.createElement('div');
+        let btnAdd = document.createElement('button');
+        btnAdd.classList.add('btn', 'btn-default');
+        btnAdd.innerText = "Thêm dữ liệu";
+        on(btnAdd, "click", () => {
+          this.addDetailTrongTrot();
+
+        })
         let btnSubmit = document.createElement('button');
         btnSubmit.classList.add('btn', 'btn-primary');
         btnSubmit.innerText = "Chấp nhận";
@@ -575,6 +850,7 @@ define([
         btnClose.setAttribute('data-dismiss', 'modal');
         btnClose.innerText = 'Đóng';
         footer.appendChild(btnSubmit);
+        footer.appendChild(btnAdd);
         footer.appendChild(btnClose);
         div.appendChild(tableResponsive);
         let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
@@ -589,17 +865,86 @@ define([
               let row = this.renderDetailTrongtrot(item);
               tbody.appendChild(row);
             }
-            this.tmpDatasDetailTrongTrong.validData = results.features.map(f => { return f.attributes });
+            this.tmpDatasDetailTrongTrong.tableDatas = results.features.map(f => { return f.attributes });
           }
           let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', div, footer);
           modal.modal();
           notify.update({ 'type': 'success', 'progress': 90 });
         })
       }
+      editRenderDetailTrongTrot(item) {
+        try {
+          this.tmpDatasDetailTrongTrong.edits.map(row => {
+            if (row.OBJECTID == item.OBJECTID) {
+              this.tmpDatasDetailTrongTrong.edits.splice(this.tmpDatasDetailTrongTrong.edits.indexOf(row));
+            }
+          })
+          let tableDatas = [];
+
+          this.tmpDatasDetailTrongTrong.tableDatas.map(row => {
+            row.OBJECTID == item.OBJECTID ? tableDatas.push(item) : tableDatas.push(row);
+          })
+          this.tmpDatasDetailTrongTrong.tableDatas = tableDatas;
+          this.tmpDatasDetailTrongTrong.edits.push(item);
+          let rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
+          let row;
+          for (const r of rows) {
+            if (r.id == item['OBJECTID'] || r.id == item['ID']) {
+              row = r;
+              break;
+            }
+          }
+
+          let tds = row.getElementsByTagName('td');
+          let tdNCT = tds[0],
+            tdLCT = tds[1],
+            tdArea = tds[2],
+            tdTime = tds[3],
+            tdHarvestingTime = tds[4],
+            tdMainCrop = tds[5];
+          //Nhom Cay Trong
+          let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+          if (NCTcodedValues) {
+            let codeValue = NCTcodedValues.find(f => { return f.code == item['NhomCayTrong'] })
+            if (codeValue) tdNCT.innerText = codeValue.name;
+          }
+          if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] || '';
+          //Loai cay trong
+          let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
+          if (!subtype) return;
+          let domain = subtype.domains['LoaiCayTrong'];
+          if (domain) {
+            let LCTcodedValues;
+            if (domain.type === "inherited") {
+              let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+              if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
+            } else {//type is codedValue
+              LCTcodedValues = domain.codedValues;
+            }
+            if (LCTcodedValues) {
+              let codeValue = LCTcodedValues.find(f => { return f.code == item['LoaiCayTrong'] });
+              if (codeValue) tdLCT.innerText = codeValue.name;
+            }
+          }
+          if (!tdLCT.innerText) tdLCT.innerText = item['LoaiCayTrong'] || '';
+          //dien tich
+          tdArea.innerText = item['DienTich'] || '0';
+          //thoi gian
+          tdTime.innerText = `${item['Thang'] || 0}/${item['Nam'] || 0}`;
+          //thoi gian thu hoach
+          tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianThuHoach']);
+          //Cay trong chu dao
+          tdMainCrop.innerText = !item['CayTrongChuDao'] ? '' : item['CayTrongChuDao']
+
+        } catch (error) {
+
+        }
+      }
       renderDetailTrongtrot(item, isNew = false) {
         try {
           //tạo <tr>
           let row = document.createElement('tr');
+          row.id = item['OBJECTID'] || item['ID'];
           if (isNew) row.classList.add("info");
           //nhom cay trong
           let tdNCT = document.createElement('td');
@@ -637,13 +982,34 @@ define([
           //thoi gian
           let tdTime = document.createElement('td');
           tdTime.innerText = `${item['Thang'] || 0}/${item['Nam'] || 0}`;
-          //XÓA
+          //thoi gian thu hoach
+          let tdHarvestingTime = document.createElement('td');
+          tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianThuHoach']);
+          //Cay trong chu dao
+          let tdMainCrop = document.createElement('td');
+          tdMainCrop.innerText = !item['CayTrongChuDao'] ? '' : item['CayTrongChuDao']
           let tdAction = document.createElement('td');
-          let itemDelete = document.createElement('div');
+          //SỬA
+          let itemEdit = document.createElement('span');
+          itemEdit.classList.add('esri-icon-edit');
+          on(itemEdit, 'click', (evt) => {
+            this.tmpDatasDetailTrongTrong.tableDatas.map(row => {
+              if (row.OBJECTID == item.OBJECTID)
+                this.editDetailTrongTrot(row);
+            })
+          })
+          //Xóa
+          let itemDelete = document.createElement('span');
           itemDelete.classList.add('esri-icon-trash');
           on(itemDelete, 'click', () => {
             if (item['OBJECTID']) {
               this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
+              this.tmpDatasDetailTrongTrong.tableDatas.map(row => {
+                if (row.OBJECTID == item['OBJECTID']) {
+                  let index = this.tmpDatasDetailTrongTrong.tableDatas.indexOf(row);
+                  this.tmpDatasDetailTrongTrong.tableDatas.splice(index, 1);
+                }
+              });
             }
             this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
             //KIEM TRA CO TRONG ADDS?
@@ -654,11 +1020,14 @@ define([
               this.tmpDatasDetailTrongTrong.adds.splice(this.tmpDatasDetailTrongTrong.adds.indexOf(addItem));
             }
           });
+          tdAction.appendChild(itemEdit);
           tdAction.appendChild(itemDelete);
           row.appendChild(tdNCT);
           row.appendChild(tdLCT);
           row.appendChild(tdArea);
           row.appendChild(tdTime);
+          row.appendChild(tdHarvestingTime);
+          row.appendChild(tdMainCrop);
           row.appendChild(tdAction);
           return row;
 
@@ -667,11 +1036,11 @@ define([
         }
       }
       addDataToDetailTrongtrot(data) {
-        let row = this.renderDetailTrongtrot(data,true);
+        let row = this.renderDetailTrongtrot(data, true);
         this.tmpDatasDetailTrongTrong.tbody.appendChild(row);
       }
+
       submitDetailTrongtrot(datas) {
-        let edits = {};
         let deleteFeatures = '';
         let proms = [];
         if (datas.deletes.length > 0) {
@@ -692,6 +1061,31 @@ define([
             method: 'post',
             body: form
           }))
+        }
+        if (datas.edits.length > 0) {
+          let dataSent = [];
+          for (let item of datas.edits) {
+            item['MaDoiTuong'] = this.attributes['MaDoiTuong'];
+            dataSent.push({
+              attributes: item
+            });
+          }
+          let form = document.createElement('form');
+          form.method = 'post';
+          let ft = document.createElement('input');
+          ft.name = 'features'
+          ft.type = 'text';
+          ft.value = JSON.stringify(dataSent)
+          let format = document.createElement('input');
+          format.name = 'f';
+          format.type = 'text';
+          format.value = 'json';
+          form.appendChild(ft);
+          form.appendChild(format);
+          proms.push(esriRequest(constName.TABLE_SXTT_URL + '/updateFeatures?&f=json', {
+            method: 'post',
+            body: form
+          }));
         }
         if (datas.adds.length > 0) {
           let dataSent = [];
@@ -721,6 +1115,31 @@ define([
         }
         Promise.all(proms).then(() => {
           $('#ttModal').modal('toggle');
+        })
+        let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
+        queryTask.execute({
+          outFields: ['*'],
+          where: `MaDoiTuong = '${this.attributes['MaDoiTuong']}'`
+        }).then(results => {
+          var features = results.features;
+          features.map(feature => {
+            var attributes = feature.attributes;
+
+            if (attributes.CayTrongChuDao == 'Phải') {
+              this.attributes.NhomCayTrong = attributes.NhomCayTrong;
+              this.attributes.LoaiCayTrong = attributes.LoaiCayTrong;
+              this.layer.applyEdits({
+                updateFeatures: [{
+                  attributes: this.attributes
+                }]
+              }).then((res) => {
+                console.log(res);
+              })
+              return;
+            }
+          })
+
+
         })
       }
       /**
