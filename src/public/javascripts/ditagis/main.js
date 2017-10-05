@@ -122,9 +122,18 @@ require([
             function watchVisible(newValue, oldValue, property, target) {
               if (newValue) {
                 switch (target) {
-                  case osm: basemap.visible = worldImage.visible = !newValue; break;
-                  case basemap: osm.visible = worldImage.visible = !newValue; break;
-                  case worldImage: osm.visible = basemap.visible = !newValue; break;
+                  case osm:
+                    basemap.visible = worldImage.visible = !newValue;
+                    map.findLayerById(constName.TRONGTROT).opacity = 1;
+                    break;
+                  case basemap:
+                    osm.visible = worldImage.visible = !newValue;
+                    map.findLayerById(constName.TRONGTROT).opacity = 1;
+                    break;
+                  case worldImage:
+                    osm.visible = basemap.visible = !newValue;
+                    map.findLayerById(constName.TRONGTROT).opacity = 0.7;
+                    break;
                 }
               }
             }
