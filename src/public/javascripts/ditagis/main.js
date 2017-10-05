@@ -275,14 +275,14 @@ require([
                 name: "Doanh Nghiệp",
                 placeholder: "Nhập tên hoặc mã Doanh nghiệp",
               }, {
-                featureLayer: map.findLayerById(constName.DOANHNGHIEP),
-                searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
-                displayField: "NguoiDaiDienDoanhNghiep",
+                featureLayer: map.findLayerById(constName.TRONGTROT),
+                searchFields: ["MaDoiTuong"],
+                displayField: "MaDoiTuong",
 
                 exactMatch: false,
                 outFields: ["*"],
-                name: "Doanh Nghiệp",
-                placeholder: "Nhập tên hoặc mã Doanh nghiệp",
+                name: "Trồng Trọt",
+                placeholder: "Nhập mã đối tượng Trồng trọt",
               }
               ]
             });
