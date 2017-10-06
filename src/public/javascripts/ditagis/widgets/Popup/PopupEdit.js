@@ -365,6 +365,18 @@ define([
           }
         }
       }
+      validCayTrongChuDao(datas, newdata) {
+        let currentDate = new Date();
+        let _validCayTrongChuDao = datas
+          .filter(attr => {
+            return !(attr.OBJECTID == newdata.OBJECTID) && (!attr['ThoiGianThuHoach'] || (attr['ThoiGianThuHoach'] && currentDate.getTime() <= new Date(attr['ThoiGianThuHoach']).getTime()));
+          })
+          .some(attr => {
+            return attr['CayTrongChuDao'] == 1
+          });
+        return _validCayTrongChuDao && (newdata['CayTrongChuDao'] == 1 &&
+          (!newdata['ThoiGianThuHoach'] || new Date(newdata['ThoiGianThuHoach']) >= currentDate.getTime()));
+      }
       addDetailTrongTrot() {
         let div = document.createElement('div');
         let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGTH, formGroupCTCD, btnAdd;
@@ -515,12 +527,12 @@ define([
         defaultComboValue.value = -1;
         defaultComboValue.innerText = 'Chọn giá trị...';
         inputCTCD.appendChild(defaultComboValue);
-        option1.setAttribute('value', 'Phải');
+        option1.setAttribute('value', 1);
         option1.innerHTML = "Phải";
         inputCTCD.appendChild(option1);
 
         let option2 = document.createElement('option');
-        option2.setAttribute('value', 'Không phải');
+        option2.setAttribute('value', 2);
         option2.innerHTML = "Không Phải";
         inputCTCD.appendChild(option2);
 
@@ -534,7 +546,7 @@ define([
         on(btnAdd, 'click', () => {
           var length = this.tmpDatasDetailTrongTrong.adds.length;
           let data = {
-            ID: length + 1,
+            OBJECTID: length + 1,
             NhomCayTrong: parseInt(inputNCT.value),
             LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
             Thang: parseInt(inputMonth.value),
@@ -542,6 +554,11 @@ define([
             DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
             ThoiGianThuHoach: !inputTime.value ? null : inputTime.value,
             CayTrongChuDao: inputCTCD.value == -1 ? null : inputCTCD.value
+          }
+          let validCayTrongChuDao = this.validCayTrongChuDao(this.tmpDatasDetailTrongTrong.tableDatas, data);
+          if (validCayTrongChuDao) {
+            alert("Dữ liệu sai - Đã tồn tại cây trồng chủ đạo");
+            return;
           }
           let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
           let addDatas = this.tmpDatasDetailTrongTrong.adds;
@@ -742,12 +759,12 @@ define([
         defaultComboValue.value = -1;
         defaultComboValue.innerText = 'Chọn giá trị...';
         inputCTCD.appendChild(defaultComboValue);
-        option1.setAttribute('value', 'Phải');
+        option1.setAttribute('value', 1);
         option1.innerHTML = "Phải";
         inputCTCD.appendChild(option1);
 
         let option2 = document.createElement('option');
-        option2.setAttribute('value', 'Không phải');
+        option2.setAttribute('value', 2);
         option2.innerHTML = "Không Phải";
         inputCTCD.appendChild(option2);
         inputCTCD.value = item[inputCTCD.id];
@@ -760,7 +777,7 @@ define([
         btnEdit.innerText = "Chấp nhận";
         on(btnEdit, 'click', () => {
           let data = {
-            OBJECTID: item.OBJECTID | item.ID,
+            OBJECTID: item.OBJECTID,
             NhomCayTrong: parseInt(inputNCT.value),
             LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
             Thang: parseInt(inputMonth.value),
@@ -768,6 +785,11 @@ define([
             DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
             ThoiGianThuHoach: !inputTime.value ? null : inputTime.value,
             CayTrongChuDao: inputCTCD.value == -1 ? null : inputCTCD.value
+          }
+          let validCayTrongChuDao = this.validCayTrongChuDao(this.tmpDatasDetailTrongTrong.tableDatas, data);
+          if (validCayTrongChuDao) {
+            alert("Dữ liệu sai - Đã tồn tại cây trồng chủ đạo");
+            return;
           }
           this.editRenderDetailTrongTrot(data);
           $('#ModalDetail').modal('toggle');
@@ -934,7 +956,7 @@ define([
           //thoi gian thu hoach
           tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianThuHoach']);
           //Cay trong chu dao
-          tdMainCrop.innerText = !item['CayTrongChuDao'] ? '' : item['CayTrongChuDao']
+          tdMainCrop.innerText = !item['CayTrongChuDao'] ? '' : (item['CayTrongChuDao'] == 1 ? "Phải" : "Không phải")
 
         } catch (error) {
 
@@ -987,7 +1009,7 @@ define([
           tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianThuHoach']);
           //Cay trong chu dao
           let tdMainCrop = document.createElement('td');
-          tdMainCrop.innerText = !item['CayTrongChuDao'] ? '' : item['CayTrongChuDao']
+          tdMainCrop.innerText = !item['CayTrongChuDao'] ? '' : (item['CayTrongChuDao'] == 1 ? "Phải" : "Không phải")
           let tdAction = document.createElement('td');
           //SỬA
           let itemEdit = document.createElement('span');
@@ -1014,7 +1036,7 @@ define([
             this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
             //KIEM TRA CO TRONG ADDS?
             let addItem = this.tmpDatasDetailTrongTrong.adds.find(f => {
-              return f.ID == item.ID;
+              return f.OBJECTID == item.OBJECTID;
             });
             if (addItem) {
               this.tmpDatasDetailTrongTrong.adds.splice(this.tmpDatasDetailTrongTrong.adds.indexOf(addItem));
@@ -1039,8 +1061,23 @@ define([
         let row = this.renderDetailTrongtrot(data, true);
         this.tmpDatasDetailTrongTrong.tbody.appendChild(row);
       }
-
+      //Cập nhật lại các adds, edits.
+      submitData(datas) {
+        let adds = [], edits;
+        datas.tableDatas.map(fs => {
+          if (datas.adds.some(f => {
+            return f.OBJECTID == fs.OBJECTID;
+          })) adds.push(fs);
+        });
+        this.tmpDatasDetailTrongTrong.adds = adds;
+        edits = datas.edits.filter(f => {
+          console.log(datas.adds.indexOf(f));
+          return datas.adds.indexOf(f);
+        })
+        this.tmpDatasDetailTrongTrong.edits = edits;
+      }
       submitDetailTrongtrot(datas) {
+        this.submitData(datas);
         let deleteFeatures = '';
         let proms = [];
         if (datas.deletes.length > 0) {
@@ -1062,31 +1099,7 @@ define([
             body: form
           }))
         }
-        if (datas.edits.length > 0) {
-          let dataSent = [];
-          for (let item of datas.edits) {
-            item['MaDoiTuong'] = this.attributes['MaDoiTuong'];
-            dataSent.push({
-              attributes: item
-            });
-          }
-          let form = document.createElement('form');
-          form.method = 'post';
-          let ft = document.createElement('input');
-          ft.name = 'features'
-          ft.type = 'text';
-          ft.value = JSON.stringify(dataSent)
-          let format = document.createElement('input');
-          format.name = 'f';
-          format.type = 'text';
-          format.value = 'json';
-          form.appendChild(ft);
-          form.appendChild(format);
-          proms.push(esriRequest(constName.TABLE_SXTT_URL + '/updateFeatures?&f=json', {
-            method: 'post',
-            body: form
-          }));
-        }
+
         if (datas.adds.length > 0) {
           let dataSent = [];
           for (let item of datas.adds) {
@@ -1113,10 +1126,36 @@ define([
           }));
 
         }
+        if (datas.edits.length > 0) {
+          let dataSent = [];
+          for (let item of datas.edits) {
+            item['MaDoiTuong'] = this.attributes['MaDoiTuong'];
+            dataSent.push({
+              attributes: item
+            });
+          }
+          let form = document.createElement('form');
+          form.method = 'post';
+          let ft = document.createElement('input');
+          ft.name = 'features'
+          ft.type = 'text';
+          ft.value = JSON.stringify(dataSent)
+          let format = document.createElement('input');
+          format.name = 'f';
+          format.type = 'text';
+          format.value = 'json';
+          form.appendChild(ft);
+          form.appendChild(format);
+          proms.push(esriRequest(constName.TABLE_SXTT_URL + '/updateFeatures?&f=json', {
+            method: 'post',
+            body: form
+          }));
+        }
         Promise.all(proms).then(() => {
           $('#ttModal').modal('toggle');
         })
         let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
+        let currentDate = new Date();
         queryTask.execute({
           outFields: ['*'],
           where: `MaDoiTuong = '${this.attributes['MaDoiTuong']}'`
@@ -1125,7 +1164,7 @@ define([
           features.map(feature => {
             var attributes = feature.attributes;
 
-            if (attributes.CayTrongChuDao == 'Phải') {
+            if (attributes.CayTrongChuDao == 1 && (!attributes.ThoiGianThuHoach || (currentDate.getTime() <= new Date(attributes.ThoiGianThuHoach)))) {
               this.attributes.NhomCayTrong = attributes.NhomCayTrong;
               this.attributes.LoaiCayTrong = attributes.LoaiCayTrong;
               this.layer.applyEdits({

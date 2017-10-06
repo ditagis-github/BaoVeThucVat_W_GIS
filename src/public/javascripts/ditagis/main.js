@@ -274,6 +274,26 @@ require([
                 outFields: ["*"],
                 name: "Trồng Trọt",
                 placeholder: "Nhập mã đối tượng Trồng trọt",
+              }, {
+                featureLayer: new FeatureLayer({
+                  // url: mapconfigs.basemap.url + '/' + constName.INDEX_HANHCHINHHUYEN
+                  url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/4"
+                }),
+                searchFields: ["MaPhuongXa", "TenXa"],
+                displayField: "TenXa",
+                outFields: ["*"],
+                name: "Hành chính xã",
+                placeholder: "Nhập tên xã/ phường"
+              }, {
+                featureLayer: new FeatureLayer({
+                  url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/0"
+                }),
+                searchFields: ["Ten", "maNhanDang"],
+                displayField: "maNhanDang",
+                exactMatch: false,
+                outFields: ["*"],
+                name: "Tìm đường",
+                placeholder: "Nhập tên đường"
               }
               ]
             });
