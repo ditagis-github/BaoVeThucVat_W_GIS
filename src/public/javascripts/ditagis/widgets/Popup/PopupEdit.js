@@ -252,7 +252,7 @@ define([
       }
       renderAttachmentEditPopup(item, props) {
         const
-          container = props.container || document.getElementById(`attachment-${this.layer.id}-${attributes['OBJECTID']}`);
+          container = props.container || document.getElementById(`attachment-${this.layer.id}-${this.attributes['OBJECTID']}`);
 
         let url = `${this.layer.url}/${this.layer.layerId}/${attributes['OBJECTID']}`;
         let itemDiv = domConstruct.create('div', {

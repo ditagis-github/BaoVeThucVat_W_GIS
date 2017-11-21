@@ -274,7 +274,7 @@ define([
               readonly: true,
               innerHTML: content,
               style: 'background: transparent;border:none'
-            });
+            },tdValue);
           }
           //neu khong thi co content vao trong td. <td>{content}</td>
           else {
