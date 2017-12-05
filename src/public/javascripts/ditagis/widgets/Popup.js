@@ -1,20 +1,17 @@
 define([
+  "ditagis/config",
   "dojo/on",
   "dojo/dom",
   "dojo/dom-construct",
-
   "ditagis/widgets/Popup/PopupEdit",
   "ditagis/support/HightlightGraphic",
   "ditagis/support/Editing",
   "ditagis/toolview/bootstrap",
-
   "esri/symbols/SimpleMarkerSymbol",
   "esri/symbols/SimpleFillSymbol",
-  "esri/tasks/QueryTask",
+  "ditagis/support/FeatureTable",
 
-  "esri/request"
-
-], function (on, dom, domConstruct, PopupEdit, HightlightGraphic, editingSupport, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, QueryTask, esriRequest) {
+], function (config,on, dom, domConstruct, PopupEdit, HightlightGraphic, editingSupport, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, FeatureTable) {
   'use strict';
   return class {
     constructor(view) {
@@ -22,8 +19,13 @@ define([
       this.options = {
         hightLength: 100
       }
+      let url = config.tables.find(function (f) {
+        return f.id === 'thoigiansxtt'
+      }).url;
+      this.thoiGianSanXuatTrongTrot = new FeatureTable({url:url});
       this.popupEdit = new PopupEdit(view, {
-        hightLength: this.options.hightLength
+        hightLength: this.options.hightLength,
+        table:this.thoiGianSanXuatTrongTrot
       })
 
       this.hightlightGraphic = new HightlightGraphic(view, {
@@ -40,7 +42,6 @@ define([
           }
         })
       });
-
     }
 
     startup() {
@@ -74,7 +75,7 @@ define([
             }
             layer.popupTemplate = {
               content: (target) => {
-                return this.contentPopup(target,layer);
+                return this.contentPopup(target, layer);
               },
               title: layer.title,
               actions: actions
@@ -85,7 +86,7 @@ define([
       })
 
       this.view.popup.watch('visible', (newValue) => {
-        if (!newValue)//unvisible
+        if (!newValue) //unvisible
           this.hightlightGraphic.clear();
       })
       this.view.popup.on("trigger-action", (evt) => {
@@ -145,8 +146,8 @@ define([
             $.notify({
               message: 'Không xác được định danh'
             }, {
-                type: 'danger'
-              })
+              type: 'danger'
+            })
           break;
         case "view-detail-edit":
           if (this.attributes['MaDoiTuong'])
@@ -155,8 +156,8 @@ define([
             $.notify({
               message: 'Không xác được định danh'
             }, {
-                type: 'danger'
-              })
+              type: 'danger'
+            })
           break;
         case "update-geometry":
           if (layer.geometryType === 'polygon') {
@@ -172,17 +173,16 @@ define([
         $.notify({
           message: 'Không có quyền thực hiện tác vụ'
         }, {
-            type: 'danger'
-          })
+          type: 'danger'
+        })
       }
     }
     getSubtype(name, value) {
       name = name || this.layer.typeIdField;
       value = value || this.attributes[name];
-      if (this.layer.typeIdField === name) {
-        const typeIdField = this.layer.typeIdField,//tên thuộc tính của subtypes
-          domainType = this.layer.getFieldDomain(typeIdField),//lấy domain
-          subtypes = this.layer.types,//subtypes
+      if (this.thoiGianSanXuatTrongTrot.typeIdField === name) {
+        const typeIdField = this.thoiGianSanXuatTrongTrot.typeIdField, //tên thuộc tính của subtypes
+          subtypes = this.thoiGianSanXuatTrongTrot.types, //subtypes
           subtype = subtypes.find(f => f.id == value);
         return subtype;
       }
@@ -193,7 +193,7 @@ define([
       if (domain.type === "inherited") {
         let fieldDomain = this.layer.getFieldDomain(name);
         if (fieldDomain) codedValues = fieldDomain.codedValues;
-      } else {//type is codedValue
+      } else { //type is codedValue
         codedValues = domain.codedValues;
       }
       return codedValues;
@@ -203,13 +203,13 @@ define([
      * @param {esri/layers/FeatureLayer} layer - layer được chọn (clickEvent)
      * @param {object} attributes - thông tin của layer được chọn
      */
-    async contentPopup(target,featureLayer) {
+    async contentPopup(target, featureLayer) {
       try {
-        
+
         const graphic = target.graphic,
           layer = graphic.layer || featureLayer,
           attributes = graphic.attributes;
-        if(!graphic.layer) graphic.layer = layer;
+        if (!graphic.layer) graphic.layer = layer;
         //hightlight graphic
         this.hightlightGraphic.clear();
         this.hightlightGraphic.add(graphic);
@@ -229,8 +229,8 @@ define([
           let row = domConstruct.create('tr');
           //tạo <td>
           let tdName = domConstruct.create('td', {
-            innerHTML: field.alias
-          }),
+              innerHTML: field.alias
+            }),
             input, content, formatString;
           let codedValues;
           if (subtype && subtype.domains[field.name]) {
@@ -243,10 +243,17 @@ define([
           //nếu field có domain thì hiển thị value theo name của codevalues
           if (codedValues) {
             //lấy name của code
-            let codeValue = codedValues.find(f => { return f.code === value });
+            let codeValue = codedValues.find(f => {
+              return f.code === value
+            });
             if (codeValue) value = codeValue.name;
           } else if ((field.name === 'MaPhuongXa' || field.name === 'MaHuyenTP') && attributes[field.name]) {
-            let location = await editingSupport.getLocationName(this.view, { PhuongXa: attributes['MaPhuongXa'], HuyenTP: attributes['MaHuyenTP'] }).then(async res => { return await res });
+            let location = await editingSupport.getLocationName(this.view, {
+              PhuongXa: attributes['MaPhuongXa'],
+              HuyenTP: attributes['MaHuyenTP']
+            }).then(async res => {
+              return await res
+            });
             value = field.name == 'MaPhuongXa' ? location['TenPhuong'] : location['TenHuyen'];
           } else {
             //lấy formatString
@@ -274,7 +281,7 @@ define([
               readonly: true,
               innerHTML: content,
               style: 'background: transparent;border:none'
-            },tdValue);
+            }, tdValue);
           }
           //neu khong thi co content vao trong td. <td>{content}</td>
           else {
@@ -301,12 +308,15 @@ define([
                   class: 'col-lg-3 col-md-4 col-xs-6 thumb'
                 }, div);
                 let itemA = domConstruct.create('a', {
-                  class: "thumbnail", href: "#",
+                  class: "thumbnail",
+                  href: "#",
                 }, itemDiv)
 
                 let img = domConstruct.create('img', {
                   class: 'img-responsive',
-                  id: `${url}/attachments/${item.id}`, src: `${url}/attachments/${item.id}`, alt: `${url}/attachments/${item.name}`,
+                  id: `${url}/attachments/${item.id}`,
+                  src: `${url}/attachments/${item.id}`,
+                  alt: `${url}/attachments/${item.name}`,
                 }, itemA)
                 on(itemA, 'click', () => {
                   let modal = bootstrap.modal(`attachments-${item.id}`, item.name, img.cloneNode(true));
@@ -332,24 +342,17 @@ define([
         title: 'Thời gian trồng trọt thửa đất: ' + maDoiTuong,
         message: 'Đang truy vấn...'
       }, {
-          delay: 20000,
-          showProgressbar: true
-        })
-      // $.post('map/trongtrot/thoigian/getbymadoituong', {
-      //     MaDoiTuong: maDoiTuong
-      // }).done(results => {
-      let queryTask = new QueryTask(constName.TABLE_SXTT_URL);
-      queryTask.execute({
-        outFields: ['*'],
-        where: `MaDoiTuong = '${maDoiTuong}'`
-      }).then(results => {
+        delay: 20000,
+        showProgressbar: true
+      })
+      this.thoiGianSanXuatTrongTrot.findById(maDoiTuong).then(results => {
         if (results.features.length > 0) {
           notify.update({
             message: `Tìm thấy ${results.features.length} dữ liệu`,
             progress: 100
           }, {
-              type: 'success'
-            })
+            type: 'success'
+          })
 
           let table = document.createElement('table');
           table.classList.add('table', 'table-hover');
@@ -366,7 +369,12 @@ define([
           table.appendChild(thead);
           let tbody = document.createElement('tbody');
           table.appendChild(tbody);
-          let features = results.features.sort(function (f1, f2) { let a = f1.attributes, b = f2.attributes; if (a['Nam'] == b['Nam']) return a['Thang'] > b['Thang']; else return a['Nam'] > b['Nam']; })
+          let features = results.features.sort(function (f1, f2) {
+            let a = f1.attributes,
+              b = f2.attributes;
+            if (a['Nam'] == b['Nam']) return a['Thang'] > b['Thang'];
+            else return a['Nam'] > b['Nam'];
+          })
           for (let feature of features) {
             const item = feature.attributes;
             //tạo <tr>
@@ -378,7 +386,9 @@ define([
             // tdNCT.innerText = item['NhomCayTrong'] || '';
             let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
             if (NCTcodedValues) {
-              let codeValue = NCTcodedValues.find(f => { return f.code == item['NhomCayTrong'] })
+              let codeValue = NCTcodedValues.find(f => {
+                return f.code == item['NhomCayTrong']
+              })
               if (codeValue) tdNCT.innerText = codeValue.name;
             }
             if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] || '';
@@ -393,11 +403,13 @@ define([
               if (domain.type === "inherited") {
                 let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
                 if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
-              } else {//type is codedValue
+              } else { //type is codedValue
                 LCTcodedValues = domain.codedValues;
               }
               if (LCTcodedValues) {
-                let codeValue = LCTcodedValues.find(f => { return f.code == item['LoaiCayTrong'] });
+                let codeValue = LCTcodedValues.find(f => {
+                  return f.code == item['LoaiCayTrong']
+                });
                 if (codeValue) tdLCT.innerText = codeValue.name;
               }
             }

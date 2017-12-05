@@ -155,10 +155,8 @@ require([
                   resolve(result.data || null);
                 });
               });
-
             }
             return new Promise((resolve, reject) => {
-
               esriRequest('/map/layerrole', {
                 method: 'post'
               }).then(res => {
@@ -236,13 +234,6 @@ require([
                 src: "images/logo-ditagis.png",
                 id: "dtg-widget-logo",
               });
-              on(logo, 'mouseover, mouseleave', function (evt) {
-                if (evt.type === 'mouseover')
-                  logo.style.display = 'none';
-                if (evt.type === 'mouseleave')
-                  logo.style.display = 'unset';
-
-              })
               view.ui.add(logo, "bottom-right");
             }
             //LEGEND
