@@ -1,8 +1,6 @@
-define([
-    'dojo/window',
-], function (win) {
-    'use strict';
-    return class {
+define(["require", "exports", "dojo/window"], function (require, exports, win) {
+    "use strict";
+    class Bootstrap {
         static modal(id, title, body, footer) {
             try {
                 let width = win.getBox().w + 'px';
@@ -34,12 +32,13 @@ define([
                 modalBody.appendChild(body);
                 if (footer) {
                     modalFooter = document.createElement('div');
-                    modalFooter.classList.add('modal-footer')
+                    modalFooter.classList.add('modal-footer');
                     modalFooter.appendChild(footer);
                 }
                 modalContent.appendChild(modalHeader);
                 modalContent.appendChild(modalBody);
-                if (modalFooter) modalContent.appendChild(modalFooter);
+                if (modalFooter)
+                    modalContent.appendChild(modalFooter);
                 modalDlg.appendChild(modalContent);
                 _modal.appendChild(modalDlg);
                 document.body.appendChild(_modal);
@@ -47,15 +46,18 @@ define([
                 if ($modal) {
                     $modal.on('hidden.bs.modal', function () {
                         $modal.remove();
-                    })
+                    });
                     return $modal;
                 }
                 else {
                     return null;
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 throw error;
             }
         }
     }
+    return Bootstrap;
 });
+//# sourceMappingURL=bootstrap.js.map

@@ -3,17 +3,9 @@
 /**
  * Phần này quan trọng không được xóa
  */
-const constName = {
-  BASEMAP: 'dulieunen',
-  SAUBENH: 'SauBenh',
-  DOANHNGHIEP: 'DoanhNghiep',
-  TRONGTROT: 'TrongTrot',
-  INDEX_HANHCHINHXA: 4,
-  INDEX_HANHCHINHHUYEN: 5,
-  TABLE_SXTT_URL: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat/FeatureServer/3"
-}
 //  var socket = io();
 require([
+  "ditagis/classes/ConstName",
   "ditagis/config",
   "esri/Map",
   "esri/views/MapView",
@@ -36,19 +28,18 @@ require([
   "ditagis/widgets/LayerEditor",
   "ditagis/widgets/User",
   "ditagis/widgets/Popup",
-  "ditagis/widgets/TimeSlider",
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
   "css!ditagis/styling/dtg-map.css"
 
 
-], function (mapconfigs, Map, MapView, TileLayer, OpenStreetMapLayer, MapImageLayer, FeatureLayer,
+], function (constName,mapconfigs, Map, MapView, TileLayer, OpenStreetMapLayer, MapImageLayer, FeatureLayer,
   Expand, Locate, LayerList, Legend, Search,
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
   SystemStatusObject,
-  LayerEditor, UserWidget, Popup, TimeSlider,
+  LayerEditor, UserWidget, Popup, 
   on, domConstruct, has
 ) {
     'use strict';
@@ -301,11 +292,6 @@ require([
             view.ui.add(searchWidget, {
               position: "top-right"
             });
-            //TIME SLIDER
-            var timeSlider = new TimeSlider(view, {
-              position: 'bottom-left'
-            });
-            timeSlider.startup();
             /**
              * Layer Editor
              */
