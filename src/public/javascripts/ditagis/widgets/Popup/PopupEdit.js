@@ -319,7 +319,7 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
         }
         addDetailTrongTrot() {
             let div = document.createElement('div');
-            let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGTH, formGroupTGTT, btnAdd;
+            let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGBDTT, formGroupTGTT, btnAdd;
             divInfo = document.createElement('div');
             formGroupLCT = document.createElement('div');
             formGroupLCT.classList.add('form-group');
@@ -406,22 +406,22 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
             inputTGTT.id = 'ThoiGianTrongTrot';
             inputTGTT.classList.add('form-control');
             lbTGTT = document.createElement('label');
-            lbTGTT.innerText = 'Thời gian trồng trọth';
+            lbTGTT.innerText = 'Thời gian trồng trọt';
             lbTGTT.setAttribute('for', inputTGTT.id);
             formGroupTGTT.appendChild(lbTGTT);
             formGroupTGTT.appendChild(inputTGTT);
-            formGroupTGTH = document.createElement('div');
-            formGroupTGTH.classList.add('form-group');
+            formGroupTGBDTT = document.createElement('div');
+            formGroupTGBDTT.classList.add('form-group');
             let inputTime, lbTime;
             inputTime = document.createElement('input');
             inputTime.type = 'date';
             inputTime.id = 'ThoiGianBatDauTrong';
             inputTime.classList.add('form-control');
             lbTime = document.createElement('label');
-            lbTime.innerText = 'Ngày thu hoạch';
+            lbTime.innerText = 'Thời gian bắt đầu trồng';
             lbTime.setAttribute('for', inputTime.id);
-            formGroupTGTH.appendChild(lbTime);
-            formGroupTGTH.appendChild(inputTime);
+            formGroupTGBDTT.appendChild(lbTime);
+            formGroupTGBDTT.appendChild(inputTime);
             btnAdd = document.createElement('button');
             btnAdd.classList.add('btn', 'btn-primary');
             btnAdd.innerText = "Thêm";
@@ -433,30 +433,16 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                     NhomCayTrong: parseInt(inputNCT.value),
                     LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
                     DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
-                    ThoiGianTrongTrot: !inputTGTT.value ? null : inputTGTT.value,
-                    ThoiGianBatDauTrong: !inputTime.value ? null : inputTime.value,
+                    ThoiGianTrongTrot: !inputTGTT.value ? null : new Date(inputTGTT.value),
+                    ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
                 };
                 let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
                 let addDatas = this.tmpDatasDetailTrongTrong.adds;
                 for (const d of addDatas) {
                     if (data.LoaiCayTrong == d.LoaiCayTrong &&
-                        data.NhomCayTrong == d.NhomCayTrong && data.ThoiGianBatDauTrong === d.ThoiGianBatDauTrong) {
+                        data.NhomCayTrong == d.NhomCayTrong && data.ThoiGianBatDauTrong.getTime() === d.ThoiGianBatDauTrong.getTime()) {
                         alert("Dữ liệu vừa mới thêm - Không được thêm nữa");
                         return;
-                    }
-                }
-                for (const d of tableDatas) {
-                    if (data.LoaiCayTrong == d.LoaiCayTrong &&
-                        data.NhomCayTrong == d.NhomCayTrong && data.ThoiGianBatDauTrong === d.ThoiGianBatDauTrong) {
-                        var ok = confirm("Đã có - Tiếp tục thêm");
-                        if (ok == true) {
-                            this.tmpDatasDetailTrongTrong.adds.push(data);
-                            this.tmpDatasDetailTrongTrong.tableDatas.push(data);
-                            this.addDataToDetailTrongtrot(data);
-                        }
-                        else {
-                            return;
-                        }
                     }
                 }
                 this.tmpDatasDetailTrongTrong.tableDatas.push(data);
@@ -468,7 +454,7 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
             divInfo.appendChild(formGroupLCT);
             divInfo.appendChild(formGroupArea);
             divInfo.appendChild(formGroupTGTT);
-            divInfo.appendChild(formGroupTGTH);
+            divInfo.appendChild(formGroupTGBDTT);
             divInfo.appendChild(btnAdd);
             div.appendChild(divInfo);
             let footer = document.createElement('div');
@@ -478,7 +464,7 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
         }
         editDetailTrongTrot(item) {
             let div = document.createElement('div');
-            let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTGTT, formGroupTGTH, btnEdit;
+            let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTGTT, formGroupTGBDTT, formGDST, btnEdit;
             divInfo = document.createElement('div');
             formGroupLCT = document.createElement('div');
             formGroupLCT.classList.add('form-group');
@@ -574,19 +560,31 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
             lbTGTT.setAttribute('for', inputTGTT.id);
             formGroupTGTT.appendChild(lbTGTT);
             formGroupTGTT.appendChild(inputTGTT);
-            formGroupTGTH = document.createElement('div');
-            formGroupTGTH.classList.add('form-group');
-            let inputTime, lbTime;
-            inputTime = document.createElement('input');
-            inputTime.type = 'date';
-            inputTime.id = 'ThoiGianBatDauTrong';
-            inputTime.value = DateTimeDefine.formatDateValue(item[inputTime.id]);
-            inputTime.classList.add('form-control');
-            lbTGTT = document.createElement('label');
-            lbTGTT.innerText = 'Ngày thu hoạch';
-            lbTGTT.setAttribute('for', inputTime.id);
-            formGroupTGTH.appendChild(lbTGTT);
-            formGroupTGTH.appendChild(inputTime);
+            formGroupTGBDTT = document.createElement('div');
+            formGroupTGBDTT.classList.add('form-group');
+            let inputTGBDT, lbTime;
+            inputTGBDT = document.createElement('input');
+            inputTGBDT.type = 'date';
+            inputTGBDT.id = 'ThoiGianBatDauTrong';
+            inputTGBDT.value = DateTimeDefine.formatDateValue(item[inputTGBDT.id]);
+            inputTGBDT.classList.add('form-control');
+            lbTime = document.createElement('label');
+            lbTime.innerText = 'Ngày thu hoạch';
+            lbTime.setAttribute('for', inputTGBDT.id);
+            formGroupTGBDTT.appendChild(lbTime);
+            formGroupTGBDTT.appendChild(inputTGBDT);
+            formGDST = document.createElement('div');
+            formGDST.classList.add('form-group');
+            let lbGDST, inputGDST;
+            inputGDST = document.createElement('input');
+            inputGDST.id = 'GiaiDoanSinhTruong';
+            inputGDST.value = item[inputGDST.id];
+            inputGDST.classList.add('form-control');
+            lbGDST = document.createElement('label');
+            lbGDST.innerText = 'Giai đoạn sinh trưởng';
+            lbGDST.setAttribute('for', inputGDST.id);
+            formGDST.appendChild(lbGDST);
+            formGDST.appendChild(inputGDST);
             btnEdit = document.createElement('button');
             btnEdit.classList.add('btn', 'btn-primary');
             btnEdit.innerText = "Chấp nhận";
@@ -594,10 +592,11 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                 let data = {
                     OBJECTID: item.OBJECTID,
                     NhomCayTrong: parseInt(inputNCT.value),
-                    LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
-                    DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
-                    ThoiGianTrongTrot: !inputTGTT.value ? null : inputTGTT.value,
-                    ThoiGianBatDauTrong: !inputTime.value ? null : inputTime.value,
+                    LoaiCayTrong: inputLCT.value == "-1" ? null : inputLCT.value,
+                    DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
+                    ThoiGianTrongTrot: !inputTGTT.value ? null : new Date(inputTGTT.value),
+                    ThoiGianBatDauTrong: !inputTGBDT.value ? null : new Date(inputTGBDT.value),
+                    GiaiDoanSinhTruong: inputGDST.value
                 };
                 this.editRenderDetailTrongTrot(data);
                 $('#ModalDetail').modal('toggle');
@@ -606,7 +605,8 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
             divInfo.appendChild(formGroupLCT);
             divInfo.appendChild(formGroupArea);
             divInfo.appendChild(formGroupTGTT);
-            divInfo.appendChild(formGroupTGTH);
+            divInfo.appendChild(formGroupTGBDTT);
+            divInfo.appendChild(formGDST);
             divInfo.appendChild(btnEdit);
             div.appendChild(divInfo);
             let footer = document.createElement('div');
@@ -712,13 +712,14 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                 let rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
                 let row;
                 for (const r of rows) {
-                    if (r.id == item['OBJECTID'] || r.id == item['ID']) {
+                    let id = parseInt(r.id);
+                    if (id == item['OBJECTID'] || id == item['ID']) {
                         row = r;
                         break;
                     }
                 }
                 let tds = row.getElementsByTagName('td');
-                let tdNCT = tds[0], tdLCT = tds[1], tdArea = tds[2], tdTGTT = tds[3], tdTime = tds[4], tdHarvestingTime = tds[5], tdMainCrop = tds[6];
+                let tdNCT = tds[0], tdLCT = tds[1], tdArea = tds[2], tdTGTT = tds[3], tdTGBDT = tds[4], tdGDST = tds[5];
                 let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
                 if (NCTcodedValues) {
                     let codeValue = NCTcodedValues.find(f => {
@@ -728,7 +729,7 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                         tdNCT.innerText = codeValue.name;
                 }
                 if (!tdNCT.innerText)
-                    tdNCT.innerText = item['NhomCayTrong'] || '';
+                    tdNCT.innerText = item['NhomCayTrong'] + "" || '';
                 let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
                 if (!subtype)
                     return;
@@ -753,9 +754,10 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                 }
                 if (!tdLCT.innerText)
                     tdLCT.innerText = item['LoaiCayTrong'] || '';
-                tdArea.innerText = item['DienTich'] || '0';
+                tdArea.innerText = item['DienTich'] + "" || '0';
                 tdTGTT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianTrongTrot']);
-                tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
+                tdTGBDT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
+                tdGDST.innerText = item.GiaiDoanSinhTruong;
             }
             catch (error) {
                 throw 'Có lỗi xảy ra trong quá trình thực hiện';
@@ -777,7 +779,7 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                         tdNCT.innerText = codeValue.name;
                 }
                 if (!tdNCT.innerText)
-                    tdNCT.innerText = item['NhomCayTrong'] || '';
+                    tdNCT.innerText = item['NhomCayTrong'] + "" || '';
                 let tdLCT = document.createElement('td');
                 let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
                 if (!subtype)
@@ -804,12 +806,14 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                 if (!tdLCT.innerText)
                     tdLCT.innerText = item['LoaiCayTrong'] || '';
                 let tdArea = document.createElement('td');
-                tdArea.innerText = item['DienTich'] || '0';
+                tdArea.innerText = item['DienTich'] + "" || '0';
                 let tdTGTT = document.createElement('td');
                 tdTGTT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianTrongTrot']);
-                let tdHarvestingTime = document.createElement('td');
-                tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
+                let tdTGBDT = document.createElement('td');
+                tdTGBDT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
                 let tdAction = document.createElement('td');
+                let tdGDST = document.createElement('td');
+                tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
                 let itemEdit = document.createElement('span');
                 itemEdit.classList.add('esri-icon-edit');
                 on(itemEdit, 'click', (evt) => {
@@ -844,7 +848,8 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
                 row.appendChild(tdLCT);
                 row.appendChild(tdArea);
                 row.appendChild(tdTGTT);
-                row.appendChild(tdHarvestingTime);
+                row.appendChild(tdTGBDT);
+                row.appendChild(tdGDST);
                 row.appendChild(tdAction);
                 return row;
             }
@@ -883,14 +888,31 @@ define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-co
             if (datas.adds.length > 0) {
                 for (let item of datas.adds) {
                     applyEdits.addFeatures.push({
-                        attributes: item
+                        attributes: {
+                            DienTich: item.DienTich,
+                            GiaiDoanSinhTruong: item.GiaiDoanSinhTruong,
+                            LoaiCayTrong: item.LoaiCayTrong,
+                            MaDoiTuong: item.MaDoiTuong,
+                            NhomCayTrong: item.NhomCayTrong,
+                            ThoiGianBatDauTrong: item.ThoiGianBatDauTrong.getTime(),
+                            ThoiGianTrongTrot: item.ThoiGianTrongTrot.getTime()
+                        }
                     });
                 }
             }
             if (datas.edits.length > 0) {
                 for (let item of datas.edits) {
                     applyEdits.updateFeatures.push({
-                        attributes: item
+                        attributes: {
+                            DienTich: item.DienTich,
+                            GiaiDoanSinhTruong: item.GiaiDoanSinhTruong,
+                            LoaiCayTrong: item.LoaiCayTrong,
+                            MaDoiTuong: item.MaDoiTuong,
+                            NhomCayTrong: item.NhomCayTrong,
+                            OBJECTID: item.OBJECTID,
+                            ThoiGianBatDauTrong: item.ThoiGianBatDauTrong.getTime(),
+                            ThoiGianTrongTrot: item.ThoiGianTrongTrot.getTime()
+                        }
                     });
                 }
             }

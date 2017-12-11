@@ -60,4 +60,4 @@ define(["require", "exports", "dojo/window"], function (require, exports, win) {
     }
     return Bootstrap;
 });
-//# sourceMappingURL=bootstrap.js.map
+//# sourceMappingURL=Bootstrap.js.map

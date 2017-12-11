@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "dojo/dom-construct", "./Popup/PopupEdit", "../support/HightlightGraphic", "../support/Editing", "../toolview/Bootstrap", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "../support/FeatureTable", "esri/Color"], function (require, exports, constName, config, on, domConstruct, PopupEdit, HightlightGraphic, editingSupport, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, FeatureTable, Color) {
     "use strict";
-    'use strict';
     class Popup {
         constructor(view) {
             this.view = view;
@@ -18,7 +17,7 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
             let url = config.tables.find(function (f) {
                 return f.id === 'thoigiansxtt';
             }).url;
-            this.thoiGianSanXuatTrongTrot = new FeatureTable({ url: url });
+            this.thoiGianSanXuatTrongTrot = new FeatureTable({ url: url, fieldID: 'MaDoiTuong' });
             this.popupEdit = new PopupEdit(view, {
                 hightLength: this.options.hightLength,
                 table: this.thoiGianSanXuatTrongTrot
@@ -327,7 +326,9 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
               <th>Nhóm cây trồng</th>
               <th>Loại cây trồng</th>
               <th>Diện tích</th>
-              <th>Thời gian</th>
+              <th>Thời gian bắt đầu trồng</th>
+              <th>Thời gian trồng trọt</th>
+              <th>Giai đoạn sinh trưởng</th>
             </tr>
             </thead>`;
                     domConstruct.place(thead, table);
@@ -356,7 +357,7 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                                 tdNCT.innerText = codeValue.name;
                         }
                         if (!tdNCT.innerText)
-                            tdNCT.innerText = item['NhomCayTrong'] || '';
+                            tdNCT.innerText = item['NhomCayTrong'] + "" || '';
                         let tdLCT = document.createElement('td');
                         let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
                         if (!subtype)
@@ -383,13 +384,25 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                         if (!tdLCT.innerText)
                             tdLCT.innerText = item['LoaiCayTrong'] || '';
                         let tdArea = document.createElement('td');
-                        tdArea.innerText = item['DienTich'] || '0';
-                        let tdTime = document.createElement('td');
-                        tdTime.innerText = `${item['Thang'] || 0}/${item['Nam'] || 0}`;
+                        tdArea.innerText = item['DienTich'] + "" || '0';
+                        let tdTGBDT = document.createElement('td');
+                        if (item.ThoiGianBatDauTrong) {
+                            let dtTGBDT = new Date(item.ThoiGianBatDauTrong);
+                            tdTGBDT.innerText = `${dtTGBDT.getDate()}/${dtTGBDT.getMonth() + 1}/${dtTGBDT.getFullYear()}`;
+                        }
+                        let tdTGTT = document.createElement('td');
+                        if (item.ThoiGianTrongTrot) {
+                            let dtTGTT = new Date(item.ThoiGianTrongTrot);
+                            tdTGTT.innerText = `${dtTGTT.getDate()}/${dtTGTT.getMonth() + 1}/${dtTGTT.getFullYear()}`;
+                        }
+                        let tdGDST = document.createElement('td');
+                        tdGDST.innerText = item.GiaiDoanSinhTruong;
                         row.appendChild(tdNCT);
                         row.appendChild(tdLCT);
                         row.appendChild(tdArea);
-                        row.appendChild(tdTime);
+                        row.appendChild(tdTGBDT);
+                        row.appendChild(tdTGTT);
+                        row.appendChild(tdGDST);
                     }
                     let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', table);
                     modal.modal();

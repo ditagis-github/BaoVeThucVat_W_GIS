@@ -1,12 +1,10 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "watch": true,
     "sourceMap": true,
     "target": "es6",
     "module": "amd",
     "rootDir": "ditagis",
-    "removeComments": true,
-    "inlineSources": true
+    "removeComments": true
   }
 }

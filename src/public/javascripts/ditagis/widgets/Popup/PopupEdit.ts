@@ -18,6 +18,25 @@ interface ThoiGianSanXuatTrongTrot {
   DienTich: number;
   ThoiGianTrongTrot: Date
   ThoiGianBatDauTrong: Date;
+  GiaiDoanSinhTruong: string;
+}
+interface ThoiGianSanXuatTrongTrotService {
+  OBJECTID: number;
+  MaDoiTuong: string;
+  NhomCayTrong: number;
+  LoaiCayTrong: string;
+  DienTich: number;
+  ThoiGianTrongTrot: number;
+  ThoiGianBatDauTrong: number;
+  GiaiDoanSinhTruong: string;
+}
+interface TmpDataDetailTrongTrot {
+  adds: Array<ThoiGianSanXuatTrongTrot>,
+  edits: Array<ThoiGianSanXuatTrongTrot>,
+  updates: Array<ThoiGianSanXuatTrongTrot>,
+  deletes: Array<number>,
+  tableDatas: Array<ThoiGianSanXuatTrongTrot>,
+  tbody: HTMLTableSectionElement
 }
 class PopupEdit {
   view;
@@ -27,14 +46,7 @@ class PopupEdit {
   inputElement;
   thoiGianSanXuatTrongTrot;
   _layer;
-  tmpDatasDetailTrongTrong: {
-    adds: Array<ThoiGianSanXuatTrongTrot>,
-    edits: Array<ThoiGianSanXuatTrongTrot>,
-    updates: Array<ThoiGianSanXuatTrongTrot>,
-    deletes: Array<ThoiGianSanXuatTrongTrot>,
-    tableDatas: Array<ThoiGianSanXuatTrongTrot>,
-    tbody: HTMLTableSectionElement
-  }
+  tmpDatasDetailTrongTrong: TmpDataDetailTrongTrot;
   constructor(view, options) {
     this.view = view;
     this.options = options;
@@ -391,7 +403,7 @@ class PopupEdit {
   }
   addDetailTrongTrot() {
     let div = document.createElement('div');
-    let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGTH, formGroupTGTT, btnAdd;
+    let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGBDTT, formGroupTGTT, btnAdd;
     divInfo = document.createElement('div');
 
     //LOAI CAY TRONG
@@ -483,23 +495,23 @@ class PopupEdit {
     inputTGTT.id = 'ThoiGianTrongTrot';
     inputTGTT.classList.add('form-control');
     lbTGTT = document.createElement('label');
-    lbTGTT.innerText = 'Thời gian trồng trọth';
+    lbTGTT.innerText = 'Thời gian trồng trọt';
     lbTGTT.setAttribute('for', inputTGTT.id);
     formGroupTGTT.appendChild(lbTGTT);
     formGroupTGTT.appendChild(inputTGTT);
     // Ngay thu hoach
-    formGroupTGTH = document.createElement('div');
-    formGroupTGTH.classList.add('form-group');
+    formGroupTGBDTT = document.createElement('div');
+    formGroupTGBDTT.classList.add('form-group');
     let inputTime, lbTime;
     inputTime = document.createElement('input');
     inputTime.type = 'date';
     inputTime.id = 'ThoiGianBatDauTrong';
     inputTime.classList.add('form-control');
     lbTime = document.createElement('label');
-    lbTime.innerText = 'Ngày thu hoạch';
+    lbTime.innerText = 'Thời gian bắt đầu trồng';
     lbTime.setAttribute('for', inputTime.id);
-    formGroupTGTH.appendChild(lbTime);
-    formGroupTGTH.appendChild(inputTime);
+    formGroupTGBDTT.appendChild(lbTime);
+    formGroupTGBDTT.appendChild(inputTime);
 
     //Add
     btnAdd = document.createElement('button');
@@ -507,37 +519,22 @@ class PopupEdit {
     btnAdd.innerText = "Thêm";
     on(btnAdd, 'click', () => {
       var length = this.tmpDatasDetailTrongTrong.adds.length;
-      let data = {
+      let data = <ThoiGianSanXuatTrongTrot>{
         OBJECTID: length + 1,
         MaDoiTuong: this.attributes['MaDoiTuong'],
         NhomCayTrong: parseInt(inputNCT.value),
         LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
         DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
-        ThoiGianTrongTrot: !inputTGTT.value ? null : inputTGTT.value,
-        ThoiGianBatDauTrong: !inputTime.value ? null : inputTime.value,
+        ThoiGianTrongTrot: !inputTGTT.value ? null : new Date(inputTGTT.value),
+        ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
       }
       let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
       let addDatas = this.tmpDatasDetailTrongTrong.adds;
       for (const d of addDatas) {
         if (data.LoaiCayTrong == d.LoaiCayTrong &&
-          data.NhomCayTrong == d.NhomCayTrong && data.ThoiGianBatDauTrong === d.ThoiGianBatDauTrong) {
+          data.NhomCayTrong == d.NhomCayTrong && data.ThoiGianBatDauTrong.getTime() === d.ThoiGianBatDauTrong.getTime()) {
           alert("Dữ liệu vừa mới thêm - Không được thêm nữa")
           return;
-        }
-      }
-      for (const d of tableDatas) {
-        if (data.LoaiCayTrong == d.LoaiCayTrong &&
-          data.NhomCayTrong == d.NhomCayTrong && data.ThoiGianBatDauTrong === d.ThoiGianBatDauTrong) {
-          var ok = confirm("Đã có - Tiếp tục thêm");
-          if (ok == true) {
-            this.tmpDatasDetailTrongTrong.adds.push(data);
-            this.tmpDatasDetailTrongTrong.tableDatas.push(data);
-            this.addDataToDetailTrongtrot(data);
-
-          } else {
-            return;
-          }
-
         }
       }
       this.tmpDatasDetailTrongTrong.tableDatas.push(data);
@@ -549,7 +546,7 @@ class PopupEdit {
     divInfo.appendChild(formGroupLCT);
     divInfo.appendChild(formGroupArea);
     divInfo.appendChild(formGroupTGTT);
-    divInfo.appendChild(formGroupTGTH);
+    divInfo.appendChild(formGroupTGBDTT);
     divInfo.appendChild(btnAdd);
     div.appendChild(divInfo);
     let footer = document.createElement('div');
@@ -559,13 +556,13 @@ class PopupEdit {
   }
   editDetailTrongTrot(item) {
     let div = document.createElement('div');
-    let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTGTT, formGroupTGTH, btnEdit;
+    let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTGTT, formGroupTGBDTT, formGDST, btnEdit;
     divInfo = document.createElement('div');
 
     //LOAI CAY TRONG
     formGroupLCT = document.createElement('div');
     formGroupLCT.classList.add('form-group');
-    let lbLCT, inputLCT;
+    let lbLCT: HTMLLabelElement, inputLCT: HTMLSelectElement;
     inputLCT = document.createElement('select');
     inputLCT.id = 'LoaiCayTrong';
     inputLCT.classList.add('form-control');
@@ -579,7 +576,7 @@ class PopupEdit {
     //NHOM CAY TRONG
     formGroupNCT = document.createElement('div');
     formGroupNCT.classList.add('form-group');
-    let lbNCT, inputNCT;
+    let lbNCT: HTMLLabelElement, inputNCT: HTMLSelectElement;
     inputNCT = document.createElement('select');
     inputNCT.id = 'NhomCayTrong';
     inputNCT.value = item[inputNCT.id];
@@ -635,7 +632,7 @@ class PopupEdit {
     //DIEN TICH
     formGroupArea = document.createElement('div');
     formGroupArea.classList.add('form-group');
-    let lbArea, inputArea;
+    let lbArea: HTMLLabelElement, inputArea: HTMLInputElement;
     inputArea = document.createElement('input');
     inputArea.type = 'number';
     inputArea.id = 'DienTich';
@@ -650,45 +647,60 @@ class PopupEdit {
     // Thoi gian trong trot
     formGroupTGTT = document.createElement('div');
     formGroupTGTT.classList.add('form-group');
-    let inputTGTT, lbTGTT;
+    let inputTGTT: HTMLInputElement, lbTGTT: HTMLLabelElement;
     inputTGTT = document.createElement('input');
     inputTGTT.type = 'date';
     inputTGTT.id = 'ThoiGianTrongTrot';
     inputTGTT.value = DateTimeDefine.formatDateValue(item[inputTGTT.id]);
     inputTGTT.classList.add('form-control');
     lbTGTT = document.createElement('label');
-    lbTGTT.innerText = 'Thời gian trồng trọth';
+    lbTGTT.innerText = 'Thời gian trồng trọt';
     lbTGTT.setAttribute('for', inputTGTT.id);
     formGroupTGTT.appendChild(lbTGTT);
     formGroupTGTT.appendChild(inputTGTT);
 
     // Ngay thu hoach
-    formGroupTGTH = document.createElement('div');
-    formGroupTGTH.classList.add('form-group');
-    let inputTime, lbTime;
-    inputTime = document.createElement('input');
-    inputTime.type = 'date';
-    inputTime.id = 'ThoiGianBatDauTrong';
-    inputTime.value = DateTimeDefine.formatDateValue(item[inputTime.id]);
-    inputTime.classList.add('form-control');
-    lbTGTT = document.createElement('label');
-    lbTGTT.innerText = 'Ngày thu hoạch';
-    lbTGTT.setAttribute('for', inputTime.id);
-    formGroupTGTH.appendChild(lbTGTT);
-    formGroupTGTH.appendChild(inputTime);
+    formGroupTGBDTT = document.createElement('div');
+    formGroupTGBDTT.classList.add('form-group');
+    let inputTGBDT: HTMLInputElement, lbTime: HTMLLabelElement;
+    inputTGBDT = document.createElement('input');
+    inputTGBDT.type = 'date';
+    inputTGBDT.id = 'ThoiGianBatDauTrong';
+    inputTGBDT.value = DateTimeDefine.formatDateValue(item[inputTGBDT.id]);
+    inputTGBDT.classList.add('form-control');
+    lbTime = document.createElement('label');
+    lbTime.innerText = 'Thời gian bắt đầu trồng';
+    lbTime.setAttribute('for', inputTGBDT.id);
+    formGroupTGBDTT.appendChild(lbTime);
+    formGroupTGBDTT.appendChild(inputTGBDT);
+
+    //GIAI DOAN SINH TRUONG
+    formGDST = document.createElement('div');
+    formGDST.classList.add('form-group');
+    let lbGDST: HTMLLabelElement, inputGDST: HTMLInputElement;
+    inputGDST = document.createElement('input');
+    inputGDST.id = 'GiaiDoanSinhTruong';
+    inputGDST.value = item[inputGDST.id];
+    inputGDST.classList.add('form-control');
+    lbGDST = document.createElement('label');
+    lbGDST.innerText = 'Giai đoạn sinh trưởng';
+    lbGDST.setAttribute('for', inputGDST.id);
+    formGDST.appendChild(lbGDST);
+    formGDST.appendChild(inputGDST);
 
     //Add
     btnEdit = document.createElement('button');
     btnEdit.classList.add('btn', 'btn-primary');
     btnEdit.innerText = "Chấp nhận";
     on(btnEdit, 'click', () => {
-      let data = {
+      let data = <ThoiGianSanXuatTrongTrot>{
         OBJECTID: item.OBJECTID,
         NhomCayTrong: parseInt(inputNCT.value),
-        LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
-        DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
-        ThoiGianTrongTrot: !inputTGTT.value ? null : inputTGTT.value,
-        ThoiGianBatDauTrong: !inputTime.value ? null : inputTime.value,
+        LoaiCayTrong: inputLCT.value == "-1" ? null : inputLCT.value,
+        DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
+        ThoiGianTrongTrot: !inputTGTT.value ? null : new Date(inputTGTT.value),
+        ThoiGianBatDauTrong: !inputTGBDT.value ? null : new Date(inputTGBDT.value),
+        GiaiDoanSinhTruong: inputGDST.value
       }
       this.editRenderDetailTrongTrot(data);
       $('#ModalDetail').modal('toggle');
@@ -697,7 +709,8 @@ class PopupEdit {
     divInfo.appendChild(formGroupLCT);
     divInfo.appendChild(formGroupArea);
     divInfo.appendChild(formGroupTGTT);
-    divInfo.appendChild(formGroupTGTH);
+    divInfo.appendChild(formGroupTGBDTT);
+    divInfo.appendChild(formGDST);
     divInfo.appendChild(btnEdit);
     div.appendChild(divInfo);
     let footer = document.createElement('div');
@@ -717,7 +730,7 @@ class PopupEdit {
           align: 'left'
         }
       })
-    this.tmpDatasDetailTrongTrong = {
+    this.tmpDatasDetailTrongTrong = <TmpDataDetailTrongTrot> {
       adds: [],
       edits: [],
       updates: [],
@@ -792,7 +805,7 @@ class PopupEdit {
       notify.update('progress', 90);
     })
   }
-  editRenderDetailTrongTrot(item) {
+  editRenderDetailTrongTrot(item: ThoiGianSanXuatTrongTrot) {
     try {
       this.tmpDatasDetailTrongTrong.edits.map(row => {
         if (row.OBJECTID == item.OBJECTID) {
@@ -809,19 +822,19 @@ class PopupEdit {
       let rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
       let row;
       for (const r of rows) {
-        if (r.id == item['OBJECTID'] || r.id == item['ID']) {
+        let id = parseInt(r.id);
+        if (id == item['OBJECTID'] || id == item['ID']) {
           row = r;
           break;
         }
       }
       let tds = row.getElementsByTagName('td');
-      let tdNCT = tds[0],
-        tdLCT = tds[1],
-        tdArea = tds[2],
-        tdTGTT = tds[3],
-        tdTime = tds[4],
-        tdHarvestingTime = tds[5],
-        tdMainCrop = tds[6];
+      let tdNCT: HTMLElement = tds[0],
+        tdLCT: HTMLElement = tds[1],
+        tdArea: HTMLElement = tds[2],
+        tdTGTT: HTMLElement = tds[3],
+        tdTGBDT: HTMLElement = tds[4],
+        tdGDST: HTMLElement = tds[5];
       //Nhom Cay Trong
       let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
       if (NCTcodedValues) {
@@ -830,7 +843,7 @@ class PopupEdit {
         })
         if (codeValue) tdNCT.innerText = codeValue.name;
       }
-      if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] || '';
+      if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] + "" || '';
       //Loai cay trong
       let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
       if (!subtype) return;
@@ -852,15 +865,16 @@ class PopupEdit {
       }
       if (!tdLCT.innerText) tdLCT.innerText = item['LoaiCayTrong'] || '';
       //dien tich
-      tdArea.innerText = item['DienTich'] || '0';
+      tdArea.innerText = item['DienTich'] + "" || '0';
       tdTGTT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianTrongTrot']);
       //thoi gian thu hoach
-      tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
+      tdTGBDT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
+      tdGDST.innerText = item.GiaiDoanSinhTruong;
     } catch (error) {
       throw 'Có lỗi xảy ra trong quá trình thực hiện'
     }
   }
-  renderDetailTrongtrot(item, isNew = false) {
+  renderDetailTrongtrot(item: ThoiGianSanXuatTrongTrot, isNew = false) {
     try {
       //tạo <tr>
       let row = document.createElement('tr');
@@ -876,7 +890,7 @@ class PopupEdit {
         })
         if (codeValue) tdNCT.innerText = codeValue.name;
       }
-      if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] || '';
+      if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] + "" || '';
       //loai cay trong
       let tdLCT = document.createElement('td');
 
@@ -902,14 +916,16 @@ class PopupEdit {
 
       //dien tich
       let tdArea = document.createElement('td');
-      tdArea.innerText = item['DienTich'] || '0';
-      //thoi gian
+      tdArea.innerText = item['DienTich'] + "" || '0';
+      //thoi gian trong trot
       let tdTGTT = document.createElement('td');
       tdTGTT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianTrongTrot']);
-      //thoi gian thu hoach
-      let tdHarvestingTime = document.createElement('td');
-      tdHarvestingTime.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
+      //thoi gian bat dau trong
+      let tdTGBDT = document.createElement('td');
+      tdTGBDT.innerText = DateTimeDefine.formatNumberDate(item['ThoiGianBatDauTrong']);
       let tdAction = document.createElement('td');
+      let tdGDST = document.createElement('td');
+      tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
       //SỬA
       let itemEdit = document.createElement('span');
       itemEdit.classList.add('esri-icon-edit');
@@ -947,7 +963,8 @@ class PopupEdit {
       row.appendChild(tdLCT);
       row.appendChild(tdArea);
       row.appendChild(tdTGTT);
-      row.appendChild(tdHarvestingTime);
+      row.appendChild(tdTGBDT);
+      row.appendChild(tdGDST);
       row.appendChild(tdAction);
       return row;
 
@@ -961,8 +978,8 @@ class PopupEdit {
   }
   //Cập nhật lại các adds, edits.
   submitData(datas) {
-    let adds = [],
-      edits;
+    let adds: ThoiGianSanXuatTrongTrot[] = [],
+      edits: ThoiGianSanXuatTrongTrot[];
     datas.tableDatas.map(fs => {
       if (datas.adds.some(f => {
         return f.OBJECTID == fs.OBJECTID;
@@ -974,7 +991,7 @@ class PopupEdit {
     })
     this.tmpDatasDetailTrongTrong.edits = edits;
   }
-  submitDetailTrongtrot(datas) {
+  submitDetailTrongtrot(datas: TmpDataDetailTrongTrot) {
     this.submitData(datas);
     let applyEdits = {
       addFeatures: [],
@@ -987,7 +1004,15 @@ class PopupEdit {
     if (datas.adds.length > 0) {
       for (let item of datas.adds) {
         applyEdits.addFeatures.push({
-          attributes: item
+          attributes: <ThoiGianSanXuatTrongTrotService>{
+            DienTich: item.DienTich,
+            GiaiDoanSinhTruong: item.GiaiDoanSinhTruong,
+            LoaiCayTrong: item.LoaiCayTrong,
+            MaDoiTuong: item.MaDoiTuong,
+            NhomCayTrong: item.NhomCayTrong,
+            ThoiGianBatDauTrong: item.ThoiGianBatDauTrong.getTime(),
+            ThoiGianTrongTrot: item.ThoiGianTrongTrot.getTime()
+          }
         });
       }
 
@@ -995,7 +1020,16 @@ class PopupEdit {
     if (datas.edits.length > 0) {
       for (let item of datas.edits) {
         applyEdits.updateFeatures.push({
-          attributes: item
+          attributes: <ThoiGianSanXuatTrongTrotService>{
+            DienTich: item.DienTich,
+            GiaiDoanSinhTruong: item.GiaiDoanSinhTruong,
+            LoaiCayTrong: item.LoaiCayTrong,
+            MaDoiTuong: item.MaDoiTuong,
+            NhomCayTrong: item.NhomCayTrong,
+            OBJECTID: item.OBJECTID,
+            ThoiGianBatDauTrong: item.ThoiGianBatDauTrong.getTime(),
+            ThoiGianTrongTrot: item.ThoiGianTrongTrot.getTime()
+          }
         });
       }
     }

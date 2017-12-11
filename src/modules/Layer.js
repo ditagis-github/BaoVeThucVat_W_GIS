@@ -10,10 +10,8 @@ class LayerRoleManager extends Database {
 				return this.sql.query`SELECT layer,role,isView,isDelete,isEdit,isCreate FROM LAYERROLE WHERE ROLE = ${role}`;
 			}).then(result => {
 					resolve(result.recordset)
-				this.close();
 			}).catch(err => {
 				reject(err);
-				this.close();
 			})
 		});
 	}

@@ -12,11 +12,20 @@ import SimpleFillSymbol = require('esri/symbols/SimpleFillSymbol');
 import SimpleLineSymbol = require('esri/symbols/SimpleLineSymbol');
 import FeatureTable = require('../support/FeatureTable');
 import Color = require('esri/Color');
-'use strict';
+interface ThoiGianSanXuatTrongTrot {
+  OBJECTID: number;
+  MaDoiTuong: string;
+  NhomCayTrong: number;
+  LoaiCayTrong: string;
+  DienTich: number;
+  ThoiGianTrongTrot: Date
+  ThoiGianBatDauTrong: Date;
+  GiaiDoanSinhTruong: string;
+}
 class Popup {
   view;
   options;
-  thoiGianSanXuatTrongTrot;
+  thoiGianSanXuatTrongTrot: FeatureTable;
   popupEdit;
   hightlightGraphic
   constructor(view) {
@@ -27,7 +36,7 @@ class Popup {
     let url = config.tables.find(function (f) {
       return f.id === 'thoigiansxtt'
     }).url;
-    this.thoiGianSanXuatTrongTrot = new FeatureTable({ url: url });
+    this.thoiGianSanXuatTrongTrot = new FeatureTable({ url: url, fieldID: 'MaDoiTuong' });
     this.popupEdit = new PopupEdit(view, {
       hightLength: this.options.hightLength,
       table: this.thoiGianSanXuatTrongTrot
@@ -352,9 +361,9 @@ class Popup {
       })
     this.thoiGianSanXuatTrongTrot.findById(maDoiTuong).then(results => {
       if (results.features.length > 0) {
-          notify.update('message', `Tìm thấy ${results.features.length} dữ liệu`)
-          notify.update('progress', 100)
-          notify.update('type', 'success')
+        notify.update('message', `Tìm thấy ${results.features.length} dữ liệu`)
+        notify.update('progress', 100)
+        notify.update('type', 'success')
 
         let table = document.createElement('table');
         table.classList.add('table', 'table-hover');
@@ -364,7 +373,9 @@ class Popup {
               <th>Nhóm cây trồng</th>
               <th>Loại cây trồng</th>
               <th>Diện tích</th>
-              <th>Thời gian</th>
+              <th>Thời gian bắt đầu trồng</th>
+              <th>Thời gian trồng trọt</th>
+              <th>Giai đoạn sinh trưởng</th>
             </tr>
             </thead>`
         domConstruct.place(thead, table);
@@ -378,7 +389,7 @@ class Popup {
           else return a['Nam'] > b['Nam'];
         })
         for (let feature of features) {
-          const item = feature.attributes;
+          const item: ThoiGianSanXuatTrongTrot = feature.attributes;
           //tạo <tr>
           let row = document.createElement('tr');
           row.classList.add("Info");
@@ -393,7 +404,7 @@ class Popup {
             })
             if (codeValue) tdNCT.innerText = codeValue.name;
           }
-          if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] || '';
+          if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] + "" || '';
           //loai cay trong
           let tdLCT = document.createElement('td');
 
@@ -419,21 +430,35 @@ class Popup {
 
           //dien tich
           let tdArea = document.createElement('td');
-          tdArea.innerText = item['DienTich'] || '0';
-          //thoi gian
-          let tdTime = document.createElement('td');
-          tdTime.innerText = `${item['Thang'] || 0}/${item['Nam'] || 0}`;
+          tdArea.innerText = item['DienTich'] + "" || '0';
+          //thoi gian bat dau trong
+          let tdTGBDT = document.createElement('td');
+          if (item.ThoiGianBatDauTrong) {
+            let dtTGBDT = new Date(item.ThoiGianBatDauTrong);
+            tdTGBDT.innerText = `${dtTGBDT.getDate()}/${dtTGBDT.getMonth() + 1}/${dtTGBDT.getFullYear()}`;
+          }
+          //thoi gian trong trot
+          let tdTGTT = document.createElement('td');
+          if (item.ThoiGianTrongTrot) {
+            let dtTGTT = new Date(item.ThoiGianTrongTrot);
+            tdTGTT.innerText = `${dtTGTT.getDate()}/${dtTGTT.getMonth() + 1}/${dtTGTT.getFullYear()}`;
+          }
+          //giai doan sinh truong
+          let tdGDST = document.createElement('td');
+          tdGDST.innerText = item.GiaiDoanSinhTruong;
           row.appendChild(tdNCT);
           row.appendChild(tdLCT);
           row.appendChild(tdArea);
-          row.appendChild(tdTime);
+          row.appendChild(tdTGBDT);
+          row.appendChild(tdTGTT);
+          row.appendChild(tdGDST);
         }
         let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', table);
         modal.modal();
       } else {
-          notify.update('type', 'danger')
-          notify.update('message', 'Không tìm thấy dữ liệu')
-          notify.update('progress', 100)
+        notify.update('type', 'danger')
+        notify.update('message', 'Không tìm thấy dữ liệu')
+        notify.update('progress', 100)
       }
     })
   }
