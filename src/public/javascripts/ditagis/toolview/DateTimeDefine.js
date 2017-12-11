@@ -11,10 +11,9 @@ define(["require", "exports"], function (require, exports) {
         checkUnexpired(date) {
             return !this.checkOutOfDate(date);
         }
-        static formatDateValue(arg) {
-            if (!arg)
+        static formatDateValue(date) {
+            if (!date)
                 return '';
-            var date = new Date(arg);
             let day = date.getDate(), month = date.getMonth() + 1, year = date.getFullYear();
             if (day / 10 < 1)
                 day = '0' + day;

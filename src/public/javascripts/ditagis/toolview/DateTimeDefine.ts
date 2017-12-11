@@ -10,9 +10,8 @@ class DateTimeDefine {
     checkUnexpired(date) {
         return !this.checkOutOfDate(date);
     }
-    static formatDateValue(arg) {
-        if (!arg) return '';
-        var date = new Date(arg);
+    static formatDateValue(date:Date):string {
+        if (!date) return '';
         let day:any = date.getDate(),
             month:any = date.getMonth() + 1,
             year = date.getFullYear();
@@ -23,7 +22,7 @@ class DateTimeDefine {
         let value = `${year}-${month}-${day}`;
         return value;
     }
-    static formatNumberDate(number) {
+    static formatNumberDate(number:number):string {
         if (!number) return '';
         var date = new Date(number);
         let day:any = date.getDate(),
