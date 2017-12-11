@@ -499,6 +499,7 @@ class PopupEdit {
     lbTGTT.setAttribute('for', inputTGTT.id);
     formGroupTGTT.appendChild(lbTGTT);
     formGroupTGTT.appendChild(inputTGTT);
+    
     // Ngay thu hoach
     formGroupTGBDTT = document.createElement('div');
     formGroupTGBDTT.classList.add('form-group');
@@ -752,8 +753,8 @@ class PopupEdit {
           <th>Nhóm cây trồng</th>
           <th>Loại cây trồng</th>
           <th>Diện tích</th>
-          <th>Thời gian bắt đầu trồng</th>
           <th>Thời gian trồng trọt</th>
+          <th>Thời gian bắt đầu trồng</th>
           <th>Giai đoạn sinh trưởng</th>
           <th>Tác vụ</th>
         </tr>`
@@ -1015,7 +1016,6 @@ class PopupEdit {
           }
         });
       }
-
     }
     if (datas.edits.length > 0) {
       for (let item of datas.edits) {
@@ -1036,6 +1036,14 @@ class PopupEdit {
     this.thoiGianSanXuatTrongTrot.applyEdits(applyEdits).then(function (e) {
       console.log(e);
       $('#ttModal').modal('toggle');
+    })
+  }
+  /**
+   * Cập nhật lại nhóm cây trồng của trồng trọt
+   */
+  private refreshNhomCayTrong(currents:ThoiGianSanXuatTrongTrot[],adds:ThoiGianSanXuatTrongTrot[]){
+    currents.filter(f=>{
+      return f.NhomCayTrong === this.attributes.NhomCayTrong
     })
   }
   /**
