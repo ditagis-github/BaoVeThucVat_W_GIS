@@ -4,15 +4,20 @@ import SimpleLineSymbol = require("esri/symbols/SimpleLineSymbol");
 import SimpleFillSymbol = require("esri/symbols/SimpleFillSymbol");
 import View = require('esri/views/MapView');
 import Color = require('esri/Color');
+import GraphicsLayer = require('esri/layers/GraphicsLayer');
 class HightlightGraphic {
-  view: View;
-  symbolMarker: SimpleMarkerSymbol;
-  symbolLine: SimpleLineSymbol;
-  symbolPlg: SimpleFillSymbol;
-  tmpGraphics: Array<Graphic>;
+  private view: View;
+  private symbolMarker: SimpleMarkerSymbol;
+  private symbolLine: SimpleLineSymbol;
+  private symbolPlg: SimpleFillSymbol;
+  private graphics: GraphicsLayer;
   constructor(view: View, options) {
     options = options || {};
     this.view = view;
+    this.graphics = new GraphicsLayer({
+      listMode:'hide'
+    })
+    this.view.map.add(this.graphics);
     this.symbolMarker = options.symbolMarker || new SimpleMarkerSymbol({
       color: new Color([255, 0, 0]),
       size: 3,
@@ -26,17 +31,14 @@ class HightlightGraphic {
       color: new Color([255, 0, 0]),
       width: 4
     })
-    this.symbolPlg = options.symbolPlg || {
-      type: 'simple-polygon',
-      color: [255, 0, 0],
-      size: 3,
-      width: 4,
-      outline: { // autocasts as new SimpleLineSymbol()
-        color: [255, 64, 0, 0.4], // autocasts as new Color()
-        width: 7
-      }
-    }
-    this.tmpGraphics = [];
+    this.symbolPlg = options.symbolPlg ||
+      new SimpleFillSymbol({
+        style: "none",
+        outline: new SimpleLineSymbol({ // autocasts as SimpleLineSymbol
+          color: new Color([255, 64, 0, 0.4]),
+          width: 1
+        })
+      })
   }
   /**
    * Làm sáng các graphic được tìm thấy xung quanh screenCoor
@@ -87,8 +89,7 @@ class HightlightGraphic {
   add(graphic) {
     const type = graphic.geometry.type;
     let renderergraphic = this.rendererGraphic(type, graphic.geometry);
-    this.tmpGraphics.push(renderergraphic);
-    this.view.graphics.add(renderergraphic);
+    this.graphics.add(renderergraphic);
   }
   addAll(graphics) {
     for (let g of graphics) {
@@ -96,10 +97,7 @@ class HightlightGraphic {
     }
   }
   removeAll() {
-    for (let g of this.tmpGraphics) {
-      this.view.graphics.remove(g);
-    }
-    this.tmpGraphics = [];
+    this.graphics.removeAll();
   }
 }
 export = HightlightGraphic;

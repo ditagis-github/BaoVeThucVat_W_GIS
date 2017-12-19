@@ -1,9 +1,13 @@
-define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color"], function (require, exports, Graphic, SimpleMarkerSymbol, SimpleLineSymbol, Color) {
+define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/Color", "esri/layers/GraphicsLayer"], function (require, exports, Graphic, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, Color, GraphicsLayer) {
     "use strict";
     class HightlightGraphic {
         constructor(view, options) {
             options = options || {};
             this.view = view;
+            this.graphics = new GraphicsLayer({
+                listMode: 'hide'
+            });
+            this.view.map.add(this.graphics);
             this.symbolMarker = options.symbolMarker || new SimpleMarkerSymbol({
                 color: new Color([255, 0, 0]),
                 size: 3,
@@ -16,17 +20,14 @@ define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol",
                 color: new Color([255, 0, 0]),
                 width: 4
             });
-            this.symbolPlg = options.symbolPlg || {
-                type: 'simple-polygon',
-                color: [255, 0, 0],
-                size: 3,
-                width: 4,
-                outline: {
-                    color: [255, 64, 0, 0.4],
-                    width: 7
-                }
-            };
-            this.tmpGraphics = [];
+            this.symbolPlg = options.symbolPlg ||
+                new SimpleFillSymbol({
+                    style: "none",
+                    outline: new SimpleLineSymbol({
+                        color: new Color([255, 64, 0, 0.4]),
+                        width: 1
+                    })
+                });
         }
         hightlight(screenCoors) {
             this.clear();
@@ -62,8 +63,7 @@ define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol",
         add(graphic) {
             const type = graphic.geometry.type;
             let renderergraphic = this.rendererGraphic(type, graphic.geometry);
-            this.tmpGraphics.push(renderergraphic);
-            this.view.graphics.add(renderergraphic);
+            this.graphics.add(renderergraphic);
         }
         addAll(graphics) {
             for (let g of graphics) {
@@ -71,10 +71,7 @@ define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol",
             }
         }
         removeAll() {
-            for (let g of this.tmpGraphics) {
-                this.view.graphics.remove(g);
-            }
-            this.tmpGraphics = [];
+            this.graphics.removeAll();
         }
     }
     return HightlightGraphic;

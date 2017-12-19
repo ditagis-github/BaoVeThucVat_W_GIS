@@ -109,8 +109,6 @@ require([
               })
             })
           }
-
-
         })
         let worldImage = new MapImageLayer({
           url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/',
