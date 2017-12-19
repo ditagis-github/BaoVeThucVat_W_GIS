@@ -22,13 +22,15 @@ require([
   "esri/renderers/UniqueValueRenderer",
   "esri/symbols/SimpleMarkerSymbol",
   "ditagis/classes/SystemStatusObject",
-
+  "ditagis/support/HightlightGraphic",
   "ditagis/widgets/LayerEditor",
   "ditagis/widgets/User",
   "ditagis/widgets/Popup",
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
+  'esri/symbols/SimpleFillSymbol',
+  'esri/symbols/SimpleLineSymbol',
   "css!ditagis/styling/dtg-map.css"
 
 
@@ -36,9 +38,9 @@ require([
   Expand, Locate, LayerList, Legend, Search,
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
-  SystemStatusObject,
+  SystemStatusObject, HightlightGraphic,
   LayerEditor, UserWidget, Popup,
-  on, domConstruct, has
+  on, domConstruct, has, SimpleFillSymbol, SimpleLineSymbol
 ) {
   'use strict';
   try {
@@ -59,7 +61,15 @@ require([
         definitionExpression = `MaHuyenTP = '${systemVariable.user.role.trim()}'`; //vi du role = 725, => MaHuyenTP = 725
       }
 
-
+      var hightlightGraphic = new HightlightGraphic(view, {
+        symbolPlg: new SimpleFillSymbol({
+          style: "none",
+          outline: new SimpleLineSymbol({ // autocasts as SimpleLineSymbol
+            color: "black",
+            width: 1
+          })
+        })
+      });
 
 
       view.systemVariable = systemVariable;
@@ -300,6 +310,16 @@ require([
             placeholder: "Nhập tên đường"
           }]
         });
+        searchWidget.on('search-complete', e => {
+          hightlightGraphic.clear();
+          let hanhChinh = e.results.find(f => {
+            return f.sourceIndex === 3
+          });
+          if (hanhChinh && hanhChinh.results.length > 0) {
+            let graphic = hanhChinh.results[0].feature;
+            hightlightGraphic.add(graphic);
+          }
+        })
         // Add the search widget to the top left corner of the view
         view.ui.add(searchWidget, {
           position: "top-right"

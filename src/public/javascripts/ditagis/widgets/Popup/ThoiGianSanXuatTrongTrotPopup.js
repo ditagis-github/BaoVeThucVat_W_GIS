@@ -139,7 +139,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 inputArea.value = area + "";
             }
             lbArea = document.createElement('label');
-            lbArea.innerText = 'Diện tích';
+            lbArea.innerText = 'Diện tích (m2)';
             lbArea.setAttribute('for', inputArea.id);
             formGroupArea.appendChild(lbArea);
             formGroupArea.appendChild(inputArea);
@@ -281,7 +281,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             inputArea.value = item.DienTich + "";
             inputArea.classList.add('form-control');
             lbArea = document.createElement('label');
-            lbArea.innerText = 'Diện tích';
+            lbArea.innerText = 'Diện tích (m2)';
             inputArea.readOnly = true;
             formGroupArea.appendChild(lbArea);
             formGroupArea.appendChild(inputArea);

@@ -85,7 +85,7 @@ class HightlightGraphic {
     return graphic;
   }
   add(graphic) {
-    const type = graphic.layer.geometryType;
+    const type = graphic.geometry.type;
     let renderergraphic = this.rendererGraphic(type, graphic.geometry);
     this.tmpGraphics.push(renderergraphic);
     this.view.graphics.add(renderergraphic);
