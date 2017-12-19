@@ -173,6 +173,11 @@ require([
                   if (definitionExpression)
                     element.definitionExpression = definitionExpression;
                   if (element.id === constName.SAUBENH) {
+                    if (!element.definitionExpression)
+                      element.definitionExpression = ''
+                    let date = new Date();
+                    date.setDate(date.getDate() - 365);
+                    element.definitionExpression += `NgayXayRa >= date '${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}'`
                     element.renderer = new UniqueValueRenderer({
                       field: "CapDoGayHai",
                       uniqueValueInfos: [{
@@ -252,7 +257,7 @@ require([
             style: "none",
             outline: new SimpleLineSymbol({ // autocasts as SimpleLineSymbol
               color: "black",
-              width: 1
+              width: 3
             })
           })
         });
@@ -332,8 +337,6 @@ require([
 
         var popup = new Popup(view);
         popup.startup();
-
-
       }
 
       initBaseMap();
