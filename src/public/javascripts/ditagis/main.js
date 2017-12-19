@@ -22,15 +22,16 @@ require([
   "esri/renderers/UniqueValueRenderer",
   "esri/symbols/SimpleMarkerSymbol",
   "ditagis/classes/SystemStatusObject",
-  "ditagis/support/HightlightGraphic",
+
   "ditagis/widgets/LayerEditor",
   "ditagis/widgets/User",
   "ditagis/widgets/Popup",
+  "ditagis/support/HightlightGraphic",
+  'esri/symbols/SimpleFillSymbol',
+  'esri/symbols/SimpleLineSymbol',
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
-  'esri/symbols/SimpleFillSymbol',
-  'esri/symbols/SimpleLineSymbol',
   "css!ditagis/styling/dtg-map.css"
 
 
@@ -38,9 +39,9 @@ require([
   Expand, Locate, LayerList, Legend, Search,
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
-  SystemStatusObject, HightlightGraphic,
-  LayerEditor, UserWidget, Popup,
-  on, domConstruct, has, SimpleFillSymbol, SimpleLineSymbol
+  SystemStatusObject,
+  LayerEditor, UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol,
+  on, domConstruct, has
 ) {
   'use strict';
   try {
@@ -60,17 +61,6 @@ require([
       if (Math.floor(systemVariable.user.role / 100) === 7) { //role bat dau tu so 7
         definitionExpression = `MaHuyenTP = '${systemVariable.user.role.trim()}'`; //vi du role = 725, => MaHuyenTP = 725
       }
-
-      var hightlightGraphic = new HightlightGraphic(view, {
-        symbolPlg: new SimpleFillSymbol({
-          style: "none",
-          outline: new SimpleLineSymbol({ // autocasts as SimpleLineSymbol
-            color: "black",
-            width: 1
-          })
-        })
-      });
-
 
       view.systemVariable = systemVariable;
       view.snapping = {
@@ -109,6 +99,8 @@ require([
               })
             })
           }
+
+
         })
         let worldImage = new MapImageLayer({
           url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/',
@@ -255,7 +247,15 @@ require([
             view: view,
           })
         }), "top-left");
-
+        var hightlightGraphic = new HightlightGraphic(view, {
+          symbolPlg: new SimpleFillSymbol({
+            style: "none",
+            outline: new SimpleLineSymbol({ // autocasts as SimpleLineSymbol
+              color: "black",
+              width: 1
+            })
+          })
+        });
         // Widget Search Features //
         var searchWidget = new Search({
           view: view,
@@ -308,6 +308,10 @@ require([
             placeholder: "Nhập tên đường"
           }]
         });
+        // Add the search widget to the top left corner of the view
+        view.ui.add(searchWidget, {
+          position: "top-right"
+        });
         searchWidget.on('search-complete', e => {
           hightlightGraphic.clear();
           let hanhChinh = e.results.find(f => {
@@ -318,10 +322,6 @@ require([
             hightlightGraphic.add(graphic);
           }
         })
-        // Add the search widget to the top left corner of the view
-        view.ui.add(searchWidget, {
-          position: "top-right"
-        });
         /**
          * Layer Editor
          */
