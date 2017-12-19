@@ -3,6 +3,12 @@ import DateTimeDefine = require('../../toolview/DateTimeDefine');
 import Graphic = require('esri/Graphic');
 import FeatureTable = require('../../support/FeatureTable');
 import on = require('dojo/on');
+import MapView = require('esri/views/MapView');
+import geometryEngine = require('esri/geometry/geometryEngine');
+import constName = require('../../classes/ConstName');
+import mapConfig = require('../../config');
+
+
 interface ThoiGianSanXuatTrongTrot {
   OBJECTID: number;
   MaDoiTuong: string;
@@ -40,20 +46,25 @@ interface ConstructorProperies {
   table;
 }
 class ThoiGianSanXuatTrongTrotPopup {
-  private view;
+  private view: MapView;
   private tmpDatasDetailTrongTrong: TmpDataDetailTrongTrot;
   private thoiGianSanXuatTrongTrot: FeatureTable;
   private dataDetails: ThoiGianSanXuatTrongTrotService[];
+  private tblGiaiDoanSinhTruong: FeatureTable;
   constructor(params: ConstructorProperies) {
     this.view = params.view;
     this.thoiGianSanXuatTrongTrot = params.table;
+    this.tblGiaiDoanSinhTruong = new FeatureTable({
+      url: mapConfig.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG }).url,
+      fieldID: 'OBJECTID'
+    })
     this.dataDetails = [];
   }
-  private get selectFeature() {
+  private get selectFeature(): Graphic {
     return this.view.popup.viewModel.selectedFeature;
   }
-  private get layer() {
-    return this.selectFeature.layer;
+  private get layer(): __esri.FeatureLayer {
+    return this.view.map.findLayerById(constName.TRONGTROT) as __esri.FeatureLayer;
   }
   private get attributes(): TrongTrotLayer {
     return this.selectFeature.attributes;
@@ -79,7 +90,7 @@ class ThoiGianSanXuatTrongTrotPopup {
   private renderDomain(domain, name) {
     let codedValues;
     if (domain.type === "inherited") {
-      let fieldDomain = this.layer.getFieldDomain(name);
+      let fieldDomain = this.layer.getFieldDomain(name) as __esri.CodedValueDomain;
       if (fieldDomain) codedValues = fieldDomain.codedValues;
     } else { //type is codedValue
       codedValues = domain.codedValues;
@@ -131,12 +142,12 @@ class ThoiGianSanXuatTrongTrotPopup {
     inputNCT = document.createElement('select');
     inputNCT.id = 'NhomCayTrong';
     inputNCT.classList.add('form-control');
-    let codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+    let codedValues = (this.layer.getFieldDomain('NhomCayTrong') as __esri.CodedValueDomain).codedValues;
     for (let codedValue of codedValues) {
       let dmCode = codedValue.code,
         dmName = codedValue.name;
       let option = document.createElement('option');
-      option.setAttribute('value', dmCode);
+      option.setAttribute('value', dmCode + "");
       option.innerHTML = dmName;
       inputNCT.appendChild(option);
     }
@@ -152,7 +163,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       if (!domain) return;
       let codedValues;
       if (domain.type === "inherited") {
-        let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+        let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong') as __esri.CodedValueDomain;
         if (fieldDomain) codedValues = fieldDomain.codedValues;
       } else { //type is codedValue
         codedValues = domain.codedValues;
@@ -180,11 +191,16 @@ class ThoiGianSanXuatTrongTrotPopup {
     //DIEN TICH
     formGroupArea = document.createElement('div');
     formGroupArea.classList.add('form-group');
-    let lbArea, inputArea;
+    let lbArea, inputArea: HTMLInputElement;
     inputArea = document.createElement('input');
-    inputArea.type = 'number';
+    // inputArea.type = 'number';
     inputArea.id = 'DienTich';
     inputArea.classList.add('form-control');
+    if (this.selectFeature.geometry) {
+      let area = geometryEngine.geodesicArea(this.selectFeature.geometry as __esri.Polygon, "square-meters").toFixed(1);
+      inputArea.value = area + "";
+    }
+
     lbArea = document.createElement('label');
     lbArea.innerText = 'Diện tích';
     lbArea.setAttribute('for', inputArea.id);
@@ -230,7 +246,7 @@ class ThoiGianSanXuatTrongTrotPopup {
         MaDoiTuong: this.attributes['MaDoiTuong'],
         NhomCayTrong: parseInt(inputNCT.value),
         LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
-        DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
+        DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
         ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
         ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value)
       }
@@ -282,12 +298,12 @@ class ThoiGianSanXuatTrongTrotPopup {
     let lbNCT: HTMLLabelElement, inputNCT: HTMLSelectElement;
     inputNCT = document.createElement('select');
     inputNCT.classList.add('form-control');
-    let codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+    let codedValues = (this.layer.getFieldDomain('NhomCayTrong') as __esri.CodedValueDomain).codedValues;
     for (let codedValue of codedValues) {
       let dmCode = codedValue.code,
         dmName = codedValue.name;
       let option = document.createElement('option');
-      option.setAttribute('value', dmCode);
+      option.setAttribute('value', dmCode + "");
       option.innerHTML = dmName;
       inputNCT.appendChild(option);
     }
@@ -304,7 +320,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       if (!domain) return;
       let codedValues;
       if (domain.type === "inherited") {
-        let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+        let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong') as __esri.CodedValueDomain;
         if (fieldDomain) codedValues = fieldDomain.codedValues;
       } else { //type is codedValue
         codedValues = domain.codedValues;
@@ -339,6 +355,7 @@ class ThoiGianSanXuatTrongTrotPopup {
     inputArea.classList.add('form-control');
     lbArea = document.createElement('label');
     lbArea.innerText = 'Diện tích';
+    inputArea.readOnly = true;
     formGroupArea.appendChild(lbArea);
     formGroupArea.appendChild(inputArea);
 
@@ -371,12 +388,29 @@ class ThoiGianSanXuatTrongTrotPopup {
     //GIAI DOAN SINH TRUONG
     formGDST = document.createElement('div');
     formGDST.classList.add('form-group');
-    let lbGDST: HTMLLabelElement, inputGDST: HTMLInputElement;
-    inputGDST = document.createElement('input');
-    inputGDST.value = item.GiaiDoanSinhTruong;
-    inputGDST.classList.add('form-control');
+    let lbGDST: HTMLLabelElement, inputGDST: HTMLSelectElement;
     lbGDST = document.createElement('label');
     lbGDST.innerText = 'Giai đoạn sinh trưởng';
+    inputGDST = document.createElement('select');
+    inputGDST.classList.add('form-control');
+    let defaultComboValue = document.createElement('option');
+    defaultComboValue.value = "N/A";
+    defaultComboValue.innerText = 'Chọn giá trị...';
+    defaultComboValue.selected = true;
+    inputGDST.appendChild(defaultComboValue);
+    this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
+      where: `NhomCayTrong = ${item.NhomCayTrong} and LoaiCayTrong = '${item.LoaiCayTrong}'`,
+      outFields: ['GiaiDoanSinhTruong'],
+      orderByFields: ['MocTG']
+    }).then(res => {
+      res.features.forEach(f => {
+        let gdst = f.attributes.GiaiDoanSinhTruong;
+        let cbb = document.createElement('option');
+        cbb.value = cbb.innerText = gdst;
+        inputGDST.appendChild(cbb);
+      })
+      inputGDST.value = item.GiaiDoanSinhTruong;
+    })
     formGDST.appendChild(lbGDST);
     formGDST.appendChild(inputGDST);
 
@@ -442,7 +476,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       `<tr>
           <th>Nhóm cây trồng</th>
           <th>Loại cây trồng</th>
-          <th>Diện tích</th>
+          <th>Diện tích (m2)</th>
           <th>Thời gian trồng trọt</th>
           <th>Thời gian bắt đầu trồng</th>
           <th>Giai đoạn sinh trưởng</th>
@@ -537,7 +571,7 @@ class ThoiGianSanXuatTrongTrotPopup {
         tdTGBDT: HTMLElement = tds[4],
         tdGDST: HTMLElement = tds[5];
       //Nhom Cay Trong
-      let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+      let NCTcodedValues = (this.layer.getFieldDomain('NhomCayTrong') as __esri.CodedValueDomain).codedValues;
       if (NCTcodedValues) {
         let codeValue = NCTcodedValues.find(f => {
           return f.code == item['NhomCayTrong']
@@ -552,7 +586,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       if (domain) {
         let LCTcodedValues;
         if (domain.type === "inherited") {
-          let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+          let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong') as __esri.CodedValueDomain;
           if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
         } else { //type is codedValue
           LCTcodedValues = domain.codedValues;
@@ -586,7 +620,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       //nhom cay trong
       let tdNCT = document.createElement('td');
       // tdNCT.innerText = item['NhomCayTrong'] || '';
-      let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+      let NCTcodedValues = (this.layer.getFieldDomain('NhomCayTrong') as __esri.CodedValueDomain).codedValues;
       if (NCTcodedValues) {
         let codeValue = NCTcodedValues.find(f => {
           return f.code == item['NhomCayTrong']
@@ -603,7 +637,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       if (domain) {
         let LCTcodedValues;
         if (domain.type === "inherited") {
-          let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+          let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong') as __esri.CodedValueDomain;
           if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
         } else { //type is codedValue
           LCTcodedValues = domain.codedValues;
@@ -779,12 +813,12 @@ class ThoiGianSanXuatTrongTrotPopup {
     if (isValid) {
       let firstItem = adds[0];
       this.layer.applyEdits({
-        updateFeatures: [{
+        updateFeatures: [new Graphic({
           attributes: <TrongTrotLayer>{
             OBJECTID: this.attributes.OBJECTID,
             NhomCayTrong: firstItem.NhomCayTrong
           }
-        }]
+        })]
       })
     }
 

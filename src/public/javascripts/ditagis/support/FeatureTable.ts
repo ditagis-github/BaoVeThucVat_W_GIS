@@ -71,5 +71,8 @@ class FeatureTable {
       body: form
     })
   }
+  public queryFeatures(query: __esri.Query): IPromise<__esri.FeatureSet> {
+    return this.queryTask.execute(query);
+  }
 }
 export = FeatureTable;

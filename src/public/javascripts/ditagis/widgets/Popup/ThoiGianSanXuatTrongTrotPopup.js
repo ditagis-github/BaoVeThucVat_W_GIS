@@ -1,16 +1,20 @@
-define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTimeDefine", "dojo/on"], function (require, exports, bootstrap, DateTimeDefine, on) {
+define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTimeDefine", "esri/Graphic", "../../support/FeatureTable", "dojo/on", "esri/geometry/geometryEngine", "../../classes/ConstName", "../../config"], function (require, exports, bootstrap, DateTimeDefine, Graphic, FeatureTable, on, geometryEngine, constName, mapConfig) {
     "use strict";
     class ThoiGianSanXuatTrongTrotPopup {
         constructor(params) {
             this.view = params.view;
             this.thoiGianSanXuatTrongTrot = params.table;
+            this.tblGiaiDoanSinhTruong = new FeatureTable({
+                url: mapConfig.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG; }).url,
+                fieldID: 'OBJECTID'
+            });
             this.dataDetails = [];
         }
         get selectFeature() {
             return this.view.popup.viewModel.selectedFeature;
         }
         get layer() {
-            return this.selectFeature.layer;
+            return this.view.map.findLayerById(constName.TRONGTROT);
         }
         get attributes() {
             return this.selectFeature.attributes;
@@ -80,7 +84,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             for (let codedValue of codedValues) {
                 let dmCode = codedValue.code, dmName = codedValue.name;
                 let option = document.createElement('option');
-                option.setAttribute('value', dmCode);
+                option.setAttribute('value', dmCode + "");
                 option.innerHTML = dmName;
                 inputNCT.appendChild(option);
             }
@@ -128,9 +132,12 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupArea.classList.add('form-group');
             let lbArea, inputArea;
             inputArea = document.createElement('input');
-            inputArea.type = 'number';
             inputArea.id = 'DienTich';
             inputArea.classList.add('form-control');
+            if (this.selectFeature.geometry) {
+                let area = geometryEngine.geodesicArea(this.selectFeature.geometry, "square-meters").toFixed(1);
+                inputArea.value = area + "";
+            }
             lbArea = document.createElement('label');
             lbArea.innerText = 'Diện tích';
             lbArea.setAttribute('for', inputArea.id);
@@ -170,7 +177,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                     MaDoiTuong: this.attributes['MaDoiTuong'],
                     NhomCayTrong: parseInt(inputNCT.value),
                     LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
-                    DienTich: parseFloat(inputArea.value ? inputArea.value : 0),
+                    DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
                     ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
                     ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value)
                 };
@@ -221,7 +228,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             for (let codedValue of codedValues) {
                 let dmCode = codedValue.code, dmName = codedValue.name;
                 let option = document.createElement('option');
-                option.setAttribute('value', dmCode);
+                option.setAttribute('value', dmCode + "");
                 option.innerHTML = dmName;
                 inputNCT.appendChild(option);
             }
@@ -275,6 +282,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             inputArea.classList.add('form-control');
             lbArea = document.createElement('label');
             lbArea.innerText = 'Diện tích';
+            inputArea.readOnly = true;
             formGroupArea.appendChild(lbArea);
             formGroupArea.appendChild(inputArea);
             formGroupTGTT = document.createElement('div');
@@ -302,11 +310,28 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGDST = document.createElement('div');
             formGDST.classList.add('form-group');
             let lbGDST, inputGDST;
-            inputGDST = document.createElement('input');
-            inputGDST.value = item.GiaiDoanSinhTruong;
-            inputGDST.classList.add('form-control');
             lbGDST = document.createElement('label');
             lbGDST.innerText = 'Giai đoạn sinh trưởng';
+            inputGDST = document.createElement('select');
+            inputGDST.classList.add('form-control');
+            let defaultComboValue = document.createElement('option');
+            defaultComboValue.value = "N/A";
+            defaultComboValue.innerText = 'Chọn giá trị...';
+            defaultComboValue.selected = true;
+            inputGDST.appendChild(defaultComboValue);
+            this.tblGiaiDoanSinhTruong.queryFeatures({
+                where: `NhomCayTrong = ${item.NhomCayTrong} and LoaiCayTrong = '${item.LoaiCayTrong}'`,
+                outFields: ['GiaiDoanSinhTruong'],
+                orderByFields: ['MocTG']
+            }).then(res => {
+                res.features.forEach(f => {
+                    let gdst = f.attributes.GiaiDoanSinhTruong;
+                    let cbb = document.createElement('option');
+                    cbb.value = cbb.innerText = gdst;
+                    inputGDST.appendChild(cbb);
+                });
+                inputGDST.value = item.GiaiDoanSinhTruong;
+            });
             formGDST.appendChild(lbGDST);
             formGDST.appendChild(inputGDST);
             btnEdit = document.createElement('button');
@@ -367,7 +392,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 `<tr>
           <th>Nhóm cây trồng</th>
           <th>Loại cây trồng</th>
-          <th>Diện tích</th>
+          <th>Diện tích (m2)</th>
           <th>Thời gian trồng trọt</th>
           <th>Thời gian bắt đầu trồng</th>
           <th>Giai đoạn sinh trưởng</th>
@@ -690,12 +715,12 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             if (isValid) {
                 let firstItem = adds[0];
                 this.layer.applyEdits({
-                    updateFeatures: [{
+                    updateFeatures: [new Graphic({
                             attributes: {
                                 OBJECTID: this.attributes.OBJECTID,
                                 NhomCayTrong: firstItem.NhomCayTrong
                             }
-                        }]
+                        })]
                 });
             }
         }

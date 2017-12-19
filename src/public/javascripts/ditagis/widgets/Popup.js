@@ -15,7 +15,7 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                 hightLength: 100
             };
             let url = config.tables.find(function (f) {
-                return f.id === 'thoigiansxtt';
+                return f.id === constName.THOI_GIAN_SAN_XUAT_TRONG_TROT;
             }).url;
             this.thoiGianSanXuatTrongTrot = new FeatureTable({ url: url, fieldID: 'MaDoiTuong' });
             this.popupEdit = new PopupEdit(view, {

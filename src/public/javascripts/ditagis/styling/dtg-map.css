@@ -86,6 +86,8 @@
     }
     .modal-body{
       background-color: #fff;
+      max-height: calc(100vh - 200px);
+      overflow: auto;
     }
     .esri-view-width-xsmall .esri-popup--is-docked-top-right .esri-popup__main-container{
       max-height: 80%;

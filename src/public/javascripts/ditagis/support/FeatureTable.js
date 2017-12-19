@@ -61,6 +61,9 @@ define(["require", "exports", "esri/tasks/QueryTask", "esri/request"], function 
                 body: form
             });
         }
+        queryFeatures(query) {
+            return this.queryTask.execute(query);
+        }
     }
     return FeatureTable;
 });

@@ -51,7 +51,7 @@ const config = {
         id: 'thoigiansxtt',
         url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/3",
     }, {
-        id: 'giaidoansinhtruong',
+        id: 'tblgiaidoansinhtruong',
         url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/4",
     }],
     zoom: 10,
