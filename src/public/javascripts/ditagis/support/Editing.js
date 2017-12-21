@@ -50,7 +50,7 @@ define(["require", "exports", "esri/tasks/QueryTask", "../classes/ConstName"], f
             let layer = view.map.findLayerById(constName.TRONGTROT);
             var query = layer.createQuery();
             query.geometry = geometry;
-            query.outFields = ["LoaiCayTrong", "NhomCayTrong"];
+            query.outFields = ["NhomCayTrong"];
             return new Promise((resolve, reject) => {
                 layer.queryFeatures(query).then(result => {
                     resolve(result.features[0].attributes);

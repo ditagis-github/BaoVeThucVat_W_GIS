@@ -20,7 +20,7 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
         set layer(value) {
             this._layer = value;
         }
-        draw(graphic, layer) {
+        draw(layer, graphic) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
                     var notify = $.notify({
@@ -60,8 +60,9 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
                                 notify.update('message', 'Đang lấy vị trí...!');
                                 notify.update('progress', 55);
                                 var proms = [];
+                                if (layer.id === constName.SAUBENH)
+                                    proms.push(editingSupport.getLocationInfo(this.view, graphic.geometry));
                                 proms.push(editingSupport.getNhomCayTrong(this.view, graphic.geometry));
-                                proms.push(editingSupport.getLocationInfo(this.view, graphic.geometry));
                                 Promise.all(proms).then((value) => {
                                     notify.update('type', 'info');
                                     notify.update('message', 'Lấy vị trí thành công!');
@@ -70,9 +71,10 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
                                     for (let i in value[0]) {
                                         attributes[i] = value[0][i];
                                     }
-                                    for (let i in value[1]) {
-                                        attributes[i] = value[1][i];
-                                    }
+                                    if (value[1])
+                                        for (let i in value[1]) {
+                                            attributes[i] = value[1][i];
+                                        }
                                     layer.applyEdits({
                                         updateFeatures: [{
                                                 attributes: attributes
@@ -99,7 +101,7 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
                                         }
                                         else
                                             notify.update('type', 'danger');
-                                        notify.update('message', 'Cập nhật vị trí không thành công');
+                                        notify.update('message', 'Cập nhật vị trí thành công');
                                         notify.update('progress', 100);
                                     });
                                 });

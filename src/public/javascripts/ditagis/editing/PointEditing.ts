@@ -20,9 +20,7 @@ class PointEditing {
   set layer(value: FeatureLayer) {
     this._layer = value;
   }
-  draw(graphic): void;
-  draw(graphic, layer): void;
-  async draw(graphic, layer?) {
+  async draw(layer, graphic) {
     try {
       var notify = $.notify({
         title: '<strong>Cập nhật đối tượng</strong>',
@@ -72,19 +70,21 @@ class PointEditing {
             notify.update('message', 'Đang lấy vị trí...!')
             notify.update('progress', 55)
             var proms = [];
+            if (layer.id === constName.SAUBENH)
+              proms.push(editingSupport.getLocationInfo(this.view, graphic.geometry));
             proms.push(editingSupport.getNhomCayTrong(this.view, graphic.geometry));
-            proms.push(editingSupport.getLocationInfo(this.view, graphic.geometry));
             Promise.all(proms).then((value) => {
               notify.update('type', 'info');
               notify.update('message', 'Lấy vị trí thành công!')
-              notify.update('progress', 80 );
+              notify.update('progress', 80);
               let attributes = { objectId: item.objectId };
               for (let i in value[0]) {
                 attributes[i] = value[0][i];
               }
-              for (let i in value[1]) {
-                attributes[i] = value[1][i];
-              }
+              if (value[1])
+                for (let i in value[1]) {
+                  attributes[i] = value[1][i];
+                }
               layer.applyEdits({
                 updateFeatures: [{
                   attributes: attributes
@@ -93,7 +93,7 @@ class PointEditing {
                 if (!result.updateFeatureResults[0].error) {
                   notify.update('type', 'success')
                   notify.update('message', 'Cập nhật vị trí thành công!')
-                  notify.update('progress', 100 );
+                  notify.update('progress', 100);
                   //POPUP OPEN
                   layer.queryFeatures({
                     returnGeometry: true,
@@ -113,8 +113,8 @@ class PointEditing {
                 }
                 else
                   notify.update('type', 'danger')
-                  notify.update('message', 'Cập nhật vị trí không thành công');
-                  notify.update('progress', 100 );
+                notify.update('message', 'Cập nhật vị trí thành công');
+                notify.update('progress', 100);
               });
 
             });
