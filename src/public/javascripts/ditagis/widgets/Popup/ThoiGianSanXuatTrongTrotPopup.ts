@@ -248,7 +248,8 @@ class ThoiGianSanXuatTrongTrotPopup {
         LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
         DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
         ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
-        ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value)
+        ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value),
+        GiaiDoanSinhTruong:'Trồng mới'
       }
       let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
       let addDatas = this.tmpDatasDetailTrongTrong.adds;
