@@ -6,7 +6,7 @@ define(["require", "exports", "dojo/dom-construct", "esri/widgets/Expand"], func
             this.view = options.view;
             this.options = {
                 position: "top-left",
-                icon: 'esri-icon-user',
+                icon: 'esri-icon-documentation',
                 title: 'Lịch sử thao tác dữ liệu'
             };
             this.initView();
