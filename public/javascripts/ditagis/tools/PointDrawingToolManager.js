@@ -14,15 +14,20 @@ define(["require", "exports", "./SimpleDrawPoint", "../editing/PointEditing", ".
             let accept = confirm('Chắc chắn muốn thêm?');
             if (!accept)
                 return;
-            this.pointEditing.draw(this.drawLayer, graphic);
+            return this.pointEditing.draw(this.drawLayer, graphic);
         }
         registerEvent() {
             this.simpleDrawPoint.on('draw-finish', (graphic) => {
-                this.eventListener.fire('draw-finish', {
-                    graphic: graphic,
-                    method: 'simple'
+                this.addFeature(graphic).then(_ => {
+                    this.eventListener.fire('draw-finish', {
+                        graphic: {
+                            layer: this.drawLayer,
+                            attributes: graphic.attributes,
+                            geometry: graphic.geometry
+                        },
+                        method: 'simple'
+                    });
                 });
-                this.addFeature(graphic);
             });
         }
         set drawLayer(val) {

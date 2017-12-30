@@ -23,6 +23,7 @@ require([
   "esri/symbols/SimpleMarkerSymbol",
   "ditagis/classes/SystemStatusObject",
 
+  "ditagis/widgets/EditorHistory",
   "ditagis/widgets/LayerEditor",
   "ditagis/widgets/User",
   "ditagis/widgets/Popup",
@@ -40,7 +41,7 @@ require([
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
   SystemStatusObject,
-  LayerEditor, UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol,
+  EditorHistory, LayerEditor, UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol,
   on, domConstruct, has
 ) {
   'use strict';
@@ -189,15 +190,15 @@ require([
                     }]
                   });
                 }
-                if (definitionExpression){
-                  if(element.definitionExpression){
-                    element.definitionExpression+=` and `+ definitionExpression;
-                  }else{
+                if (definitionExpression) {
+                  if (element.definitionExpression) {
+                    element.definitionExpression += ` and ` + definitionExpression;
+                  } else {
                     element.definitionExpression = definitionExpression;
                   }
                   element.definitionExpression = definitionExpression;
                 }
-                  
+
                 let fl = new FeatureLayer(element);
 
                 map.add(fl);
@@ -331,6 +332,14 @@ require([
 
       var popup = new Popup(view);
       popup.startup();
+      var editorHistory = new EditorHistory({
+        view: view
+      });
+      layerEditor.on("draw-finish", function (e) {
+        editorHistory.add({
+          layerName: e.graphic.layer.title
+        });
+      })
     }
 
     initBaseMap();

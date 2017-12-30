@@ -81,6 +81,7 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
                                             }]
                                     }).then((result) => {
                                         if (!result.updateFeatureResults[0].error) {
+                                            Promise.resolve();
                                             notify.update('type', 'success');
                                             notify.update('message', 'Cập nhật vị trí thành công!');
                                             notify.update('progress', 100);
@@ -99,10 +100,10 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
                                                 }
                                             });
                                         }
-                                        else
+                                        else {
                                             notify.update('type', 'danger');
-                                        notify.update('message', 'Cập nhật vị trí thành công');
-                                        notify.update('progress', 100);
+                                            Promise.reject("err");
+                                        }
                                     });
                                 });
                             }

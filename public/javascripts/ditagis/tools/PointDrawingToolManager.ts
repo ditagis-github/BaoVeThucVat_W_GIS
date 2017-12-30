@@ -30,15 +30,21 @@ class PointDrawingToolManager {
     addFeature(graphic) {
         let accept = confirm('Chắc chắn muốn thêm?');
         if (!accept) return;
-        this.pointEditing.draw(this.drawLayer, graphic);
+        return this.pointEditing.draw(this.drawLayer, graphic);
     }
     registerEvent() {
         this.simpleDrawPoint.on('draw-finish', (graphic) => {
-            this.eventListener.fire('draw-finish', {
-                graphic: graphic,
-                method: 'simple'
-            });
-            this.addFeature(graphic);
+
+            this.addFeature(graphic).then(_=>{
+                this.eventListener.fire('draw-finish', {
+                    graphic: <__esri.Graphic>{
+                        layer:this.drawLayer,
+                        attributes:graphic.attributes,
+                        geometry:graphic.geometry
+                    },
+                    method: 'simple'
+                });                
+            })
         })
     }
     set drawLayer(val) {

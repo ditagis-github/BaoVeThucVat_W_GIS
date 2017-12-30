@@ -4,13 +4,13 @@ define([
     "dojo/dom-class",
     "dojo/dom",
     "esri/widgets/Expand",
-
+    "../classes/EventListener",
     "ditagis/tools/PointDrawingToolManager",
     'css!ditagis/widgets/LayerEditor.css'
 
 ], function (on,
     domConstruct, domClass, dom,
-    Expand,
+    Expand,EventListener,
     PointDrawingToolManager
 ) {
         'use strict';
@@ -27,9 +27,12 @@ define([
                     this.options[i] = options[i];
                 }
                 this.isStartup = false;
-
+                this.eventListener = new EventListener(this);
                 this.initView();
                 this.drawManager = new PointDrawingToolManager(this.view);
+                this.drawManager.on("draw-finish",e=>{
+                    this.eventListener.fire("draw-finish",e);
+                })
 
             }
             get selectedFeature() {
