@@ -337,7 +337,8 @@ require([
       });
       layerEditor.on("draw-finish", function (e) {
         editorHistory.add({
-          layerName: e.graphic.layer.title
+          layerName: e.graphic.layer.title,
+          geometry:e.graphic.geometry
         });
       })
     }

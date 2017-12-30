@@ -1,4 +1,4 @@
-define(["require", "exports", "dojo/dom-construct", "esri/widgets/Expand"], function (require, exports, domConstruct, Expand) {
+define(["require", "exports", "dojo/on", "dojo/dom-construct", "esri/widgets/Expand"], function (require, exports, on, domConstruct, Expand) {
     "use strict";
     class EditorHistory {
         constructor(options) {
@@ -41,6 +41,11 @@ define(["require", "exports", "dojo/dom-construct", "esri/widgets/Expand"], func
         <div class="col-2">
         <strong class="name">${info.layerName}</strong>
         <p>Thời gian: ${time}</p></div></div>`;
+            if (info.geometry) {
+                on(li, 'click', _ => {
+                    this.view.goTo(info.geometry);
+                });
+            }
         }
     }
     return EditorHistory;

@@ -37,7 +37,8 @@ class EditorHistory {
         });
     }
     public add(info: {
-        layerName: string
+        layerName: string,
+        geometry?:__esri.Geometry
     }) {
         let li = domConstruct.create('li', {
             class: "list-group-item"
@@ -52,6 +53,11 @@ class EditorHistory {
         <div class="col-2">
         <strong class="name">${info.layerName}</strong>
         <p>Thời gian: ${time}</p></div></div>`
+        if(info.geometry){
+            on(li,'click',_=>{                
+                (this.view as __esri.MapView).goTo(info.geometry);
+            })
+        }
     }
 }
 export = EditorHistory;
