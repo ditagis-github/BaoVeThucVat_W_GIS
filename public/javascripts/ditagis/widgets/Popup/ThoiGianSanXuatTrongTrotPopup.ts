@@ -79,9 +79,9 @@ class ThoiGianSanXuatTrongTrotPopup {
   private getSubtype(name?, value?) {
     name = name || this.layer.typeIdField;
     value = value || this.attributes[name];
-    if (this.thoiGianSanXuatTrongTrot.typeIdField === name) {
-      const typeIdField = this.thoiGianSanXuatTrongTrot.typeIdField, //tên thuộc tính của subtypes
-        subtypes = this.thoiGianSanXuatTrongTrot.types, //subtypes
+    if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
+      const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, //tên thuộc tính của subtypes
+        subtypes = this.tblGiaiDoanSinhTruong.types, //subtypes
         subtype = subtypes.find(f => f.id == value);
       return subtype;
     }

@@ -28,6 +28,7 @@ class Popup {
   thoiGianSanXuatTrongTrot: FeatureTable;
   popupEdit;
   hightlightGraphic
+  private tblGiaiDoanSinhTruong: FeatureTable;
   constructor(view) {
     this.view = view;
     this.options = {
@@ -41,7 +42,10 @@ class Popup {
       hightLength: this.options.hightLength,
       table: this.thoiGianSanXuatTrongTrot
     })
-
+    this.tblGiaiDoanSinhTruong = new FeatureTable({
+      url: config.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG }).url,
+      fieldID: 'OBJECTID'
+    })
     this.hightlightGraphic = new HightlightGraphic(view, {
       symbolMarker: new SimpleMarkerSymbol({
         outline: new SimpleLineSymbol({ // autocasts as new SimpleLineSymbol()
@@ -194,9 +198,9 @@ class Popup {
   getSubtype(name?, value?) {
     name = name || this.layer.typeIdField;
     value = value || this.attributes[name];
-    if (this.thoiGianSanXuatTrongTrot.typeIdField === name) {
-      const typeIdField = this.thoiGianSanXuatTrongTrot.typeIdField, //tên thuộc tính của subtypes
-        subtypes = this.thoiGianSanXuatTrongTrot.types, //subtypes
+    if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
+      const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, //tên thuộc tính của subtypes
+        subtypes = this.tblGiaiDoanSinhTruong.types, //subtypes
         subtype = subtypes.find(f => f.id == value);
       return subtype;
     }

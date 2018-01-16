@@ -22,8 +22,8 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
         getSubtype(name, value) {
             name = name || this.layer.typeIdField;
             value = value || this.attributes[name];
-            if (this.thoiGianSanXuatTrongTrot.typeIdField === name) {
-                const typeIdField = this.thoiGianSanXuatTrongTrot.typeIdField, subtypes = this.thoiGianSanXuatTrongTrot.types, subtype = subtypes.find(f => f.id == value);
+            if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
+                const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(f => f.id == value);
                 return subtype;
             }
             return null;

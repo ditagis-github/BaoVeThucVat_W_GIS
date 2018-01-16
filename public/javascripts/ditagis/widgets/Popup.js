@@ -22,6 +22,10 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                 hightLength: this.options.hightLength,
                 table: this.thoiGianSanXuatTrongTrot
             });
+            this.tblGiaiDoanSinhTruong = new FeatureTable({
+                url: config.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG; }).url,
+                fieldID: 'OBJECTID'
+            });
             this.hightlightGraphic = new HightlightGraphic(view, {
                 symbolMarker: new SimpleMarkerSymbol({
                     outline: new SimpleLineSymbol({
@@ -170,8 +174,8 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
         getSubtype(name, value) {
             name = name || this.layer.typeIdField;
             value = value || this.attributes[name];
-            if (this.thoiGianSanXuatTrongTrot.typeIdField === name) {
-                const typeIdField = this.thoiGianSanXuatTrongTrot.typeIdField, subtypes = this.thoiGianSanXuatTrongTrot.types, subtype = subtypes.find(f => f.id == value);
+            if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
+                const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(f => f.id == value);
                 return subtype;
             }
             return null;
