@@ -1,12 +1,12 @@
 const config = {
 
-    user: 'sa',
+    user: 'bvtvbinhduong',
 
-    password: '268@lTk',
+    password: 'BaovethucvatBD2017',
 
-    server: '112.78.4.175',
+    server: 'ditagis.com',
 
-    database: 'BaoVeThucVat',
+    database: 'BinhDuong_BVTV',
     options: {
         encrypt: false // Use this if you're on Windows Azure 
     }

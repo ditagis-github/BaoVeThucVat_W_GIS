@@ -61,8 +61,8 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
                                 notify.update('progress', 55);
                                 var proms = [];
                                 if (layer.id === constName.SAUBENH)
-                                    proms.push(editingSupport.getLocationInfo(this.view, graphic.geometry));
-                                proms.push(editingSupport.getNhomCayTrong(this.view, graphic.geometry));
+                                    proms.push(editingSupport.getNhomCayTrong(this.view, graphic.geometry));
+                                proms.push(editingSupport.getLocationInfo(this.view, graphic.geometry));
                                 Promise.all(proms).then((value) => {
                                     notify.update('type', 'info');
                                     notify.update('message', 'Lấy vị trí thành công!');
