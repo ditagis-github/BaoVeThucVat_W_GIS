@@ -169,24 +169,43 @@ require([
                     uniqueValueInfos: [{
                       value: "1",
                       symbol: new SimpleMarkerSymbol({
-                        color: 'green',
-                        style: 'circle'
+                        color: '#0f0',
+                        style: 'circle',
+                        outline: {
+                          color: "white"
+                        }
                       }),
-                      label: "Nhẹ-TB"
+                      label: "Nhẹ"
                     }, {
                       value: "2",
                       symbol: new SimpleMarkerSymbol({
-                        color: 'yellow',
-                        style: 'circle'
+                        color: '#00a9e6',
+                        style: 'circle',
+                        outline: {
+                          color: "white"
+                        }
                       }),
                       label: "Nặng"
                     }, {
                       value: "3", // code for U.S. highways
                       symbol: new SimpleMarkerSymbol({
-                        color: 'red',
-                        style: 'circle'
+                        color: '#ff0000',
+                        style: 'circle',
+                        outline: {
+                          color: "white"
+                        }
                       }),
                       label: "Mất trắng"
+                    }, {
+                      value: "4", // code for U.S. highways
+                      symbol: new SimpleMarkerSymbol({
+                        color: '#ffff6d',
+                        style: 'circle',
+                        outline: {
+                          color: "white"
+                        }
+                      }),
+                      label: "Trung bình"
                     }]
                   });
                 }
@@ -338,7 +357,7 @@ require([
       layerEditor.on("draw-finish", function (e) {
         editorHistory.add({
           layerName: e.graphic.layer.title,
-          geometry:e.graphic.geometry
+          geometry: e.graphic.geometry
         });
       })
     }
