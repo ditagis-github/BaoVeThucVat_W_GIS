@@ -7,10 +7,10 @@ require([
   "ditagis/config",
   "esri/Map",
   "ditagis/classes/MapView",
-  "esri/layers/TileLayer",
   "esri/layers/OpenStreetMapLayer",
   "esri/layers/MapImageLayer",
   "esri/layers/FeatureLayer",
+  "esri/layers/WebTileLayer",
   "esri/widgets/Expand",
   "esri/widgets/Locate",
   "esri/widgets/LayerList",
@@ -36,7 +36,7 @@ require([
   "css!ditagis/styling/dtg-map.css"
 
 
-], function (constName, mapconfigs, Map, MapView, TileLayer, OpenStreetMapLayer, MapImageLayer, FeatureLayer,
+], function (constName, mapconfigs, Map, MapView, OpenStreetMapLayer, MapImageLayer, FeatureLayer, WebTileLayer,
   Expand, Locate, LayerList, Legend, Search,
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
@@ -89,11 +89,9 @@ require([
             })
           })
         }
-
-
       })
-      let worldImage = new MapImageLayer({
-        url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/',
+      let worldImage = new WebTileLayer({
+        urlTemplate: '//mt1.google.com/vt/lyrs=y&x={col}&y={row}&z={level}',
         title: 'Ảnh vệ tinh',
         id: 'worldimagery',
         visible: false
