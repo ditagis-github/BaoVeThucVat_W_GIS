@@ -331,7 +331,7 @@ class PopupEdit {
       for (let key in subtypes.domains) {
         let subtype = subtypes.domains[key];
         let input = this.inputElement[key];
-        if(!input) continue;
+        if (!input) continue;
         let codedValues;
         if (subtype.type === "inherited") {
           let fieldDomain = this.layer.getFieldDomain(key);
@@ -533,6 +533,10 @@ class PopupEdit {
         notify.update('progress', 100)
       }
     });
+  }
+  splitPolygon(splitPolygon) {
+    this.view.popup.visible = false;
+    splitPolygon.startup(this.selectFeature, this.layer);
   }
   updateGeometryGPS() {
     let objectId = this.objectId;

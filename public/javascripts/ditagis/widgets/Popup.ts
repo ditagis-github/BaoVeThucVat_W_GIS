@@ -12,6 +12,7 @@ import SimpleFillSymbol = require('esri/symbols/SimpleFillSymbol');
 import SimpleLineSymbol = require('esri/symbols/SimpleLineSymbol');
 import FeatureTable = require('../support/FeatureTable');
 import Color = require('esri/Color');
+import SplitPolygon = require('ditagis/widgets/SplitPolygon');
 interface ThoiGianSanXuatTrongTrot {
   OBJECTID: number;
   MaDoiTuong: string;
@@ -29,6 +30,7 @@ class Popup {
   popupEdit;
   hightlightGraphic
   private tblGiaiDoanSinhTruong: FeatureTable;
+  private splitPolygon;
   constructor(view) {
     this.view = view;
     this.options = {
@@ -60,6 +62,7 @@ class Popup {
         })
       })
     });
+    this.splitPolygon = new SplitPolygon(view);
   }
 
   startup() {
@@ -88,6 +91,12 @@ class Popup {
               id: "view-detail",
               title: "Chi tiết thời gian trồng trọt",
               className: "esri-icon-table",
+              layer: layer
+            });
+            actions.push({
+              id: "split",
+              title: "Chia thửa",
+              className: "esri-icon-basemap",
               layer: layer
             })
           }
@@ -183,6 +192,10 @@ class Popup {
           break;
         }
         this.popupEdit.updateGeometryGPS();
+        break;
+      case "split":
+      
+        this.popupEdit.splitPolygon(this.splitPolygon);
         break;
       default:
         break;
@@ -310,7 +323,6 @@ class Popup {
         domConstruct.place(row, table);
       }
       if (layer.hasAttachments) {
-
         layer.getAttachments(attributes['OBJECTID']).then(res => {
           if (res && res.attachmentInfos && res.attachmentInfos.length > 0) {
             let div = domConstruct.create('div', {

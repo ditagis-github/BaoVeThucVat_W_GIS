@@ -460,6 +460,10 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
                 }
             });
         }
+        splitPolygon(splitPolygon) {
+            this.view.popup.visible = false;
+            splitPolygon.startup(this.selectFeature, this.layer);
+        }
         updateGeometryGPS() {
             let objectId = this.objectId;
             let notify = $.notify({

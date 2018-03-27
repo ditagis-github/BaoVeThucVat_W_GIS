@@ -245,7 +245,7 @@ require([
         })
       }), "top-left");
 
-
+      
       //LOCATE
       view.ui.add(new Locate({
         view: view
@@ -346,9 +346,6 @@ require([
        */
       var layerEditor = new LayerEditor(view);
       layerEditor.startup();
-
-
-
       var popup = new Popup(view);
       popup.startup();
       var editorHistory = new EditorHistory({
