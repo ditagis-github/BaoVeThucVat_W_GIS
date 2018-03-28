@@ -6,7 +6,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "dojo/dom-construct", "./Popup/PopupEdit", "../support/HightlightGraphic", "../support/Editing", "../toolview/Bootstrap", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "../support/FeatureTable", "esri/Color"], function (require, exports, constName, config, on, domConstruct, PopupEdit, HightlightGraphic, editingSupport, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, FeatureTable, Color) {
+define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "dojo/dom-construct", "./Popup/PopupEdit", "../support/HightlightGraphic", "../support/Editing", "../toolview/Bootstrap", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "../support/FeatureTable", "esri/Color", "ditagis/widgets/SplitPolygon"], function (require, exports, constName, config, on, domConstruct, PopupEdit, HightlightGraphic, editingSupport, bootstrap, SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, FeatureTable, Color, SplitPolygon) {
     "use strict";
     class Popup {
         constructor(view) {
@@ -40,6 +40,7 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                     })
                 })
             });
+            this.splitPolygon = new SplitPolygon(view);
         }
         startup() {
             this.view.map.layers.map(layer => {
@@ -65,6 +66,12 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                                 id: "view-detail",
                                 title: "Chi tiết thời gian trồng trọt",
                                 className: "esri-icon-table",
+                                layer: layer
+                            });
+                            actions.push({
+                                id: "split",
+                                title: "Chia thửa",
+                                className: "esri-icon-basemap",
                                 layer: layer
                             });
                         }
@@ -159,6 +166,9 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                         break;
                     }
                     this.popupEdit.updateGeometryGPS();
+                    break;
+                case "split":
+                    this.popupEdit.splitPolygon(this.splitPolygon);
                     break;
                 default:
                     break;

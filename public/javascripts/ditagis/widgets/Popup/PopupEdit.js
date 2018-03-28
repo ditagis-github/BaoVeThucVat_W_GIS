@@ -417,7 +417,7 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
                             notify.update('message', 'Cập nhật thành công!');
                             notify.update('progress', 90);
                             let query = this.layer.createQuery();
-                            query.outField = ['*'];
+                            query.outFields = ['*'];
                             query.where = 'OBJECTID=' + this.attributes['OBJECTID'];
                             this.layer.queryFeatures(query).then(res => {
                                 this.view.popup.open({
@@ -459,6 +459,10 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
                     notify.update('progress', 100);
                 }
             });
+        }
+        splitPolygon(splitPolygon) {
+            this.view.popup.visible = false;
+            splitPolygon.startup(this.selectFeature, this.layer);
         }
         updateGeometryGPS() {
             let objectId = this.objectId;

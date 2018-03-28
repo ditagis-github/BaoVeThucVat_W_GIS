@@ -331,7 +331,7 @@ class PopupEdit {
       for (let key in subtypes.domains) {
         let subtype = subtypes.domains[key];
         let input = this.inputElement[key];
-        if(!input) continue;
+        if (!input) continue;
         let codedValues;
         if (subtype.type === "inherited") {
           let fieldDomain = this.layer.getFieldDomain(key);
@@ -489,7 +489,7 @@ class PopupEdit {
             notify.update('message', 'Cập nhật thành công!', )
             notify.update('progress', 90);
             let query = this.layer.createQuery();
-            query.outField = ['*'];
+            query.outFields = ['*'];
             query.where = 'OBJECTID=' + this.attributes['OBJECTID'];
             this.layer.queryFeatures(query).then(res => {
               this.view.popup.open({
@@ -533,6 +533,10 @@ class PopupEdit {
         notify.update('progress', 100)
       }
     });
+  }
+  splitPolygon(splitPolygon) {
+    this.view.popup.visible = false;
+    splitPolygon.startup(this.selectFeature, this.layer);
   }
   updateGeometryGPS() {
     let objectId = this.objectId;
