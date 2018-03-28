@@ -96,8 +96,9 @@ require([
         id: 'worldimagery',
         visible: false
       });
-      let osm = new OpenStreetMapLayer({
-        title: 'Open Street Map',
+      let osm = new WebTileLayer({
+        title: 'Đường đi',
+        urlTemplate: '//mt1.google.com/vt/lyrs=m&x={col}&y={row}&z={level}',
         id: 'osm',
         visible: false
       })
