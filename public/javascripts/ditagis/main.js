@@ -6,6 +6,7 @@ require([
   "ditagis/classes/ConstName",
   "ditagis/config",
   "esri/Map",
+  "esri/tasks/Locator",
   "ditagis/classes/MapView",
   "esri/layers/OpenStreetMapLayer",
   "esri/layers/MapImageLayer",
@@ -36,7 +37,7 @@ require([
   "css!ditagis/styling/dtg-map.css"
 
 
-], function (constName, mapconfigs, Map, MapView, OpenStreetMapLayer, MapImageLayer, FeatureLayer, WebTileLayer,
+], function (constName, mapconfigs, Map, Locator, MapView, OpenStreetMapLayer, MapImageLayer, FeatureLayer, WebTileLayer,
   Expand, Locate, LayerList, Legend, Search,
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
@@ -244,7 +245,7 @@ require([
         })
       }), "top-left");
 
-      
+
       //LOCATE
       view.ui.add(new Locate({
         view: view
@@ -275,10 +276,24 @@ require([
         })
       });
       // Widget Search Features //
+      let locator = new Locator({
+        url: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+        countryCode: "VNM"
+      });
       var searchWidget = new Search({
+        searchAllEnabled: false,
         view: view,
         allPlaceholder: "Nhập nội dung tìm kiếm",
         sources: [{
+          locator: locator,
+          name: "Tìm địa chỉ",
+          searchFields: ["*"],
+          placeholder: "Nhập địa chỉ",
+          popupOpenOnSelect: false,
+          suffix: ", Bình Dương",
+          resultGraphicEnabled: false,
+          displayField: "Address",
+        }, {
           featureLayer: map.findLayerById(constName.SAUBENH),
           searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
           displayField: "MaSauBenh",
@@ -313,17 +328,9 @@ require([
           displayField: "TenXa",
           outFields: ["*"],
           name: "Hành chính xã",
-          placeholder: "Nhập tên xã/ phường"
-        }, {
-          featureLayer: new FeatureLayer({
-            url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/0"
-          }),
-          searchFields: ["Ten", "maNhanDang"],
-          displayField: "maNhanDang",
-          exactMatch: false,
-          outFields: ["*"],
-          name: "Tìm đường",
-          placeholder: "Nhập tên đường"
+          placeholder: "Nhập tên xã/ phường",
+          popupOpenOnSelect: false,
+          resultGraphicEnabled: false
         }]
       });
       // Add the search widget to the top left corner of the view
