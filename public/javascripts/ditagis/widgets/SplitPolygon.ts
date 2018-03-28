@@ -18,7 +18,7 @@ import Polyline = require("esri/geometry/Polyline");
 import Polygon = require("esri/geometry/Polygon");
 import geometryEngine = require("esri/geometry/geometryEngine");
 class SplitPolygon {
-    private view;
+    private view:__esri.MapView;
     private options;
     private DOM;
     private isStartup;
@@ -26,8 +26,8 @@ class SplitPolygon {
     private layerView;
     private clickEvent;
     private pointerMoveEvent;
-    private selectedFeature;
-    private layer;
+    private selectedFeature:__esri.Graphic;
+    private layer:__esri.FeatureLayer;
     private hightlightGraphic;
     private dblClickHandler;
     private vertices;
@@ -96,8 +96,8 @@ class SplitPolygon {
         this.clearEvent();
 
     }
-    xuly() {
-
+    async xuly() {
+        var selectedFeature_attributes = this.selectedFeature.attributes;
         var geometry = this.selectedFeature.geometry;
         let line = new Polyline({
             paths: this.vertices,
@@ -107,19 +107,19 @@ class SplitPolygon {
         console.log(res);
         var ring_list = [];
         for (var result in res) {
-            var geometry = res[result] as any;
-            for (const ring of geometry.rings) {
+            var graphic = res[result] as any;
+            for (const ring of graphic.rings) {
                 ring_list.push(ring);
             }
         }
+        var madoituong = await this.taoMaDoiTuong();
         var update_graphics = [], add_graphics = [];
-        for (const item in ring_list) {
-            var selectedFeature_attributes = this.selectedFeature.attributes;
+        for (var index = 0;index < ring_list.length;index++) {
             var polygon = new Polygon({
-                rings: ring_list[item],
+                rings: ring_list[index],
                 spatialReference: this.view.spatialReference
             });
-            if (item == "0") {
+            if (index == 0) {
                 const addFeature = new Graphic({
                     geometry: polygon,
                     attributes: selectedFeature_attributes,
@@ -132,25 +132,42 @@ class SplitPolygon {
                 attributes["OBJECTID"] = selectedFeature_attributes['OBJECTID'];
                 attributes["MaHuyenTP"] = selectedFeature_attributes['MaHuyenTP'];
                 attributes["NhomCayTrong"] = selectedFeature_attributes['NhomCayTrong'];
-                attributes["MaDoiTuong"] = selectedFeature_attributes['MaDoiTuong'] + "_" + item;
+
+                attributes["MaDoiTuong"] = selectedFeature_attributes['MaDoiTuong'] + "_" + (madoituong + index);
                 const addFeature = new Graphic({
                     geometry: polygon,
                     attributes: attributes,
                 });
                 add_graphics.push(addFeature);
             }
-
         }
-
         let edits = {
             updateFeatures: update_graphics,
             addFeatures: add_graphics,
         };
         this.layer.applyEdits(edits).then((result) => {
-            console.log(result);
         });
-        console.log(ring_list);
         this.vertices = [];
+    }
+    private async taoMaDoiTuong(){
+        var maDoiTuong = this.selectedFeature.attributes['MaDoiTuong'];
+        var split_mdt = maDoiTuong.split('_');
+        var len_mdt = split_mdt.length;
+        let query = this.layer.createQuery();
+        query.outFields = ['MaDoiTuong'];
+        query.where = "MaDoiTuong like '" + maDoiTuong + "[_]%'";
+        let danhSachTrongTrot = await this.layer.queryFeatures(query);
+        var max_ma = 0;
+        for (const item of danhSachTrongTrot.features) {
+            let mdt = item.attributes.MaDoiTuong as string;
+            if(mdt){
+                var split_mdt_query = mdt.split('_');
+                var stt =  parseInt(split_mdt_query[len_mdt]);
+                if(stt > max_ma)
+                    max_ma = stt;
+            }
+        }
+        return max_ma;
     }
     add_dtg_wget_cancel() {
         this.view.ui.add(this.DOM.cancel_wget, this.options.position);
