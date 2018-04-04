@@ -24,10 +24,10 @@ define(["require", "exports", "esri/tasks/QueryTask", "esri/request"], function 
             }).domain;
         }
         applyEdits(options = {
-                addFeatures: [],
-                updateFeatures: [],
-                deleteFeatures: []
-            }) {
+            addFeatures: [],
+            updateFeatures: [],
+            deleteFeatures: []
+        }) {
             let form = document.createElement('form');
             form.method = 'post';
             if (options.addFeatures.length > 0) {

@@ -77,6 +77,8 @@ require([
           $.notify(value ? 'Hiển thị dữ liệu nền' : 'Ẩn dữ liệu nền');
       });
       basemap.then(() => {
+        basemap.findSublayerById(1).visible = false;
+        basemap.findSublayerById(2).visible = false;
         if (definitionExpression) {
           let layer = basemap.findSublayerById(constName.INDEX_HANHCHINHHUYEN);
           let query = layer.createQuery();

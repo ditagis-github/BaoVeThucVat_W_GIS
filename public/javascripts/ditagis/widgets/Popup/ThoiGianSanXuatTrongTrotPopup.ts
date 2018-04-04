@@ -356,7 +356,6 @@ class ThoiGianSanXuatTrongTrotPopup {
     inputArea.classList.add('form-control');
     lbArea = document.createElement('label');
     lbArea.innerText = 'Diện tích (m2)';
-    inputArea.readOnly = true;
     formGroupArea.appendChild(lbArea);
     formGroupArea.appendChild(inputArea);
 

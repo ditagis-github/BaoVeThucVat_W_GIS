@@ -283,7 +283,6 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             inputArea.classList.add('form-control');
             lbArea = document.createElement('label');
             lbArea.innerText = 'Diện tích (m2)';
-            inputArea.readOnly = true;
             formGroupArea.appendChild(lbArea);
             formGroupArea.appendChild(inputArea);
             formGroupTGTT = document.createElement('div');
