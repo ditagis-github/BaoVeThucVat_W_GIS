@@ -7,6 +7,9 @@
    width: 100%;
  }
 
+ .blue-map .esri-widget{
+   font-family: "Consolas","Andale Mono","Lucida Console","Monaco",monospace
+ }
  .blue-map .esri-widget,
  .blue-map .esri-widget-button,
  .blue-map .esri-menu,

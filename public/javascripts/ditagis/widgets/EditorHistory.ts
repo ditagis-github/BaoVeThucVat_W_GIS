@@ -25,10 +25,10 @@ class EditorHistory {
         let container = domConstruct.create('div', {
             class: "editor-history-widget",
         });
-        let resultsContainer = domConstruct.create('div',{
-            class:"results-container"
-        },container)
-        this.ul = domConstruct.create('ul', { class: "list-group" }, resultsContainer);
+        let resultsContainer = domConstruct.create('div', {
+            class: "results-container"
+        }, container)
+        this.ul = domConstruct.create('ul', { class: "list-group", innerHTML: "<li class='list-group-item'><strong>Chưa có dữ liệu</strong></li>" }, resultsContainer);
         this.expand = new Expand({
             expandIconClass: this.options.icon,
             expandTooltip: this.options.title,
@@ -38,23 +38,26 @@ class EditorHistory {
     }
     public add(info: {
         layerName: string,
-        geometry?:__esri.Geometry
+        geometry?: __esri.Geometry
     }) {
+        if (this.number === 0) {
+            this.ul.innerHTML = '';
+        }
         let li = domConstruct.create('li', {
             class: "list-group-item"
-        },this.ul);
+        }, this.ul);
         this.number++;
         let index = this.number / 10 < 1 ? '0' + this.number : this.number;
         let date = new Date();
-        let time:String = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        let time: String = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
         li.innerHTML = `<div class="row">
         <div class="col-1">
         <span class="number">${index}</span></div>
         <div class="col-2">
         <strong class="name">${info.layerName}</strong>
         <p>Thời gian: ${time}</p></div></div>`
-        if(info.geometry){
-            on(li,'click',_=>{                
+        if (info.geometry) {
+            on(li, 'click', _ => {
                 (this.view as __esri.MapView).goTo(info.geometry);
             })
         }

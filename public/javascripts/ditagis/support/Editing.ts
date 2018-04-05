@@ -2,22 +2,29 @@ import QueryTask = require("esri/tasks/QueryTask");
 import Query = require("esri/tasks/support/Query");
 import constName = require('../classes/ConstName');
 class Editing {
-    static queryLocation;
+
+    private static _queryLocation: QueryTask;
+    public static getQueryLocation(view: __esri.MapView): QueryTask {
+        if (!this._queryLocation) {
+            this._queryLocation = new QueryTask({
+                url: (view.map.findLayerById(constName.BASEMAP) as __esri.MapImageLayer).findSublayerById(constName.INDEX_HANHCHINHXA).url
+            });
+        }
+        return this._queryLocation;
+    }
+
     static getLocationName(view, params = { PhuongXa: null, HuyenTP: null }) {
         return new Promise((resolve, reject) => {
             try {
-                if (!this.queryLocation)
-                    this.queryLocation = new QueryTask({
-                        url: view.map.findLayerById(constName.BASEMAP).findSublayerById(constName.INDEX_HANHCHINHXA).url
-                    });
+                let queryLocation = this.getQueryLocation(view);
                 let where = [];
                 if (params.PhuongXa) where.push(`MaPhuongXa = '${params.PhuongXa}'`);
                 if (params.HuyenTP) where.push(`MaHuyenTP = '${params.HuyenTP}'`);
-                this.queryLocation.execute({
+                queryLocation.execute(<__esri.Query>{
                     outFields: ['TenXa', 'TenHuyen'],
                     where: where.join(' and ')
                 }).then(res => {
-                    if (res) {
+                    if (res && res.features.length>0) {
                         let ft = res.features[0];
                         if (ft && ft.attributes) {
                             resolve(ft.attributes);
@@ -45,30 +52,33 @@ class Editing {
             NgayCapNhat: new Date().getTime(),
         }
     }
-    static getNhomCayTrong(view, geometry) {
-        let layer = view.map.findLayerById(constName.TRONGTROT);
-        var query = layer.createQuery();
-        query.geometry = geometry;
-        query.outFields = ["NhomCayTrong"];
-        return new Promise((resolve, reject) => {
-            layer.queryFeatures(query).then(result => {
-                resolve(result.features[0].attributes);
-            });
+    static async getNhomCayTrong(view: __esri.MapView, geometry: __esri.Point) {
+        let screenCoors = view.toScreen(geometry);
+        let hitTestResults = await view.hitTest(screenCoors);
+        if (hitTestResults.results.length > 0) {
+            let trongTrotGraphic = hitTestResults.results.find(f => f.graphic.layer.id === constName.TRONGTROT);
+            if (trongTrotGraphic && trongTrotGraphic.graphic && trongTrotGraphic.graphic.attributes) {
+                return {
+                    NhomCayTrong: trongTrotGraphic.graphic.attributes.NhomCayTrong,
+                    LoaiCayTrong: trongTrotGraphic.graphic.attributes.LoaiCayTrong
+                }
+            } else {
+                return null;
+            }
 
-        })
+        } else {
+            return null;
+        }
     }
     static getLocationInfo(view, geometry) {
         return new Promise((resolve, reject) => {
             try {
-                if (!this.queryLocation)
-                    this.queryLocation = new QueryTask({
-                        url: view.map.findLayerById(constName.BASEMAP).findSublayerById(constName.INDEX_HANHCHINHXA).url
-                    });
-                this.queryLocation.execute({
+                let queryLocation = this.getQueryLocation(view);
+                queryLocation.execute(<__esri.Query>{
                     outFields: ['MaPhuongXa', 'MaHuyenTP'],
                     geometry: geometry
                 }).then(res => {
-                    if (res) {
+                    if (res && res.features.length>0) {
                         let ft = res.features[0];
                         if (ft && ft.attributes) {
                             resolve(ft.attributes);

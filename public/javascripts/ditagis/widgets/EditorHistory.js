@@ -19,7 +19,7 @@ define(["require", "exports", "dojo/on", "dojo/dom-construct", "esri/widgets/Exp
             let resultsContainer = domConstruct.create('div', {
                 class: "results-container"
             }, container);
-            this.ul = domConstruct.create('ul', { class: "list-group" }, resultsContainer);
+            this.ul = domConstruct.create('ul', { class: "list-group", innerHTML: "<li class='list-group-item'><strong>Chưa có dữ liệu</strong></li>" }, resultsContainer);
             this.expand = new Expand({
                 expandIconClass: this.options.icon,
                 expandTooltip: this.options.title,
@@ -28,6 +28,9 @@ define(["require", "exports", "dojo/on", "dojo/dom-construct", "esri/widgets/Exp
             });
         }
         add(info) {
+            if (this.number === 0) {
+                this.ul.innerHTML = '';
+            }
             let li = domConstruct.create('li', {
                 class: "list-group-item"
             }, this.ul);

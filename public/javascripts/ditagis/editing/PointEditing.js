@@ -22,96 +22,109 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
         }
         draw(layer, graphic) {
             return __awaiter(this, void 0, void 0, function* () {
-                try {
-                    var notify = $.notify({
-                        title: '<strong>Cập nhật đối tượng</strong>',
-                        message: 'Đang cập nhật...'
-                    }, {
-                        showProgressbar: true,
-                        delay: 20000
-                    });
-                    let attributes = {};
-                    if (layer.drawingAttributes) {
-                        for (let i in layer.drawingAttributes) {
-                            attributes[i] = layer.drawingAttributes[i];
-                        }
+                var notify = $.notify({
+                    title: '<strong>Cập nhật đối tượng</strong>',
+                    message: 'Đang cập nhật...'
+                }, {
+                    showProgressbar: true,
+                    delay: 20000
+                });
+                let attributes = {};
+                if (layer.drawingAttributes) {
+                    for (let i in layer.drawingAttributes) {
+                        attributes[i] = layer.drawingAttributes[i];
                     }
-                    if (layer.id === constName.SAUBENH) {
-                        attributes['NgayXayRa'] = new Date().getTime();
-                    }
+                }
+                if (layer.id === constName.SAUBENH) {
+                    attributes['NgayXayRa'] = new Date().getTime();
+                }
+                notify.update('type', 'info');
+                notify.update('message', 'Đang lấy thông tin người cập nhật...');
+                notify.update('progress', 10);
+                const createdInfo = yield editingSupport.getCreatedInfo(this.view);
+                for (let i in createdInfo) {
+                    attributes[i] = createdInfo[i];
+                }
+                notify.update('type', 'info');
+                notify.update('message', 'Lấy thông tin người cập nhật thành công');
+                notify.update('progress', 20);
+                notify.update('type', 'info');
+                notify.update('message', 'Đang lấy vị trí...!');
+                notify.update('progress', 30);
+                let locationInfo = yield editingSupport.getLocationInfo(this.view, graphic.geometry);
+                if (!locationInfo) {
+                    notify.update('type', 'danger');
+                    notify.update('message', 'Không xác định được vị trí');
+                    notify.update('progress', 90);
+                    return;
+                }
+                else {
                     notify.update('type', 'info');
-                    notify.update('message', 'Đang lấy định danh...');
-                    notify.update('progress', 20);
-                    const createdInfo = yield editingSupport.getCreatedInfo(this.view);
-                    for (let i in createdInfo) {
-                        attributes[i] = createdInfo[i];
+                    notify.update('message', 'Lấy vị trí thành công!');
+                    notify.update('progress', 80);
+                    for (let i in locationInfo) {
+                        attributes[i] = locationInfo[i];
                     }
-                    notify.update('type', 'info');
-                    notify.update('message', 'Lấy định danh thành công');
-                    notify.update('progress', 30);
                     graphic.attributes = attributes;
                     let edits = {
                         addFeatures: [graphic]
                     };
-                    layer.applyEdits(edits).then((result) => {
+                    layer.applyEdits(edits).then((result) => __awaiter(this, void 0, void 0, function* () {
                         if (result.addFeatureResults.length > 0) {
                             for (let item of result.addFeatureResults) {
-                                notify.update('type', 'info');
-                                notify.update('message', 'Đang lấy vị trí...!');
-                                notify.update('progress', 55);
-                                var proms = [];
-                                if (layer.id === constName.SAUBENH)
-                                    proms.push(editingSupport.getNhomCayTrong(this.view, graphic.geometry));
-                                proms.push(editingSupport.getLocationInfo(this.view, graphic.geometry));
-                                Promise.all(proms).then((value) => {
+                                let attributes = { objectId: item.objectId };
+                                if (layer.id === constName.SAUBENH) {
                                     notify.update('type', 'info');
-                                    notify.update('message', 'Lấy vị trí thành công!');
-                                    notify.update('progress', 80);
-                                    let attributes = { objectId: item.objectId };
-                                    for (let i in value[0]) {
-                                        attributes[i] = value[0][i];
+                                    notify.update('message', 'Đang lấy thông tin cây trồng!');
+                                    notify.update('progress', 60);
+                                    let nhomCayTrong = yield editingSupport.getNhomCayTrong(this.view, graphic.geometry);
+                                    if (nhomCayTrong) {
+                                        notify.update('type', 'info');
+                                        notify.update('message', 'Lấy thông tin cây trồng thành công');
+                                        notify.update('progress', 80);
+                                        for (let i in nhomCayTrong) {
+                                            attributes[i] = nhomCayTrong[i];
+                                        }
                                     }
-                                    if (value[1])
-                                        for (let i in value[1]) {
-                                            attributes[i] = value[1][i];
-                                        }
-                                    layer.applyEdits({
-                                        updateFeatures: [{
-                                                attributes: attributes
-                                            }]
-                                    }).then((result) => {
-                                        if (!result.updateFeatureResults[0].error) {
-                                            Promise.resolve();
-                                            notify.update('type', 'success');
-                                            notify.update('message', 'Cập nhật vị trí thành công!');
-                                            notify.update('progress', 100);
-                                            layer.queryFeatures({
-                                                returnGeometry: true,
-                                                spatialReference: this.view.spatialReference,
-                                                where: 'OBJECTID = ' + item.objectId,
-                                                outFields: ['*']
-                                            }).then(res => {
-                                                if (res.features[0]) {
-                                                    let ft = res.features[0];
-                                                    this.view.popup.open({
-                                                        features: [ft],
-                                                        location: ft.geometry
-                                                    });
-                                                }
-                                            });
-                                        }
-                                        else {
-                                            notify.update('type', 'danger');
-                                            Promise.reject("err");
-                                        }
-                                    });
+                                    else {
+                                        notify.update('type', 'danger');
+                                        notify.update('message', 'Lấy thông tin cây trồng thất bại');
+                                        notify.update('progress', 80);
+                                    }
+                                }
+                                layer.applyEdits({
+                                    updateFeatures: [{
+                                            attributes: attributes
+                                        }]
+                                }).then((result) => {
+                                    if (!result.updateFeatureResults[0].error) {
+                                        Promise.resolve();
+                                        notify.update('type', 'success');
+                                        notify.update('message', 'Cập nhật vị trí thành công!');
+                                        notify.update('progress', 100);
+                                        layer.queryFeatures({
+                                            returnGeometry: true,
+                                            spatialReference: this.view.spatialReference,
+                                            where: 'OBJECTID = ' + item.objectId,
+                                            outFields: ['*']
+                                        }).then(res => {
+                                            if (res.features[0]) {
+                                                let ft = res.features[0];
+                                                this.view.popup.open({
+                                                    features: [ft],
+                                                    updateLocationEnabled: true
+                                                });
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        notify.update('type', 'danger');
+                                        Promise.reject("err");
+                                    }
                                 });
                             }
                         }
-                    });
-                }
-                catch (err) {
-                    console.log(err);
+                    }));
                 }
             });
         }

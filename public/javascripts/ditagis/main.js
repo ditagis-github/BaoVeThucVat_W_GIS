@@ -56,6 +56,7 @@ require([
     center: mapconfigs.center,
     zoom: mapconfigs.zoom
   });
+  var basemap, worldImage, osm;
   view.session().then(user => {
     systemVariable.user = user
     let definitionExpression;
@@ -71,14 +72,12 @@ require([
           sublayer.definitionExpression = definitionExpression;
         }
       }
-      let basemap = new MapImageLayer(bmCfg);
+      basemap = new MapImageLayer(bmCfg);
       basemap.watch('visible', function (value) {
         if ($)
           $.notify(value ? 'Hiển thị dữ liệu nền' : 'Ẩn dữ liệu nền');
       });
       basemap.then(() => {
-        basemap.findSublayerById(1).visible = false;
-        basemap.findSublayerById(2).visible = false;
         if (definitionExpression) {
           let layer = basemap.findSublayerById(constName.INDEX_HANHCHINHHUYEN);
           let query = layer.createQuery();
@@ -93,13 +92,13 @@ require([
           })
         }
       })
-      let worldImage = new WebTileLayer({
+      worldImage = new WebTileLayer({
         urlTemplate: '//mt1.google.com/vt/lyrs=y&x={col}&y={row}&z={level}',
         title: 'Ảnh vệ tinh',
         id: 'worldimagery',
-        visible: false
+        visible: true
       });
-      let osm = new WebTileLayer({
+      osm = new WebTileLayer({
         title: 'Đường đi',
         urlTemplate: '//mt1.google.com/vt/lyrs=m&x={col}&y={row}&z={level}',
         id: 'osm',
@@ -112,15 +111,15 @@ require([
           switch (target) {
             case osm:
               basemap.visible = worldImage.visible = !newValue;
-              map.findLayerById(constName.TRONGTROT).opacity = 1;
+              // map.findLayerById(constName.TRONGTROT).opacity = 1;
               break;
             case basemap:
               osm.visible = worldImage.visible = !newValue;
-              map.findLayerById(constName.TRONGTROT).opacity = 1;
+              // map.findLayerById(constName.TRONGTROT).opacity = 1;
               break;
             case worldImage:
               osm.visible = basemap.visible = !newValue;
-              map.findLayerById(constName.TRONGTROT).opacity = 0.7;
+              // map.findLayerById(constName.TRONGTROT).opacity = 0.7;
               break;
           }
         }
@@ -219,7 +218,8 @@ require([
                   }
                   element.definitionExpression = definitionExpression;
                 }
-
+                if (element.id === constName.TRONGTROT)
+                  element.opacity = 0.7
                 let fl = new FeatureLayer(element);
 
                 map.add(fl);
