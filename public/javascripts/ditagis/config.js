@@ -5,7 +5,7 @@ define(["require", "exports"], function (require, exports) {
             title: 'Dữ liệu nền',
             id: 'dulieunen',
             url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer',
-            visible: false,
+            visible: true,
             copyright: 'Bản đồ biên tập bởi Trung tâm DITAGIS',
             sublayers: [{
                     id: 5,

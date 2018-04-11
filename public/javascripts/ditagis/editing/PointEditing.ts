@@ -21,6 +21,7 @@ class PointEditing {
     this._layer = value;
   }
   async draw(layer, graphic: __esri.Graphic) {
+    
     var notify = $.notify({
       title: '<strong>Cập nhật đối tượng</strong>',
       message: 'Đang cập nhật...'

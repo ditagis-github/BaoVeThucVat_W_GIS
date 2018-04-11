@@ -1,3 +1,10 @@
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+      .register('/javascripts/sw.js')
+      .then(function () {
+          console.log('Service Worker Registered');
+      })
+}
 /**
  * Phần này quan trọng không được xóa
  */
@@ -96,7 +103,7 @@ require([
         urlTemplate: '//mt1.google.com/vt/lyrs=y&x={col}&y={row}&z={level}',
         title: 'Ảnh vệ tinh',
         id: 'worldimagery',
-        visible: true
+        visible: false
       });
       osm = new WebTileLayer({
         title: 'Đường đi',
@@ -329,6 +336,9 @@ require([
           searchFields: ["MaPhuongXa", "TenXa"],
           displayField: "TenXa",
           outFields: ["*"],
+          filter: {
+            where: `${definitionExpression?definitionExpression:'1=1'}`
+          },
           name: "Hành chính xã",
           placeholder: "Nhập tên xã/ phường",
           popupOpenOnSelect: false,
@@ -342,7 +352,7 @@ require([
       searchWidget.on('search-complete', e => {
         hightlightGraphic.clear();
         let hanhChinh = e.results.find(f => {
-          return f.sourceIndex === 3
+          return f.sourceIndex === 4
         });
         if (hanhChinh && hanhChinh.results.length > 0) {
           let graphic = hanhChinh.results[0].feature;
@@ -370,6 +380,7 @@ require([
     initBaseMap();
     initFeatureLayers().then(() => {
       initWidgets();
+      map.reorder(basemap,5)
     })
 
 
