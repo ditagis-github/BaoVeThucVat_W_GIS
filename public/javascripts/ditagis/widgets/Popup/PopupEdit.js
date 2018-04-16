@@ -1,4 +1,4 @@
-define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/on", "dojo/dom-construct", "esri/request", "esri/core/watchUtils", "esri/geometry/Point", "esri/widgets/Locate/LocateViewModel", "ditagis/support/Editing", "./ThoiGianSanXuatTrongTrotPopup", "../../support/FeatureTable"], function (require, exports, constName, config, on, domConstruct, esriRequest, watchUtils, Point, LocateViewModel, editingSupport, ThoiGianSanXuatTrongTrotPopup, FeatureTable) {
+define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/on", "dojo/dom-construct", "esri/request", "esri/core/watchUtils", "esri/geometry/Point", "esri/widgets/Locate/LocateViewModel", "ditagis/support/Editing", "./ThoiGianSanXuatTrongTrotPopup", "../../support/FeatureTable", "../SplitPolygon", "../MergePolygon"], function (require, exports, constName, config, on, domConstruct, esriRequest, watchUtils, Point, LocateViewModel, editingSupport, ThoiGianSanXuatTrongTrotPopup, FeatureTable, SplitPolygon, MergePolygon) {
     "use strict";
     class PopupEdit {
         constructor(view, options) {
@@ -16,6 +16,14 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
             this.inputElement = {};
             this.thoiGianSanXuatTrongTrotPopup = new ThoiGianSanXuatTrongTrotPopup({ view: view, table: options.table });
             this.thoiGianSanXuatTrongTrotTbl = options.table;
+            if (location.pathname === '/map') {
+                this._splitPolygon = new SplitPolygon(view);
+                this.view.on('layerview-create', e => {
+                    if (e.layer.id === constName.TRONGTROT) {
+                        this._mergePolygon = new MergePolygon({ view: view, layer: e.layer });
+                    }
+                });
+            }
         }
         get selectFeature() {
             return this.view.popup.viewModel.selectedFeature;
@@ -460,9 +468,13 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
                 }
             });
         }
-        splitPolygon(splitPolygon) {
+        splitPolygon() {
             this.view.popup.visible = false;
-            splitPolygon.startup(this.selectFeature, this.layer);
+            this._splitPolygon.startup(this.selectFeature, this.layer);
+        }
+        mergePolygon() {
+            this.view.popup.visible = false;
+            this._mergePolygon.run(this.selectFeature);
         }
         updateGeometryGPS() {
             let objectId = this.objectId;
@@ -512,4 +524,3 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
     }
     return PopupEdit;
 });
-//# sourceMappingURL=PopupEdit.js.map

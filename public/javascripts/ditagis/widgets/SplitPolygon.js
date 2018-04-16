@@ -71,56 +71,57 @@ define(["require", "exports", "dojo/dom-construct", "dojo/on", "ditagis/toolview
         }
         xuly() {
             return __awaiter(this, void 0, void 0, function* () {
-                var selectedFeature_attributes = this.selectedFeature.attributes;
-                var geometry = this.selectedFeature.geometry;
-                let line = new Polyline({
-                    paths: this.vertices,
-                    spatialReference: this.view.spatialReference
-                });
-                let res = geometryEngine.cut(geometry, line);
-                console.log(res);
-                var ring_list = [];
-                for (var result in res) {
-                    var graphic = res[result];
-                    for (const ring of graphic.rings) {
-                        ring_list.push(ring);
-                    }
-                }
-                var madoituong = yield this.taoMaDoiTuong();
-                var update_graphics = [], add_graphics = [];
-                for (var index = 0; index < ring_list.length; index++) {
-                    var polygon = new Polygon({
-                        rings: ring_list[index],
+                if (confirm('Có chắc chắn tách thửa?')) {
+                    Loader.show(false);
+                    var selectedFeature_attributes = this.selectedFeature.attributes;
+                    var geometry = this.selectedFeature.geometry;
+                    let line = new Polyline({
+                        paths: this.vertices,
                         spatialReference: this.view.spatialReference
                     });
-                    if (index == 0) {
-                        const addFeature = new Graphic({
-                            geometry: polygon,
-                            attributes: selectedFeature_attributes,
-                        });
-                        update_graphics.push(addFeature);
+                    let res = geometryEngine.cut(geometry, line);
+                    var ring_list = [];
+                    for (var result in res) {
+                        var graphic = res[result];
+                        for (const ring of graphic.rings) {
+                            ring_list.push(ring);
+                        }
                     }
-                    else {
-                        var attributes = {};
-                        attributes["LoaiCayTrong"] = selectedFeature_attributes['LoaiCayTrong'];
-                        attributes["OBJECTID"] = selectedFeature_attributes['OBJECTID'];
-                        attributes["MaHuyenTP"] = selectedFeature_attributes['MaHuyenTP'];
-                        attributes["NhomCayTrong"] = selectedFeature_attributes['NhomCayTrong'];
-                        attributes["MaDoiTuong"] = selectedFeature_attributes['MaDoiTuong'] + "_" + (madoituong + index);
-                        const addFeature = new Graphic({
-                            geometry: polygon,
-                            attributes: attributes,
+                    var madoituong = yield this.taoMaDoiTuong();
+                    var update_graphics = [], add_graphics = [];
+                    for (var index = 0; index < ring_list.length; index++) {
+                        var polygon = new Polygon({
+                            rings: ring_list[index],
+                            spatialReference: this.view.spatialReference
                         });
-                        add_graphics.push(addFeature);
+                        if (index == 0) {
+                            const addFeature = new Graphic({
+                                geometry: polygon,
+                                attributes: selectedFeature_attributes,
+                            });
+                            update_graphics.push(addFeature);
+                        }
+                        else {
+                            var attributes = {};
+                            attributes["LoaiCayTrong"] = selectedFeature_attributes['LoaiCayTrong'];
+                            attributes["OBJECTID"] = selectedFeature_attributes['OBJECTID'];
+                            attributes["MaHuyenTP"] = selectedFeature_attributes['MaHuyenTP'];
+                            attributes["NhomCayTrong"] = selectedFeature_attributes['NhomCayTrong'];
+                            attributes["MaDoiTuong"] = selectedFeature_attributes['MaDoiTuong'] + "_" + (madoituong + index);
+                            const addFeature = new Graphic({
+                                geometry: polygon,
+                                attributes: attributes,
+                            });
+                            add_graphics.push(addFeature);
+                        }
                     }
+                    let edits = {
+                        updateFeatures: update_graphics,
+                        addFeatures: add_graphics,
+                    };
+                    this.layer.applyEdits(edits).always(_ => Loader.hide());
+                    this.vertices = [];
                 }
-                let edits = {
-                    updateFeatures: update_graphics,
-                    addFeatures: add_graphics,
-                };
-                this.layer.applyEdits(edits).then((result) => {
-                });
-                this.vertices = [];
             });
         }
         taoMaDoiTuong() {
@@ -235,4 +236,3 @@ define(["require", "exports", "dojo/dom-construct", "dojo/on", "ditagis/toolview
     }
     return SplitPolygon;
 });
-//# sourceMappingURL=SplitPolygon.js.map

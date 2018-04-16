@@ -9,8 +9,10 @@ import LocateViewModel = require("esri/widgets/Locate/LocateViewModel");
 import editingSupport = require("ditagis/support/Editing");
 import ThoiGianSanXuatTrongTrotPopup = require('./ThoiGianSanXuatTrongTrotPopup');
 import FeatureTable = require('../../support/FeatureTable');
+import SplitPolygon = require('../SplitPolygon');
+import MergePolygon = require('../MergePolygon');
 class PopupEdit {
-  private view;
+  private view: __esri.MapView;
   private options;
   private locateViewModel;
   private fireFields;
@@ -19,6 +21,8 @@ class PopupEdit {
   private thoiGianSanXuatTrongTrotTbl: FeatureTable;
   private tblGiaiDoanSinhTruong: FeatureTable;
   private _layer;
+  private _splitPolygon: SplitPolygon;
+  private _mergePolygon: MergePolygon;
   constructor(view, options) {
     this.view = view;
     this.options = options;
@@ -35,6 +39,15 @@ class PopupEdit {
     this.inputElement = {};
     this.thoiGianSanXuatTrongTrotPopup = new ThoiGianSanXuatTrongTrotPopup({ view: view, table: options.table });
     this.thoiGianSanXuatTrongTrotTbl = options.table;
+    if (location.pathname === '/map') {
+      this._splitPolygon = new SplitPolygon(view);
+      this.view.on('layerview-create', e => {
+        if (e.layer.id === constName.TRONGTROT) {
+          this._mergePolygon = new MergePolygon({ view: view, layer: e.layer as __esri.FeatureLayer });
+        }
+      })
+
+    }
   }
   get selectFeature() {
     return this.view.popup.viewModel.selectedFeature;
@@ -240,7 +253,7 @@ class PopupEdit {
     })
     updateAction.className = 'esri-icon-check-mark';
     //ADD ACTON UPDATE GEOMETRY WITH GPS
-    this.view.popup.actions.add({
+    this.view.popup.actions.add(<__esri.Action>{
       id: 'update-geometry',
       title: 'Cập nhật vị trí đối tượng',
       className: 'esri-icon-locate'
@@ -534,9 +547,13 @@ class PopupEdit {
       }
     });
   }
-  splitPolygon(splitPolygon) {
+  splitPolygon() {
     this.view.popup.visible = false;
-    splitPolygon.startup(this.selectFeature, this.layer);
+    this._splitPolygon.startup(this.selectFeature, this.layer);
+  }
+  mergePolygon() {
+    this.view.popup.visible = false;
+    this._mergePolygon.run(this.selectFeature);
   }
   updateGeometryGPS() {
     let objectId = this.objectId;

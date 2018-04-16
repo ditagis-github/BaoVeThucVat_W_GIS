@@ -1,14 +1,3 @@
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-      .register('/javascripts/sw.js')
-      .then(function () {
-          console.log('Service Worker Registered');
-      })
-}
-/**
- * Phần này quan trọng không được xóa
- */
-//  var socket = io();
 require([
   "ditagis/classes/ConstName",
   "ditagis/config",

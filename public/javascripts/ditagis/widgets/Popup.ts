@@ -12,7 +12,8 @@ import SimpleFillSymbol = require('esri/symbols/SimpleFillSymbol');
 import SimpleLineSymbol = require('esri/symbols/SimpleLineSymbol');
 import FeatureTable = require('../support/FeatureTable');
 import Color = require('esri/Color');
-import SplitPolygon = require('ditagis/widgets/SplitPolygon');
+
+
 interface ThoiGianSanXuatTrongTrot {
   OBJECTID: number;
   MaDoiTuong: string;
@@ -30,7 +31,6 @@ class Popup {
   popupEdit;
   hightlightGraphic
   private tblGiaiDoanSinhTruong: FeatureTable;
-  private splitPolygon;
   constructor(view) {
     this.view = view;
     this.options = {
@@ -62,8 +62,7 @@ class Popup {
         })
       })
     });
-    if(location.pathname === '/map')
-    this.splitPolygon = new SplitPolygon(view);
+
   }
 
   startup() {
@@ -94,17 +93,26 @@ class Popup {
               className: "esri-icon-table",
               layer: layer
             });
-            if(location.pathname ==='/map')
+            if (location.pathname === '/map')
+              actions.push({
+                id: "split",
+                title: "Chia thửa",
+                className: "esri-icon-zoom-out-fixed",
+                layer: layer
+              })
             actions.push({
-              id: "split",
-              title: "Chia thửa",
-              className: "esri-icon-basemap",
+              id: "merge",
+              title: "Ghép thửa",
+              className: "esri-icon-zoom-in-fixed",
               layer: layer
             })
           }
           layer.popupTemplate = {
             content: (target) => {
-              return this.contentPopup(target, layer);
+              Loader.show(false)
+              let content = this.contentPopup(target, layer);
+              Loader.hide();
+              return content;
             },
             title: layer.title,
             actions: actions
@@ -196,8 +204,12 @@ class Popup {
         this.popupEdit.updateGeometryGPS();
         break;
       case "split":
-      
-        this.popupEdit.splitPolygon(this.splitPolygon);
+
+        this.popupEdit.splitPolygon();
+        break;
+      case "merge":
+
+        this.popupEdit.mergePolygon();
         break;
       default:
         break;

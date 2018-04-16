@@ -1,7 +1,6 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "sourceMap": true,
     "target": "es6",
     "module": "amd",
     "rootDir": "ditagis",
