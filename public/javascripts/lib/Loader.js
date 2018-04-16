@@ -5,15 +5,17 @@ class Loader {
     /**
      * Hiển thị một trang loading
      */
-    static show() {
+    static show(isImg = true) {
         var wrapper = document.createElement('div');
         wrapper.id = 'loader-wrapper';
         var loader = document.createElement('div');
         loader.id = 'loader';
         wrapper.appendChild(loader);
-        var loaderImg = document.createElement('div');
-        loaderImg.id = 'loader-img';
-        wrapper.appendChild(loaderImg);
+        if (isImg) {
+            var loaderImg = document.createElement('div');
+            loaderImg.id = 'loader-img';
+            wrapper.appendChild(loaderImg);
+        }
         document.body.appendChild(wrapper);
     }
     /**

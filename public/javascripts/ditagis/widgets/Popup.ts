@@ -62,6 +62,7 @@ class Popup {
         })
       })
     });
+    if(location.pathname === '/map')
     this.splitPolygon = new SplitPolygon(view);
   }
 
@@ -93,6 +94,7 @@ class Popup {
               className: "esri-icon-table",
               layer: layer
             });
+            if(location.pathname ==='/map')
             actions.push({
               id: "split",
               title: "Chia thửa",

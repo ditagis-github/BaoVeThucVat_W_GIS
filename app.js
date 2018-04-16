@@ -66,12 +66,14 @@ passport.use(new LocalStrategy(
 /* ROUTER */
 const LoginRouter = require('./routes/login');
 const MapRouter = require('./routes/map');
+const CongTacVienRouter = require('./routes/congtacvien');
 const AccountRouter = require('./routes/account');
 var routerParams = {
   passport: passport
 }
 app.use('/', new LoginRouter(routerParams).router)
 app.use('/map', new MapRouter(routerParams).router)
+app.use('/congtacvien', new CongTacVienRouter(routerParams).router)
 app.use('/account', new AccountRouter(routerParams).router)
 
 // catch 404 and forward to error handler

@@ -40,7 +40,8 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                     })
                 })
             });
-            this.splitPolygon = new SplitPolygon(view);
+            if (location.pathname === '/map')
+                this.splitPolygon = new SplitPolygon(view);
         }
         startup() {
             this.view.map.layers.map(layer => {
@@ -68,12 +69,13 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                                 className: "esri-icon-table",
                                 layer: layer
                             });
-                            actions.push({
-                                id: "split",
-                                title: "Chia thửa",
-                                className: "esri-icon-basemap",
-                                layer: layer
-                            });
+                            if (location.pathname === '/map')
+                                actions.push({
+                                    id: "split",
+                                    title: "Chia thửa",
+                                    className: "esri-icon-basemap",
+                                    layer: layer
+                                });
                         }
                         layer.popupTemplate = {
                             content: (target) => {
