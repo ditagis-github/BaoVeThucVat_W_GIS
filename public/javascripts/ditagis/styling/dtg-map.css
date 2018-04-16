@@ -202,3 +202,6 @@
  .editor-history-widget .results-container .list-group-item .row {
    border-bottom: 1px #ddd solid;
  }
+ .google-geocoding-widget.input-group{
+  max-width: calc(100vw - 80px);
+ }

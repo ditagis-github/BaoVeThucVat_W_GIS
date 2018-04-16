@@ -184,7 +184,7 @@ require([
       const initWidgets = () => {
         function searchWidget() {
           var searchdiv = $('<div/>', {
-            class: 'input-group add-on',
+            class: 'google-geocoding-widget input-group add-on',
           });
           var searchbox = $('<input/>', {
             class: 'form-control',

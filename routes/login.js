@@ -10,9 +10,10 @@ class LoginRouter extends Router {
 			res.render('login', { title: 'Đăng nhập' });
 		});
 		this.router.post('/login', this.passport.authenticate('local', {
-			successRedirect: '/map',
 			failureRedirect: '/login'
-		}))
+		}), function (req, res) {
+			res.redirect(req.body.pm)
+		})
 	}
 }
 module.exports = LoginRouter;

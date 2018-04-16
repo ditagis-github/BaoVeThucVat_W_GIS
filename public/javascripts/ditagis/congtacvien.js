@@ -259,14 +259,13 @@ require([
       const initWidgets = () => {
         function searchWidget() {
           var searchdiv = $('<div/>', {
-            class: 'input-group add-on',
+            class: 'google-geocoding-widget input-group add-on',
           });
           var searchbox = $('<input/>', {
             class: 'form-control',
             type: 'text',
             name: 'srch-term',
             id: 'srch-term',
-            style: 'width: calc(100vw - 125px);float: right;',
             placeholder: "Nhập đơn vị hành chính, tên đường "
           }).appendTo(searchdiv);
           var input_group = $('<div/>', {
@@ -367,14 +366,18 @@ require([
         });
         // Widget Search Features //
         var searchWidget = new Search({
-          featureLayer: map.findLayerById(constName.SAUBENH),
-          searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
-          displayField: "MaSauBenh",
-          exactMatch: false,
-          outFields: ["*"],
-          name: "Sâu hại",
-          placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
-        }, {
+          searchAllEnabled: false,
+          view: view,
+          allPlaceholder: "Nhập nội dung tìm kiếm",
+          sources: [{
+            featureLayer: map.findLayerById(constName.SAUBENH),
+            searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
+            displayField: "MaSauBenh",
+            exactMatch: false,
+            outFields: ["*"],
+            name: "Sâu hại",
+            placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
+          }, {
             featureLayer: map.findLayerById(constName.TRONGTROT),
             searchFields: ["MaDoiTuong"],
             displayField: "MaDoiTuong",
@@ -400,45 +403,45 @@ require([
             resultGraphicEnabled: false
           }]
         });
-    // Add the search widget to the top left corner of the view
-    view.ui.add(searchWidget, {
-      position: "top-right"
-    });
-    searchWidget.on('search-complete', e => {
-      hightlightGraphic.clear();
-      let hanhChinh = e.results.find(f => {
-        return f.sourceIndex === 4
-      });
-      if (hanhChinh && hanhChinh.results.length > 0) {
-        let graphic = hanhChinh.results[0].feature;
-        hightlightGraphic.add(graphic);
+        // Add the search widget to the top left corner of the view
+        view.ui.add(searchWidget, {
+          position: "top-right"
+        });
+        searchWidget.on('search-complete', e => {
+          hightlightGraphic.clear();
+          let hanhChinh = e.results.find(f => {
+            return f.sourceIndex === 4
+          });
+          if (hanhChinh && hanhChinh.results.length > 0) {
+            let graphic = hanhChinh.results[0].feature;
+            hightlightGraphic.add(graphic);
+          }
+        })
+        /**
+         * Layer Editor
+         */
+        var layerEditor = new LayerEditor(view);
+        layerEditor.startup();
+        var popup = new Popup(view);
+        popup.startup();
+        var editorHistory = new EditorHistory({
+          view: view
+        });
+        layerEditor.on("draw-finish", function (e) {
+          editorHistory.add({
+            layerName: e.graphic.layer.title,
+            geometry: e.graphic.geometry
+          });
+        })
       }
-    })
-    /**
-     * Layer Editor
-     */
-    var layerEditor = new LayerEditor(view);
-    layerEditor.startup();
-    var popup = new Popup(view);
-    popup.startup();
-    var editorHistory = new EditorHistory({
-      view: view
-    });
-    layerEditor.on("draw-finish", function (e) {
-      editorHistory.add({
-        layerName: e.graphic.layer.title,
-        geometry: e.graphic.geometry
-      });
-    })
-  }
 
       initBaseMap();
-initFeatureLayers().then(() => {
-  initWidgets();
-  map.reorder(basemap, 5)
-})
+      initFeatureLayers().then(() => {
+        initWidgets();
+        map.reorder(basemap, 5)
+      })
 
 
-Loader.hide();
+      Loader.hide();
     })
   })

@@ -233,14 +233,13 @@ require([
     const initWidgets = () => {
       function searchWidget() {
         var searchdiv = $('<div/>', {
-          class: 'input-group add-on',
+          class: 'google-geocoding-widget input-group add-on',
         });
         var searchbox = $('<input/>', {
           class: 'form-control',
           type: 'text',
           name: 'srch-term',
           id: 'srch-term',
-          style: 'width: calc(100vw - 125px);float: right;',
           placeholder: "Nhập đơn vị hành chính, tên đường "
         }).appendTo(searchdiv);
         var input_group = $('<div/>', {
