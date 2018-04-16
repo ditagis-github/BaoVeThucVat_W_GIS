@@ -689,10 +689,10 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             }
             this.thoiGianSanXuatTrongTrot.applyEdits(applyEdits).then(e => {
                 this.refreshNhomCayTrong(this.dataDetails, datas.adds);
-                $('#ttModal').modal('toggle');
                 this.tmpDatasDetailTrongTrong = null;
                 this.dataDetails = null;
             });
+            $('#ttModal').modal('toggle');
         }
         refreshNhomCayTrong(currents, adds) {
             if (adds.length === 0)

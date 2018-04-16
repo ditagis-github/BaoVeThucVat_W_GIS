@@ -786,10 +786,10 @@ class ThoiGianSanXuatTrongTrotPopup {
 
     this.thoiGianSanXuatTrongTrot.applyEdits(applyEdits).then(e => {
       this.refreshNhomCayTrong(this.dataDetails, datas.adds);
-      $('#ttModal').modal('toggle');
       this.tmpDatasDetailTrongTrong = null;
       this.dataDetails = null;
     })
+    $('#ttModal').modal('toggle');
   }
   /**
    * Cập nhật lại nhóm cây trồng của trồng trọt
