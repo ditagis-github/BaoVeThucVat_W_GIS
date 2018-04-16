@@ -26,4 +26,3 @@ define(["require", "exports"], function (require, exports) {
     }
     return EventListener;
 });
-//# sourceMappingURL=EventListener.js.map

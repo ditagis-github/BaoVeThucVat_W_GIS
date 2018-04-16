@@ -53,4 +53,3 @@ define(["require", "exports", "dojo/on", "dojo/dom-construct", "esri/widgets/Exp
     }
     return EditorHistory;
 });
-//# sourceMappingURL=EditorHistory.js.map

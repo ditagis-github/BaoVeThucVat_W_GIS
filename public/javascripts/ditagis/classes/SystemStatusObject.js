@@ -7,4 +7,3 @@ define(["require", "exports", "./EventListener"], function (require, exports, Ev
     }
     return SystemStatusObject;
 });
-//# sourceMappingURL=SystemStatusObject.js.map

@@ -1,0 +1,11 @@
+extends layout
+block javascript
+  script(src='javascripts/config.js')
+  script(src='https://js.arcgis.com/4.4/')
+  script(src='javascripts/ditagis/cattachthua.js')
+block content
+  script.
+    //hiển thị loader
+    Loader.show();
+  #map
+  

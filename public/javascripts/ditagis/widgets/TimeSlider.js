@@ -116,4 +116,3 @@ define(["require", "exports", "dojo/dom-construct", "esri/widgets/Expand", "../c
     }
     return TimeSlider;
 });
-//# sourceMappingURL=TimeSlider.js.map

@@ -60,4 +60,3 @@ define(["require", "exports"], function (require, exports) {
     };
     return config;
 });
-//# sourceMappingURL=config.js.map

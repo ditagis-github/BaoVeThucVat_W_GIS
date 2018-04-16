@@ -76,4 +76,3 @@ define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol",
     }
     return HightlightGraphic;
 });
-//# sourceMappingURL=HightlightGraphic.js.map

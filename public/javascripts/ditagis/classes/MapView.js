@@ -18,4 +18,3 @@ define(["require", "exports", "esri/views/MapView", "./SystemStatusObject", "esr
     }
     return MapViewDTG;
 });
-//# sourceMappingURL=MapView.js.map

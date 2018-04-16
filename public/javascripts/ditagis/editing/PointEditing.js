@@ -131,4 +131,3 @@ define(["require", "exports", "../support/Editing", "../classes/ConstName"], fun
     }
     return PointEditing;
 });
-//# sourceMappingURL=PointEditing.js.map

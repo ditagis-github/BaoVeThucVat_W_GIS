@@ -49,4 +49,3 @@ define(["require", "exports", "dojo/on", "esri/Graphic", "esri/symbols/SimpleMar
     ;
     return SimpleDrawPoint;
 });
-//# sourceMappingURL=SimpleDrawPoint.js.map

@@ -46,4 +46,3 @@ define(["require", "exports", "./SimpleDrawPoint", "../editing/PointEditing", ".
     }
     return PointDrawingToolManager;
 });
-//# sourceMappingURL=PointDrawingToolManager.js.map

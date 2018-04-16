@@ -67,4 +67,3 @@ define(["require", "exports", "esri/tasks/QueryTask", "esri/request"], function 
     }
     return FeatureTable;
 });
-//# sourceMappingURL=FeatureTable.js.map

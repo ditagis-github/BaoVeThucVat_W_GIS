@@ -13,4 +13,3 @@ define(["require", "exports"], function (require, exports) {
     };
     return constName;
 });
-//# sourceMappingURL=ConstName.js.map
