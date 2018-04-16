@@ -87,25 +87,27 @@ class Popup {
               layer: layer
             })
           if (layer.id === constName.TRONGTROT) {
-            actions.push({
-              id: "view-detail",
-              title: "Chi tiết thời gian trồng trọt",
-              className: "esri-icon-table",
-              layer: layer
-            });
-            if (location.pathname === '/map')
+            if (location.pathname !== '/cattachthua')
+              actions.push({
+                id: "view-detail",
+                title: "Chi tiết thời gian trồng trọt",
+                className: "esri-icon-table",
+                layer: layer
+              });
+            if (location.pathname !== '/congtacvien') {
               actions.push({
                 id: "split",
                 title: "Chia thửa",
                 className: "esri-icon-zoom-out-fixed",
                 layer: layer
               })
-            actions.push({
-              id: "merge",
-              title: "Ghép thửa",
-              className: "esri-icon-zoom-in-fixed",
-              layer: layer
-            })
+              actions.push({
+                id: "merge",
+                title: "Ghép thửa",
+                className: "esri-icon-zoom-in-fixed",
+                layer: layer
+              })
+            }
           }
           layer.popupTemplate = {
             content: (target) => {

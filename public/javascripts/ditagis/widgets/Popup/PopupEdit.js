@@ -16,7 +16,7 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
             this.inputElement = {};
             this.thoiGianSanXuatTrongTrotPopup = new ThoiGianSanXuatTrongTrotPopup({ view: view, table: options.table });
             this.thoiGianSanXuatTrongTrotTbl = options.table;
-            if (location.pathname === '/map') {
+            if (location.pathname !== '/congtacvien') {
                 this._splitPolygon = new SplitPolygon(view);
                 this.view.on('layerview-create', e => {
                     if (e.layer.id === constName.TRONGTROT) {

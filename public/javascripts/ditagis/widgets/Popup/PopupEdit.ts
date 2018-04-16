@@ -39,14 +39,13 @@ class PopupEdit {
     this.inputElement = {};
     this.thoiGianSanXuatTrongTrotPopup = new ThoiGianSanXuatTrongTrotPopup({ view: view, table: options.table });
     this.thoiGianSanXuatTrongTrotTbl = options.table;
-    if (location.pathname === '/map') {
+    if (location.pathname !== '/congtacvien') {
       this._splitPolygon = new SplitPolygon(view);
       this.view.on('layerview-create', e => {
         if (e.layer.id === constName.TRONGTROT) {
           this._mergePolygon = new MergePolygon({ view: view, layer: e.layer as __esri.FeatureLayer });
         }
       })
-
     }
   }
   get selectFeature() {

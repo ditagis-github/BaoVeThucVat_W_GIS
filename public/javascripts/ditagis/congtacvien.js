@@ -38,6 +38,7 @@ require([
   "ditagis/support/HightlightGraphic",
   'esri/symbols/SimpleFillSymbol',
   'esri/symbols/SimpleLineSymbol',
+  "esri/geometry/Extent",
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
@@ -49,7 +50,7 @@ require([
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
   SystemStatusObject,
-  EditorHistory, LayerEditor, UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol,
+  EditorHistory, LayerEditor, UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol, Extent,
   on, domConstruct, has
 ) {
     'use strict';
@@ -231,20 +232,20 @@ require([
                     element.opacity = 0.7
                   let fl = new FeatureLayer(element);
                   map.add(fl);
-                  if (element.id === constName.TRONGTROT){
-                    fl.on('layerview-create',function(event){
-                      if(event.layerView){
-                        event.layerView.watch('updating',function(newVal,oldVal){
-                          if(newVal && newVal != oldVal){
+                  if (element.id === constName.TRONGTROT) {
+                    fl.on('layerview-create', function (event) {
+                      if (event.layerView) {
+                        event.layerView.watch('updating', function (newVal, oldVal) {
+                          if (newVal && newVal != oldVal) {
                             Loader.show(false)
-                          }else{
+                          } else {
                             Loader.hide()
                           }
                         })
                       }
                     })
                   }
-                  
+
                 }
               }
               resolve();
@@ -256,6 +257,71 @@ require([
         });
       }
       const initWidgets = () => {
+        function searchWidget() {
+          var searchdiv = $('<div/>', {
+            class: 'input-group add-on',
+          });
+          var searchbox = $('<input/>', {
+            class: 'form-control',
+            type: 'text',
+            name: 'srch-term',
+            id: 'srch-term',
+            style: 'width: calc(100vw - 125px);float: right;',
+            placeholder: "Nhập đơn vị hành chính, tên đường "
+          }).appendTo(searchdiv);
+          var input_group = $('<div/>', {
+            class: 'input-group-btn',
+          }).appendTo(searchdiv);
+          var btnsearch = $('<button/>', {
+            class: 'btn btn-default',
+            type: 'submit',
+          }).appendTo(input_group);
+          var iconsearch = $('<i/>', {
+            class: 'glyphicon glyphicon-search',
+          }).appendTo(btnsearch);
+          var data;
+          var ketqua = $('<div/>', {
+            class: 'output-group add-on',
+            id: 'ketqua'
+          });
+          view.ui.add(searchdiv[0], 'top-right');
+          view.ui.add(ketqua[0], 'top-right');
+          btnsearch.on('click', ((e) => {
+            function clearResultSearch() {
+              var ketqua = document.getElementById('ketqua');
+              if (ketqua)
+                while (ketqua.firstChild) {
+                  ketqua.removeChild(ketqua.firstChild);
+                }
+            }
+            function btnChiTietClick(bound) {
+              let extent = new Extent({
+                ymin: bound.southwest.lat,
+                ymax: bound.northeast.lat,
+                xmin: bound.southwest.lng,
+                xmax: bound.northeast.lng,
+              });
+              view.goTo(extent);
+              clearResultSearch();
+            }
+            let address = searchbox.val().toString().replace(/[ ]/g, '+');
+            $.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyC9VTEqoczK2j7lDRacfQ3aRTE3f4vuHek`).done((response) => {
+              let results = response.results;
+              clearResultSearch();
+              for (const item of results) {
+                let div = $('<div />', {
+                  class: 'address list-group-item'
+                }).appendTo(ketqua);
+                var diachi_chitiet = $('<div />', {
+                  class: 'address-detail',
+                  text: item.formatted_address
+                }).appendTo(div);
+                diachi_chitiet.click(() => btnChiTietClick(item.geometry.viewport));
+              }
+            });
+          }));
+        }
+        searchWidget();
         var userWidget = new UserWidget(view);
         userWidget.startup();
         view.ui.move(["zoom"], "top-left");
@@ -300,32 +366,15 @@ require([
           })
         });
         // Widget Search Features //
-        let locator = new Locator({
-          url: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
-          countryCode: "VNM"
-        });
         var searchWidget = new Search({
-          searchAllEnabled: false,
-          view: view,
-          allPlaceholder: "Nhập nội dung tìm kiếm",
-          sources: [{
-            locator: locator,
-            name: "Tìm địa chỉ",
-            searchFields: ["*"],
-            placeholder: "Nhập địa chỉ",
-            popupOpenOnSelect: false,
-            suffix: ", Bình Dương",
-            resultGraphicEnabled: false,
-            displayField: "Address",
-          }, {
-            featureLayer: map.findLayerById(constName.SAUBENH),
-            searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
-            displayField: "MaSauBenh",
-            exactMatch: false,
-            outFields: ["*"],
-            name: "Sâu hại",
-            placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
-          }, {
+          featureLayer: map.findLayerById(constName.SAUBENH),
+          searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
+          displayField: "MaSauBenh",
+          exactMatch: false,
+          outFields: ["*"],
+          name: "Sâu hại",
+          placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
+        }, {
             featureLayer: map.findLayerById(constName.TRONGTROT),
             searchFields: ["MaDoiTuong"],
             displayField: "MaDoiTuong",
@@ -351,45 +400,45 @@ require([
             resultGraphicEnabled: false
           }]
         });
-        // Add the search widget to the top left corner of the view
-        view.ui.add(searchWidget, {
-          position: "top-right"
-        });
-        searchWidget.on('search-complete', e => {
-          hightlightGraphic.clear();
-          let hanhChinh = e.results.find(f => {
-            return f.sourceIndex === 4
-          });
-          if (hanhChinh && hanhChinh.results.length > 0) {
-            let graphic = hanhChinh.results[0].feature;
-            hightlightGraphic.add(graphic);
-          }
-        })
-        /**
-         * Layer Editor
-         */
-        var layerEditor = new LayerEditor(view);
-        layerEditor.startup();
-        var popup = new Popup(view);
-        popup.startup();
-        var editorHistory = new EditorHistory({
-          view: view
-        });
-        layerEditor.on("draw-finish", function (e) {
-          editorHistory.add({
-            layerName: e.graphic.layer.title,
-            geometry: e.graphic.geometry
-          });
-        })
+    // Add the search widget to the top left corner of the view
+    view.ui.add(searchWidget, {
+      position: "top-right"
+    });
+    searchWidget.on('search-complete', e => {
+      hightlightGraphic.clear();
+      let hanhChinh = e.results.find(f => {
+        return f.sourceIndex === 4
+      });
+      if (hanhChinh && hanhChinh.results.length > 0) {
+        let graphic = hanhChinh.results[0].feature;
+        hightlightGraphic.add(graphic);
       }
+    })
+    /**
+     * Layer Editor
+     */
+    var layerEditor = new LayerEditor(view);
+    layerEditor.startup();
+    var popup = new Popup(view);
+    popup.startup();
+    var editorHistory = new EditorHistory({
+      view: view
+    });
+    layerEditor.on("draw-finish", function (e) {
+      editorHistory.add({
+        layerName: e.graphic.layer.title,
+        geometry: e.graphic.geometry
+      });
+    })
+  }
 
       initBaseMap();
-      initFeatureLayers().then(() => {
-        initWidgets();
-        map.reorder(basemap, 5)
-      })
+initFeatureLayers().then(() => {
+  initWidgets();
+  map.reorder(basemap, 5)
+})
 
 
-      Loader.hide();
+Loader.hide();
     })
   })

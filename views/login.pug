@@ -21,6 +21,19 @@ html
 				.form-group
 					label Mật khẩu
 					input.form-control(type='password', id='pass-tf', name='password')
+				.form-group
+					.radio
+						label
+							input(type='radio', name='optradio' value='map')
+							| Phần mềm chung
+					.radio
+						label
+							input(type='radio', name='optradio' value='cattachthua')
+						| Cắt tách thửa
+					.radio
+						label
+							input(type='radio', name='optradio' value='congtacvien')
+							| Cộng tác viên
 				.controls
 					button(type='button').btn.btn-default.button-rememember-me
 						span.glyphicon.glyphicon-unchecked.button-rememember-me-glyph

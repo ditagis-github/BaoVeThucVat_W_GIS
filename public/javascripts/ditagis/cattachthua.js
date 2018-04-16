@@ -22,9 +22,9 @@ require([
 
   "ditagis/widgets/User",
   "ditagis/widgets/Popup",
-  "ditagis/support/HightlightGraphic",
   'esri/symbols/SimpleFillSymbol',
   'esri/symbols/SimpleLineSymbol',
+  "esri/geometry/Extent",
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
@@ -36,7 +36,7 @@ require([
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
   SystemStatusObject,
-  UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol,
+  UserWidget, Popup, SimpleFillSymbol, SimpleLineSymbol, Extent,
   on, domConstruct, has
 ) {
     'use strict';
@@ -182,6 +182,70 @@ require([
         });
       }
       const initWidgets = () => {
+        function searchWidget() {
+          var searchdiv = $('<div/>', {
+            class: 'input-group add-on',
+          });
+          var searchbox = $('<input/>', {
+            class: 'form-control',
+            type: 'text',
+            name: 'srch-term',
+            id: 'srch-term',
+            placeholder: "Nhập đơn vị hành chính, tên đường "
+          }).appendTo(searchdiv);
+          var input_group = $('<div/>', {
+            class: 'input-group-btn',
+          }).appendTo(searchdiv);
+          var btnsearch = $('<button/>', {
+            class: 'btn btn-default',
+            type: 'submit',
+          }).appendTo(input_group);
+          var iconsearch = $('<i/>', {
+            class: 'glyphicon glyphicon-search',
+          }).appendTo(btnsearch);
+          var data;
+          var ketqua = $('<div/>', {
+            class: 'output-group add-on',
+            id: 'ketqua'
+          });
+          view.ui.add(searchdiv[0], 'top-left');
+          view.ui.add(ketqua[0], 'top-left');
+          btnsearch.on('click', ((e) => {
+            function clearResultSearch() {
+              var ketqua = document.getElementById('ketqua');
+              if (ketqua)
+                while (ketqua.firstChild) {
+                  ketqua.removeChild(ketqua.firstChild);
+                }
+            }
+            function btnChiTietClick(bound) {
+              let extent = new Extent({
+                ymin: bound.southwest.lat,
+                ymax: bound.northeast.lat,
+                xmin: bound.southwest.lng,
+                xmax: bound.northeast.lng,
+              });
+              view.goTo(extent);
+              clearResultSearch();
+            }
+            let address = searchbox.val().toString().replace(/[ ]/g, '+');
+            $.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyC9VTEqoczK2j7lDRacfQ3aRTE3f4vuHek`).done((response) => {
+              let results = response.results;
+              clearResultSearch();
+              for (const item of results) {
+                let div = $('<div />', {
+                  class: 'address list-group-item'
+                }).appendTo(ketqua);
+                var diachi_chitiet = $('<div />', {
+                  class: 'address-detail',
+                  text: item.formatted_address
+                }).appendTo(div);
+                diachi_chitiet.click(() => btnChiTietClick(item.geometry.viewport));
+              }
+            });
+          }));
+        }
+        searchWidget();
         var userWidget = new UserWidget(view);
         userWidget.startup();
         view.ui.move(["zoom"], "top-left");
@@ -208,90 +272,7 @@ require([
             view: view,
           })
         }), "top-left");
-        var hightlightGraphic = new HightlightGraphic(view, {
-          symbolPlg: new SimpleFillSymbol({
-            style: "none",
-            outline: new SimpleLineSymbol({ // autocasts as SimpleLineSymbol
-              color: "black",
-              width: 3
-            })
-          })
-        });
-        // Widget Search Features //
-        let locator = new Locator({
-          url: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
-          countryCode: "VNM"
-        });
-        var searchWidget = new Search({
-          searchAllEnabled: false,
-          view: view,
-          allPlaceholder: "Nhập nội dung tìm kiếm",
-          sources: [{
-            locator: locator,
-            name: "Tìm địa chỉ",
-            searchFields: ["*"],
-            placeholder: "Nhập địa chỉ",
-            popupOpenOnSelect: false,
-            suffix: ", Bình Dương",
-            resultGraphicEnabled: false,
-            displayField: "Address",
-          }, {
-            featureLayer: map.findLayerById(constName.SAUBENH),
-            searchFields: ["OBJECTID", "MaSauBenh", "MaHuyenTP"],
-            displayField: "MaSauBenh",
-            exactMatch: false,
-            outFields: ["*"],
-            name: "Sâu hại",
-            placeholder: "Tìm kiếm theo tên, loại cây trồng, huyện/tp",
-          }, {
-            featureLayer: map.findLayerById(constName.DOANHNGHIEP),
-            searchFields: ["OBJECTID", "MaDoanhNghiep", "NguoiDaiDienDoanhNghiep"],
-            displayField: "NguoiDaiDienDoanhNghiep",
 
-            exactMatch: false,
-            outFields: ["*"],
-            name: "Doanh Nghiệp",
-            placeholder: "Nhập tên hoặc mã Doanh nghiệp",
-          }, {
-            featureLayer: map.findLayerById(constName.TRONGTROT),
-            searchFields: ["MaDoiTuong"],
-            displayField: "MaDoiTuong",
-
-            exactMatch: false,
-            outFields: ["*"],
-            name: "Trồng Trọt",
-            placeholder: "Nhập mã đối tượng Trồng trọt",
-          }, {
-            featureLayer: new FeatureLayer({
-              // url: mapconfigs.basemap.url + '/' + constName.INDEX_HANHCHINHHUYEN
-              url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/4"
-            }),
-            searchFields: ["MaPhuongXa", "TenXa"],
-            displayField: "TenXa",
-            outFields: ["*"],
-            filter: {
-              where: `${definitionExpression ? definitionExpression : '1=1'}`
-            },
-            name: "Hành chính xã",
-            placeholder: "Nhập tên xã/ phường",
-            popupOpenOnSelect: false,
-            resultGraphicEnabled: false
-          }]
-        });
-        // Add the search widget to the top left corner of the view
-        view.ui.add(searchWidget, {
-          position: "top-right"
-        });
-        searchWidget.on('search-complete', e => {
-          hightlightGraphic.clear();
-          let hanhChinh = e.results.find(f => {
-            return f.sourceIndex === 4
-          });
-          if (hanhChinh && hanhChinh.results.length > 0) {
-            let graphic = hanhChinh.results[0].feature;
-            hightlightGraphic.add(graphic);
-          }
-        })
         /**
          * Layer Editor
          */
