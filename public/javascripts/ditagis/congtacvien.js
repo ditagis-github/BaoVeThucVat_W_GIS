@@ -79,6 +79,7 @@ require([
             sublayer.definitionExpression = definitionExpression;
           }
         }
+        bmCfg.visible = false;
         basemap = new MapImageLayer(bmCfg);
         basemap.watch('visible', function (value) {
           if ($)
@@ -103,7 +104,7 @@ require([
           urlTemplate: '//mt1.google.com/vt/lyrs=y&x={col}&y={row}&z={level}',
           title: 'Ảnh vệ tinh',
           id: 'worldimagery',
-          visible: false
+          visible: true
         });
         osm = new WebTileLayer({
           title: 'Đường đi',
