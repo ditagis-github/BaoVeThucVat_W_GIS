@@ -39,6 +39,7 @@ require([
   'esri/symbols/SimpleFillSymbol',
   'esri/symbols/SimpleLineSymbol',
   "esri/geometry/Extent",
+  "esri/geometry/Point",
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
@@ -50,7 +51,7 @@ require([
   QueryTask, Query, esriRequest,
   UniqueValueRenderer, SimpleMarkerSymbol,
   SystemStatusObject,
-  EditorHistory, LayerEditor, UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol, Extent,
+  EditorHistory, LayerEditor, UserWidget, Popup, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol, Extent, Point,
   on, domConstruct, has
 ) {
     'use strict';
@@ -248,13 +249,24 @@ require([
 
                 }
               }
+              var danhDauViTri = new FeatureLayer({
+                id: "danhdauvitri",
+                url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
+                permission: {
+                  create: false,
+                  view: true,
+                  delete: true,
+                  edit: false
+                }
+              });
+              map.add(danhDauViTri);
               resolve();
             } else {
               throw 'cannot request permission';
             }
           })
-
         });
+
       }
       const initWidgets = () => {
         function searchWidget() {
@@ -333,12 +345,39 @@ require([
             view: view
           })
         }), "top-left");
-
-
-        //LOCATE
-        view.ui.add(new Locate({
+        var locate = new Locate({
           view: view
-        }), "top-left");
+        });
+        function danhDauViTri() {
+          let div = document.createElement('div');
+          div.id = "dtg-wget-split-polygon";
+          div.classList.add('esri-widget', 'esri-widget-button', 'esri-icon-applications');
+          div.title = "Đánh dấu vị trí";
+          view.ui.add(div, 'bottom-right');
+          div.addEventListener('click', function () {
+            let layer = map.findLayerById('danhdauvitri');
+            Loader.show(false);
+            locate.locate().then(function (results) {
+              let point = new Point({
+                latitude: results.coords.latitude,
+                longitude: results.coords.longitude,
+                spatialReference: view.spatialReference
+              });
+              layer.applyEdits({
+                addFeatures: [{
+                  attributes: {
+                    NgayCapNhat: new Date().getTime(),
+                    NguoiCapNhat: systemVariable.user.userName
+                  },
+                  geometry: point
+                }]
+              }).then(r => console.log(r)).always(_ => Loader.hide())
+            })
+          });
+        }
+        danhDauViTri();
+        //LOCATE
+        view.ui.add(locate, "top-left");
         //neu khong phai la thiet bi di dong
         if (!has('android') && !has('ios') && !has('bb')) {
           //Add Logo DATAGIS to the bottom left of the view

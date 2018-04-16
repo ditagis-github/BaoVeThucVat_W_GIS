@@ -173,6 +173,17 @@ require([
                   map.add(fl);
                 }
               }
+              var danhDauViTri = new FeatureLayer({
+                id: "danhdauvitri",
+                url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
+                permission: {
+                  create: false,
+                  view: true,
+                  delete: true,
+                  edit: false
+                }
+              });
+              map.add(danhDauViTri);
               resolve();
             } else {
               throw 'cannot request permission';
