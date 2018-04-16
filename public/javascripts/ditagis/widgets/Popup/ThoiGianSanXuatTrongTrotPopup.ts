@@ -249,7 +249,7 @@ class ThoiGianSanXuatTrongTrotPopup {
         DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
         ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
         ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value),
-        GiaiDoanSinhTruong:'Trồng mới'
+        GiaiDoanSinhTruong: 'Trồng mới'
       }
       let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
       let addDatas = this.tmpDatasDetailTrongTrong.adds;
@@ -338,9 +338,13 @@ class ThoiGianSanXuatTrongTrotPopup {
     }
     on(inputNCT, 'change', () => {
       inputNCTChange();
+      capNhatGiaiDoanSinhTruong();
     })
     inputNCTChange();
     inputLCT.value = item.LoaiCayTrong;
+    on(inputLCT, 'change', _ => {
+      capNhatGiaiDoanSinhTruong();
+    })
     lbNCT = document.createElement('label');
     lbNCT.innerText = 'Nhóm cây trồng';
     formGroupNCT.appendChild(lbNCT);
@@ -394,23 +398,27 @@ class ThoiGianSanXuatTrongTrotPopup {
     inputGDST = document.createElement('select');
     inputGDST.classList.add('form-control');
     let defaultComboValue = document.createElement('option');
-    defaultComboValue.value = "N/A";
+    defaultComboValue.value = "Chưa xác định";
     defaultComboValue.innerText = 'Chọn giá trị...';
     defaultComboValue.selected = true;
     inputGDST.appendChild(defaultComboValue);
-    this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
-      where: `NhomCayTrong = ${item.NhomCayTrong} and LoaiCayTrong = '${item.LoaiCayTrong}'`,
-      outFields: ['GiaiDoanSinhTruong'],
-      orderByFields: ['MocTG']
-    }).then(res => {
-      res.features.forEach(f => {
-        let gdst = f.attributes.GiaiDoanSinhTruong;
-        let cbb = document.createElement('option');
-        cbb.value = cbb.innerText = gdst;
-        inputGDST.appendChild(cbb);
+    const capNhatGiaiDoanSinhTruong = () => {
+      inputGDST.innerHTML = '';
+      inputGDST.appendChild(defaultComboValue);
+      this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
+        where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
+        outFields: ['GiaiDoanSinhTruong'],
+        orderByFields: ['MocTG']
+      }).then(res => {
+        res.features.forEach(f => {
+          let gdst = f.attributes.GiaiDoanSinhTruong;
+          let cbb = document.createElement('option');
+          cbb.value = cbb.innerText = gdst;
+          inputGDST.appendChild(cbb);
+        })
+        inputGDST.value = item.GiaiDoanSinhTruong;
       })
-      inputGDST.value = item.GiaiDoanSinhTruong;
-    })
+    }
     formGDST.appendChild(lbGDST);
     formGDST.appendChild(inputGDST);
 

@@ -267,9 +267,13 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             };
             on(inputNCT, 'change', () => {
                 inputNCTChange();
+                capNhatGiaiDoanSinhTruong();
             });
             inputNCTChange();
             inputLCT.value = item.LoaiCayTrong;
+            on(inputLCT, 'change', _ => {
+                capNhatGiaiDoanSinhTruong();
+            });
             lbNCT = document.createElement('label');
             lbNCT.innerText = 'Nhóm cây trồng';
             formGroupNCT.appendChild(lbNCT);
@@ -315,23 +319,27 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             inputGDST = document.createElement('select');
             inputGDST.classList.add('form-control');
             let defaultComboValue = document.createElement('option');
-            defaultComboValue.value = "N/A";
+            defaultComboValue.value = "Chưa xác định";
             defaultComboValue.innerText = 'Chọn giá trị...';
             defaultComboValue.selected = true;
             inputGDST.appendChild(defaultComboValue);
-            this.tblGiaiDoanSinhTruong.queryFeatures({
-                where: `NhomCayTrong = ${item.NhomCayTrong} and LoaiCayTrong = '${item.LoaiCayTrong}'`,
-                outFields: ['GiaiDoanSinhTruong'],
-                orderByFields: ['MocTG']
-            }).then(res => {
-                res.features.forEach(f => {
-                    let gdst = f.attributes.GiaiDoanSinhTruong;
-                    let cbb = document.createElement('option');
-                    cbb.value = cbb.innerText = gdst;
-                    inputGDST.appendChild(cbb);
+            const capNhatGiaiDoanSinhTruong = () => {
+                inputGDST.innerHTML = '';
+                inputGDST.appendChild(defaultComboValue);
+                this.tblGiaiDoanSinhTruong.queryFeatures({
+                    where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
+                    outFields: ['GiaiDoanSinhTruong'],
+                    orderByFields: ['MocTG']
+                }).then(res => {
+                    res.features.forEach(f => {
+                        let gdst = f.attributes.GiaiDoanSinhTruong;
+                        let cbb = document.createElement('option');
+                        cbb.value = cbb.innerText = gdst;
+                        inputGDST.appendChild(cbb);
+                    });
+                    inputGDST.value = item.GiaiDoanSinhTruong;
                 });
-                inputGDST.value = item.GiaiDoanSinhTruong;
-            });
+            };
             formGDST.appendChild(lbGDST);
             formGDST.appendChild(inputGDST);
             btnEdit = document.createElement('button');

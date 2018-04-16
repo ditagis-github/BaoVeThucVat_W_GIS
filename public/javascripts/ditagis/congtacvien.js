@@ -238,9 +238,9 @@ require([
                       if (event.layerView) {
                         event.layerView.watch('updating', function (newVal, oldVal) {
                           if (newVal && newVal != oldVal) {
-                            Loader.show(false)
+                            $('.loading').css('display','block')
                           } else {
-                            Loader.hide()
+                            $('.loading').css('display','none')
                           }
                         })
                       }

@@ -109,7 +109,7 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                     width: 600,
                     height: 1000
                 },
-                position: 'top-right'
+                position: 'bottom-center'
             };
         }
         get selectFeature() {

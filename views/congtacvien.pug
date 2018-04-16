@@ -3,9 +3,25 @@ block javascript
   script(src='javascripts/config.js')
   script(src='https://js.arcgis.com/4.4/')
   script(src='javascripts/ditagis/congtacvien.js')
+block stylesheet
+  style.
+    .loading{
+      width: 110px;
+      position: absolute;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.1em;
+      border: 1px solid #efefef;
+      color: #555;
+      top: 100px;
+      left: calc(50% - 55px);
+      z-index: 1000;
+      background-color: #fff
+    }
 block content
   script.
     //hiển thị loader
     Loader.show();
+  .loading(style='display:none') Đang tải...
   #map
   

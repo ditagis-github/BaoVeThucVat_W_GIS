@@ -139,7 +139,7 @@ class Popup {
         width: 600,
         height: 1000
       },
-      position: 'top-right'
+      position: 'bottom-center'
     };
   }
   get selectFeature() {
