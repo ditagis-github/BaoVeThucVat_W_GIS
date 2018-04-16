@@ -355,7 +355,7 @@ class Popup {
               }, div);
               let itemA = domConstruct.create('a', {
                 class: "thumbnail",
-                href: "#",
+                href: "javascript:void(0)",
               }, itemDiv)
 
               let img = domConstruct.create('img', {

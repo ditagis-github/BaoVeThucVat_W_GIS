@@ -309,7 +309,7 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
                                     }, div);
                                     let itemA = domConstruct.create('a', {
                                         class: "thumbnail",
-                                        href: "#",
+                                        href: "javascript:void(0)",
                                     }, itemDiv);
                                     let img = domConstruct.create('img', {
                                         class: 'img-responsive',
