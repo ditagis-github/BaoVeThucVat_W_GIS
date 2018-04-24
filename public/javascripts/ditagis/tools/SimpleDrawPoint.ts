@@ -21,7 +21,7 @@ import geometryEngine = require('esri/geometry/geometryEngine');
 import geometryEngineAsync = require('esri/geometry/geometryEngineAsync');
 import PointEditing = require('../editing/PointEditing');
 import EventListener = require('../classes/EventListener');
-import Tooltip = require("ditagis/toolview/Tooltip");
+import Tooltip = require("../toolview/Tooltip");
      class SimpleDrawPoint {
          options;
          view;

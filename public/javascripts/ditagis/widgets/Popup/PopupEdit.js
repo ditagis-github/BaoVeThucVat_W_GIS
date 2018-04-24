@@ -1,4 +1,4 @@
-define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/on", "dojo/dom-construct", "esri/request", "esri/core/watchUtils", "esri/geometry/Point", "esri/widgets/Locate/LocateViewModel", "ditagis/support/Editing", "./ThoiGianSanXuatTrongTrotPopup", "../../support/FeatureTable", "../SplitPolygon", "../MergePolygon"], function (require, exports, constName, config, on, domConstruct, esriRequest, watchUtils, Point, LocateViewModel, editingSupport, ThoiGianSanXuatTrongTrotPopup, FeatureTable, SplitPolygon, MergePolygon) {
+define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/on", "dojo/dom-construct", "esri/request", "esri/core/watchUtils", "esri/geometry/Point", "esri/widgets/Locate/LocateViewModel", "../../support/Editing", "./ThoiGianSanXuatTrongTrotPopup", "../../support/FeatureTable", "../SplitPolygon", "../MergePolygon"], function (require, exports, constName, config, on, domConstruct, esriRequest, watchUtils, Point, LocateViewModel, editingSupport, ThoiGianSanXuatTrongTrotPopup, FeatureTable, SplitPolygon, MergePolygon) {
     "use strict";
     class PopupEdit {
         constructor(view, options) {

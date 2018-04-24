@@ -5,8 +5,7 @@ define([
     "dojo/dom",
     "esri/widgets/Expand",
     "../classes/EventListener",
-    "ditagis/tools/PointDrawingToolManager",
-    'css!ditagis/widgets/LayerEditor.css'
+    "../tools/PointDrawingToolManager"
 
 ], function (on,
     domConstruct, domClass, dom,

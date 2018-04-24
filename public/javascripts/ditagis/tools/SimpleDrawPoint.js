@@ -1,4 +1,4 @@
-define(["require", "exports", "dojo/on", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol", "../editing/PointEditing", "../classes/EventListener", "ditagis/toolview/Tooltip"], function (require, exports, on, Graphic, SimpleMarkerSymbol, PointEditing, EventListener, Tooltip) {
+define(["require", "exports", "dojo/on", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol", "../editing/PointEditing", "../classes/EventListener", "../toolview/Tooltip"], function (require, exports, on, Graphic, SimpleMarkerSymbol, PointEditing, EventListener, Tooltip) {
     "use strict";
     class SimpleDrawPoint {
         constructor(view) {

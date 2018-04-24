@@ -6,7 +6,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-define(["require", "exports", "dojo/dom-construct", "dojo/on", "ditagis/toolview/Tooltip", "../support/HightlightGraphic", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/Graphic", "esri/geometry/Polyline", "esri/geometry/Polygon", "esri/geometry/geometryEngine"], function (require, exports, domConstruct, on, Tooltip, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol, Color, Graphic, Polyline, Polygon, geometryEngine) {
+define(["require", "exports", "dojo/dom-construct", "dojo/on", "../toolview/Tooltip", "../support/HightlightGraphic", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/Graphic", "esri/geometry/Polyline", "esri/geometry/Polygon", "esri/geometry/geometryEngine"], function (require, exports, domConstruct, on, Tooltip, HightlightGraphic, SimpleFillSymbol, SimpleLineSymbol, Color, Graphic, Polyline, Polygon, geometryEngine) {
     "use strict";
     class SplitPolygon {
         constructor(view, options = {}) {

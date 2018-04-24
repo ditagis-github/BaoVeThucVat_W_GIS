@@ -3,10 +3,7 @@ define([
     "dojo/dom-construct",
     "dojo/dom-class",
     "dojo/dom",
-    "esri/widgets/Expand",
-
-    'css!ditagis/widgets/user.css'
-
+    "esri/widgets/Expand"
 ], function (on,
     domConstruct, domClass, dom,
     Expand
