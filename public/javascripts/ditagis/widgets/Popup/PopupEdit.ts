@@ -11,8 +11,10 @@ import ThoiGianSanXuatTrongTrotPopup = require('./ThoiGianSanXuatTrongTrotPopup'
 import FeatureTable = require('../../support/FeatureTable');
 import SplitPolygon = require('../SplitPolygon');
 import MergePolygon = require('../MergePolygon');
+import MapView = require('../../classes/MapView');
+
 class PopupEdit {
-  private view: __esri.MapView;
+  private view: MapView;
   private options;
   private locateViewModel;
   private fireFields;
@@ -556,6 +558,9 @@ class PopupEdit {
   }
   updateGeometryGPS() {
     let objectId = this.objectId;
+    $.notify({
+      message: 'Chọn vị trí trên bản đồ'
+    });
     let notify = $.notify({
       title: `<strong>Cập nhật vị trí</strong>`,
       message: 'Cập nhật...'
@@ -567,21 +572,16 @@ class PopupEdit {
           align: 'left'
         }
       })
-    this.locateViewModel.locate().then(res => {
-      const coords = res.coords,
-        latitude = coords.latitude,
-        longitude = coords.longitude;
-      const geometry = new Point({
-        latitude: latitude,
-        longitude: longitude,
-        spatialReference: this.view.spatialReference
-      })
+    let handle = this.view.on('click', (e) => {
+      e.stopPropagation();
       this.layer.applyEdits({
         updateFeatures: [{
           attributes: {
-            objectId: objectId
+            objectId: objectId,
+            NguoiCapNhat:this.view.systemVariable.user.userName,
+            NgayCapNhat:new Date().getTime()
           },
-          geometry: geometry
+          geometry: e.mapPoint
         }]
       }).then(res => {
         if (res.updateFeatureResults[0].error) {
@@ -595,6 +595,7 @@ class PopupEdit {
           this.view.popup.close();
         }
       })
+      handle.remove()
     })
   }
   public showTableDetailTrongTrot() {

@@ -2,12 +2,9 @@ extends layout
 block javascript
   script(src='javascripts/config.js')
   script(src='https://js.arcgis.com/4.4/')
-  script(src='javascripts/ditagis/main.js')
-  //- script.
-  //-   require(['/main.bundle.js'])
-block content 
+  //- script(src='javascripts/ditagis/main.js')
   script.
-    //hiển thị loader
-    Loader.show();
+    require(['/main.bundle.js'])
+block content 
   #map
   
