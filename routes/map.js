@@ -21,13 +21,12 @@ class MapRouter extends Router {
 		});
 		this.router.post('/', (req, res) => {
 			if (req.isAuthenticated()) {
-				this.accountManager.getByUsername(req.session.passport.user).then(user => {
-					res.status(200).send({
-						userName: user.Username,
-						displayName: user.DisplayName,
-						role: user.Role
-					});
-				})
+				const user = req.session.passport.user;
+				res.status(200).send({
+					userName: user.Username,
+					displayName: user.DisplayName,
+					role: user.Role
+				});
 
 			} else {
 				res.status(400).send('fail');
@@ -35,15 +34,14 @@ class MapRouter extends Router {
 		});
 		this.router.post('/layerrole', (req, res) => {
 			if (req.isAuthenticated()) {
-				this.accountManager.getByUsername(req.session.passport.user).then(user => {
-					this.layerRole.getByRole(user.Role).then(result => {
-						res.status(200).send(result);
-					}).catch(err => {
-						res.status(400).send(null);
-						console.log(err);
-					})
+				const user = req.session.passport.user;
+				this.layerRole.getByRole(user.Role).then(result => {
+					res.status(200).send(result);
+				}).catch(err => {
+					res.status(400).send(null);
+					console.log(err);
 				})
-				
+
 			} else {
 				res.status(400).send('fail');
 			}
@@ -57,28 +55,45 @@ class MapRouter extends Router {
 			})
 		})
 
-		this.router.post('/trongtrot/thoigian/add', (req, res) => {
-			const attributes = {
-				MaDoiTuong: req.body.MaDoiTuong,
-				Thang: req.body.Thang,
-				Nam: req.body.Nam,
-				NhomCayTrong: req.body.NhomCayTrong,
-				LoaiCayTrong: req.body.LoaiCayTrong || null
+		this.router.post('/trongtrot/thoigian/edits', async (req, res) => {
+			let body = JSON.parse(req.body.edits);
+			try {
+				if (body.adds) {
+					body.adds.forEach(
+						async addModel => {
+							await this.trongtrotDB.add({
+								...addModel,
+								ThoiGianBatDauTrong: new Date(parseInt(addModel.ThoiGianBatDauTrong)),
+								ThoiGianTrongTrot: new Date(parseInt(addModel.ThoiGianTrongTrot)),
+								NgayCapNhat: new Date(parseInt(addModel.NgayCapNhat))
+							})
+
+						})
+				}
+
+				if (body.deletes) {
+					body.deletes.forEach(
+						async id => await this.trongtrotDB.delete(id)
+					);
+				}
+
+				if (body.updates) {
+					body.updates.forEach(
+						async attributes => await this.trongtrotDB.update(attributes)
+					);
+				}
+				res.status(200).send();
+			} catch (error) {
+				res.status(400).send(error)
 			}
-			// this.trongtrotDB.add(attributes).then(result => {
-			// 	res.status(200).send('Successfully');
-			// }).catch(err => {
-			// 	res.status(400).send(err);
-			// })
 		})
+
 		this.router.post('/trongtrot/thoigian/getbymadoituong', (req, res) => {
 			const maDoiTuong = req.body.MaDoiTuong;
 			if (maDoiTuong) {
-				this.trongtrotDB.getByMaDoiTuong(maDoiTuong).then(result => {
-					res.status(200).send(result);
-				}).catch(err => {
-					res.status(400).send(err);
-				})
+				this.trongtrotDB.getByMaDoiTuong(maDoiTuong)
+					.then(result => res.status(200).send(result))
+					.catch(err => res.status(400).send(err));
 			} else {
 				res.status(400).send('Parameters is null');
 			}

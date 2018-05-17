@@ -1,7 +1,7 @@
 define(["require", "exports", "dojo/on", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol", "../editing/PointEditing", "../classes/EventListener", "../toolview/Tooltip"], function (require, exports, on, Graphic, SimpleMarkerSymbol, PointEditing, EventListener, Tooltip) {
     "use strict";
-    var SimpleDrawPoint = (function () {
-        function SimpleDrawPoint(view) {
+    class SimpleDrawPoint {
+        constructor(view) {
             this.options = {
                 tooltip: {
                     move: 'Nhấn vào màn hình để vẽ'
@@ -12,17 +12,16 @@ define(["require", "exports", "dojo/on", "esri/Graphic", "esri/symbols/SimpleMar
             this.drawLayer = new PointEditing(view);
             this.eventListener = new EventListener(this);
         }
-        SimpleDrawPoint.prototype.draw = function (layer) {
-            var _this = this;
+        draw(layer) {
             this.drawLayer.layer = layer;
-            this.clickEvent = on(this.view, 'click', function (evt) {
-                _this.clickHandler(evt);
+            this.clickEvent = on(this.view, 'click', (evt) => {
+                this.clickHandler(evt);
             });
-            this.pointerMoveEvent = on(this.view, 'pointer-move', function (evt) {
-                Tooltip.instance().show([evt.x, evt.y], _this.options.tooltip.move);
+            this.pointerMoveEvent = on(this.view, 'pointer-move', evt => {
+                Tooltip.instance().show([evt.x, evt.y], this.options.tooltip.move);
             });
-        };
-        SimpleDrawPoint.prototype.clearEvents = function () {
+        }
+        clearEvents() {
             if (this.clickEvent) {
                 this.clickEvent.remove();
                 this.clickEvent = null;
@@ -32,10 +31,10 @@ define(["require", "exports", "dojo/on", "esri/Graphic", "esri/symbols/SimpleMar
                 this.pointerMoveEvent.remove();
                 this.pointerMoveEvent = null;
             }
-        };
-        SimpleDrawPoint.prototype.clickHandler = function (evt) {
+        }
+        clickHandler(evt) {
             evt.stopPropagation();
-            var point;
+            let point;
             point = new Graphic({
                 geometry: this.view.toMap({
                     x: evt.x,
@@ -45,9 +44,8 @@ define(["require", "exports", "dojo/on", "esri/Graphic", "esri/symbols/SimpleMar
             });
             this.eventListener.fire('draw-finish', point);
             this.clearEvents();
-        };
-        return SimpleDrawPoint;
-    }());
+        }
+    }
     ;
     return SimpleDrawPoint;
 });

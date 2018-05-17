@@ -1,71 +1,120 @@
 const Database = require('./Database');
+const TABLE_NAME = 'THOIGIANSANXUATTRONGTROT';
+
 class TrongTrotDB extends Database {
-	constructor(params) {
-		super(params)
-	}
 	timer(id, month, year) {
 		return new Promise((resolve, reject) => {
-			this.connect().then(() => {
-				return sql.query `SELECT * FROM THOIGIANSANXUATTRONGTROT WHERE MADOITUONG = ${id} AND THANG = ${month} AND NAM = ${year}`
-			}).then(result => {
-				resolve(result.recordset);
-			}).catch(err => {
-				reject(err);
-			})
+			resolve(null)
+			// this.connect().then(() => {
+			// 	return sql.query `SELECT * FROM THOIGIANSANXUATTRONGTROT WHERE MADOITUONG = ${id} AND THANG = ${month} AND NAM = ${year}`
+			// }).then(result => {
+			// 	resolve(result.recordset);
+			// }).catch(err => {
+			// 	reject(err);
+			// })
 		})
 	}
-	getByMaDoiTuong(maDoiTuong) {
-		return new Promise((resolve, reject) => {
-			this.connect().then(() => {
-				return sql.query `SELECT * FROM THOIGIANSANXUATTRONGTROT WHERE MADOITUONG = ${maDoiTuong}`
-			}).then(result => {
-				resolve(result.recordset);
-				console.log(result.recordset);
-			}).catch(err => {
-				reject(err);
-			})
-		})
+	async add(attributes) {
+		try {
+			let result = await this.execute(`INSERT INTO ${TABLE_NAME}(
+			OBJECTID,
+			MaDoiTuong,
+			NhomCayTrong,
+			LoaiCayTrong,
+			DienTich,
+			GiaiDoanSinhTruong,
+			NguoiCapNhat,
+			NgayCapNhat,
+			ThoiGianBatDauTrong,
+			ThoiGianTrongTrot
+		)
+			SELECT ISNULL(MAX(OBJECTID),1) + 1 AS OBJECTID,
+			'${attributes.MaDoiTuong}',
+			'${attributes.NhomCayTrong}',
+			'${attributes.LoaiCayTrong}',
+			${attributes.DienTich},
+			N'${attributes.GiaiDoanSinhTruong}',
+			'${attributes.NguoiCapNhat}',
+			'${attributes.NgayCapNhat.toJSON()}',
+			'${attributes.ThoiGianBatDauTrong.toJSON()}',
+			'${attributes.ThoiGianTrongTrot.toJSON()}'
+			FROM ${TABLE_NAME}
+		`);
+			if (result) return attributes;
+		} catch (error) {
+			throw error;
+		}
 	}
-	add(attributes) {
-		return new Promise((resolve, reject) => {
-			console.log('Them du lieu thoi gian trong trot' + JSON.stringify(attributes));
-			let
-				MaDoiTuong = attributes.MaDoiTuong,
-				Thang = attributes.Thang,
-				Nam = attributes.Nam,
-				NhomCayTrong = attributes.NhomCayTrong,
-				LoaiCayTrong = attributes.LoaiCayTrong || null;
-			if (MaDoiTuong && Thang && Nam && NhomCayTrong) {
-				this.connect().then(() => {
-						return sql.query `SELECT TOP 1 OBJECTID FROM THOIGIANSANXUATTRONGTROT ORDER BY OBJECTID DESC `
-					})
-					.then(result => {
-						let ObjectId = result.recordset[0].OBJECTID + 1;
-						return sql.query `INSERT INTO THOIGIANSANXUATTRONGTROT (OBJECTID,MADOITUONG,THANG,NAM,NHOMCAYTRONG,LOAICAYTRONG) VALUES(${ObjectId},${MaDoiTuong},${Thang},${Nam},${NhomCayTrong},${LoaiCayTrong})`
-					}).catch(err => {
-						console.log(err);
-						reject(err);
-					})
-					.then(result => {
-						console.log('Them thanh cong du lieu ' + attributes.MaDoiTuong);
-						resolve(result);
-					}).catch(err => {
-						console.log(err);
-						reject(err);
-					})
-			} else {
-				reject('Tham số truyền vào còn thiếu hoặc không chính xác');
+	async delete(id) {
+		try {
+			let result = this.execute(`DELETE FROM ${TABLE_NAME} WHERE OBJECTID = ${id}`);
+			return result;
+		} catch (error) {
+			throw error;
+		}
+	}
+	async update(attributes) {
+		try {
+			let setStatements = [];
+
+			if (attributes.NhomCayTrong) {
+				setStatements.push(
+					`NhomCayTrong = '${attributes.NhomCayTrong}'`
+				)
 			}
-		});
-	}
-	adds(arr) {
-		return new Promise((resolve, reject) => {
-			this.connect().then((request) => {
-				return request.query('SELECT TOP 1 OBJECTID FROM THOIGIANSANXUATTRONGTROT ORDER BY OBJECTID DESC', function (err, ls) {
-					console.log(ls);
-				})
-			})
-		});
+
+			if (attributes.LoaiCayTrong) {
+				setStatements.push(
+					`LoaiCayTrong = '${attributes.LoaiCayTrong}'`
+				)
+			}
+
+			if (attributes.DienTich) {
+				setStatements.push(
+					`DienTich = ${attributes.DienTich}`
+				)
+			}
+
+			if (attributes.GiaiDoanSinhTruong) {
+				setStatements.push(
+					`GiaiDoanSinhTruong = N'${attributes.GiaiDoanSinhTruong}'`
+				)
+			}
+
+			if (attributes.NguoiCapNhat) {
+				setStatements.push(
+					`NguoiCapNhat = '${attributes.NguoiCapNhat}'`
+				)
+			}
+
+			if (attributes.NgayCapNhat) {
+				setStatements.push(
+					`NgayCapNhat = '${new Date(attributes.NgayCapNhat).toJSON()}'`
+				)
+			}
+
+			if (attributes.ThoiGianBatDauTrong) {
+				setStatements.push(
+					`ThoiGianBatDauTrong = '${new Date(attributes.ThoiGianBatDauTrong).toJSON()}'`
+				)
+			}
+
+			if (attributes.ThoiGianTrongTrot) {
+				setStatements.push(
+					`ThoiGianTrongTrot = '${new Date(attributes.ThoiGianTrongTrot).toJSON()}'`
+				)
+			}
+			if (setStatements.length > 0) {
+				let result = this.execute(`
+			UPDATE ${TABLE_NAME}
+			SET ${setStatements.join(', ')}
+			WHERE OBJECTID = ${attributes.OBJECTID}
+			`)
+				return result;
+			} return null;
+		} catch (error) {
+			throw error;
+		}
 	}
 }
 module.exports = TrongTrotDB;

@@ -1,6 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    var constName = {
+    const constName = {
         BASEMAP: 'dulieunen',
         SAUBENH: 'SauBenh',
         DOANHNGHIEP: 'DoanhNghiep',

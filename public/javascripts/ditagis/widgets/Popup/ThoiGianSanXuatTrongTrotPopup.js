@@ -1,49 +1,37 @@
-define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTimeDefine", "esri/Graphic", "../../support/FeatureTable", "dojo/on", "esri/geometry/geometryEngine", "../../classes/ConstName", "../../config"], function (require, exports, bootstrap, DateTimeDefine, Graphic, FeatureTable, on, geometryEngine, constName, mapConfig) {
+define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTimeDefine", "esri/Graphic", "../../support/FeatureTable", "dojo/on", "esri/geometry/geometryEngine", "../../classes/ConstName", "../../config", "../../api/TrongTrotApi"], function (require, exports, bootstrap, DateTimeDefine, Graphic, FeatureTable, on, geometryEngine, constName, mapConfig, trongTrotApi) {
     "use strict";
-    var ThoiGianSanXuatTrongTrotPopup = (function () {
-        function ThoiGianSanXuatTrongTrotPopup(params) {
+    class ThoiGianSanXuatTrongTrotPopup {
+        constructor(params) {
             this.view = params.view;
             this.thoiGianSanXuatTrongTrot = params.table;
             this.tblGiaiDoanSinhTruong = new FeatureTable({
-                url: mapConfig.tables.find(function (f) { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG; }).url,
+                url: mapConfig.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG; }).url,
                 fieldID: 'OBJECTID'
             });
             this.dataDetails = [];
         }
-        Object.defineProperty(ThoiGianSanXuatTrongTrotPopup.prototype, "selectFeature", {
-            get: function () {
-                return this.view.popup.viewModel.selectedFeature;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ThoiGianSanXuatTrongTrotPopup.prototype, "layer", {
-            get: function () {
-                return this.view.map.findLayerById(constName.TRONGTROT);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ThoiGianSanXuatTrongTrotPopup.prototype, "attributes", {
-            get: function () {
-                return this.selectFeature.attributes;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ThoiGianSanXuatTrongTrotPopup.prototype.getSubtype = function (name, value) {
+        get selectFeature() {
+            return this.view.popup.viewModel.selectedFeature;
+        }
+        get layer() {
+            return this.view.map.findLayerById(constName.TRONGTROT);
+        }
+        get attributes() {
+            return this.selectFeature.attributes;
+        }
+        getSubtype(name, value) {
             name = name || this.layer.typeIdField;
             value = value || this.attributes[name];
             if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
-                var typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(function (f) { return f.id == value; });
+                const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(f => f.id == value);
                 return subtype;
             }
             return null;
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.renderDomain = function (domain, name) {
-            var codedValues;
+        }
+        renderDomain(domain, name) {
+            let codedValues;
             if (domain.type === "inherited") {
-                var fieldDomain = this.layer.getFieldDomain(name);
+                let fieldDomain = this.layer.getFieldDomain(name);
                 if (fieldDomain)
                     codedValues = fieldDomain.codedValues;
             }
@@ -52,17 +40,16 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             }
             if (!codedValues)
                 return null;
-            var currentValue = this.attributes[name];
-            var input = document.createElement('select');
+            let currentValue = this.attributes[name];
+            let input = document.createElement('select');
             input.classList.add('form-control');
-            var defaultComboValue = document.createElement('option');
+            let defaultComboValue = document.createElement('option');
             defaultComboValue.value = "-1";
             defaultComboValue.innerText = 'Chọn giá trị...';
             input.appendChild(defaultComboValue);
-            for (var _i = 0, codedValues_1 = codedValues; _i < codedValues_1.length; _i++) {
-                var codedValue = codedValues_1[_i];
-                var dmCode = codedValue.code, dmName = codedValue.name;
-                var option = document.createElement('option');
+            for (let codedValue of codedValues) {
+                let dmCode = codedValue.code, dmName = codedValue.name;
+                let option = document.createElement('option');
                 option.setAttribute('value', dmCode);
                 if (currentValue === dmCode) {
                     option.selected = true;
@@ -71,15 +58,14 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 input.appendChild(option);
             }
             return input;
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.addDetailTrongTrot = function () {
-            var _this = this;
-            var div = document.createElement('div');
-            var divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGBDTT, formGroupTGTT, btnAdd;
+        }
+        addDetailTrongTrot() {
+            let div = document.createElement('div');
+            let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTime, formGroupTGBDTT, formGroupTGTT, btnAdd;
             divInfo = document.createElement('div');
             formGroupLCT = document.createElement('div');
             formGroupLCT.classList.add('form-group');
-            var lbLCT, inputLCT;
+            let lbLCT, inputLCT;
             inputLCT = document.createElement('select');
             inputLCT.id = 'LoaiCayTrong';
             inputLCT.classList.add('form-control');
@@ -90,34 +76,33 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupLCT.appendChild(inputLCT);
             formGroupNCT = document.createElement('div');
             formGroupNCT.classList.add('form-group');
-            var lbNCT, inputNCT;
+            let lbNCT, inputNCT;
             inputNCT = document.createElement('select');
             inputNCT.id = 'NhomCayTrong';
             inputNCT.classList.add('form-control');
-            var codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
-            for (var _i = 0, codedValues_2 = codedValues; _i < codedValues_2.length; _i++) {
-                var codedValue = codedValues_2[_i];
-                var dmCode = codedValue.code, dmName = codedValue.name;
-                var option = document.createElement('option');
+            let codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+            for (let codedValue of codedValues) {
+                let dmCode = codedValue.code, dmName = codedValue.name;
+                let option = document.createElement('option');
                 option.setAttribute('value', dmCode + "");
                 option.innerHTML = dmName;
                 inputNCT.appendChild(option);
             }
-            var inputNCTChange = function () {
+            var inputNCTChange = () => {
                 inputLCT.innerHTML = '';
-                var defaultComboValue = document.createElement('option');
+                let defaultComboValue = document.createElement('option');
                 defaultComboValue.value = "-1";
                 defaultComboValue.innerText = 'Chọn giá trị...';
                 inputLCT.appendChild(defaultComboValue);
-                var subtype = _this.getSubtype('NhomCayTrong', inputNCT.value);
+                let subtype = this.getSubtype('NhomCayTrong', inputNCT.value);
                 if (!subtype)
                     return;
-                var domain = subtype.domains['LoaiCayTrong'];
+                let domain = subtype.domains['LoaiCayTrong'];
                 if (!domain)
                     return;
-                var codedValues;
+                let codedValues;
                 if (domain.type === "inherited") {
-                    var fieldDomain = _this.layer.getFieldDomain('LoaiCayTrong');
+                    let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
                     if (fieldDomain)
                         codedValues = fieldDomain.codedValues;
                 }
@@ -126,19 +111,22 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 }
                 if (!codedValues)
                     return;
-                for (var _i = 0, codedValues_3 = codedValues; _i < codedValues_3.length; _i++) {
-                    var codedValue = codedValues_3[_i];
-                    var dmCode = codedValue.code, dmName = codedValue.name;
-                    var option = document.createElement('option');
+                for (let codedValue of codedValues) {
+                    let dmCode = codedValue.code, dmName = codedValue.name;
+                    let option = document.createElement('option');
                     option.setAttribute('value', dmCode);
                     option.innerHTML = dmName;
                     inputLCT.appendChild(option);
                 }
             };
-            on(inputNCT, 'change', function () {
+            on(inputNCT, 'change', () => {
                 inputNCTChange();
+                capNhatGiaiDoanSinhTruong();
             });
             inputNCTChange();
+            on(inputLCT, 'change', _ => {
+                capNhatGiaiDoanSinhTruong();
+            });
             lbNCT = document.createElement('label');
             lbNCT.innerText = 'Nhóm cây trồng';
             lbNCT.setAttribute('for', inputNCT.id);
@@ -146,12 +134,12 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupNCT.appendChild(inputNCT);
             formGroupArea = document.createElement('div');
             formGroupArea.classList.add('form-group');
-            var lbArea, inputArea;
+            let lbArea, inputArea;
             inputArea = document.createElement('input');
             inputArea.id = 'DienTich';
             inputArea.classList.add('form-control');
             if (this.selectFeature.geometry) {
-                var area = geometryEngine.geodesicArea(this.selectFeature.geometry, "square-meters").toFixed(1);
+                let area = geometryEngine.geodesicArea(this.selectFeature.geometry, "square-meters").toFixed(1);
                 inputArea.value = area + "";
             }
             lbArea = document.createElement('label');
@@ -161,11 +149,12 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupArea.appendChild(inputArea);
             formGroupTGTT = document.createElement('div');
             formGroupTGTT.classList.add('form-group');
-            var inputTGTT, lbTGTT;
+            let inputTGTT, lbTGTT;
             inputTGTT = document.createElement('input');
             inputTGTT.type = 'date';
             inputTGTT.id = 'ThoiGianTrongTrot';
             inputTGTT.classList.add('form-control');
+            inputTGTT.valueAsDate = new Date();
             lbTGTT = document.createElement('label');
             lbTGTT.innerText = 'Thời gian trồng trọt';
             lbTGTT.setAttribute('for', inputTGTT.id);
@@ -173,44 +162,74 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupTGTT.appendChild(inputTGTT);
             formGroupTGBDTT = document.createElement('div');
             formGroupTGBDTT.classList.add('form-group');
-            var inputTime, lbTime;
+            let inputTime, lbTime;
             inputTime = document.createElement('input');
             inputTime.type = 'date';
             inputTime.id = 'ThoiGianBatDauTrong';
             inputTime.classList.add('form-control');
+            inputTime.valueAsDate = new Date();
             lbTime = document.createElement('label');
             lbTime.innerText = 'Thời gian bắt đầu trồng';
             lbTime.setAttribute('for', inputTime.id);
             formGroupTGBDTT.appendChild(lbTime);
             formGroupTGBDTT.appendChild(inputTime);
+            let formGDST = document.createElement('div');
+            formGDST.classList.add('form-group');
+            let lbGDST, inputGDST;
+            lbGDST = document.createElement('label');
+            lbGDST.innerText = 'Giai đoạn sinh trưởng';
+            inputGDST = document.createElement('select');
+            inputGDST.classList.add('form-control');
+            let defaultComboValue = document.createElement('option');
+            defaultComboValue.value = "Chưa xác định";
+            defaultComboValue.innerText = 'Chọn giá trị...';
+            defaultComboValue.selected = true;
+            inputGDST.appendChild(defaultComboValue);
+            const capNhatGiaiDoanSinhTruong = () => {
+                inputGDST.innerHTML = '';
+                inputGDST.appendChild(defaultComboValue);
+                this.tblGiaiDoanSinhTruong.queryFeatures({
+                    where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
+                    outFields: ['GiaiDoanSinhTruong'],
+                    orderByFields: ['MocTG']
+                }).then(res => {
+                    res.features.forEach(f => {
+                        let gdst = f.attributes.GiaiDoanSinhTruong;
+                        let cbb = document.createElement('option');
+                        cbb.value = cbb.innerText = gdst;
+                        inputGDST.appendChild(cbb);
+                    });
+                });
+            };
+            formGDST.appendChild(lbGDST);
+            formGDST.appendChild(inputGDST);
             btnAdd = document.createElement('button');
             btnAdd.classList.add('btn', 'btn-primary');
             btnAdd.innerText = "Thêm";
-            on(btnAdd, 'click', function () {
-                var length = _this.tmpDatasDetailTrongTrong.adds.length;
-                var data = {
+            on(btnAdd, 'click', () => {
+                var length = this.tmpDatasDetailTrongTrong.adds.length;
+                let data = {
                     OBJECTID: length + 1,
-                    MaDoiTuong: _this.attributes['MaDoiTuong'],
+                    MaDoiTuong: this.attributes['MaDoiTuong'],
                     NhomCayTrong: parseInt(inputNCT.value),
                     LoaiCayTrong: inputLCT.value == -1 ? null : inputLCT.value,
                     DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
                     ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
                     ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value),
-                    GiaiDoanSinhTruong: 'Trồng mới'
+                    GiaiDoanSinhTruong: inputGDST.value || 'Trồng mới'
                 };
-                var tableDatas = _this.tmpDatasDetailTrongTrong.tableDatas;
-                var addDatas = _this.tmpDatasDetailTrongTrong.adds;
-                for (var _i = 0, addDatas_1 = addDatas; _i < addDatas_1.length; _i++) {
-                    var d = addDatas_1[_i];
+                let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
+                let addDatas = this.tmpDatasDetailTrongTrong.adds;
+                for (const d of addDatas) {
                     if (data.LoaiCayTrong == d.LoaiCayTrong &&
                         data.NhomCayTrong == d.NhomCayTrong && data.ThoiGianBatDauTrong.getTime() === d.ThoiGianBatDauTrong.getTime()) {
                         alert("Dữ liệu vừa mới thêm - Không được thêm nữa");
                         return;
                     }
                 }
-                _this.tmpDatasDetailTrongTrong.tableDatas.push(data);
-                _this.tmpDatasDetailTrongTrong.adds.push(data);
-                _this.addDataToDetailTrongtrot(data);
+                this.tmpDatasDetailTrongTrong.tableDatas.push(data);
+                this.tmpDatasDetailTrongTrong.adds.push(data);
+                this.addDataToDetailTrongtrot(data);
                 $('#ModalDetail').modal('toggle');
             });
             divInfo.appendChild(formGroupNCT);
@@ -218,20 +237,20 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             divInfo.appendChild(formGroupArea);
             divInfo.appendChild(formGroupTGBDTT);
             divInfo.appendChild(formGroupTGTT);
+            divInfo.appendChild(formGDST);
             div.appendChild(divInfo);
-            var footer = document.createElement('div');
+            let footer = document.createElement('div');
             footer.appendChild(btnAdd);
-            var modalDetail = bootstrap.modal('ModalDetail', 'Thêm dữ liệu', div, footer);
+            let modalDetail = bootstrap.modal('ModalDetail', 'Thêm dữ liệu', div, footer);
             modalDetail.modal();
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.editDetailTrongTrot = function (item) {
-            var _this = this;
-            var div = document.createElement('div');
-            var divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTGTT, formGroupTGBDTT, formGDST, btnEdit;
+        }
+        editDetailTrongTrot(item) {
+            let div = document.createElement('div');
+            let divInfo, formGroupNCT, formGroupLCT, formGroupArea, formGroupTGTT, formGroupTGBDTT, formGDST, btnEdit;
             divInfo = document.createElement('div');
             formGroupLCT = document.createElement('div');
             formGroupLCT.classList.add('form-group');
-            var lbLCT, inputLCT;
+            let lbLCT, inputLCT;
             inputLCT = document.createElement('select');
             inputLCT.classList.add('form-control');
             lbLCT = document.createElement('label');
@@ -240,34 +259,33 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupLCT.appendChild(inputLCT);
             formGroupNCT = document.createElement('div');
             formGroupNCT.classList.add('form-group');
-            var lbNCT, inputNCT;
+            let lbNCT, inputNCT;
             inputNCT = document.createElement('select');
             inputNCT.classList.add('form-control');
-            var codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
-            for (var _i = 0, codedValues_4 = codedValues; _i < codedValues_4.length; _i++) {
-                var codedValue = codedValues_4[_i];
-                var dmCode = codedValue.code, dmName = codedValue.name;
-                var option = document.createElement('option');
+            let codedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+            for (let codedValue of codedValues) {
+                let dmCode = codedValue.code, dmName = codedValue.name;
+                let option = document.createElement('option');
                 option.setAttribute('value', dmCode + "");
                 option.innerHTML = dmName;
                 inputNCT.appendChild(option);
             }
             inputNCT.value = item.NhomCayTrong + "";
-            var inputNCTChange = function () {
+            var inputNCTChange = () => {
                 inputLCT.innerHTML = '';
-                var defaultComboValue = document.createElement('option');
+                let defaultComboValue = document.createElement('option');
                 defaultComboValue.value = "-1";
                 defaultComboValue.innerText = 'Chọn giá trị...';
                 inputLCT.appendChild(defaultComboValue);
-                var subtype = _this.getSubtype('NhomCayTrong', inputNCT.value);
+                let subtype = this.getSubtype('NhomCayTrong', inputNCT.value);
                 if (!subtype)
                     return;
-                var domain = subtype.domains['LoaiCayTrong'];
+                let domain = subtype.domains['LoaiCayTrong'];
                 if (!domain)
                     return;
-                var codedValues;
+                let codedValues;
                 if (domain.type === "inherited") {
-                    var fieldDomain = _this.layer.getFieldDomain('LoaiCayTrong');
+                    let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
                     if (fieldDomain)
                         codedValues = fieldDomain.codedValues;
                 }
@@ -276,22 +294,21 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 }
                 if (!codedValues)
                     return;
-                for (var _i = 0, codedValues_5 = codedValues; _i < codedValues_5.length; _i++) {
-                    var codedValue = codedValues_5[_i];
-                    var dmCode = codedValue.code, dmName = codedValue.name;
-                    var option = document.createElement('option');
+                for (let codedValue of codedValues) {
+                    let dmCode = codedValue.code, dmName = codedValue.name;
+                    let option = document.createElement('option');
                     option.setAttribute('value', dmCode);
                     option.innerHTML = dmName;
                     inputLCT.appendChild(option);
                 }
             };
-            on(inputNCT, 'change', function () {
+            on(inputNCT, 'change', () => {
                 inputNCTChange();
                 capNhatGiaiDoanSinhTruong();
             });
             inputNCTChange();
             inputLCT.value = item.LoaiCayTrong;
-            on(inputLCT, 'change', function (_) {
+            on(inputLCT, 'change', _ => {
                 capNhatGiaiDoanSinhTruong();
             });
             lbNCT = document.createElement('label');
@@ -300,7 +317,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupNCT.appendChild(inputNCT);
             formGroupArea = document.createElement('div');
             formGroupArea.classList.add('form-group');
-            var lbArea, inputArea;
+            let lbArea, inputArea;
             inputArea = document.createElement('input');
             inputArea.type = 'number';
             inputArea.value = item.DienTich + "";
@@ -311,7 +328,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupArea.appendChild(inputArea);
             formGroupTGTT = document.createElement('div');
             formGroupTGTT.classList.add('form-group');
-            var inputTGTT, lbTGTT;
+            let inputTGTT, lbTGTT;
             inputTGTT = document.createElement('input');
             inputTGTT.type = 'date';
             inputTGTT.value = DateTimeDefine.formatDateValue(item.ThoiGianTrongTrot);
@@ -322,7 +339,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupTGTT.appendChild(inputTGTT);
             formGroupTGBDTT = document.createElement('div');
             formGroupTGBDTT.classList.add('form-group');
-            var inputTGBDT, lbTime;
+            let inputTGBDT, lbTime;
             inputTGBDT = document.createElement('input');
             inputTGBDT.type = 'date';
             inputTGBDT.value = DateTimeDefine.formatDateValue(item.ThoiGianBatDauTrong);
@@ -333,40 +350,41 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             formGroupTGBDTT.appendChild(inputTGBDT);
             formGDST = document.createElement('div');
             formGDST.classList.add('form-group');
-            var lbGDST, inputGDST;
+            let lbGDST, inputGDST;
             lbGDST = document.createElement('label');
             lbGDST.innerText = 'Giai đoạn sinh trưởng';
             inputGDST = document.createElement('select');
             inputGDST.classList.add('form-control');
-            var defaultComboValue = document.createElement('option');
+            let defaultComboValue = document.createElement('option');
             defaultComboValue.value = "Chưa xác định";
             defaultComboValue.innerText = 'Chọn giá trị...';
             defaultComboValue.selected = true;
             inputGDST.appendChild(defaultComboValue);
-            var capNhatGiaiDoanSinhTruong = function () {
+            const capNhatGiaiDoanSinhTruong = () => {
                 inputGDST.innerHTML = '';
                 inputGDST.appendChild(defaultComboValue);
-                _this.tblGiaiDoanSinhTruong.queryFeatures({
-                    where: "NhomCayTrong = " + inputNCT.value + " and LoaiCayTrong = '" + inputLCT.value + "'",
+                this.tblGiaiDoanSinhTruong.queryFeatures({
+                    where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
                     outFields: ['GiaiDoanSinhTruong'],
                     orderByFields: ['MocTG']
-                }).then(function (res) {
-                    res.features.forEach(function (f) {
-                        var gdst = f.attributes.GiaiDoanSinhTruong;
-                        var cbb = document.createElement('option');
+                }).then(res => {
+                    res.features.forEach(f => {
+                        let gdst = f.attributes.GiaiDoanSinhTruong;
+                        let cbb = document.createElement('option');
                         cbb.value = cbb.innerText = gdst;
                         inputGDST.appendChild(cbb);
                     });
                     inputGDST.value = item.GiaiDoanSinhTruong;
                 });
             };
+            capNhatGiaiDoanSinhTruong();
             formGDST.appendChild(lbGDST);
             formGDST.appendChild(inputGDST);
             btnEdit = document.createElement('button');
             btnEdit.classList.add('btn', 'btn-primary');
             btnEdit.innerText = "Chấp nhận";
-            on(btnEdit, 'click', function () {
-                var data = {
+            on(btnEdit, 'click', () => {
+                let data = {
                     OBJECTID: item.OBJECTID,
                     NhomCayTrong: parseInt(inputNCT.value),
                     LoaiCayTrong: inputLCT.value == "-1" ? null : inputLCT.value,
@@ -375,7 +393,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                     ThoiGianBatDauTrong: !inputTGBDT.value ? null : new Date(inputTGBDT.value),
                     GiaiDoanSinhTruong: inputGDST.value
                 };
-                _this.renderEditDetailTrongTrot(data);
+                this.renderEditDetailTrongTrot(data);
                 $('#ModalDetail').modal('toggle');
             });
             divInfo.appendChild(formGroupNCT);
@@ -385,14 +403,13 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             divInfo.appendChild(formGroupTGTT);
             divInfo.appendChild(formGDST);
             div.appendChild(divInfo);
-            var footer = document.createElement('div');
+            let footer = document.createElement('div');
             footer.appendChild(btnEdit);
-            var modalDetail = bootstrap.modal('ModalDetail', 'Sửa dữ liệu', div, footer);
+            let modalDetail = bootstrap.modal('ModalDetail', 'Sửa dữ liệu', div, footer);
             modalDetail.modal();
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.showTableDetailTrongTrot = function () {
-            var _this = this;
-            var notify = $.notify({
+        }
+        showTableDetailTrongTrot() {
+            let notify = $.notify({
                 message: 'Đang tai dữ liệu...'
             }, {
                 showProgressbar: true,
@@ -410,33 +427,41 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 tbody: null
             };
             this.dataDetails = [];
-            var div = document.createElement('div');
-            var tableResponsive = document.createElement('div');
+            let div = document.createElement('div');
+            let tableResponsive = document.createElement('div');
             tableResponsive.classList.add('table-responsive');
-            var table = document.createElement('table');
+            let table = document.createElement('table');
             table.classList.add('table');
             tableResponsive.appendChild(table);
-            var thead = document.createElement('thead');
+            let thead = document.createElement('thead');
             thead.innerHTML =
-                "<tr>\n          <th>Nh\u00F3m c\u00E2y tr\u1ED3ng</th>\n          <th>Lo\u1EA1i c\u00E2y tr\u1ED3ng</th>\n          <th>Di\u1EC7n t\u00EDch (m2)</th>\n          <th>Th\u1EDDi gian tr\u1ED3ng tr\u1ECDt</th>\n          <th>Th\u1EDDi gian b\u1EAFt \u0111\u1EA7u tr\u1ED3ng</th>\n          <th>Giai \u0111o\u1EA1n sinh tr\u01B0\u1EDFng</th>\n          <th>T\u00E1c v\u1EE5</th>\n        </tr>";
+                `<tr>
+          <th>Nhóm cây trồng</th>
+          <th>Loại cây trồng</th>
+          <th>Diện tích (m2)</th>
+          <th>Thời gian trồng trọt</th>
+          <th>Thời gian bắt đầu trồng</th>
+          <th>Giai đoạn sinh trưởng</th>
+          <th>Tác vụ</th>
+        </tr>`;
             table.appendChild(thead);
-            var tbody = document.createElement('tbody');
+            let tbody = document.createElement('tbody');
             table.appendChild(tbody);
             this.tmpDatasDetailTrongTrong.tbody = tbody;
-            var footer = document.createElement('div');
-            var btnAdd = document.createElement('button');
+            let footer = document.createElement('div');
+            let btnAdd = document.createElement('button');
             btnAdd.classList.add('btn', 'btn-default');
             btnAdd.innerText = "Thêm dữ liệu";
-            on(btnAdd, "click", function () {
-                _this.addDetailTrongTrot();
+            on(btnAdd, "click", () => {
+                this.addDetailTrongTrot();
             });
-            var btnSubmit = document.createElement('button');
+            let btnSubmit = document.createElement('button');
             btnSubmit.classList.add('btn', 'btn-primary');
             btnSubmit.innerText = "Chấp nhận";
-            on(btnSubmit, 'click', function () {
-                _this.submitDetailTrongtrot(_this.tmpDatasDetailTrongTrong);
+            on(btnSubmit, 'click', () => {
+                this.submitDetailTrongtrot(this.tmpDatasDetailTrongTrong);
             });
-            var btnClose = document.createElement('button');
+            let btnClose = document.createElement('button');
             btnClose.type = 'button';
             btnClose.classList.add('btn', 'btn-default');
             btnClose.setAttribute('data-dismiss', 'modal');
@@ -445,12 +470,12 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             footer.appendChild(btnAdd);
             footer.appendChild(btnClose);
             div.appendChild(tableResponsive);
-            this.thoiGianSanXuatTrongTrot.findById(this.attributes['MaDoiTuong']).then(function (results) {
+            this.thoiGianSanXuatTrongTrot.findById(this.attributes['MaDoiTuong']).then(results => {
                 if (results.features.length > 0) {
-                    var features = results.features;
-                    features.forEach(function (f) {
-                        var attributes = f.attributes;
-                        var item = {
+                    let features = results.features;
+                    features.forEach(f => {
+                        let attributes = f.attributes;
+                        let item = {
                             DienTich: attributes.DienTich,
                             GiaiDoanSinhTruong: attributes.GiaiDoanSinhTruong,
                             MaDoiTuong: attributes.MaDoiTuong,
@@ -462,47 +487,45 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                             item.ThoiGianBatDauTrong = new Date(attributes.ThoiGianBatDauTrong);
                         if (attributes.ThoiGianTrongTrot)
                             item.ThoiGianTrongTrot = new Date(attributes.ThoiGianTrongTrot);
-                        _this.tmpDatasDetailTrongTrong.tableDatas.push(item);
-                        _this.dataDetails.push(f.attributes);
-                        var row = _this.renderDetailTrongtrot(item);
+                        this.tmpDatasDetailTrongTrong.tableDatas.push(item);
+                        this.dataDetails.push(f.attributes);
+                        let row = this.renderDetailTrongtrot(item);
                         tbody.appendChild(row);
                     });
                 }
-                var modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', div, footer);
+                let modal = bootstrap.modal('ttModal', 'Thời gian trồng trọt', div, footer);
                 modal.modal();
                 notify.update('type', 'success');
                 notify.update('progress', 90);
             });
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.renderEditDetailTrongTrot = function (item) {
-            var _this = this;
+        }
+        renderEditDetailTrongTrot(item) {
             try {
-                this.tmpDatasDetailTrongTrong.edits.map(function (row) {
+                this.tmpDatasDetailTrongTrong.edits.forEach(row => {
                     if (row.OBJECTID == item.OBJECTID) {
-                        _this.tmpDatasDetailTrongTrong.edits.splice(_this.tmpDatasDetailTrongTrong.edits.indexOf(row));
+                        this.tmpDatasDetailTrongTrong.edits.splice(this.tmpDatasDetailTrongTrong.edits.indexOf(row));
                     }
                 });
-                var tableDatas_1 = [];
-                this.tmpDatasDetailTrongTrong.tableDatas.map(function (row) {
-                    row.OBJECTID == item.OBJECTID ? tableDatas_1.push(item) : tableDatas_1.push(row);
+                let tableDatas = [];
+                this.tmpDatasDetailTrongTrong.tableDatas.forEach(row => {
+                    row.OBJECTID == item.OBJECTID ? tableDatas.push(item) : tableDatas.push(row);
                 });
-                this.tmpDatasDetailTrongTrong.tableDatas = tableDatas_1;
+                this.tmpDatasDetailTrongTrong.tableDatas = tableDatas;
                 this.tmpDatasDetailTrongTrong.edits.push(item);
-                var rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
-                var row = void 0;
-                for (var _i = 0, rows_1 = rows; _i < rows_1.length; _i++) {
-                    var r = rows_1[_i];
-                    var id = parseInt(r.id);
+                let rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
+                let row;
+                for (const r of rows) {
+                    let id = parseInt(r.id);
                     if (id == item['OBJECTID'] || id == item['ID']) {
                         row = r;
                         break;
                     }
                 }
-                var tds = row.getElementsByTagName('td');
-                var tdNCT = tds[0], tdLCT = tds[1], tdArea = tds[2], tdTGTT = tds[3], tdTGBDT = tds[4], tdGDST = tds[5];
-                var NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+                let tds = row.getElementsByTagName('td');
+                let tdNCT = tds[0], tdLCT = tds[1], tdArea = tds[2], tdTGTT = tds[3], tdTGBDT = tds[4], tdGDST = tds[5];
+                let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
                 if (NCTcodedValues) {
-                    var codeValue = NCTcodedValues.find(function (f) {
+                    let codeValue = NCTcodedValues.find(f => {
                         return f.code == item['NhomCayTrong'];
                     });
                     if (codeValue)
@@ -510,14 +533,14 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 }
                 if (!tdNCT.innerText)
                     tdNCT.innerText = item['NhomCayTrong'] + "" || '';
-                var subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
+                let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
                 if (!subtype)
                     return;
-                var domain = subtype.domains['LoaiCayTrong'];
+                let domain = subtype.domains['LoaiCayTrong'];
                 if (domain) {
-                    var LCTcodedValues = void 0;
+                    let LCTcodedValues;
                     if (domain.type === "inherited") {
-                        var fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+                        let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
                         if (fieldDomain)
                             LCTcodedValues = fieldDomain.codedValues;
                     }
@@ -525,7 +548,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                         LCTcodedValues = domain.codedValues;
                     }
                     if (LCTcodedValues) {
-                        var codeValue = LCTcodedValues.find(function (f) {
+                        let codeValue = LCTcodedValues.find(f => {
                             return f.code == item['LoaiCayTrong'];
                         });
                         if (codeValue)
@@ -542,19 +565,17 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             catch (error) {
                 throw 'Có lỗi xảy ra trong quá trình thực hiện';
             }
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.renderDetailTrongtrot = function (item, isNew) {
-            var _this = this;
-            if (isNew === void 0) { isNew = false; }
+        }
+        renderDetailTrongtrot(item, isNew = false) {
             try {
-                var row_1 = document.createElement('tr');
-                row_1.id = item['OBJECTID'] || item['ID'];
+                let row = document.createElement('tr');
+                row.id = item['OBJECTID'] || item['ID'];
                 if (isNew)
-                    row_1.classList.add("info");
-                var tdNCT = document.createElement('td');
-                var NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+                    row.classList.add("info");
+                let tdNCT = document.createElement('td');
+                let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
                 if (NCTcodedValues) {
-                    var codeValue = NCTcodedValues.find(function (f) {
+                    let codeValue = NCTcodedValues.find(f => {
                         return f.code == item['NhomCayTrong'];
                     });
                     if (codeValue)
@@ -562,135 +583,132 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 }
                 if (!tdNCT.innerText)
                     tdNCT.innerText = item['NhomCayTrong'] + "" || '';
-                var tdLCT = document.createElement('td');
-                var subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
-                if (!subtype)
-                    return;
-                var domain = subtype.domains['LoaiCayTrong'];
-                if (domain) {
-                    var LCTcodedValues = void 0;
-                    if (domain.type === "inherited") {
-                        var fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
-                        if (fieldDomain)
-                            LCTcodedValues = fieldDomain.codedValues;
-                    }
-                    else {
-                        LCTcodedValues = domain.codedValues;
-                    }
-                    if (LCTcodedValues) {
-                        var codeValue = LCTcodedValues.find(function (f) {
-                            return f.code == item['LoaiCayTrong'];
-                        });
-                        if (codeValue)
-                            tdLCT.innerText = codeValue.name;
+                let tdLCT = document.createElement('td');
+                if (item['NhomCayTrong']) {
+                    let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
+                    if (subtype) {
+                        let domain = subtype.domains['LoaiCayTrong'];
+                        if (domain) {
+                            let LCTcodedValues;
+                            if (domain.type === "inherited") {
+                                let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
+                                if (fieldDomain)
+                                    LCTcodedValues = fieldDomain.codedValues;
+                            }
+                            else {
+                                LCTcodedValues = domain.codedValues;
+                            }
+                            if (LCTcodedValues) {
+                                let codeValue = LCTcodedValues.find(f => {
+                                    return f.code == item['LoaiCayTrong'];
+                                });
+                                if (codeValue)
+                                    tdLCT.innerText = codeValue.name;
+                            }
+                        }
                     }
                 }
                 if (!tdLCT.innerText)
                     tdLCT.innerText = item['LoaiCayTrong'] || '';
-                var tdArea = document.createElement('td');
+                let tdArea = document.createElement('td');
                 tdArea.innerText = item['DienTich'] + "" || '0';
-                var tdTGTT = document.createElement('td');
+                let tdTGTT = document.createElement('td');
                 tdTGTT.innerText = DateTimeDefine.formatDateValue(item['ThoiGianTrongTrot']);
-                var tdTGBDT = document.createElement('td');
+                let tdTGBDT = document.createElement('td');
                 tdTGBDT.innerText = DateTimeDefine.formatDateValue(item['ThoiGianBatDauTrong']);
-                var tdAction = document.createElement('td');
-                var tdGDST = document.createElement('td');
+                let tdAction = document.createElement('td');
+                let tdGDST = document.createElement('td');
                 tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
-                var itemEdit = document.createElement('span');
+                let itemEdit = document.createElement('span');
                 itemEdit.classList.add('esri-icon-edit');
-                on(itemEdit, 'click', function (evt) {
-                    _this.tmpDatasDetailTrongTrong.tableDatas.map(function (row) {
+                on(itemEdit, 'click', (evt) => {
+                    this.tmpDatasDetailTrongTrong.tableDatas.forEach(row => {
                         if (row.OBJECTID == item.OBJECTID)
-                            _this.editDetailTrongTrot(row);
+                            this.editDetailTrongTrot(row);
                     });
                 });
-                var itemDelete = document.createElement('span');
+                let itemDelete = document.createElement('span');
                 itemDelete.classList.add('esri-icon-trash');
-                on(itemDelete, 'click', function () {
+                on(itemDelete, 'click', () => {
                     if (item['OBJECTID']) {
-                        _this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID']);
-                        _this.tmpDatasDetailTrongTrong.tableDatas.map(function (row) {
+                        this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID']);
+                        this.tmpDatasDetailTrongTrong.tableDatas.forEach(row => {
                             if (row.OBJECTID == item['OBJECTID']) {
-                                var index = _this.tmpDatasDetailTrongTrong.tableDatas.indexOf(row);
-                                _this.tmpDatasDetailTrongTrong.tableDatas.splice(index, 1);
+                                let index = this.tmpDatasDetailTrongTrong.tableDatas.indexOf(row);
+                                this.tmpDatasDetailTrongTrong.tableDatas.splice(index, 1);
                             }
                         });
                     }
-                    _this.tmpDatasDetailTrongTrong.tbody.removeChild(row_1);
-                    var addItem = _this.tmpDatasDetailTrongTrong.adds.find(function (f) {
+                    this.tmpDatasDetailTrongTrong.tbody.removeChild(row);
+                    let addItem = this.tmpDatasDetailTrongTrong.adds.find(f => {
                         return f.OBJECTID == item.OBJECTID;
                     });
                     if (addItem) {
-                        _this.tmpDatasDetailTrongTrong.adds.splice(_this.tmpDatasDetailTrongTrong.adds.indexOf(addItem));
+                        this.tmpDatasDetailTrongTrong.adds.splice(this.tmpDatasDetailTrongTrong.adds.indexOf(addItem));
                     }
                 });
                 tdAction.appendChild(itemEdit);
                 tdAction.appendChild(itemDelete);
-                row_1.appendChild(tdNCT);
-                row_1.appendChild(tdLCT);
-                row_1.appendChild(tdArea);
-                row_1.appendChild(tdTGTT);
-                row_1.appendChild(tdTGBDT);
-                row_1.appendChild(tdGDST);
-                row_1.appendChild(tdAction);
-                return row_1;
+                row.appendChild(tdNCT);
+                row.appendChild(tdLCT);
+                row.appendChild(tdArea);
+                row.appendChild(tdTGTT);
+                row.appendChild(tdTGBDT);
+                row.appendChild(tdGDST);
+                row.appendChild(tdAction);
+                return row;
             }
             catch (error) {
                 throw error;
             }
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.addDataToDetailTrongtrot = function (data) {
-            var row = this.renderDetailTrongtrot(data, true);
+        }
+        addDataToDetailTrongtrot(data) {
+            let row = this.renderDetailTrongtrot(data, true);
             this.tmpDatasDetailTrongTrong.tbody.appendChild(row);
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.submitData = function (datas) {
-            var adds = [], edits;
-            datas.tableDatas.map(function (fs) {
-                if (datas.adds.some(function (f) {
-                    return f.OBJECTID == fs.OBJECTID;
-                }))
-                    adds.push(fs);
+        }
+        submitData(datas) {
+            let adds = [], edits;
+            datas.tableDatas.forEach(fs => {
+                let valid = datas.adds.find(f => f.OBJECTID == fs.OBJECTID);
+                if (valid)
+                    adds.push(valid);
             });
             this.tmpDatasDetailTrongTrong.adds = adds;
-            edits = datas.edits.filter(function (f) {
+            edits = datas.edits.filter(f => {
                 return datas.adds.indexOf(f);
             });
             this.tmpDatasDetailTrongTrong.edits = edits;
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.submitDetailTrongtrot = function (datas) {
-            var _this = this;
+        }
+        submitDetailTrongtrot(datas) {
             this.submitData(datas);
-            var applyEdits = {
-                addFeatures: [],
-                updateFeatures: [],
-                deleteFeatures: []
+            let applyEdits = {
+                adds: [],
+                updates: [],
+                deletes: []
             };
             if (datas.deletes.length > 0) {
-                applyEdits.deleteFeatures = datas.deletes;
+                applyEdits.deletes = datas.deletes;
             }
             if (datas.adds.length > 0) {
-                for (var _i = 0, _a = datas.adds; _i < _a.length; _i++) {
-                    var item = _a[_i];
-                    var attributes = {
+                let addFeatures = [];
+                for (let item of datas.adds) {
+                    let attributes = {
                         DienTich: item.DienTich,
                         GiaiDoanSinhTruong: item.GiaiDoanSinhTruong,
                         LoaiCayTrong: item.LoaiCayTrong,
                         MaDoiTuong: item.MaDoiTuong,
-                        NhomCayTrong: item.NhomCayTrong
+                        NhomCayTrong: item.NhomCayTrong,
+                        NguoiCapNhat: this.view.systemVariable.user.userName,
+                        NgayCapNhat: new Date().getTime(),
+                        ThoiGianBatDauTrong: item.ThoiGianBatDauTrong && item.ThoiGianBatDauTrong.getTime(),
+                        ThoiGianTrongTrot: item.ThoiGianTrongTrot ? item.ThoiGianTrongTrot.getTime() : (item.ThoiGianBatDauTrong ? item.ThoiGianBatDauTrong.getTime() : null)
                     };
-                    if (item.ThoiGianBatDauTrong)
-                        attributes.ThoiGianBatDauTrong = item.ThoiGianBatDauTrong.getTime();
-                    if (item.ThoiGianTrongTrot)
-                        attributes.ThoiGianTrongTrot = item.ThoiGianTrongTrot.getTime();
-                    applyEdits.addFeatures.push({
-                        attributes: attributes
-                    });
+                    applyEdits.adds.push(attributes);
                 }
             }
             if (datas.edits.length > 0) {
-                for (var _b = 0, _c = datas.edits; _b < _c.length; _b++) {
-                    var item = _c[_b];
-                    var attributes = {
+                for (let item of datas.edits) {
+                    let attributes = {
                         DienTich: item.DienTich,
                         GiaiDoanSinhTruong: item.GiaiDoanSinhTruong,
                         LoaiCayTrong: item.LoaiCayTrong,
@@ -702,36 +720,33 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                         attributes.ThoiGianBatDauTrong = item.ThoiGianBatDauTrong.getTime();
                     if (item.ThoiGianTrongTrot)
                         attributes.ThoiGianTrongTrot = item.ThoiGianTrongTrot.getTime();
-                    applyEdits.updateFeatures.push({
-                        attributes: attributes
-                    });
+                    applyEdits.updates.push(attributes);
                 }
             }
-            this.thoiGianSanXuatTrongTrot.applyEdits(applyEdits).then(function (e) {
-                _this.refreshNhomCayTrong(_this.dataDetails, datas.adds);
-                _this.tmpDatasDetailTrongTrong = null;
-                _this.dataDetails = null;
+            trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
+                this.refreshNhomCayTrong(this.dataDetails, datas.adds);
+                this.tmpDatasDetailTrongTrong = null;
+                this.dataDetails = null;
             });
             $('#ttModal').modal('toggle');
-        };
-        ThoiGianSanXuatTrongTrotPopup.prototype.refreshNhomCayTrong = function (currents, adds) {
-            var _this = this;
+        }
+        refreshNhomCayTrong(currents, adds) {
             if (adds.length === 0)
                 return;
-            var tgsxtt = currents.filter(function (f) {
-                return f.NhomCayTrong === _this.attributes.NhomCayTrong;
+            let tgsxtt = currents.filter(f => {
+                return f.NhomCayTrong === this.attributes.NhomCayTrong;
             });
-            var isValid = false;
+            let isValid = false;
             if (tgsxtt.length > 0) {
-                var group_1 = {};
+                let group = {};
                 tgsxtt.forEach(function (f) {
-                    var ThoiGianBatDauTrong = f.ThoiGianBatDauTrong;
-                    if (!group_1[ThoiGianBatDauTrong])
-                        group_1[ThoiGianBatDauTrong] = [];
-                    group_1[ThoiGianBatDauTrong].push(f.GiaiDoanSinhTruong);
+                    let ThoiGianBatDauTrong = f.ThoiGianBatDauTrong;
+                    if (!group[ThoiGianBatDauTrong])
+                        group[ThoiGianBatDauTrong] = [];
+                    group[ThoiGianBatDauTrong].push(f.GiaiDoanSinhTruong);
                 });
-                for (var key in group_1) {
-                    var item = group_1[key];
+                for (const key in group) {
+                    let item = group[key];
                     if (item.indexOf('Thu hoạch') !== -1) {
                         isValid = true;
                         break;
@@ -742,7 +757,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 isValid = true;
             }
             if (isValid) {
-                var firstItem = adds[0];
+                let firstItem = adds[0];
                 this.layer.applyEdits({
                     updateFeatures: [new Graphic({
                             attributes: {
@@ -752,8 +767,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                         })]
                 });
             }
-        };
-        return ThoiGianSanXuatTrongTrotPopup;
-    }());
+        }
+    }
     return ThoiGianSanXuatTrongTrotPopup;
 });

@@ -25,7 +25,7 @@ interface ThoiGianSanXuatTrongTrot {
   GiaiDoanSinhTruong: string;
 }
 class Popup {
-  view;
+  view: __esri.MapView;
   options;
   thoiGianSanXuatTrongTrot: FeatureTable;
   popupEdit;
@@ -67,26 +67,28 @@ class Popup {
 
   startup() {
     // this.view.on('layerview-create', (evt) => {
-    this.view.map.layers.map(layer => {
+    this.view.map.layers.forEach((layer: __esri.FeatureLayer) => {
       layer.then(() => {
         // let layer = evt.layer;
         if (layer.type == 'feature') {
           let actions = [];
-          if (layer.permission.edit){
+          let permission = (layer as any).permission
+          if (permission.edit) {
             actions.push({
               id: "update",
               title: "Cập nhật",
               className: "esri-icon-edit",
               layer: layer
             });
-            actions.push({
-              id: "update-geometry",
-              title: "Cập nhật vị trí",
-              className: "esri-icon-locate",
-              layer: layer
-            });
+            if (layer.geometryType === 'point')
+              actions.push({
+                id: "update-geometry",
+                title: "Cập nhật vị trí",
+                className: "esri-icon-locate",
+                layer: layer
+              });
           }
-          if (layer.permission.delete)
+          if (permission.delete)
             actions.push({
               id: "delete",
               title: "Xóa",
@@ -123,7 +125,7 @@ class Popup {
             },
             title: layer.title,
             actions: actions
-          }
+          } as any
         }
 
       });
@@ -150,8 +152,8 @@ class Popup {
   get selectFeature() {
     return this.view.popup.viewModel.selectedFeature;
   }
-  get layer() {
-    return this.selectFeature.layer;
+  get layer(): __esri.FeatureLayer {
+    return this.selectFeature.layer as any;
   }
   get attributes() {
     return this.selectFeature.attributes;
@@ -243,7 +245,7 @@ class Popup {
   renderDomain(domain, name) {
     let codedValues;
     if (domain.type === "inherited") {
-      let fieldDomain = this.layer.getFieldDomain(name);
+      let fieldDomain = this.layer.getFieldDomain(name) as __esri.CodedValueDomain;
       if (fieldDomain) codedValues = fieldDomain.codedValues;
     } else { //type is codedValue
       codedValues = domain.codedValues;
@@ -434,7 +436,7 @@ class Popup {
           //nhom cay trong
           let tdNCT = document.createElement('td');
           // tdNCT.innerText = item['NhomCayTrong'] || '';
-          let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
+          let NCTcodedValues = (this.layer.getFieldDomain('NhomCayTrong') as any).codedValues;
           if (NCTcodedValues) {
             let codeValue = NCTcodedValues.find(f => {
               return f.code == item['NhomCayTrong']
@@ -444,23 +446,25 @@ class Popup {
           if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] + "" || '';
           //loai cay trong
           let tdLCT = document.createElement('td');
-
-          let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
-          if (!subtype) return;
-          let domain = subtype.domains['LoaiCayTrong'];
-          if (domain) {
-            let LCTcodedValues;
-            if (domain.type === "inherited") {
-              let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong');
-              if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
-            } else { //type is codedValue
-              LCTcodedValues = domain.codedValues;
-            }
-            if (LCTcodedValues) {
-              let codeValue = LCTcodedValues.find(f => {
-                return f.code == item['LoaiCayTrong']
-              });
-              if (codeValue) tdLCT.innerText = codeValue.name;
+          if (item['NhomCayTrong']) {
+            let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
+            if (subtype) {
+              let domain = subtype.domains['LoaiCayTrong'];
+              if (domain) {
+                let LCTcodedValues;
+                if (domain.type === "inherited") {
+                  let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong') as __esri.CodedValueDomain;
+                  if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
+                } else { //type is codedValue
+                  LCTcodedValues = domain.codedValues;
+                }
+                if (LCTcodedValues) {
+                  let codeValue = LCTcodedValues.find(f => {
+                    return f.code == item['LoaiCayTrong']
+                  });
+                  if (codeValue) tdLCT.innerText = codeValue.name;
+                }
+              }
             }
           }
           if (!tdLCT.innerText) tdLCT.innerText = item['LoaiCayTrong'] || '';

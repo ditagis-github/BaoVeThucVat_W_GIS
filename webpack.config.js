@@ -1,8 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
-const dist = path.join(__dirname, '.', 'public');
-console.log(dist);
+const dist = path.join(__dirname, '.', 'dist');
 module.exports = {
   entry: {
     main: "./public/javascripts/ditagis/main.js",

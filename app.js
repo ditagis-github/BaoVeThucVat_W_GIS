@@ -37,16 +37,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser');
-  done(null, user.Username);
+  done(null, user);
 })
-passport.deserializeUser((username, done) => {
-  console.log('deserializeUser');
-  accountManager.getByUsername(username).then(function (user) {
+passport.deserializeUser((user, done) => {
+  // accountManager.getByUsername(username).then(function (user) {
     done(null, user);
-  }).catch(function (err) {
-    console.log(err);
-  })
+  // }).catch(function (err) {
+  //   console.log(err);
+  // })
 })
 passport.use(new LocalStrategy(
   function (username, password, done) {

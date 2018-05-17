@@ -3,10 +3,11 @@ import DateTimeDefine = require('../../toolview/DateTimeDefine');
 import Graphic = require('esri/Graphic');
 import FeatureTable = require('../../support/FeatureTable');
 import on = require('dojo/on');
-import MapView = require('esri/views/MapView');
+import MapView = require('../../classes/MapView');
 import geometryEngine = require('esri/geometry/geometryEngine');
 import constName = require('../../classes/ConstName');
 import mapConfig = require('../../config');
+import trongTrotApi = require('../../api/TrongTrotApi');
 
 
 interface ThoiGianSanXuatTrongTrot {
@@ -28,6 +29,8 @@ interface ThoiGianSanXuatTrongTrotService {
   ThoiGianTrongTrot: number;
   ThoiGianBatDauTrong: number;
   GiaiDoanSinhTruong: string;
+  NguoiCapNhat: string
+  NgayCapNhat: number
 }
 interface TmpDataDetailTrongTrot {
   adds: Array<ThoiGianSanXuatTrongTrot>,
@@ -180,8 +183,12 @@ class ThoiGianSanXuatTrongTrotPopup {
     }
     on(inputNCT, 'change', () => {
       inputNCTChange();
+      capNhatGiaiDoanSinhTruong();
     })
     inputNCTChange();
+    on(inputLCT, 'change', _ => {
+      capNhatGiaiDoanSinhTruong();
+    })
     lbNCT = document.createElement('label');
     lbNCT.innerText = 'Nhóm cây trồng';
     lbNCT.setAttribute('for', inputNCT.id);
@@ -215,6 +222,7 @@ class ThoiGianSanXuatTrongTrotPopup {
     inputTGTT.type = 'date';
     inputTGTT.id = 'ThoiGianTrongTrot';
     inputTGTT.classList.add('form-control');
+    inputTGTT.valueAsDate = new Date();
     lbTGTT = document.createElement('label');
     lbTGTT.innerText = 'Thời gian trồng trọt';
     lbTGTT.setAttribute('for', inputTGTT.id);
@@ -229,11 +237,45 @@ class ThoiGianSanXuatTrongTrotPopup {
     inputTime.type = 'date';
     inputTime.id = 'ThoiGianBatDauTrong';
     inputTime.classList.add('form-control');
+    inputTime.valueAsDate = new Date();
     lbTime = document.createElement('label');
     lbTime.innerText = 'Thời gian bắt đầu trồng';
     lbTime.setAttribute('for', inputTime.id);
     formGroupTGBDTT.appendChild(lbTime);
     formGroupTGBDTT.appendChild(inputTime);
+
+    //GIAI DOAN SINH TRUONG
+    let
+      formGDST = document.createElement('div');
+    formGDST.classList.add('form-group');
+    let lbGDST: HTMLLabelElement, inputGDST: HTMLSelectElement;
+    lbGDST = document.createElement('label');
+    lbGDST.innerText = 'Giai đoạn sinh trưởng';
+    inputGDST = document.createElement('select');
+    inputGDST.classList.add('form-control');
+    let defaultComboValue = document.createElement('option');
+    defaultComboValue.value = "Chưa xác định";
+    defaultComboValue.innerText = 'Chọn giá trị...';
+    defaultComboValue.selected = true;
+    inputGDST.appendChild(defaultComboValue);
+    const capNhatGiaiDoanSinhTruong = () => {
+      inputGDST.innerHTML = '';
+      inputGDST.appendChild(defaultComboValue);
+      this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
+        where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
+        outFields: ['GiaiDoanSinhTruong'],
+        orderByFields: ['MocTG']
+      }).then(res => {
+        res.features.forEach(f => {
+          let gdst = f.attributes.GiaiDoanSinhTruong;
+          let cbb = document.createElement('option');
+          cbb.value = cbb.innerText = gdst;
+          inputGDST.appendChild(cbb);
+        })
+      })
+    }
+    formGDST.appendChild(lbGDST);
+    formGDST.appendChild(inputGDST);
 
     //Add
     btnAdd = document.createElement('button');
@@ -249,7 +291,7 @@ class ThoiGianSanXuatTrongTrotPopup {
         DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
         ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
         ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value),
-        GiaiDoanSinhTruong: 'Trồng mới'
+        GiaiDoanSinhTruong: inputGDST.value || 'Trồng mới'
       }
       let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
       let addDatas = this.tmpDatasDetailTrongTrong.adds;
@@ -270,6 +312,7 @@ class ThoiGianSanXuatTrongTrotPopup {
     divInfo.appendChild(formGroupArea);
     divInfo.appendChild(formGroupTGBDTT);
     divInfo.appendChild(formGroupTGTT);
+    divInfo.appendChild(formGDST);
     div.appendChild(divInfo);
     let footer = document.createElement('div');
     footer.appendChild(btnAdd);
@@ -419,6 +462,7 @@ class ThoiGianSanXuatTrongTrotPopup {
         inputGDST.value = item.GiaiDoanSinhTruong;
       })
     }
+    capNhatGiaiDoanSinhTruong();
     formGDST.appendChild(lbGDST);
     formGDST.appendChild(inputGDST);
 
@@ -550,14 +594,14 @@ class ThoiGianSanXuatTrongTrotPopup {
   }
   private renderEditDetailTrongTrot(item: ThoiGianSanXuatTrongTrot) {
     try {
-      this.tmpDatasDetailTrongTrong.edits.map(row => {
+      this.tmpDatasDetailTrongTrong.edits.forEach(row => {
         if (row.OBJECTID == item.OBJECTID) {
           this.tmpDatasDetailTrongTrong.edits.splice(this.tmpDatasDetailTrongTrong.edits.indexOf(row));
         }
       })
       let tableDatas = [];
 
-      this.tmpDatasDetailTrongTrong.tableDatas.map(row => {
+      this.tmpDatasDetailTrongTrong.tableDatas.forEach(row => {
         row.OBJECTID == item.OBJECTID ? tableDatas.push(item) : tableDatas.push(row);
       })
       this.tmpDatasDetailTrongTrong.tableDatas = tableDatas;
@@ -638,23 +682,25 @@ class ThoiGianSanXuatTrongTrotPopup {
       if (!tdNCT.innerText) tdNCT.innerText = item['NhomCayTrong'] + "" || '';
       //loai cay trong
       let tdLCT = document.createElement('td');
-
-      let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
-      if (!subtype) return;
-      let domain = subtype.domains['LoaiCayTrong'];
-      if (domain) {
-        let LCTcodedValues;
-        if (domain.type === "inherited") {
-          let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong') as __esri.CodedValueDomain;
-          if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
-        } else { //type is codedValue
-          LCTcodedValues = domain.codedValues;
-        }
-        if (LCTcodedValues) {
-          let codeValue = LCTcodedValues.find(f => {
-            return f.code == item['LoaiCayTrong']
-          });
-          if (codeValue) tdLCT.innerText = codeValue.name;
+      if (item['NhomCayTrong']) {
+        let subtype = this.getSubtype('NhomCayTrong', item['NhomCayTrong']);
+        if (subtype) {
+          let domain = subtype.domains['LoaiCayTrong'];
+          if (domain) {
+            let LCTcodedValues;
+            if (domain.type === "inherited") {
+              let fieldDomain = this.layer.getFieldDomain('LoaiCayTrong') as __esri.CodedValueDomain;
+              if (fieldDomain) LCTcodedValues = fieldDomain.codedValues;
+            } else { //type is codedValue
+              LCTcodedValues = domain.codedValues;
+            }
+            if (LCTcodedValues) {
+              let codeValue = LCTcodedValues.find(f => {
+                return f.code == item['LoaiCayTrong']
+              });
+              if (codeValue) tdLCT.innerText = codeValue.name;
+            }
+          }
         }
       }
       if (!tdLCT.innerText) tdLCT.innerText = item['LoaiCayTrong'] || '';
@@ -675,7 +721,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       let itemEdit = document.createElement('span');
       itemEdit.classList.add('esri-icon-edit');
       on(itemEdit, 'click', (evt) => {
-        this.tmpDatasDetailTrongTrong.tableDatas.map(row => {
+        this.tmpDatasDetailTrongTrong.tableDatas.forEach(row => {
           if (row.OBJECTID == item.OBJECTID)
             this.editDetailTrongTrot(row);
         })
@@ -686,7 +732,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       on(itemDelete, 'click', () => {
         if (item['OBJECTID']) {
           this.tmpDatasDetailTrongTrong.deletes.push(item['OBJECTID'])
-          this.tmpDatasDetailTrongTrong.tableDatas.map(row => {
+          this.tmpDatasDetailTrongTrong.tableDatas.forEach(row => {
             if (row.OBJECTID == item['OBJECTID']) {
               let index = this.tmpDatasDetailTrongTrong.tableDatas.indexOf(row);
               this.tmpDatasDetailTrongTrong.tableDatas.splice(index, 1);
@@ -725,10 +771,9 @@ class ThoiGianSanXuatTrongTrotPopup {
   private submitData(datas) {
     let adds: ThoiGianSanXuatTrongTrot[] = [],
       edits: ThoiGianSanXuatTrongTrot[];
-    datas.tableDatas.map(fs => {
-      if (datas.adds.some(f => {
-        return f.OBJECTID == fs.OBJECTID;
-      })) adds.push(fs);
+    datas.tableDatas.forEach(fs => {
+      let valid = datas.adds.find(f => f.OBJECTID == fs.OBJECTID);
+      if (valid) adds.push(valid);
     });
     this.tmpDatasDetailTrongTrong.adds = adds;
     edits = datas.edits.filter(f => {
@@ -739,14 +784,15 @@ class ThoiGianSanXuatTrongTrotPopup {
   private submitDetailTrongtrot(datas: TmpDataDetailTrongTrot) {
     this.submitData(datas);
     let applyEdits = {
-      addFeatures: [],
-      updateFeatures: [],
-      deleteFeatures: []
+      adds: [],
+      updates: [],
+      deletes: []
     }
     if (datas.deletes.length > 0) {
-      applyEdits.deleteFeatures = datas.deletes;
+      applyEdits.deletes = datas.deletes;
     }
     if (datas.adds.length > 0) {
+      let addFeatures = [];
       for (let item of datas.adds) {
         let attributes = <ThoiGianSanXuatTrongTrotService>{
           DienTich: item.DienTich,
@@ -754,14 +800,12 @@ class ThoiGianSanXuatTrongTrotPopup {
           LoaiCayTrong: item.LoaiCayTrong,
           MaDoiTuong: item.MaDoiTuong,
           NhomCayTrong: item.NhomCayTrong,
+          NguoiCapNhat: this.view.systemVariable.user.userName,
+          NgayCapNhat: new Date().getTime(),
+          ThoiGianBatDauTrong: item.ThoiGianBatDauTrong && item.ThoiGianBatDauTrong.getTime(),
+          ThoiGianTrongTrot: item.ThoiGianTrongTrot ? item.ThoiGianTrongTrot.getTime() : (item.ThoiGianBatDauTrong ? item.ThoiGianBatDauTrong.getTime() : null)
         }
-        if (item.ThoiGianBatDauTrong)
-          attributes.ThoiGianBatDauTrong = item.ThoiGianBatDauTrong.getTime();
-        if (item.ThoiGianTrongTrot)
-          attributes.ThoiGianTrongTrot = item.ThoiGianTrongTrot.getTime();
-        applyEdits.addFeatures.push({
-          attributes: attributes
-        });
+        applyEdits.adds.push(attributes);
       }
     }
     if (datas.edits.length > 0) {
@@ -778,13 +822,12 @@ class ThoiGianSanXuatTrongTrotPopup {
           attributes.ThoiGianBatDauTrong = item.ThoiGianBatDauTrong.getTime();
         if (item.ThoiGianTrongTrot)
           attributes.ThoiGianTrongTrot = item.ThoiGianTrongTrot.getTime();
-        applyEdits.updateFeatures.push({
-          attributes: attributes
-        });
+        applyEdits.updates.push(attributes);
       }
     }
 
-    this.thoiGianSanXuatTrongTrot.applyEdits(applyEdits).then(e => {
+
+    trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
       this.refreshNhomCayTrong(this.dataDetails, datas.adds);
       this.tmpDatasDetailTrongTrong = null;
       this.dataDetails = null;

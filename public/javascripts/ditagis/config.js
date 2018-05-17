@@ -1,6 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    var config = {
+    const config = {
         basemap: {
             title: 'Dữ liệu nền',
             id: 'dulieunen',
@@ -25,7 +25,7 @@ define(["require", "exports"], function (require, exports) {
                     visible: false
                 }, {
                     id: 1,
-                    title: 'Mặt giao thông'
+                    title: 'Mặt giao thông',
                 }, {
                     id: 0,
                     title: 'Tim đường'
@@ -36,7 +36,7 @@ define(["require", "exports"], function (require, exports) {
                 title: 'Trồng trọt',
                 id: "TrongTrot",
                 url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/2",
-                outFields: ['*']
+                outFields: ['*'],
             }, {
                 title: 'Sâu bệnh',
                 id: "SauBenh",
@@ -46,14 +46,14 @@ define(["require", "exports"], function (require, exports) {
                 title: 'Doanh nghiệp',
                 id: "DoanhNghiep",
                 url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/0",
-                outFields: ['*']
+                outFields: ['*'],
             }],
         tables: [{
                 id: 'thoigiansxtt',
-                url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/3"
+                url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/3",
             }, {
                 id: 'tblgiaidoansinhtruong',
-                url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/4"
+                url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_ChuyenDe/FeatureServer/4",
             }],
         zoom: 10,
         center: [106.6843694, 11.158752270428375]
