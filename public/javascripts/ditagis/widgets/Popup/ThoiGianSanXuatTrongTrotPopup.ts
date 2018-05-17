@@ -471,6 +471,7 @@ class ThoiGianSanXuatTrongTrotPopup {
     btnEdit.classList.add('btn', 'btn-primary');
     btnEdit.innerText = "Chấp nhận";
     on(btnEdit, 'click', () => {
+      alert('click');
       let data = <ThoiGianSanXuatTrongTrot>{
         OBJECTID: item.OBJECTID,
         NhomCayTrong: parseInt(inputNCT.value),
@@ -480,8 +481,10 @@ class ThoiGianSanXuatTrongTrotPopup {
         ThoiGianBatDauTrong: !inputTGBDT.value ? null : new Date(inputTGBDT.value),
         GiaiDoanSinhTruong: inputGDST.value
       }
-      this.renderEditDetailTrongTrot(data);
       $('#ModalDetail').modal('toggle');
+
+      this.renderEditDetailTrongTrot(data);
+
     })
     divInfo.appendChild(formGroupNCT);
     divInfo.appendChild(formGroupLCT);
@@ -606,15 +609,10 @@ class ThoiGianSanXuatTrongTrotPopup {
       })
       this.tmpDatasDetailTrongTrong.tableDatas = tableDatas;
       this.tmpDatasDetailTrongTrong.edits.push(item);
-      let rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
-      let row;
-      for (const r of rows) {
-        let id = parseInt(r.id);
-        if (id == item['OBJECTID'] || id == item['ID']) {
-          row = r;
-          break;
-        }
-      }
+      // let rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
+      let id = item['OBJECTID'] || item['ID'];
+      let row = this.tmpDatasDetailTrongTrong.tbody.querySelector(`tr[id='${id}']`);
+      if (!row) return;
       let tds = row.getElementsByTagName('td');
       let tdNCT: HTMLElement = tds[0],
         tdLCT: HTMLElement = tds[1],
@@ -660,6 +658,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       //giai doan sinh truong
       tdGDST.innerText = item.GiaiDoanSinhTruong;
     } catch (error) {
+      alert(JSON.stringify(error))
       throw 'Có lỗi xảy ra trong quá trình thực hiện'
     }
   }
@@ -826,7 +825,7 @@ class ThoiGianSanXuatTrongTrotPopup {
       }
     }
 
-
+    alert(JSON.stringify(applyEdits))
     trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
       this.refreshNhomCayTrong(this.dataDetails, datas.adds);
       this.tmpDatasDetailTrongTrong = null;

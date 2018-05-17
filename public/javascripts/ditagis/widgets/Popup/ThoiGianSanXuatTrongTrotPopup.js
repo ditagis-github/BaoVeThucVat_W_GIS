@@ -384,6 +384,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             btnEdit.classList.add('btn', 'btn-primary');
             btnEdit.innerText = "Chấp nhận";
             on(btnEdit, 'click', () => {
+                alert('click');
                 let data = {
                     OBJECTID: item.OBJECTID,
                     NhomCayTrong: parseInt(inputNCT.value),
@@ -393,8 +394,8 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                     ThoiGianBatDauTrong: !inputTGBDT.value ? null : new Date(inputTGBDT.value),
                     GiaiDoanSinhTruong: inputGDST.value
                 };
-                this.renderEditDetailTrongTrot(data);
                 $('#ModalDetail').modal('toggle');
+                this.renderEditDetailTrongTrot(data);
             });
             divInfo.appendChild(formGroupNCT);
             divInfo.appendChild(formGroupLCT);
@@ -512,15 +513,10 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 });
                 this.tmpDatasDetailTrongTrong.tableDatas = tableDatas;
                 this.tmpDatasDetailTrongTrong.edits.push(item);
-                let rows = this.tmpDatasDetailTrongTrong.tbody.getElementsByTagName('tr');
-                let row;
-                for (const r of rows) {
-                    let id = parseInt(r.id);
-                    if (id == item['OBJECTID'] || id == item['ID']) {
-                        row = r;
-                        break;
-                    }
-                }
+                let id = item['OBJECTID'] || item['ID'];
+                let row = this.tmpDatasDetailTrongTrong.tbody.querySelector(`tr[id='${id}']`);
+                if (!row)
+                    return;
                 let tds = row.getElementsByTagName('td');
                 let tdNCT = tds[0], tdLCT = tds[1], tdArea = tds[2], tdTGTT = tds[3], tdTGBDT = tds[4], tdGDST = tds[5];
                 let NCTcodedValues = this.layer.getFieldDomain('NhomCayTrong').codedValues;
@@ -563,6 +559,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 tdGDST.innerText = item.GiaiDoanSinhTruong;
             }
             catch (error) {
+                alert(JSON.stringify(error));
                 throw 'Có lỗi xảy ra trong quá trình thực hiện';
             }
         }
@@ -723,6 +720,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                     applyEdits.updates.push(attributes);
                 }
             }
+            alert(JSON.stringify(applyEdits));
             trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
                 this.refreshNhomCayTrong(this.dataDetails, datas.adds);
                 this.tmpDatasDetailTrongTrong = null;
