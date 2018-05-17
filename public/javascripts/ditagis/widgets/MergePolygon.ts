@@ -101,7 +101,6 @@ class MergePolygon {
   private dblClickHandlerEvent(e: __esri.MapViewDoubleClickEvent) {
     e.stopPropagation();
     if (confirm('Có chắc chắn ghép thửa?')) {
-      Loader.show(false);
       let deleteGrahics = this.mergeGraphics.slice(1, this.mergeGraphics.length);
       let deletes = deleteGrahics.map(m => { return { objectId: m.attributes.OBJECTID } }).toArray();
       let updateFeature = this.mainGraphic.clone();
@@ -109,7 +108,7 @@ class MergePolygon {
       this.layer.applyEdits({
         updateFeatures: [updateFeature],
         deleteFeatures: deletes
-      }).then(r => console.log(r)).always(_ => Loader.hide())
+      })
     }
     this.clear();
   }

@@ -17,21 +17,20 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        loader: "ts-loader",
-        options: {
-          transpileOnly: true
-        }
-      },
+      // {
+      //   test: /\.tsx?$/,
+      //   loader: "ts-loader",
+      //   options: {
+      //     transpileOnly: true
+      //   }
+      // },
       {
         test: /\.js?$/,
         loader: {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['es2015', { loose: true, modules: false }],
-              'stage-2'
+              ['env']
             ]
           }
         }
@@ -39,22 +38,22 @@ module.exports = {
     ]
   },
   plugins: [
-    new UglifyJSPlugin({
-      sourceMap: false,
-      uglifyOptions: {
-        ie8: false,
-        ecma: 8,
-        output: {
-          comments: false,
-          beautify: false
-        },
-        warnings: false
-      }
-    })
+    // new UglifyJSPlugin({
+    //   sourceMap: false,
+    //   uglifyOptions: {
+    //     ie8: false,
+    //     ecma: 8,
+    //     output: {
+    //       comments: false,
+    //       beautify: false
+    //     },
+    //     warnings: false
+    //   }
+    // })
   ],
   resolve: {
-    modules: [path.resolve(__dirname, "/src"), "node_modules/"],
-    extensions: [".ts", ".js"]
+    modules: [path.resolve(__dirname, "/src")],
+    extensions: [".js"]
   },
   externals: [
     (context, request, callback) => {

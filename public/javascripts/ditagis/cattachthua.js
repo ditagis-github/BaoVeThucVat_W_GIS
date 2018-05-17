@@ -1,9 +1,9 @@
 require([
- "ditagis/classes/ConstName",
- "ditagis/config",
+ "./classes/ConstName",
+ "./config",
   "esri/Map",
   "esri/tasks/Locator",
- "ditagis/classes/MapView",
+ "./classes/MapView",
   "esri/layers/OpenStreetMapLayer",
   "esri/layers/MapImageLayer",
   "esri/layers/FeatureLayer",
@@ -18,17 +18,17 @@ require([
   "esri/request",
   "esri/renderers/UniqueValueRenderer",
   "esri/symbols/SimpleMarkerSymbol",
- "ditagis/classes/SystemStatusObject",
+ "./classes/SystemStatusObject",
 
- "ditagis/widgets/User",
- "ditagis/widgets/Popup",
+ "./widgets/User",
+ "./widgets/Popup",
   'esri/symbols/SimpleFillSymbol',
   'esri/symbols/SimpleLineSymbol',
   "esri/geometry/Extent",
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
-  // "css!ditagis/styling/dtg-map.css"
+  // "css!./styling/dtg-map.css"
 
 
 ], function (constName, mapconfigs, Map, Locator, MapView, OpenStreetMapLayer, MapImageLayer, FeatureLayer, WebTileLayer,
@@ -175,12 +175,14 @@ require([
               }
               var danhDauViTri = new FeatureLayer({
                 id: "danhdauvitri",
+                title:"Vị trí đánh dấu",
+                outFields:['*'],
                 url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
                 permission: {
                   create: false,
                   view: true,
                   delete: true,
-                  edit: false
+                  edit: true
                 }
               });
               map.add(danhDauViTri);
@@ -296,8 +298,5 @@ require([
         initWidgets();
         map.reorder(basemap, 5)
       })
-
-
-      Loader.hide();
     })
   })

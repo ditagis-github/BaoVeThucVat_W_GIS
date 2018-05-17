@@ -1,38 +1,39 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    class DateTimeDefine {
-        constructor(date) {
+    var DateTimeDefine = (function () {
+        function DateTimeDefine(date) {
             this.date = date;
         }
-        checkOutOfDate(date) {
+        DateTimeDefine.prototype.checkOutOfDate = function (date) {
             var today = new Date();
             return (today.getTime() - date) > 0 ? false : true;
-        }
-        checkUnexpired(date) {
+        };
+        DateTimeDefine.prototype.checkUnexpired = function (date) {
             return !this.checkOutOfDate(date);
-        }
-        static formatDateValue(date) {
+        };
+        DateTimeDefine.formatDateValue = function (date) {
             if (!date)
                 return '';
-            let day = date.getDate(), month = date.getMonth() + 1, year = date.getFullYear();
+            var day = date.getDate(), month = date.getMonth() + 1, year = date.getFullYear();
             if (day / 10 < 1)
                 day = '0' + day;
             if (month / 10 < 1)
                 month = '0' + month;
-            let value = `${year}-${month}-${day}`;
+            var value = year + "-" + month + "-" + day;
             return value;
-        }
-        static formatNumberDate(number) {
+        };
+        DateTimeDefine.formatNumberDate = function (number) {
             if (!number)
                 return '';
             var date = new Date(number);
-            let day = date.getDate(), month = date.getMonth() + 1, year = date.getFullYear();
+            var day = date.getDate(), month = date.getMonth() + 1, year = date.getFullYear();
             if (day / 10 < 1)
                 day = '0' + day;
             if (month / 10 < 1)
                 month = '0' + month;
-            return `${day}/${month}/${year}`;
-        }
-    }
+            return day + "/" + month + "/" + year;
+        };
+        return DateTimeDefine;
+    }());
     return DateTimeDefine;
 });

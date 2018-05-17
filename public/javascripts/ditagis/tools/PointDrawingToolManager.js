@@ -1,7 +1,7 @@
 define(["require", "exports", "./SimpleDrawPoint", "../editing/PointEditing", "../classes/EventListener"], function (require, exports, SimpleDrawPoint, PointEditing, EventListener) {
     "use strict";
-    class PointDrawingToolManager {
-        constructor(view) {
+    var PointDrawingToolManager = (function () {
+        function PointDrawingToolManager(view) {
             this.view = view;
             this._drawLayer = null;
             this.systemVariable = view.systemVariable;
@@ -10,18 +10,19 @@ define(["require", "exports", "./SimpleDrawPoint", "../editing/PointEditing", ".
             this.pointEditing = new PointEditing(this.view);
             this.registerEvent();
         }
-        addFeature(graphic) {
-            let accept = confirm('Chắc chắn muốn thêm?');
+        PointDrawingToolManager.prototype.addFeature = function (graphic) {
+            var accept = confirm('Chắc chắn muốn thêm?');
             if (!accept)
                 return;
             return this.pointEditing.draw(this.drawLayer, graphic);
-        }
-        registerEvent() {
-            this.simpleDrawPoint.on('draw-finish', (graphic) => {
-                this.addFeature(graphic).then(_ => {
-                    this.eventListener.fire('draw-finish', {
+        };
+        PointDrawingToolManager.prototype.registerEvent = function () {
+            var _this = this;
+            this.simpleDrawPoint.on('draw-finish', function (graphic) {
+                _this.addFeature(graphic).then(function (_) {
+                    _this.eventListener.fire('draw-finish', {
                         graphic: {
-                            layer: this.drawLayer,
+                            layer: _this.drawLayer,
                             attributes: graphic.attributes,
                             geometry: graphic.geometry
                         },
@@ -29,20 +30,25 @@ define(["require", "exports", "./SimpleDrawPoint", "../editing/PointEditing", ".
                     });
                 });
             });
-        }
-        set drawLayer(val) {
-            this._drawLayer = val;
-        }
-        get drawLayer() {
-            return this._drawLayer;
-        }
-        drawSimple() {
+        };
+        Object.defineProperty(PointDrawingToolManager.prototype, "drawLayer", {
+            get: function () {
+                return this._drawLayer;
+            },
+            set: function (val) {
+                this._drawLayer = val;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PointDrawingToolManager.prototype.drawSimple = function () {
             this.clearEvents();
             this.simpleDrawPoint.draw(this.drawLayer);
-        }
-        clearEvents() {
+        };
+        PointDrawingToolManager.prototype.clearEvents = function () {
             this.simpleDrawPoint.clearEvents();
-        }
-    }
+        };
+        return PointDrawingToolManager;
+    }());
     return PointDrawingToolManager;
 });

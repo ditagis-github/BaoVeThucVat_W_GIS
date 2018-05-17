@@ -1,10 +1,12 @@
 define(["require", "exports", "dojo/window"], function (require, exports, win) {
     "use strict";
-    class Bootstrap {
-        static modal(id, title, body, footer) {
+    var Bootstrap = (function () {
+        function Bootstrap() {
+        }
+        Bootstrap.modal = function (id, title, body, footer) {
             try {
-                let width = win.getBox().w + 'px';
-                let _modal, modalDlg, modalContent, modalHeader, modalBody, modalFooter;
+                var width = win.getBox().w + 'px';
+                var _modal = void 0, modalDlg = void 0, modalContent = void 0, modalHeader = void 0, modalBody = void 0, modalFooter = void 0;
                 _modal = document.createElement('div');
                 _modal.classList.add('modal', 'fade');
                 _modal.id = id;
@@ -20,13 +22,13 @@ define(["require", "exports", "dojo/window"], function (require, exports, win) {
                 modalContent.style.width = 'fit-content';
                 modalHeader = document.createElement('div');
                 modalHeader.classList.add('modal-header');
-                let closeBtn = document.createElement('button');
+                var closeBtn = document.createElement('button');
                 closeBtn.type = 'button';
                 closeBtn.classList.add('close');
                 closeBtn.setAttribute('data-dismiss', 'modal');
                 closeBtn.innerHTML = '<span aria-hidden="true">×</span><span class="sr-only">Đóng</span>';
                 modalHeader.appendChild(closeBtn);
-                modalHeader.innerHTML += `<h4 class="modal-title">${title}</h4>`;
+                modalHeader.innerHTML += "<h4 class=\"modal-title\">" + title + "</h4>";
                 modalBody = document.createElement('div');
                 modalBody.classList.add('modal-body');
                 modalBody.appendChild(body);
@@ -42,12 +44,12 @@ define(["require", "exports", "dojo/window"], function (require, exports, win) {
                 modalDlg.appendChild(modalContent);
                 _modal.appendChild(modalDlg);
                 document.body.appendChild(_modal);
-                let $modal = $(`#${id}`);
-                if ($modal) {
-                    $modal.on('hidden.bs.modal', function () {
-                        $modal.remove();
+                var $modal_1 = $("#" + id);
+                if ($modal_1) {
+                    $modal_1.on('hidden.bs.modal', function () {
+                        $modal_1.remove();
                     });
-                    return $modal;
+                    return $modal_1;
                 }
                 else {
                     return null;
@@ -56,7 +58,8 @@ define(["require", "exports", "dojo/window"], function (require, exports, win) {
             catch (error) {
                 throw error;
             }
-        }
-    }
+        };
+        return Bootstrap;
+    }());
     return Bootstrap;
 });

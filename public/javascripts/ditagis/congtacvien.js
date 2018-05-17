@@ -10,11 +10,11 @@
  */
 //  var socket = io();
 require([
-  "ditagis/classes/ConstName",
-  "ditagis/config",
+  "./classes/ConstName",
+  "./config",
   "esri/Map",
   "esri/tasks/Locator",
-  "ditagis/classes/MapView",
+  "./classes/MapView",
   "esri/layers/OpenStreetMapLayer",
   "esri/layers/MapImageLayer",
   "esri/layers/FeatureLayer",
@@ -29,13 +29,13 @@ require([
   "esri/request",
   "esri/renderers/UniqueValueRenderer",
   "esri/symbols/SimpleMarkerSymbol",
-  "ditagis/classes/SystemStatusObject",
+  "./classes/SystemStatusObject",
 
-  "ditagis/widgets/EditorHistory",
-  "ditagis/widgets/LayerEditor",
-  "ditagis/widgets/User",
-  "ditagis/widgets/Popup",
-  "ditagis/support/HightlightGraphic",
+  "./widgets/EditorHistory",
+  "./widgets/LayerEditor",
+  "./widgets/User",
+  "./widgets/Popup",
+  "./support/HightlightGraphic",
   'esri/symbols/SimpleFillSymbol',
   'esri/symbols/SimpleLineSymbol',
   "esri/geometry/Extent",
@@ -43,7 +43,7 @@ require([
   "dojo/on",
   "dojo/dom-construct",
   "dojo/sniff",
-  // "css!ditagis/styling/dtg-map.css"
+  // "css!./styling/dtg-map.css"
 
 
 ], function (constName, mapconfigs, Map, Locator, MapView, OpenStreetMapLayer, MapImageLayer, FeatureLayer, WebTileLayer,
@@ -238,9 +238,9 @@ require([
                       if (event.layerView) {
                         event.layerView.watch('updating', function (newVal, oldVal) {
                           if (newVal && newVal != oldVal) {
-                            $('.loading').css('display','block')
+                            $('.loading').css('display', 'block')
                           } else {
-                            $('.loading').css('display','none')
+                            $('.loading').css('display', 'none')
                           }
                         })
                       }
@@ -251,12 +251,14 @@ require([
               }
               var danhDauViTri = new FeatureLayer({
                 id: "danhdauvitri",
+                outFields:['*'],
+                title:'Đánh dấu vị trí',
                 url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
                 permission: {
                   create: false,
                   view: true,
                   delete: true,
-                  edit: false
+                  edit: true
                 }
               });
               map.add(danhDauViTri);
@@ -356,7 +358,6 @@ require([
           view.ui.add(div, 'bottom-right');
           div.addEventListener('click', function () {
             let layer = map.findLayerById('danhdauvitri');
-            Loader.show(false);
             locate.locate().then(function (results) {
               let point = new Point({
                 latitude: results.coords.latitude,
@@ -371,7 +372,25 @@ require([
                   },
                   geometry: point
                 }]
-              }).then(r => console.log(r)).always(_ => Loader.hide())
+              })
+                .then(r => {
+                  if (r.addFeatureResults[0].objectId) {
+                    layer.queryFeatures({
+                      where:`OBJECTID = ${r.addFeatureResults[0].objectId}`,
+                      returnGeometry:true,outFields:['*'],
+                      outSpatialReference:view.spatialReference
+                    })
+                    .then(results=>{
+                      view.popup.open({
+                        updateLocationEnabled:true,
+                        features:results.features,
+                        featureMenuOpen: true
+                      })
+                    })
+                  } else {
+                    
+                  }
+                })
             })
           });
         }
@@ -479,8 +498,5 @@ require([
         initWidgets();
         map.reorder(basemap, 5)
       })
-
-
-      Loader.hide();
     })
   })

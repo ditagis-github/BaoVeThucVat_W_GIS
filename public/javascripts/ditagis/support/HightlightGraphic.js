@@ -1,7 +1,7 @@
 define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/Color", "esri/layers/GraphicsLayer"], function (require, exports, Graphic, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, Color, GraphicsLayer) {
     "use strict";
-    class HightlightGraphic {
-        constructor(view, options) {
+    var HightlightGraphic = (function () {
+        function HightlightGraphic(view, options) {
             options = options || {};
             this.view = view;
             this.graphics = new GraphicsLayer({
@@ -29,22 +29,24 @@ define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol",
                     })
                 });
         }
-        hightlight(screenCoors) {
+        HightlightGraphic.prototype.hightlight = function (screenCoors) {
+            var _this = this;
             this.clear();
-            this.view.hitTest(screenCoors).then((res) => {
-                for (let result of res.results) {
-                    const graphic = result.graphic;
+            this.view.hitTest(screenCoors).then(function (res) {
+                for (var _i = 0, _a = res.results; _i < _a.length; _i++) {
+                    var result = _a[_i];
+                    var graphic = result.graphic;
                     if (graphic.attributes && graphic.attributes != null) {
-                        this.add(graphic);
+                        _this.add(graphic);
                     }
                 }
             });
-        }
-        clear() {
+        };
+        HightlightGraphic.prototype.clear = function () {
             this.removeAll();
-        }
-        rendererGraphic(type, geometry) {
-            let symbol;
+        };
+        HightlightGraphic.prototype.rendererGraphic = function (type, geometry) {
+            var symbol;
             if (type === 'point') {
                 symbol = this.symbolMarker;
             }
@@ -54,25 +56,27 @@ define(["require", "exports", "esri/Graphic", "esri/symbols/SimpleMarkerSymbol",
             else {
                 symbol = this.symbolPlg;
             }
-            let graphic = new Graphic({
+            var graphic = new Graphic({
                 geometry: geometry,
                 symbol: symbol
             });
             return graphic;
-        }
-        add(graphic) {
-            const type = graphic.geometry.type;
-            let renderergraphic = this.rendererGraphic(type, graphic.geometry);
+        };
+        HightlightGraphic.prototype.add = function (graphic) {
+            var type = graphic.geometry.type;
+            var renderergraphic = this.rendererGraphic(type, graphic.geometry);
             this.graphics.add(renderergraphic);
-        }
-        addAll(graphics) {
-            for (let g of graphics) {
+        };
+        HightlightGraphic.prototype.addAll = function (graphics) {
+            for (var _i = 0, graphics_1 = graphics; _i < graphics_1.length; _i++) {
+                var g = graphics_1[_i];
                 this.add(g);
             }
-        }
-        removeAll() {
+        };
+        HightlightGraphic.prototype.removeAll = function () {
             this.graphics.removeAll();
-        }
-    }
+        };
+        return HightlightGraphic;
+    }());
     return HightlightGraphic;
 });

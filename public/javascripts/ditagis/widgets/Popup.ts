@@ -72,13 +72,20 @@ class Popup {
         // let layer = evt.layer;
         if (layer.type == 'feature') {
           let actions = [];
-          if (layer.permission.edit)
+          if (layer.permission.edit){
             actions.push({
               id: "update",
               title: "Cập nhật",
               className: "esri-icon-edit",
               layer: layer
             });
+            actions.push({
+              id: "update-geometry",
+              title: "Cập nhật vị trí",
+              className: "esri-icon-locate",
+              layer: layer
+            });
+          }
           if (layer.permission.delete)
             actions.push({
               id: "delete",
@@ -111,9 +118,7 @@ class Popup {
           }
           layer.popupTemplate = {
             content: (target) => {
-              Loader.show(false)
               let content = this.contentPopup(target, layer);
-              Loader.hide();
               return content;
             },
             title: layer.title,

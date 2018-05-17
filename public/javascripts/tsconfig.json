@@ -1,7 +1,6 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es6",
     "module": "amd",
     "rootDir": "ditagis",
     "removeComments": true

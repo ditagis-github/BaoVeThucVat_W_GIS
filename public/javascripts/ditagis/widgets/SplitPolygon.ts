@@ -98,7 +98,6 @@ class SplitPolygon {
     }
     async xuly() {
         if (confirm('Có chắc chắn tách thửa?')) {
-            Loader.show(false)
             var selectedFeature_attributes = this.selectedFeature.attributes;
             var geometry = this.selectedFeature.geometry;
             let line = new Polyline({
@@ -146,7 +145,7 @@ class SplitPolygon {
                 updateFeatures: update_graphics,
                 addFeatures: add_graphics,
             };
-            this.layer.applyEdits(edits).always(_ => Loader.hide());
+            this.layer.applyEdits(edits)
             this.vertices = [];
         }
     }
