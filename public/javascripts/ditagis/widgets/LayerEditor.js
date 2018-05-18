@@ -207,12 +207,10 @@ define([
                             this.drawManager.drawSimple();
                             break;
                         default:
-                            console.log("Chưa được liệt kê")
                             break;
                     }
                     this.expand.expanded = false;
                 } catch (error) {
-                    console.log(error);
                 }
             }
         }

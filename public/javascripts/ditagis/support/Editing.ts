@@ -34,7 +34,6 @@ class Editing {
                     }
                 });
             } catch (error) {
-                console.log(error)
                 reject(error);
             }
 
@@ -88,7 +87,6 @@ class Editing {
                     }
                 });
             } catch (error) {
-                console.log(error)
                 reject(error);
             }
 

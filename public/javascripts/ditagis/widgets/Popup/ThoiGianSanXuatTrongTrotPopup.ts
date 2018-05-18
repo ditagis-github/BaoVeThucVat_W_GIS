@@ -471,7 +471,6 @@ class ThoiGianSanXuatTrongTrotPopup {
     btnEdit.classList.add('btn', 'btn-primary');
     btnEdit.innerText = "Chấp nhận";
     on(btnEdit, 'click', () => {
-      alert('click');
       let data = <ThoiGianSanXuatTrongTrot>{
         OBJECTID: item.OBJECTID,
         NhomCayTrong: parseInt(inputNCT.value),
@@ -658,7 +657,6 @@ class ThoiGianSanXuatTrongTrotPopup {
       //giai doan sinh truong
       tdGDST.innerText = item.GiaiDoanSinhTruong;
     } catch (error) {
-      alert(JSON.stringify(error))
       throw 'Có lỗi xảy ra trong quá trình thực hiện'
     }
   }
@@ -825,7 +823,6 @@ class ThoiGianSanXuatTrongTrotPopup {
       }
     }
 
-    alert(JSON.stringify(applyEdits))
     trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
       this.refreshNhomCayTrong(this.dataDetails, datas.adds);
       this.tmpDatasDetailTrongTrong = null;

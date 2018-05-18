@@ -152,7 +152,6 @@ define([
             var distance = await geometryEngineAsync.geodesicLength(line, 'meters');
             //làm tròn
             distance = Math.round(distance * 10000) / 10000;
-            console.log(distance);
             // var linedistance = new LineDistance();
             // if (this.points.length >= 2) {
             //     for (let i = 0; i < this.points.length - 1; i++) {
@@ -204,7 +203,6 @@ define([
                 this.preMoveLine = moveLine;
                 geometryEngineAsync.distance(this.points[0].geometry, pointD.geometry, "meters").then((res) => {
                     this.distance = Math.round(res * 1000) / 1000;
-                    alert(this.distance);
                     this.changeStatusDraw();
                     for (let point of this.points) {
                         this.view.graphics.remove(point);

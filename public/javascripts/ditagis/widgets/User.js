@@ -84,7 +84,6 @@ define([
                         content: this.DOM.container
                     });
                 } catch (error) {
-                    console.log(error);
                 }
             }
             /**

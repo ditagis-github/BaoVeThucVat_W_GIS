@@ -231,7 +231,6 @@ class SplitPolygon {
                 this.view.graphics.add(this.graphic);
             }
         } catch (error) {
-            console.log(error);
         }
 
     }
