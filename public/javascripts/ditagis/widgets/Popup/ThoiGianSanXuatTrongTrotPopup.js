@@ -384,7 +384,6 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             btnEdit.classList.add('btn', 'btn-primary');
             btnEdit.innerText = "Chấp nhận";
             on(btnEdit, 'click', () => {
-                alert('click');
                 let data = {
                     OBJECTID: item.OBJECTID,
                     NhomCayTrong: parseInt(inputNCT.value),
@@ -559,7 +558,6 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 tdGDST.innerText = item.GiaiDoanSinhTruong;
             }
             catch (error) {
-                alert(JSON.stringify(error));
                 throw 'Có lỗi xảy ra trong quá trình thực hiện';
             }
         }
@@ -720,7 +718,6 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                     applyEdits.updates.push(attributes);
                 }
             }
-            alert(JSON.stringify(applyEdits));
             trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
                 this.refreshNhomCayTrong(this.dataDetails, datas.adds);
                 this.tmpDatasDetailTrongTrong = null;

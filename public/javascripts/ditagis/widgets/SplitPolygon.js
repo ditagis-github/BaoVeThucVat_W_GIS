@@ -207,7 +207,6 @@ define(["require", "exports", "dojo/dom-construct", "dojo/on", "../toolview/Tool
                 }
             }
             catch (error) {
-                console.log(error);
             }
         }
         clearEvent() {

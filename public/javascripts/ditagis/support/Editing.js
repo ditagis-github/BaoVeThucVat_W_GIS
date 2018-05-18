@@ -42,7 +42,6 @@ define(["require", "exports", "esri/tasks/QueryTask", "../classes/ConstName"], f
                     });
                 }
                 catch (error) {
-                    console.log(error);
                     reject(error);
                 }
             });
@@ -100,7 +99,6 @@ define(["require", "exports", "esri/tasks/QueryTask", "../classes/ConstName"], f
                     });
                 }
                 catch (error) {
-                    console.log(error);
                     reject(error);
                 }
             });
