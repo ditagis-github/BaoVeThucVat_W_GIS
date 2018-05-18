@@ -1,4 +1,4 @@
-require([
+define([
  "./classes/ConstName",
  "./config",
   "esri/Map",

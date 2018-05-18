@@ -1,4 +1,3 @@
-// document.body.innerHTML="on qua di"
 define([
   "esri/Map",
   "esri/tasks/Locator",

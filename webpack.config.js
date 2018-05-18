@@ -29,7 +29,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['env']
+              ["es2015", "stage-0"]
             ]
           }
         }
@@ -51,7 +51,7 @@ module.exports = {
     // })
   ],
   resolve: {
-    modules: [path.resolve(__dirname, "/src")],
+    modules: [path.resolve(__dirname, "/src"),path.resolve(__dirname, "/node_modules")],
     extensions: [".js"]
   },
   externals: [

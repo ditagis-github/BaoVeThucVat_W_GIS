@@ -9,7 +9,7 @@
  * Phần này quan trọng không được xóa
  */
 //  var socket = io();
-require([
+define([
   "./classes/ConstName",
   "./config",
   "esri/Map",
