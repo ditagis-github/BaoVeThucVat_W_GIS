@@ -225,6 +225,7 @@ class PopupEdit {
         let file = document.createElement('input');
         file.type = 'file';
         file.name = 'attachment';
+        file.accept = "image/*";
         form.appendChild(file);
         let hideField = document.createElement('input');
         hideField.hidden = true;
@@ -232,7 +233,52 @@ class PopupEdit {
         hideField.value = 'json';
         form.appendChild(hideField);
         div.appendChild(form);
-        this.registerChangeEvent(file);
+        // this.registerChangeEvent(file);
+
+        $(form).change(_ => {
+          var notify = $.notify({
+            message: 'Đang cập nhật hình ảnh...'
+          }, {
+              showProgressbar: true,
+              delay: 20000,
+              placement: {
+                from: 'top',
+                align: 'left'
+              }
+            })
+          var formData = new FormData(form);
+
+          var request = new XMLHttpRequest();
+          var url = (this.view.popup.selectedFeature.layer as __esri.FeatureLayer).url
+            + "/" + (this.view.popup.selectedFeature.layer as __esri.FeatureLayer).layerId
+            + "/" + this.view.popup.selectedFeature.attributes.OBJECTID + "/addAttachment";
+          request.open("POST", url);
+
+          request.onload = (e) => {
+            var json = JSON.parse(request.responseText);
+            if (json.addAttachmentResult.success == true) {
+              notify.update('type', 'success');
+              notify.update('message', 'Cập nhật thành công', )
+              notify.update('progress', 90);
+              this.renderAttachmentEditPopup({
+                id: json.addAttachmentResult.objectId, name: file.value.split(/(\\|\/)/g).pop()
+              }, { container: div })
+            }
+            else {
+              notify.update('type', 'danger');
+              notify.update('message', 'Cập nhật thất bại, vui lòng thử lại', )
+              notify.update('progress', 90);
+            }
+          }
+
+          request.onerror = function (e) {
+            notify.update('type', 'danger');
+            notify.update('message', 'Cập nhật thất bại, vui lòng thử lại', )
+            notify.update('progress', 90);
+          }
+
+          request.send(formData);
+        })
 
         if (res && res.attachmentInfos && res.attachmentInfos.length > 0) {
           for (let item of res.attachmentInfos) {
@@ -300,9 +346,23 @@ class PopupEdit {
       class: 'delete-attachment esri-icon-trash'
     }, itemDiv);
     on(itemDelete, 'click', () => {
-      if (!this.attributes.deleteAttachment)
-        this.attributes.deleteAttachment = [];
-      this.attributes.deleteAttachment.push(`${url}/deleteAttachments?f=json&attachmentIds=${item.id}`);
+      let deleteUrl = `${url}/deleteAttachments?f=json&attachmentIds=${item.id}`;
+      var notify = $.notify({
+        message: 'Đang xóa hình...'
+      }, {
+          showProgressbar: true,
+          delay: 20000,
+          placement: {
+            from: 'top',
+            align: 'left'
+          }
+        })
+      esriRequest(deleteUrl)
+        .then(e => {
+          notify.update('type', 'success');
+          notify.update('message', 'Xóa thành công!', )
+          notify.update('progress', 90);
+        })
       container.removeChild(itemDiv);
     });
   }
@@ -398,13 +458,16 @@ class PopupEdit {
    * ATTACHMENT
    */
   uploadFile() {
+    alert('upfile')
     let url = this.layer.url + "/" + this.layer.layerId + "/" + this.objectId + "/addAttachment";
     let attachmentForm = document.getElementById('attachment-data') as HTMLFormElement;
     if (attachmentForm) {
       esriRequest(url, {
+        method: 'POST',
         responseType: 'json',
         body: attachmentForm
       }).then(res => {
+        alert(JSON.stringify(res))
         if (res.data && res.data.addAttachmentResult && res.data.addAttachmentResult.success) {
           $.notify({ message: 'Thêm hình ảnh thành công' }, {
             type: 'success',
@@ -424,7 +487,7 @@ class PopupEdit {
               }
             });
         }
-      })
+      }).otherwise(e => alert(JSON.stringify(e)))
     }
   }
 
@@ -449,15 +512,6 @@ class PopupEdit {
       })
     try {
       if (this.attributes) {
-        if (this.attributes['attachment']) {
-          this.uploadFile();
-        }
-        if (this.attributes.deleteAttachment) {
-          for (let url of this.attributes.deleteAttachment) {
-            esriRequest(url);
-          }
-          this.attributes.deleteAttachment = [];
-        }
         for (let field of this.layer.fields) {
           const type = field.type,
             name = field.name;
@@ -578,8 +632,8 @@ class PopupEdit {
         updateFeatures: [{
           attributes: {
             objectId: objectId,
-            NguoiCapNhat:this.view.systemVariable.user.userName,
-            NgayCapNhat:new Date().getTime()
+            NguoiCapNhat: this.view.systemVariable.user.userName,
+            NgayCapNhat: new Date().getTime()
           },
           geometry: e.mapPoint
         }]

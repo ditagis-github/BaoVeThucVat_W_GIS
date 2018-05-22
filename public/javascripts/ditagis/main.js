@@ -223,7 +223,7 @@ define([
                 id: "danhdauvitri",
                 title: "Vị trí đánh dấu",
                 outFields: ['*'],
-                visible:false,
+                visible: false,
                 url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
                 permission: {
                   create: false,
@@ -419,7 +419,6 @@ define([
           });
         })
       }
-
       initBaseMap();
       initFeatureLayers().then(() => {
         initWidgets();
