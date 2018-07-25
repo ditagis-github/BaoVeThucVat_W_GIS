@@ -255,7 +255,7 @@ define([
                 title:'Đánh dấu vị trí',
                 url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
                 permission: {
-                  create: false,
+                  create: true,
                   view: true,
                   delete: true,
                   edit: true
@@ -394,7 +394,8 @@ define([
             })
           });
         }
-        danhDauViTri();
+        
+        // danhDauViTri();
         //LOCATE
         view.ui.add(locate, "top-left");
         //neu khong phai la thiet bi di dong

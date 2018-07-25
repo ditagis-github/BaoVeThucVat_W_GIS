@@ -226,7 +226,7 @@ define([
                 visible: false,
                 url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
                 permission: {
-                  create: false,
+                  create: true,
                   view: true,
                   delete: true,
                   edit: false
