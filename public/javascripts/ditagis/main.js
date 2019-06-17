@@ -25,6 +25,7 @@ define([
   "./widgets/EditorHistory",
   "./widgets/LayerEditor",
   "./widgets/User",
+  "./widgets/Query/Widget",
   "./widgets/Popup",
   "./support/HightlightGraphic",
 
@@ -35,7 +36,7 @@ define([
   UniqueValueRenderer, SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Extent,
   constName, mapconfigs, SystemStatusObject,
   MapView,
-  EditorHistory, LayerEditor, UserWidget, Popup, HightlightGraphic,
+  EditorHistory, LayerEditor, UserWidget, QueryWidget,Popup, HightlightGraphic,
 
   ) {
     'use strict';
@@ -319,7 +320,7 @@ define([
           })
         }), "top-left");
 
-
+        new QueryWidget(view);
         //LOCATE
         view.ui.add(new Locate({
           view: view

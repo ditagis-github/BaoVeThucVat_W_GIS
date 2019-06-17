@@ -300,11 +300,6 @@ class PopupEdit {
     })
     updateAction.className = 'esri-icon-check-mark';
     //ADD ACTON UPDATE GEOMETRY WITH GPS
-    this.view.popup.actions.add(<__esri.Action>{
-      id: 'update-geometry',
-      title: 'Cập nhật vị trí đối tượng',
-      className: 'esri-icon-locate'
-    })
     let viewDetailAction = this.view.popup.actions.find(function (action) {
       return action.id === 'view-detail';
     })

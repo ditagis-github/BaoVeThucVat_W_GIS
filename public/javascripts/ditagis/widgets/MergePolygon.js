@@ -45,21 +45,21 @@ define(["require", "exports", "esri/geometry/geometryEngine", "../classes/ConstN
                 symbol: SYMBOL
             }));
             this.view.map.add(this.graphicLayers);
-            this.clickHandler = this.view.on('click', e => {
-                e.stopPropagation();
-                this.view.hitTest({ x: e.x, y: e.y }).then(r => {
-                    if (r.results.length > 0) {
-                        let trongTrot = r.results.find(f => f.graphic.layer.id === constName.TRONGTROT);
-                        if (trongTrot) {
-                            if (trongTrot.graphic === mainGraphic)
-                                return;
-                            if (this.mergeGraphics.some(f => f === trongTrot.graphic)) {
-                                this.remove(trongTrot.graphic);
-                            }
-                            else {
-                                this.add(trongTrot.graphic);
-                            }
-                        }
+            this.clickHandler = this.view.on('click', event => {
+                event.stopPropagation();
+                var layer = this.view.map.findLayerById(constName.TRONGTROT);
+                const queryParams = layer.createQuery();
+                queryParams.geometry = event.mapPoint;
+                layer.queryFeatures(queryParams).then((results) => {
+                    console.log(results.features);
+                    var feature = results.features[0];
+                    if (feature.attributes.OBJECTID === mainGraphic.attributes.OBJECTID)
+                        return;
+                    if (this.mergeGraphics.some(f => f === feature)) {
+                        this.remove(feature);
+                    }
+                    else {
+                        this.add(feature);
                     }
                 });
             });

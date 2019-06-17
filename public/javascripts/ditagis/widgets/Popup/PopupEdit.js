@@ -234,11 +234,6 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
                 return action.id === 'update';
             });
             updateAction.className = 'esri-icon-check-mark';
-            this.view.popup.actions.add({
-                id: 'update-geometry',
-                title: 'Cập nhật vị trí đối tượng',
-                className: 'esri-icon-locate'
-            });
             let viewDetailAction = this.view.popup.actions.find(function (action) {
                 return action.id === 'view-detail';
             });

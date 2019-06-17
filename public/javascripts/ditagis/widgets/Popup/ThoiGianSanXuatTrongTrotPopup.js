@@ -23,7 +23,7 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
             name = name || this.layer.typeIdField;
             value = value || this.attributes[name];
             if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
-                const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(f => f.id == value);
+                const subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(f => f.id == value);
                 return subtype;
             }
             return null;
