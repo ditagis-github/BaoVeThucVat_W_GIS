@@ -42,6 +42,7 @@ interface TmpDataDetailTrongTrot {
 interface TrongTrotLayer {
   OBJECTID: number;
   NhomCayTrong: number;
+  LoaiCayTrong: string;
   HuyenTP: string;
 }
 interface ConstructorProperies {
@@ -823,7 +824,7 @@ class ThoiGianSanXuatTrongTrotPopup {
     }
 
     trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
-      this.refreshNhomCayTrong(this.dataDetails, datas.adds);
+      this.refreshNhomCayTrong(datas.adds);
       this.tmpDatasDetailTrongTrong = null;
       this.dataDetails = null;
     })
@@ -831,43 +832,63 @@ class ThoiGianSanXuatTrongTrotPopup {
   }
   /**
    * Cập nhật lại nhóm cây trồng của trồng trọt
+   * Cập nhật lại khi có thời gian trồng trọt mới
    */
-  private refreshNhomCayTrong(currents: ThoiGianSanXuatTrongTrotService[], adds: ThoiGianSanXuatTrongTrot[]) {
-    if (adds.length === 0) return;
-    let tgsxtt = currents.filter(f => {
-      return f.NhomCayTrong === this.attributes.NhomCayTrong
-    });
-    let isValid = false;
-    if (tgsxtt.length > 0) {
-      let group = {};
-      tgsxtt.forEach(function (f) {
-        let ThoiGianBatDauTrong = f.ThoiGianBatDauTrong;
-        if (!group[ThoiGianBatDauTrong])
-          group[ThoiGianBatDauTrong] = [];
-        group[ThoiGianBatDauTrong].push(f.GiaiDoanSinhTruong);
-      })
-      for (const key in group) {
-        let item = group[key];
-        if (item.indexOf('Thu hoạch') !== -1) {
-          isValid = true;
-          break;
-        }
-      }
-    } else {
-      isValid = true
-    }
-    if (isValid) {
+  private refreshNhomCayTrong(adds: ThoiGianSanXuatTrongTrot[]) {
+    if(adds.length > 0){
+      this.view.popup.close();
       let firstItem = adds[0];
       this.layer.applyEdits({
         updateFeatures: [new Graphic({
           attributes: <TrongTrotLayer>{
             OBJECTID: this.attributes.OBJECTID,
-            NhomCayTrong: firstItem.NhomCayTrong
+            NhomCayTrong: firstItem.NhomCayTrong,
+            LoaiCayTrong: firstItem.LoaiCayTrong,
           }
         })]
-      })
+      });
     }
-
   }
+  /**
+   * Cập nhật lại nhóm cây trồng của trồng trọt
+   * Hiếu viết
+   */
+  // private refreshNhomCayTrong(currents: ThoiGianSanXuatTrongTrotService[], adds: ThoiGianSanXuatTrongTrot[]) {
+  //   if (adds.length === 0) return;
+  //   let tgsxtt = currents.filter(f => {
+  //     return f.NhomCayTrong === this.attributes.NhomCayTrong
+  //   });
+  //   let isValid = false;
+  //   if (tgsxtt.length > 0) {
+  //     let group = {};
+  //     tgsxtt.forEach(function (f) {
+  //       let ThoiGianBatDauTrong = f.ThoiGianBatDauTrong;
+  //       if (!group[ThoiGianBatDauTrong])
+  //         group[ThoiGianBatDauTrong] = [];
+  //       group[ThoiGianBatDauTrong].push(f.GiaiDoanSinhTruong);
+  //     })
+  //     for (const key in group) {
+  //       let item = group[key];
+  //       if (item.indexOf('Thu hoạch') !== -1) {
+  //         isValid = true;
+  //         break;
+  //       }
+  //     }
+  //   } else {
+  //     isValid = true
+  //   }
+  //   if (isValid) {
+  //     let firstItem = adds[0];
+  //     this.layer.applyEdits({
+  //       updateFeatures: [new Graphic({
+  //         attributes: <TrongTrotLayer>{
+  //           OBJECTID: this.attributes.OBJECTID,
+  //           NhomCayTrong: firstItem.NhomCayTrong
+  //         }
+  //       })]
+  //     })
+  //   }
+
+  // }
 }
 export = ThoiGianSanXuatTrongTrotPopup;

@@ -75,10 +75,18 @@ class Popup {
           let permission = (layer as any).permission
           if (permission.edit) {
             actions.push({
-              id: "update",
-              title: "Cập nhật",
+              id: "showedits",
+              title: "Chỉnh sửa",
               className: "esri-icon-edit",
-              layer: layer
+              layer: layer,
+              visible: true
+            });
+            actions.push({
+              id: "editfeature",
+              title: "Cập nhật",
+              className: "esri-icon-check-mark",
+              layer: layer,
+              visible: false
             });
             if (layer.geometryType === 'point')
               actions.push({
@@ -149,6 +157,25 @@ class Popup {
       position: 'bottom-center'
     };
   }
+  restartUpdateAction() {
+    //CHANGE ICON FROM UPDATE TO EDIT
+    let showeditsAction = this.view.popup.actions.find(function (action) {
+      return action.id === 'showedits';
+    })
+    let editFeatureAction = this.view.popup.actions.find(function (action) {
+      return action.id === 'editfeature';
+    })
+    showeditsAction.visible = true;
+    editFeatureAction.visible = false;
+    if (showeditsAction.visible) {
+      let viewDetailEditAction = this.view.popup.actions.find(function (action) {
+        return action.id === 'view-detail-edit';
+      });
+      if (viewDetailEditAction) {
+        viewDetailEditAction.id = 'view-detail';
+      }
+    }
+  }
   get selectFeature() {
     return this.view.popup.viewModel.selectedFeature;
   }
@@ -167,14 +194,19 @@ class Popup {
     this.popupEdit.layer = layer;
     let fail = false;
     switch (actionId) {
-      case "update":
+      case "showedits":
         if (layer.permission && layer.permission.edit) {
-          if (event.action.className === 'esri-icon-check-mark') {
-            this.popupEdit.editFeature();
-          } else {
-            this.popupEdit.showEdit();
-          }
-        } else {
+          this.popupEdit.showEdit();
+        }
+        else {
+          fail = true;
+        }
+        break;
+      case "editfeature":
+        if (layer.permission && layer.permission.edit) {
+          this.popupEdit.editFeature();
+        }
+        else {
           fail = true;
         }
         break;
@@ -213,11 +245,9 @@ class Popup {
         this.popupEdit.updateGeometryGPS();
         break;
       case "split":
-
         this.popupEdit.splitPolygon();
         break;
       case "merge":
-
         this.popupEdit.mergePolygon();
         break;
       default:
@@ -259,7 +289,7 @@ class Popup {
    */
   async contentPopup(target, featureLayer) {
     try {
-
+      this.restartUpdateAction();
       const graphic = target.graphic,
         layer = graphic.layer || featureLayer,
         attributes = graphic.attributes;

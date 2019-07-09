@@ -719,45 +719,22 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 }
             }
             trongTrotApi.capNhatTGSXTT(applyEdits).then(e => {
-                this.refreshNhomCayTrong(this.dataDetails, datas.adds);
+                this.refreshNhomCayTrong(datas.adds);
                 this.tmpDatasDetailTrongTrong = null;
                 this.dataDetails = null;
             });
             $('#ttModal').modal('toggle');
         }
-        refreshNhomCayTrong(currents, adds) {
-            if (adds.length === 0)
-                return;
-            let tgsxtt = currents.filter(f => {
-                return f.NhomCayTrong === this.attributes.NhomCayTrong;
-            });
-            let isValid = false;
-            if (tgsxtt.length > 0) {
-                let group = {};
-                tgsxtt.forEach(function (f) {
-                    let ThoiGianBatDauTrong = f.ThoiGianBatDauTrong;
-                    if (!group[ThoiGianBatDauTrong])
-                        group[ThoiGianBatDauTrong] = [];
-                    group[ThoiGianBatDauTrong].push(f.GiaiDoanSinhTruong);
-                });
-                for (const key in group) {
-                    let item = group[key];
-                    if (item.indexOf('Thu hoạch') !== -1) {
-                        isValid = true;
-                        break;
-                    }
-                }
-            }
-            else {
-                isValid = true;
-            }
-            if (isValid) {
+        refreshNhomCayTrong(adds) {
+            if (adds.length > 0) {
+                this.view.popup.close();
                 let firstItem = adds[0];
                 this.layer.applyEdits({
                     updateFeatures: [new Graphic({
                             attributes: {
                                 OBJECTID: this.attributes.OBJECTID,
-                                NhomCayTrong: firstItem.NhomCayTrong
+                                NhomCayTrong: firstItem.NhomCayTrong,
+                                LoaiCayTrong: firstItem.LoaiCayTrong,
                             }
                         })]
                 });

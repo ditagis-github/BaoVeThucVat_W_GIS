@@ -230,25 +230,8 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
             }
             this.view.popup.content = div;
             this.view.popup.title = this.layer.title;
-            let updateAction = this.view.popup.actions.find(function (action) {
-                return action.id === 'update';
-            });
-            updateAction.className = 'esri-icon-check-mark';
-            let viewDetailAction = this.view.popup.actions.find(function (action) {
-                return action.id === 'view-detail';
-            });
-            if (this.layer.id === constName.TRONGTROT && viewDetailAction) {
-                viewDetailAction.id = 'view-detail-edit';
-            }
+            this.toggleAction();
             var watchFunc = () => {
-                updateAction.className = 'esri-icon-edit';
-                let action = this.view.popup.actions.find(f => {
-                    return f.id === 'update-geometry';
-                });
-                if (action)
-                    this.view.popup.actions.remove(action);
-                if (this.layer.id === constName.TRONGTROT && viewDetailAction)
-                    viewDetailAction.id = 'view-detail';
             };
             watchUtils.once(this.view.popup, 'selectedFeature').then(watchFunc);
             watchUtils.once(this.view.popup, 'visible').then(watchFunc);
@@ -475,6 +458,7 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
                                     features: res.features
                                 });
                             });
+                            this.toggleAction();
                         }
                     });
                 }
@@ -484,6 +468,24 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
                 notify.update('message', 'Có lỗi xảy ra trong quá trình cập nhật!');
                 notify.update('progress', 90);
                 throw error;
+            }
+        }
+        toggleAction() {
+            let showeditsAction = this.view.popup.actions.find(function (action) {
+                return action.id === 'showedits';
+            });
+            let editFeatureAction = this.view.popup.actions.find(function (action) {
+                return action.id === 'editfeature';
+            });
+            showeditsAction.visible = !showeditsAction.visible;
+            editFeatureAction.visible = !editFeatureAction.visible;
+            if (editFeatureAction.visible) {
+                let viewDetailAction = this.view.popup.actions.find(function (action) {
+                    return action.id === 'view-detail';
+                });
+                if (this.layer.id === constName.TRONGTROT && viewDetailAction) {
+                    viewDetailAction.id = 'view-detail-edit';
+                }
             }
         }
         deleteFeature() {

@@ -225,7 +225,7 @@ define([
                 title: "Vị trí đánh dấu",
                 outFields: ['*'],
                 visible: false,
-                url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
+                url: 'https://ditagis.com/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
                 permission: {
                   create: true,
                   view: true,
@@ -375,7 +375,7 @@ define([
           }, {
             featureLayer: new FeatureLayer({
               // url: mapconfigs.basemap.url + '/' + constName.INDEX_HANHCHINHHUYEN
-              url: "https://ditagis.com:6443/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/4"
+              url: "https://ditagis.com/arcgis/rest/services/BinhDuong/DuLieuNen/MapServer/4"
             }),
             searchFields: ["MaPhuongXa", "TenXa"],
             displayField: "TenXa",

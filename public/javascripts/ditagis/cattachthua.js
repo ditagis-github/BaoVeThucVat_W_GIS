@@ -177,7 +177,7 @@ define([
                 id: "danhdauvitri",
                 title:"Vị trí đánh dấu",
                 outFields:['*'],
-                url: 'https://ditagis.com:6443/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
+                url: 'https://ditagis.com/arcgis/rest/services/BinhDuong/BaoVeThucVat_DanhDauViTri/FeatureServer/0',
                 permission: {
                   create: false,
                   view: true,

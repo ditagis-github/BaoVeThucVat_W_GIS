@@ -210,8 +210,6 @@ class PopupEdit {
 
     // }
     if (this.layer.hasAttachments) {
-
-
       this.layer.getAttachments(this.objectId).then(res => {
         let div = domConstruct.create('div', {
           class: 'attachment-header',
@@ -294,29 +292,15 @@ class PopupEdit {
     }
     this.view.popup.content = div;
     this.view.popup.title = this.layer.title;
-    //CHANGE ICON FROM UPDATE TO EDIT
-    let updateAction = this.view.popup.actions.find(function (action) {
-      return action.id === 'update';
-    })
-    updateAction.className = 'esri-icon-check-mark';
     //ADD ACTON UPDATE GEOMETRY WITH GPS
-    let viewDetailAction = this.view.popup.actions.find(function (action) {
-      return action.id === 'view-detail';
-    })
-    if (this.layer.id === constName.TRONGTROT && viewDetailAction) {
-      viewDetailAction.id = 'view-detail-edit';
-    }
+    this.toggleAction();
     //RESTORE WHEN OUT EDIT MODE
     var watchFunc = () => {
-      //REVERT ICON UPDATE ACTION
-      updateAction.className = 'esri-icon-edit';
-      //DELETE ACTION UPDATE GEMERTRY WITH GPS
-      let action = this.view.popup.actions.find(f => {
-        return f.id === 'update-geometry'
-      });
-      if (action) this.view.popup.actions.remove(action);
-      //REVERT ID VIEW DETAIL
-      if (this.layer.id === constName.TRONGTROT && viewDetailAction) viewDetailAction.id = 'view-detail';
+      // //DELETE ACTION UPDATE GEMERTRY WITH GPS
+      // let action = this.view.popup.actions.find(f => {
+      //   return f.id === 'update-geometry'
+      // });
+      // if (action) this.view.popup.actions.remove(action);
     }
     watchUtils.once(this.view.popup, 'selectedFeature').then(watchFunc)
     watchUtils.once(this.view.popup, 'visible').then(watchFunc)
@@ -558,7 +542,8 @@ class PopupEdit {
               this.view.popup.open({
                 features: res.features
               })
-            })
+            });
+            this.toggleAction();
           }
         })
       }
@@ -568,6 +553,25 @@ class PopupEdit {
       notify.update('message', 'Có lỗi xảy ra trong quá trình cập nhật!', )
       notify.update('progress', 90);
       throw error;
+    }
+  }
+  toggleAction() {
+    //CHANGE ICON FROM UPDATE TO EDIT
+    let showeditsAction = this.view.popup.actions.find(function (action) {
+      return action.id === 'showedits';
+    })
+    let editFeatureAction = this.view.popup.actions.find(function (action) {
+      return action.id === 'editfeature';
+    });
+    showeditsAction.visible = !showeditsAction.visible;
+    editFeatureAction.visible = !editFeatureAction.visible;
+    if (editFeatureAction.visible) {
+      let viewDetailAction = this.view.popup.actions.find(function (action) {
+        return action.id === 'view-detail';
+      });
+      if (this.layer.id === constName.TRONGTROT && viewDetailAction) {
+        viewDetailAction.id = 'view-detail-edit';
+      }
     }
   }
   /**

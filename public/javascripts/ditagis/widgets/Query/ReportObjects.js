@@ -166,11 +166,13 @@ define(["dojo/dom-construct",
                                 if (value) {
                                     let subtype = this.getSubtype("NhomCayTrong", value);
                                     if (subtype != null) {
-                                        const codedValues = subtype.domains.LoaiCayTrong.codedValues;
-                                        if (codedValues != null) {
-                                            let codedValue = codedValues.find(f => f.code === attr["LoaiCayTrong"]);
-                                            if (codedValue) {
-                                                attr["LoaiCayTrong"] = codedValue.name;
+                                        if (subtype.domains.LoaiCayTrong) {
+                                            const codedValues = subtype.domains.LoaiCayTrong.codedValues;
+                                            if (codedValues != null) {
+                                                let codedValue = codedValues.find(f => f.code === attr["LoaiCayTrong"]);
+                                                if (codedValue) {
+                                                    attr["LoaiCayTrong"] = codedValue.name;
+                                                }
                                             }
                                         }
                                     }

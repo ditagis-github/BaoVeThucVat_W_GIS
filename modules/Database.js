@@ -8,9 +8,10 @@ let sql = require('mssql')
 class Database {
     async execute(query) {
         try {
-            const pool = await sql.connect(config);
+            const pool = await new sql.ConnectionPool(config).connect();
             let result = await pool.request().query(query);
             return result;
+            
         } catch (error) {
             throw error;
         }
