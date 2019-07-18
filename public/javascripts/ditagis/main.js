@@ -213,8 +213,6 @@ define([
                     }
                     element.definitionExpression = definitionExpression;
                   }
-                  if (element.id === constName.TRONGTROT)
-                    element.opacity = 0.7
                   let fl = new FeatureLayer(element);
 
                   map.add(fl);

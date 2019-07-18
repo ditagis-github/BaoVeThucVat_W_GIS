@@ -61,11 +61,12 @@ class MapRouter extends Router {
 				if (body.adds) {
 					body.adds.forEach(
 						async addModel => {
+							console.log(addModel);
 							await this.trongtrotDB.add({
 								...addModel,
 								ThoiGianBatDauTrong: new Date(parseInt(addModel.ThoiGianBatDauTrong)),
 								ThoiGianTrongTrot: new Date(parseInt(addModel.ThoiGianTrongTrot)),
-								NgayCapNhat: new Date(parseInt(addModel.NgayCapNhat))
+								NgayCapNhat: new Date(parseInt(addModel.NgayCapNhat)),
 							})
 
 						})

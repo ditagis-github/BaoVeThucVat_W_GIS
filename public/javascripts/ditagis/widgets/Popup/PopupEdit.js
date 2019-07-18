@@ -1,4 +1,4 @@
-define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/on", "dojo/dom-construct", "esri/request", "esri/core/watchUtils", "esri/widgets/Locate/LocateViewModel", "../../support/Editing", "./ThoiGianSanXuatTrongTrotPopup", "../../support/FeatureTable", "../SplitPolygon", "../MergePolygon"], function (require, exports, constName, config, on, domConstruct, esriRequest, watchUtils, LocateViewModel, editingSupport, ThoiGianSanXuatTrongTrotPopup, FeatureTable, SplitPolygon, MergePolygon) {
+define(["require", "exports", "../../classes/ConstName", "dojo/on", "dojo/dom-construct", "esri/request", "esri/core/watchUtils", "esri/widgets/Locate/LocateViewModel", "../../support/Editing", "./ThoiGianSanXuatTrongTrotPopup", "../SplitPolygon", "../MergePolygon"], function (require, exports, constName, on, domConstruct, esriRequest, watchUtils, LocateViewModel, editingSupport, ThoiGianSanXuatTrongTrotPopup, SplitPolygon, MergePolygon) {
     "use strict";
     class PopupEdit {
         constructor(view, options) {
@@ -7,10 +7,6 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
             this.locateViewModel = new LocateViewModel({
                 view: view,
                 graphic: null
-            });
-            this.tblGiaiDoanSinhTruong = new FeatureTable({
-                url: config.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG; }).url,
-                fieldID: 'OBJECTID'
             });
             this.fireFields = ['NgayCapNhat', 'NguoiCapNhat', 'MaPhuongXa', 'MaHuyenTP', 'MaDoiTuong'];
             this.inputElement = {};
@@ -51,8 +47,8 @@ define(["require", "exports", "../../classes/ConstName", "../../config", "dojo/o
         getSubtype(name, value) {
             name = name || this.layer.typeIdField;
             value = value || this.attributes[name];
-            if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
-                const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(f => f.id == value);
+            if (this.thoiGianSanXuatTrongTrotTbl.typeIdField === name) {
+                const subtypes = this.thoiGianSanXuatTrongTrotTbl.types, subtype = subtypes.find(f => f.id == value);
                 return subtype;
             }
             return null;

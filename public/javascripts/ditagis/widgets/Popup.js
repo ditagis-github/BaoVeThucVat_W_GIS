@@ -14,17 +14,15 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
             this.options = {
                 hightLength: 100
             };
-            let url = config.tables.find(function (f) {
-                return f.id === constName.THOI_GIAN_SAN_XUAT_TRONG_TROT;
-            }).url;
-            this.thoiGianSanXuatTrongTrot = new FeatureTable({ url: url, fieldID: 'MaDoiTuong' });
+            this.thoiGianSanXuatTrongTrot = new FeatureTable({
+                url: config.tables.find((f) => {
+                    return f.id === constName.THOI_GIAN_SAN_XUAT_TRONG_TROT;
+                }).url,
+                fieldID: 'MaDoiTuong'
+            });
             this.popupEdit = new PopupEdit(view, {
                 hightLength: this.options.hightLength,
                 table: this.thoiGianSanXuatTrongTrot
-            });
-            this.tblGiaiDoanSinhTruong = new FeatureTable({
-                url: config.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG; }).url,
-                fieldID: 'OBJECTID'
             });
             this.hightlightGraphic = new HightlightGraphic(view, {
                 symbolMarker: new SimpleMarkerSymbol({
@@ -234,8 +232,8 @@ define(["require", "exports", "../classes/ConstName", "../config", "dojo/on", "d
         getSubtype(name, value) {
             name = name || this.layer.typeIdField;
             value = value || this.attributes[name];
-            if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
-                const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, subtypes = this.tblGiaiDoanSinhTruong.types, subtype = subtypes.find(f => f.id == value);
+            if (this.thoiGianSanXuatTrongTrot.typeIdField === name) {
+                const subtypes = this.thoiGianSanXuatTrongTrot.types, subtype = subtypes.find(f => f.id == value);
                 return subtype;
             }
             return null;

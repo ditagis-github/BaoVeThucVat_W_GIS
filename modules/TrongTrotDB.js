@@ -26,7 +26,9 @@ class TrongTrotDB extends Database {
 			NguoiCapNhat,
 			NgayCapNhat,
 			ThoiGianBatDauTrong,
-			ThoiGianTrongTrot
+			ThoiGianTrongTrot,
+			MaHuyenTP,
+			MaPhuongXa
 		)
 			SELECT ISNULL(MAX(OBJECTID),1) + 1 AS OBJECTID,
 			'${attributes.MaDoiTuong}',
@@ -37,7 +39,9 @@ class TrongTrotDB extends Database {
 			'${attributes.NguoiCapNhat}',
 			'${attributes.NgayCapNhat.toJSON()}',
 			'${attributes.ThoiGianBatDauTrong.toJSON()}',
-			'${attributes.ThoiGianTrongTrot.toJSON()}'
+			'${attributes.ThoiGianTrongTrot.toJSON()}',
+			'${attributes.MaHuyenTP}',
+			'${attributes.MaPhuongXa}'
 			FROM ${TABLE_NAME}
 		`);
 			if (result) return attributes;
@@ -102,6 +106,16 @@ class TrongTrotDB extends Database {
 			if (attributes.ThoiGianTrongTrot) {
 				setStatements.push(
 					`ThoiGianTrongTrot = '${new Date(attributes.ThoiGianTrongTrot).toJSON()}'`
+				)
+			}
+			if (attributes.MaHuyenTP) {
+				setStatements.push(
+					`MaHuyenTP = '${attributes.MaHuyenTP}'`
+				)
+			}
+			if (attributes.MaPhuongXa) {
+				setStatements.push(
+					`MaPhuongXa = '${attributes.MaPhuongXa}'`
 				)
 			}
 			if (setStatements.length > 0) {

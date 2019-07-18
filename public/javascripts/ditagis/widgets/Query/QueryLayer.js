@@ -15,8 +15,8 @@ define([
         this._layerGroups = [];
         this.layerListContent = [];
         this.bindingDataSource();
-        this.tblGiaiDoanSinhTruong = new FeatureTable({
-          url: config.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG; }).url,
+        this.tblThoiGianSanXuatTrongTrot = new FeatureTable({
+          url: config.tables.find(f => { return f.id === constName.THOI_GIAN_SAN_XUAT_TRONG_TROT; }).url,
           fieldID: 'OBJECTID'
         });
         this.hiddenQueryFields = ["DonViCapNhat", "NgayCapNhat", "NguoiCapNhat", "MaDoiTuong", "Ten"];
@@ -31,8 +31,8 @@ define([
       getSubtype(name, value) {
         name = name || this.layer.typeIdField;
         value = value || this.attributes[name];
-        if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
-          const subtypes = this.tblGiaiDoanSinhTruong.types,
+        if (this.tblThoiGianSanXuatTrongTrot.typeIdField === name) {
+          const subtypes = this.tblThoiGianSanXuatTrongTrot.types,
             subtype = subtypes.find(f => f.id == value);
           return subtype;
         }
@@ -214,12 +214,19 @@ define([
                       if (value) {
                         let subtype = this.getSubtype(field.name, value);
                         if (subtype != null) {
-                          const codedValues = subtype.domains.LoaiCayTrong.codedValues;
-                          inputField.kendoComboBox({
-                            dataTextField: "name",
-                            dataValueField: "code",
-                            dataSource: codedValues
-                          });
+                          if(subtype.domains && subtype.domains.LoaiCayTrong){
+                            const codedValues = subtype.domains.LoaiCayTrong.codedValues;
+                            inputField.kendoComboBox({
+                              dataTextField: "name",
+                              dataValueField: "code",
+                              dataSource: codedValues
+                            });
+                          }
+                          else{
+                            inputField.kendoComboBox({
+                              dataSource: null
+                            });
+                          }
                         }
                       }
                     }

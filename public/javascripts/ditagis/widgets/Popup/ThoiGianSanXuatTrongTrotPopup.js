@@ -216,7 +216,9 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                     DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
                     ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
                     ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value),
-                    GiaiDoanSinhTruong: inputGDST.value || 'Trồng mới'
+                    GiaiDoanSinhTruong: inputGDST.value || 'Trồng mới',
+                    MaHuyenTP: this.attributes['MaHuyenTP'],
+                    MaPhuongXa: this.attributes['MaPhuongXa']
                 };
                 let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
                 let addDatas = this.tmpDatasDetailTrongTrong.adds;
@@ -696,7 +698,9 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                         NguoiCapNhat: this.view.systemVariable.user.userName,
                         NgayCapNhat: new Date().getTime(),
                         ThoiGianBatDauTrong: item.ThoiGianBatDauTrong && item.ThoiGianBatDauTrong.getTime(),
-                        ThoiGianTrongTrot: item.ThoiGianTrongTrot ? item.ThoiGianTrongTrot.getTime() : (item.ThoiGianBatDauTrong ? item.ThoiGianBatDauTrong.getTime() : null)
+                        ThoiGianTrongTrot: item.ThoiGianTrongTrot ? item.ThoiGianTrongTrot.getTime() : (item.ThoiGianBatDauTrong ? item.ThoiGianBatDauTrong.getTime() : null),
+                        MaHuyenTP: item.MaHuyenTP,
+                        MaPhuongXa: item.MaPhuongXa
                     };
                     applyEdits.adds.push(attributes);
                 }

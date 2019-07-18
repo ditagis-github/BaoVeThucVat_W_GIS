@@ -21,7 +21,6 @@ class PopupEdit {
   private inputElement;
   private thoiGianSanXuatTrongTrotPopup: ThoiGianSanXuatTrongTrotPopup;
   private thoiGianSanXuatTrongTrotTbl: FeatureTable;
-  private tblGiaiDoanSinhTruong: FeatureTable;
   private _layer;
   private _splitPolygon: SplitPolygon;
   private _mergePolygon: MergePolygon;
@@ -32,10 +31,6 @@ class PopupEdit {
     this.locateViewModel = new LocateViewModel({
       view: view,
       graphic: null
-    })
-    this.tblGiaiDoanSinhTruong = new FeatureTable({
-      url: config.tables.find(f => { return f.id === constName.TBL_GIAI_DOAN_SINH_TRUONG }).url,
-      fieldID: 'OBJECTID'
     })
     this.fireFields = ['NgayCapNhat', 'NguoiCapNhat', 'MaPhuongXa', 'MaHuyenTP', 'MaDoiTuong'];
     this.inputElement = {};
@@ -86,9 +81,8 @@ class PopupEdit {
   getSubtype(name?, value?) {
     name = name || this.layer.typeIdField;
     value = value || this.attributes[name];
-    if (this.tblGiaiDoanSinhTruong.typeIdField === name) {
-      const typeIdField = this.tblGiaiDoanSinhTruong.typeIdField, //tên thuộc tính của subtypes
-        subtypes = this.tblGiaiDoanSinhTruong.types, //subtypes
+    if (this.thoiGianSanXuatTrongTrotTbl.typeIdField === name) {
+      const subtypes = this.thoiGianSanXuatTrongTrotTbl.types, //subtypes
         subtype = subtypes.find(f => f.id == value);
       return subtype;
     }

@@ -19,6 +19,8 @@ interface ThoiGianSanXuatTrongTrot {
   ThoiGianTrongTrot: Date
   ThoiGianBatDauTrong: Date;
   GiaiDoanSinhTruong: string;
+  MaHuyenTP:string;
+  MaPhuongXa:string;
 }
 interface ThoiGianSanXuatTrongTrotService {
   OBJECTID: number;
@@ -29,8 +31,10 @@ interface ThoiGianSanXuatTrongTrotService {
   ThoiGianTrongTrot: number;
   ThoiGianBatDauTrong: number;
   GiaiDoanSinhTruong: string;
-  NguoiCapNhat: string
-  NgayCapNhat: number
+  NguoiCapNhat: string;
+  NgayCapNhat: number;
+  MaHuyenTP:string;
+  MaPhuongXa:string;
 }
 interface TmpDataDetailTrongTrot {
   adds: Array<ThoiGianSanXuatTrongTrot>,
@@ -291,7 +295,9 @@ class ThoiGianSanXuatTrongTrotPopup {
         DienTich: inputArea.value ? parseFloat(inputArea.value) : 0,
         ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
         ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value),
-        GiaiDoanSinhTruong: inputGDST.value || 'Trồng mới'
+        GiaiDoanSinhTruong: inputGDST.value || 'Trồng mới',
+        MaHuyenTP:this.attributes['MaHuyenTP'],
+        MaPhuongXa:this.attributes['MaPhuongXa']
       }
       let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
       let addDatas = this.tmpDatasDetailTrongTrong.adds;
@@ -800,7 +806,9 @@ class ThoiGianSanXuatTrongTrotPopup {
           NguoiCapNhat: this.view.systemVariable.user.userName,
           NgayCapNhat: new Date().getTime(),
           ThoiGianBatDauTrong: item.ThoiGianBatDauTrong && item.ThoiGianBatDauTrong.getTime(),
-          ThoiGianTrongTrot: item.ThoiGianTrongTrot ? item.ThoiGianTrongTrot.getTime() : (item.ThoiGianBatDauTrong ? item.ThoiGianBatDauTrong.getTime() : null)
+          ThoiGianTrongTrot: item.ThoiGianTrongTrot ? item.ThoiGianTrongTrot.getTime() : (item.ThoiGianBatDauTrong ? item.ThoiGianBatDauTrong.getTime() : null),
+          MaHuyenTP:item.MaHuyenTP,
+          MaPhuongXa:item.MaPhuongXa
         }
         applyEdits.adds.push(attributes);
       }
