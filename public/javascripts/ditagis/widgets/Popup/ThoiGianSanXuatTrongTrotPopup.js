@@ -190,13 +190,15 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 inputGDST.appendChild(defaultComboValue);
                 this.tblGiaiDoanSinhTruong.queryFeatures({
                     where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
-                    outFields: ['GiaiDoanSinhTruong'],
+                    outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
                     orderByFields: ['MocTG']
                 }).then(res => {
                     res.features.forEach(f => {
                         let gdst = f.attributes.GiaiDoanSinhTruong;
+                        let magdst = f.attributes.MaGiaiDoan;
                         let cbb = document.createElement('option');
-                        cbb.value = cbb.innerText = gdst;
+                        cbb.value = magdst;
+                        cbb.innerText = gdst;
                         inputGDST.appendChild(cbb);
                     });
                 });
@@ -367,13 +369,15 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 inputGDST.appendChild(defaultComboValue);
                 this.tblGiaiDoanSinhTruong.queryFeatures({
                     where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
-                    outFields: ['GiaiDoanSinhTruong'],
+                    outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
                     orderByFields: ['MocTG']
                 }).then(res => {
                     res.features.forEach(f => {
                         let gdst = f.attributes.GiaiDoanSinhTruong;
+                        let magdst = f.attributes.MaGiaiDoan;
                         let cbb = document.createElement('option');
-                        cbb.value = cbb.innerText = gdst;
+                        cbb.value = magdst;
+                        cbb.innerText = gdst;
                         inputGDST.appendChild(cbb);
                     });
                     inputGDST.value = item.GiaiDoanSinhTruong;
@@ -557,7 +561,19 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 tdArea.innerText = item['DienTich'] + "" || '0';
                 tdTGTT.innerText = DateTimeDefine.formatDateValue(item.ThoiGianTrongTrot);
                 tdTGBDT.innerText = DateTimeDefine.formatDateValue(item.ThoiGianBatDauTrong);
-                tdGDST.innerText = item.GiaiDoanSinhTruong;
+                this.tblGiaiDoanSinhTruong.queryFeatures({
+                    where: `MaGiaiDoan = '${item.GiaiDoanSinhTruong}'`,
+                    outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
+                }).then(res => {
+                    if (res.features.length > 0) {
+                        res.features.forEach(f => {
+                            tdGDST.innerText = f.attributes.GiaiDoanSinhTruong;
+                        });
+                    }
+                    else {
+                        tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
+                    }
+                });
             }
             catch (error) {
                 throw 'Có lỗi xảy ra trong quá trình thực hiện';
@@ -615,7 +631,19 @@ define(["require", "exports", "../../toolview/bootstrap", "../../toolview/DateTi
                 tdTGBDT.innerText = DateTimeDefine.formatDateValue(item['ThoiGianBatDauTrong']);
                 let tdAction = document.createElement('td');
                 let tdGDST = document.createElement('td');
-                tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
+                this.tblGiaiDoanSinhTruong.queryFeatures({
+                    where: `MaGiaiDoan = '${item.GiaiDoanSinhTruong}'`,
+                    outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
+                }).then(res => {
+                    if (res.features.length > 0) {
+                        res.features.forEach(f => {
+                            tdGDST.innerText = f.attributes.GiaiDoanSinhTruong;
+                        });
+                    }
+                    else {
+                        tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
+                    }
+                });
                 let itemEdit = document.createElement('span');
                 itemEdit.classList.add('esri-icon-edit');
                 on(itemEdit, 'click', (evt) => {

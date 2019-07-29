@@ -15,10 +15,11 @@ define([
         this._layerGroups = [];
         this.layerListContent = [];
         this.bindingDataSource();
-        this.tblThoiGianSanXuatTrongTrot = new FeatureTable({
-          url: config.tables.find(f => { return f.id === constName.THOI_GIAN_SAN_XUAT_TRONG_TROT; }).url,
-          fieldID: 'OBJECTID'
-        });
+        this.tblThoiGianSanXuatTrongTrot = this.view.map.findLayerById("TrongTrot");
+        // this.tblThoiGianSanXuatTrongTrot = new FeatureTable({
+        //   url: config.tables.find(f => { return f.id === constName.TRONGTROT; }).url,
+        //   fieldID: 'OBJECTID'
+        // });
         this.hiddenQueryFields = ["DonViCapNhat", "NgayCapNhat", "NguoiCapNhat", "MaDoiTuong", "Ten"];
         this.selectQueryFields = ["MaTruSo", "TenTruSo"];
         this.reportObjects = new ReportObjects(view);

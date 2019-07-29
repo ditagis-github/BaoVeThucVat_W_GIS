@@ -19,8 +19,8 @@ interface ThoiGianSanXuatTrongTrot {
   ThoiGianTrongTrot: Date
   ThoiGianBatDauTrong: Date;
   GiaiDoanSinhTruong: string;
-  MaHuyenTP:string;
-  MaPhuongXa:string;
+  MaHuyenTP: string;
+  MaPhuongXa: string;
 }
 interface ThoiGianSanXuatTrongTrotService {
   OBJECTID: number;
@@ -33,8 +33,8 @@ interface ThoiGianSanXuatTrongTrotService {
   GiaiDoanSinhTruong: string;
   NguoiCapNhat: string;
   NgayCapNhat: number;
-  MaHuyenTP:string;
-  MaPhuongXa:string;
+  MaHuyenTP: string;
+  MaPhuongXa: string;
 }
 interface TmpDataDetailTrongTrot {
   adds: Array<ThoiGianSanXuatTrongTrot>,
@@ -267,13 +267,15 @@ class ThoiGianSanXuatTrongTrotPopup {
       inputGDST.appendChild(defaultComboValue);
       this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
         where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
-        outFields: ['GiaiDoanSinhTruong'],
+        outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
         orderByFields: ['MocTG']
       }).then(res => {
         res.features.forEach(f => {
           let gdst = f.attributes.GiaiDoanSinhTruong;
+          let magdst = f.attributes.MaGiaiDoan;
           let cbb = document.createElement('option');
-          cbb.value = cbb.innerText = gdst;
+          cbb.value = magdst;
+          cbb.innerText = gdst;
           inputGDST.appendChild(cbb);
         })
       })
@@ -296,8 +298,8 @@ class ThoiGianSanXuatTrongTrotPopup {
         ThoiGianBatDauTrong: !inputTime.value ? null : new Date(inputTime.value),
         ThoiGianTrongTrot: !inputTGTT.value ? (!inputTime.value ? null : new Date(inputTime.value)) : new Date(inputTGTT.value),
         GiaiDoanSinhTruong: inputGDST.value || 'Trồng mới',
-        MaHuyenTP:this.attributes['MaHuyenTP'],
-        MaPhuongXa:this.attributes['MaPhuongXa']
+        MaHuyenTP: this.attributes['MaHuyenTP'],
+        MaPhuongXa: this.attributes['MaPhuongXa']
       }
       let tableDatas = this.tmpDatasDetailTrongTrong.tableDatas;
       let addDatas = this.tmpDatasDetailTrongTrong.adds;
@@ -456,13 +458,15 @@ class ThoiGianSanXuatTrongTrotPopup {
       inputGDST.appendChild(defaultComboValue);
       this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
         where: `NhomCayTrong = ${inputNCT.value} and LoaiCayTrong = '${inputLCT.value}'`,
-        outFields: ['GiaiDoanSinhTruong'],
+        outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
         orderByFields: ['MocTG']
       }).then(res => {
         res.features.forEach(f => {
           let gdst = f.attributes.GiaiDoanSinhTruong;
+          let magdst = f.attributes.MaGiaiDoan;
           let cbb = document.createElement('option');
-          cbb.value = cbb.innerText = gdst;
+          cbb.value = magdst;
+          cbb.innerText = gdst;
           inputGDST.appendChild(cbb);
         })
         inputGDST.value = item.GiaiDoanSinhTruong;
@@ -661,7 +665,19 @@ class ThoiGianSanXuatTrongTrotPopup {
       //thoi gian bat dau trong
       tdTGBDT.innerText = DateTimeDefine.formatDateValue(item.ThoiGianBatDauTrong);
       //giai doan sinh truong
-      tdGDST.innerText = item.GiaiDoanSinhTruong;
+      this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
+        where: `MaGiaiDoan = '${item.GiaiDoanSinhTruong}'`,
+        outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
+      }).then(res => {
+        if (res.features.length > 0) {
+          res.features.forEach(f => {
+            tdGDST.innerText = f.attributes.GiaiDoanSinhTruong;
+          });
+        }
+        else {
+          tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
+        }
+      })
     } catch (error) {
       throw 'Có lỗi xảy ra trong quá trình thực hiện'
     }
@@ -719,7 +735,19 @@ class ThoiGianSanXuatTrongTrotPopup {
       tdTGBDT.innerText = DateTimeDefine.formatDateValue(item['ThoiGianBatDauTrong']);
       let tdAction = document.createElement('td');
       let tdGDST = document.createElement('td');
-      tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
+      this.tblGiaiDoanSinhTruong.queryFeatures(<__esri.Query>{
+        where: `MaGiaiDoan = '${item.GiaiDoanSinhTruong}'`,
+        outFields: ['MaGiaiDoan', 'GiaiDoanSinhTruong'],
+      }).then(res => {
+        if (res.features.length > 0) {
+          res.features.forEach(f => {
+            tdGDST.innerText = f.attributes.GiaiDoanSinhTruong;
+          });
+        }
+        else {
+          tdGDST.innerText = item.GiaiDoanSinhTruong || 'N/A';
+        }
+      })
       //SỬA
       let itemEdit = document.createElement('span');
       itemEdit.classList.add('esri-icon-edit');
@@ -807,8 +835,8 @@ class ThoiGianSanXuatTrongTrotPopup {
           NgayCapNhat: new Date().getTime(),
           ThoiGianBatDauTrong: item.ThoiGianBatDauTrong && item.ThoiGianBatDauTrong.getTime(),
           ThoiGianTrongTrot: item.ThoiGianTrongTrot ? item.ThoiGianTrongTrot.getTime() : (item.ThoiGianBatDauTrong ? item.ThoiGianBatDauTrong.getTime() : null),
-          MaHuyenTP:item.MaHuyenTP,
-          MaPhuongXa:item.MaPhuongXa
+          MaHuyenTP: item.MaHuyenTP,
+          MaPhuongXa: item.MaPhuongXa
         }
         applyEdits.adds.push(attributes);
       }
@@ -843,7 +871,7 @@ class ThoiGianSanXuatTrongTrotPopup {
    * Cập nhật lại khi có thời gian trồng trọt mới
    */
   private refreshNhomCayTrong(adds: ThoiGianSanXuatTrongTrot[]) {
-    if(adds.length > 0){
+    if (adds.length > 0) {
       this.view.popup.close();
       let firstItem = adds[0];
       this.layer.applyEdits({
